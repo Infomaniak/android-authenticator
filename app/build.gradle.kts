@@ -1,8 +1,9 @@
+import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(core.plugins.android.application)
+    alias(core.plugins.kotlin.android)
 }
 
 android {
@@ -47,5 +48,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
+    implementation(core.androidx.core.ktx)
 }
