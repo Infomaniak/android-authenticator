@@ -4,7 +4,6 @@ buildscript {
         set("appCompileSdk", 36)
         set("appTargetSdk", 36)
         set("appMinSdk", 27)
-        set("legacyMinSdk", 27)
         set("javaVersion", JavaVersion.VERSION_17)
     }
 }
