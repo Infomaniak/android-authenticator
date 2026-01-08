@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(core.plugins.android.application)
-    alias(core.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android)
 }
 
-val appCompileSdk: Int by rootProject.extra
+val androidCompileSdk: Int by rootProject.extra
 val appTargetSdk: Int by rootProject.extra
 val appMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
@@ -13,7 +13,7 @@ val javaVersion: JavaVersion by rootProject.extra
 android {
     namespace = "com.infomaniak.auth"
     compileSdk {
-        version = release(appCompileSdk)
+        version = release(androidCompileSdk)
     }
 
     defaultConfig {
