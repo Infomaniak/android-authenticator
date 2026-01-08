@@ -33,7 +33,6 @@
     <string name="actionRequiredDescription">Aktion erforderlich, um eines Ihrer Konten zu sichern.</string>
     <string name="activityHistoryButton">Aktivitätsverlauf</string>
     <string name="appAccessIsSecure">Der Zugriff auf Authenticator ist sicher</string>
-    <string name="appName">Authenticator</string>
     <string name="authorizationCodeTitle">Ihr Autorisierungscode</string>
     <string name="autoCloseTitle">Diese Information schliesst sich automatisch nach 15 Sekunden.</string>
     <string name="callButton">Anrufen</string>

@@ -33,7 +33,6 @@
     <string name="actionRequiredDescription">Une action est requise pour sécuriser l’un de vos comptes.</string>
     <string name="activityHistoryButton">Historique des activités</string>
     <string name="appAccessIsSecure">L’accès à Authenticator\nest sécurisé</string>
-    <string name="appName">Authenticator</string>
     <string name="authorizationCodeTitle">Votre code d’autorisation</string>
     <string name="autoCloseTitle">Cette information se ferme automatiquement dans 15 secondes.</string>
     <string name="callButton">Appeler</string>
