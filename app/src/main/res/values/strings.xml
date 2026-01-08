@@ -1,3 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2025-2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
-    <string name="app_name">Authenticator</string>
+    <string name="accountLoggedOut">Account logged out</string>
+    <string name="accountLossRiskBackupVerificationDescription">Make sure another two-step verification method is set up and working.</string>
+    <string name="accountLossRiskLastDoubleAuthDescription">If Authenticator is your last two-step verification method, you could be locked out next time you log in.</string>
+    <string name="accountLossRiskTitle">You may lose access to this account</string>
+    <string name="accountPasswordTitle">Account password</string>
+    <string name="accountProtected">Account protected</string>
+    <string name="accountProtectionDisabledWarningDescription">This device is the only one used to validate logins to your Infomaniak account.\n\nWe recommend adding another device or verification method before continuing.</string>
+    <string name="accountProtectionDisabledWarningTitle">Warning: your account will no longer be protected</string>
+    <string name="accountRemovedAuthenticatorDescription">You will no longer receive login approvals on this device for account %s</string>
+    <string name="accountRemovedAuthenticatorTitle">Account disconnected from Authenticator</string>
+    <string name="accountSecurityVerificationDescription">If you did not perform this action, we recommend changing your password and reviewing your security settings.</string>
+    <string name="accountSecurityVerificationTitle">Verify your account security</string>
+    <string name="accountSettingsButton">Account settings</string>
+    <string name="actionRequiredDescription">Action required to secure one of your accounts.</string>
+    <string name="activityHistoryButton">Activity history</string>
+    <string name="appAccessIsSecure">Access to Authenticator is secure</string>
+    <string name="authorizationCodeTitle">Your authorization code</string>
+    <string name="autoCloseTitle">This information closes automatically in 15 seconds.</string>
+    <string name="callButton">Call</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="changePasswordButton">Change password</string>
+    <string name="checkMyMethodsButton">Check my methods</string>
+    <string name="closeButton">Close</string>
+    <string name="closedSupportStatus">Cosed</string>
+    <string name="confirmActionCompleteButton">I’ve done what’s needed</string>
+    <string name="confirmButton">Confirm</string>
+    <string name="confirmLoginNotificationTitle">Confirm login</string>
+    <string name="contactSupportDescription">Contact our teams by phone or email for help resolving your issue.</string>
+    <string name="contactSupportTitle">Contact support</string>
+    <string name="continueButton">Continue</string>
+    <string name="copyPassword">Copy password</string>
+    <string name="dataManagementTitle">Data management</string>
+    <string name="deletePreventionDescription">Deleting the app may compromise the security of your account.</string>
+    <string name="deletePreventionTitle">Need help?</string>
+    <string name="denyButton">Deny</string>
+    <string name="descriptionPlaceholder">Description</string>
+    <string name="deviceLoginTitle">Device</string>
+    <string name="disconnectAccountDescription">Your account will no longer be protected by two-step verification and will become vulnerable to unauthorized access.</string>
+    <string name="disconnectAccountOnThisDeviceDescription">You will no longer be able to approve logins on this device with Authenticator.</string>
+    <string name="disconnectAccountTitle">Disconnect this account</string>
+    <string name="disconnectAccountWarningDescription">Make sure your verification and recovery methods are still up to date to avoid losing access to your account.</string>
+    <string name="disconnectAccountWarningTitle">Disconnecting this account may weaken its security</string>
+    <string name="disconnectButton">Log out</string>
+    <string name="disconnectSuccess">Account disconnected</string>
+    <string name="doneButton">Done</string>
+    <string name="emailPlaceholder">Email</string>
+    <string name="enableButton">Enable</string>
+    <string name="enableNotifications">Enable notifications</string>
+    <string name="errorLoginFailed">Account login failed. Please try again or contact support. (error code: %d)</string>
+    <string name="errorOccuredDescription">Unable to complete the operation. Please try again.</string>
+    <string name="errorOccuredTitle">An error occurred</string>
+    <string name="estimatedWait">Estimated wait: %s</string>
+    <string name="feedbackTitle">Feedback</string>
+    <string name="laterButton">Later</string>
+    <string name="locationLoginTitle">Location</string>
+    <string name="logInButton">Log in</string>
+    <string name="loginAttemptQuery">Are you trying to log in?</string>
+    <string name="loginAuthorizationWarning">Confirming this login will authorize this device to access your Infomaniak account.</string>
+    <string name="loginDeniedSuccessDescription">You declined a login attempt. To secure your account, change your password.\n\nIf you initiated this request, try logging in again.</string>
+    <string name="loginDeniedSuccessTitle">Login denied successfully</string>
+    <string name="loginRequestAlreadyProcessedDescription">Not the one who did this? Check your active devices and log out of those you don’t recognise.</string>
+    <string name="loginRequestAlreadyProcessedTitle">This request has already been processed</string>
+    <string name="loginRequestExpiredDescription">Verification time has expired. Please try again.</string>
+    <string name="loginRequestExpiredTitle">This login request has expired</string>
+    <string name="noInternetDescription">Unable to complete the operation. Check your settings and try again.</string>
+    <string name="noInternetTitle">No internet connection</string>
+    <string name="notMeButton">It wasn’t me</string>
+    <string name="notificationsDescription">Enable notifications to receive security information about your Infomaniak accounts.</string>
+    <string name="notificationsTitle">Notifications</string>
+    <string name="onBoardingFaceIdDescription">Enabling Face ID secures access to the app.</string>
+    <string name="onBoardingFaceIdTitle">Do you want to enable Face ID?</string>
+    <string name="onBoardingLoginDescription">Log in to securely approve your connections and protect your access.</string>
+    <string name="onBoardingLoginTitle">Secure your Infomaniak account with Authenticator</string>
+    <string name="onBoardingMigrationDescription">Enjoy a new modernized interface, designed for your security.</string>
+    <string name="onBoardingMigrationTitle">kAuth gets a makeover and becomes Authenticator</string>
+    <string name="onBoardingSecuringAccount">Securing account…</string>
+    <string name="onBoardingSuccessDescription">You can now validate your logins with Authenticator.</string>
+    <string name="onBoardingSuccessTitle">Everything is ready</string>
+    <string name="openSupportStatus">Open</string>
+    <string name="passwordAskingWarning">Infomaniak will never ask for your password unexpectedly.\n\nMake sure you initiated this action before continuing.</string>
+    <string name="passwordChangedDescription">The login password for your Infomaniak account %s has been updated.</string>
+    <string name="passwordChangedNotification">Login password changed</string>
+    <string name="passwordChangedTitle">Login password changed</string>
+    <string name="refreshPendingLoginsButton">Refresh pending logins</string>
+    <string name="removeAccountDescription">You will no longer be able to verify your login to this account with Authenticator.</string>
+    <string name="removeAccountSuccess">Account removed</string>
+    <string name="removeAccountTitle">Remove account</string>
+    <string name="removeButton">Remove</string>
+    <string name="settingsTitle">Settings</string>
+    <string name="showAccountPasswordButton">Show account password</string>
+    <string name="startButton">Start</string>
+    <string name="subjectPlaceholder">Subject</string>
+    <string name="submitTicketDescription">To help us assist you effectively, please provide as many details as possible regarding your issue.</string>
+    <string name="submitTicketTitle">Submit a ticket</string>
+    <string name="supportResponseDelay">We will respond within the next 24 business hours.</string>
+    <string name="ticketSentSuccessDescription">We are doing our best to ensure an agent responds to you as soon as possible.</string>
+    <string name="ticketSentSuccessTitle">Your ticket has been sent to our teams!</string>
+    <string name="understandConfirmButton">I understand</string>
+    <string name="unlockingWithFaceId">Unlock with Face ID</string>
+    <string name="verifySecurityButton">Verify my security</string>
+    <string name="viewGuidesButton">Browse the guides</string>
+    <string name="whenLoginTitle">When</string>
 </resources>
