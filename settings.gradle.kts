@@ -31,3 +31,4 @@ plugins {
 
 rootProject.name = "Authenticator"
 include(":app")
+include("multiplatform-lib")
