@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,16 +5,21 @@ plugins {
     alias(core.plugins.kotlin.android)
 }
 
+val appCompileSdk: Int by rootProject.extra
+val appTargetSdk: Int by rootProject.extra
+val appMinSdk: Int by rootProject.extra
+val javaVersion: JavaVersion by rootProject.extra
+
 android {
     namespace = "com.infomaniak.auth"
     compileSdk {
-        version = release(36)
+        version = release(appCompileSdk)
     }
 
     defaultConfig {
         applicationId = "com.infomaniak.auth"
-        minSdk = 27
-        targetSdk = 36
+        minSdk = appMinSdk
+        targetSdk = appTargetSdk
         versionCode = 2_00_000_00
         versionName = "2.0.0-DEV"
 
@@ -36,13 +40,25 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
+        }
+    }
+
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        create("standard") {
+            dimension = "distribution"
+            isDefault = true
+        }
+        create("fdroid") {
+            dimension = "distribution"
         }
     }
 }
