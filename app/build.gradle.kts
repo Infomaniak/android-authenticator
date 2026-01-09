@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(core.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(core.plugins.compose.compiler)
 }
 
 val androidCompileSdk: Int by rootProject.extra
