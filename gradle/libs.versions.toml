@@ -1,6 +1,9 @@
 [versions]
 kotlin = "2.3.0"
 
+[libraries]
+infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
+
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

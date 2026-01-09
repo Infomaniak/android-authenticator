@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,7 +12,20 @@
         android:label="@string/appName"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndroidAuthenticator">
+        android:theme="@style/Theme.AndroidAuthenticator"
+        tools:targetApi="36">
+
+        <meta-data
+            android:name="io.sentry.anr.enable"
+            android:value="true" />
+
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://adacdde66d0ca8cca50da9d92847d49f@sentry-mobile.infomaniak.com/23" />
 
         <activity
             android:name=".MainActivity"
