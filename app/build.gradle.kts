@@ -61,8 +61,18 @@ android {
             dimension = "distribution"
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
     implementation(core.androidx.core.ktx)
+    // Compose
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.ui)
+    implementation(core.compose.ui.graphics)
+    implementation(core.compose.ui.tooling.preview)
+    implementation(core.compose.material3)
 }
