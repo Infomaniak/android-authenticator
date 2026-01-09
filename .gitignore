@@ -17,3 +17,4 @@ uitest-env.properties
 .kotlin/sessions
 **/local.properties
 *.mx
+/.kotlin
