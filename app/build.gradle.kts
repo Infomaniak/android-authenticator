@@ -29,10 +29,10 @@ android {
         setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
     }
 
-
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -70,10 +70,12 @@ android {
 
 dependencies {
     implementation(core.androidx.core.ktx)
+    
     // Compose
     implementation(platform(core.compose.bom))
     implementation(core.compose.ui)
     implementation(core.compose.ui.graphics)
     implementation(core.compose.ui.tooling.preview)
     implementation(core.compose.material3)
+    implementation(core.activity.compose)
 }
