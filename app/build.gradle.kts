@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(core.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(core.plugins.compose.compiler)
 }
 
 val androidCompileSdk: Int by rootProject.extra
@@ -28,10 +29,10 @@ android {
         setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
     }
 
-
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -61,8 +62,20 @@ android {
             dimension = "distribution"
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
     implementation(core.androidx.core.ktx)
+    
+    // Compose
+    implementation(platform(core.compose.bom))
+    implementation(core.compose.ui)
+    implementation(core.compose.ui.graphics)
+    implementation(core.compose.ui.tooling.preview)
+    implementation(core.compose.material3)
+    implementation(core.activity.compose)
 }
