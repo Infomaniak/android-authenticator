@@ -14,4 +14,5 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(core.plugins.compose.compiler) apply false
+    alias(core.plugins.sentry.plugin) apply false
 }
