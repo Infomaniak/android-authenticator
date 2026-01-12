@@ -15,7 +15,3 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(core.plugins.compose.compiler) apply false
 }
-
-tasks.register<Delete>("clean") {
-    delete(rootProject.layout.buildDirectory)
-}
