@@ -15,23 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.ui.navigation
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.infomaniak.auth.ui.screen.main.MainScreen
-import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AuthenticatorTheme {
-                MainScreen()
-            }
-        }
-    }
+@Serializable
+sealed interface NavDestination : NavKey {
+    @Serializable
+    data object Home : NavDestination
+
+    @Serializable
+    data object Onboarding : NavDestination
 }

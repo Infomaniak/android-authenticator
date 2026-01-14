@@ -15,23 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.ui.images.illus.shieldPerson
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.infomaniak.auth.ui.screen.main.MainScreen
-import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.images.AppImages.AppIllus
+import com.infomaniak.core.ui.compose.theme.ThemedImage
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AuthenticatorTheme {
-                MainScreen()
-            }
-        }
-    }
-}
+@Suppress("UnusedReceiverParameter")
+val AppIllus.ShieldPerson: ThemedImage
+    get() = _shieldPerson ?: object : ThemedImage {
+        override val light = AppIllus.ShieldPersonLight
+        override val dark = AppIllus.ShieldPersonDark
+    }.also { _shieldPerson = it }
+
+private var _shieldPerson: ThemedImage? = null

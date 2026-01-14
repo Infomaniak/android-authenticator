@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(core.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(core.plugins.kotlin.serialization)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.sentry.plugin)
 }
@@ -115,10 +116,18 @@ sentry {
 }
 
 dependencies {
+    implementation(libs.infomaniak.core.onboarding)
     implementation(libs.infomaniak.core.sentry)
+    implementation(libs.infomaniak.core.ui.compose.preview)
+    implementation(libs.infomaniak.core.ui.compose.theme)
 
     implementation(core.androidx.core.ktx)
-    
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+
+    implementation(core.kotlinx.serialization.json)
+
     // Compose
     implementation(platform(core.compose.bom))
     implementation(core.compose.ui)

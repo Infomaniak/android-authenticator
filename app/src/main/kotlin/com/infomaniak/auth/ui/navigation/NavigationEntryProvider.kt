@@ -15,23 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.ui.navigation
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.infomaniak.auth.ui.screen.main.MainScreen
-import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import com.infomaniak.auth.ui.screen.home.HomeScreen
+import com.infomaniak.auth.ui.screen.onboarding.OnboardingScreen
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AuthenticatorTheme {
-                MainScreen()
+fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
+    entry<NavDestination.Home> {
+        HomeScreen()
+    }
+    entry<NavDestination.Onboarding> {
+        OnboardingScreen(
+            navigateToHome = {
+                backStack.clear()
+                backStack.add(NavDestination.Home)
             }
-        }
+        )
     }
 }
