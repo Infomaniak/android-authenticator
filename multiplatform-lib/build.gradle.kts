@@ -15,3 +15,5 @@ kotlin {
     }
     iosArm64()
 }
+
+dependencies.commonMainImplementation(core.kotlinx.coroutines.core)
