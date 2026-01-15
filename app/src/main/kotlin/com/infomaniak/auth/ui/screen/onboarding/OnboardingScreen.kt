@@ -25,7 +25,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,6 +55,10 @@ fun OnboardingScreen(
     val accountsCheckingState by crossAppLoginViewModel.accountsCheckingState.collectAsStateWithLifecycle()
     val skippedIds by crossAppLoginViewModel.skippedAccountIds.collectAsStateWithLifecycle()
 
+    // TODO: Update state with login logic
+    val isLoginButtonLoading by remember { mutableStateOf(false) }
+    val isSignUpButtonLoading by remember { mutableStateOf(false) }
+
     val hostActivity = LocalActivity.current as ComponentActivity
     LaunchedEffect(crossAppLoginViewModel) {
         crossAppLoginViewModel.activateUpdates(hostActivity)
@@ -60,10 +67,14 @@ fun OnboardingScreen(
     OnboardingScreen(
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
-        isLoginButtonLoading = { loginRequest.isAwaitingCall.not() },
+        // TODO : Use loginRequest When login logic ready
+        isLoginButtonLoading = { /* loginRequest.isAwaitingCall.not() || */ isLoginButtonLoading },
+        isSignUpButtonLoading = { isSignUpButtonLoading },
         onLoginRequest = { accounts -> loginRequest(accounts) },
         onSaveSkippedAccounts = { crossAppLoginViewModel.skippedAccountIds.value = it },
-        onStartClicked = navigateToHome,
+        // TODO: Use true login or create account
+        onLogin = navigateToHome,
+        onCreateAccount = navigateToHome
     )
 }
 
@@ -72,9 +83,11 @@ private fun OnboardingScreen(
     accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
     isLoginButtonLoading: () -> Boolean,
+    isSignUpButtonLoading: () -> Boolean,
     onLoginRequest: (accounts: List<ExternalAccount>) -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
-    onStartClicked: () -> Unit,
+    onCreateAccount: () -> Unit,
+    onLogin: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
 
@@ -101,7 +114,12 @@ private fun OnboardingScreen(
                 onContinueWithSelectedAccounts = { selectedAccounts -> onLoginRequest(selectedAccounts) },
                 onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },
                 onSaveSkippedAccounts = onSaveSkippedAccounts,
-                noCrossAppLoginAccountsContent = NoCrossAppLoginAccountsContent.accountOptional { onStartClicked() }
+                noCrossAppLoginAccountsContent = NoCrossAppLoginAccountsContent.accountRequired(
+                    onLogin = onLogin,
+                    onCreateAccount = onCreateAccount,
+                    isLoginButtonLoading = isLoginButtonLoading,
+                    isSignUpButtonLoading = isSignUpButtonLoading,
+                )
             )
         }
     )
@@ -118,10 +136,12 @@ private fun OnboardingScreenPreview(
                 AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
             },
             skippedIds = { emptySet() },
-            isLoginButtonLoading = { true },
+            isLoginButtonLoading = { false },
+            isSignUpButtonLoading = { false },
             onLoginRequest = {},
             onSaveSkippedAccounts = {},
-            onStartClicked = {},
+            onLogin = {},
+            onCreateAccount = {},
         )
     }
 }
