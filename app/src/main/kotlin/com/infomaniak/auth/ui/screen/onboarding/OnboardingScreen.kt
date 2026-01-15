@@ -111,7 +111,11 @@ private fun OnboardingScreen(
                         descriptionColor = MaterialTheme.colorScheme.secondary
                     ),
                 ),
-                onContinueWithSelectedAccounts = { selectedAccounts -> onLoginRequest(selectedAccounts) },
+                onContinueWithSelectedAccounts = { selectedAccounts ->
+                    onLoginRequest(selectedAccounts)
+                    // TODO: Remove later when login logic will be ready, it just to navigate to home
+                    onLogin()
+                },
                 onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },
                 onSaveSkippedAccounts = onSaveSkippedAccounts,
                 noCrossAppLoginAccountsContent = NoCrossAppLoginAccountsContent.accountRequired(
