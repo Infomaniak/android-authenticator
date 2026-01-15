@@ -1,5 +1,6 @@
 [versions]
 kotlin = "2.3.0"
+ksp = "2.3.4"
 nav3Core = "1.0.0"
 lifecycleViewmodelNav3 = "2.10.0"
 
@@ -8,11 +9,18 @@ androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runt
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 
+infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
+infomaniak-core-common = { module = "com.infomaniak.core:Common" }
+infomaniak-core-crossapplogin-back = { module = "com.infomaniak.core:CrossAppLogin.Back" }
+infomaniak-core-crossapplogin-front = { module = "com.infomaniak.core:CrossAppLogin.Front" }
 infomaniak-core-onboarding = { module = "com.infomaniak.core:Onboarding" }
+infomaniak-core-network = { module = "com.infomaniak.core:Network" }
 infomaniak-core-sentry = { module = "com.infomaniak.core:Sentry" }
+infomaniak-core-ui-compose-basics = { module = "com.infomaniak.core:Ui.Compose.Basics" }
 infomaniak-core-ui-compose-preview = { module = "com.infomaniak.core:Ui.Compose.Preview" }
 infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Theme" }
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
