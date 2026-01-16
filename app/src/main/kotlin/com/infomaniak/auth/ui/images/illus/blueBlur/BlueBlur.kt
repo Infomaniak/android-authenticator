@@ -17,7 +17,15 @@
  */
 package com.infomaniak.auth.ui.images.illus.blueBlur
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 @Suppress("UnusedReceiverParameter")
@@ -28,3 +36,17 @@ val AppIllus.BlueBlur: ThemedImage
     }.also { _blueBlur = it }
 
 private var _blueBlur: ThemedImage? = null
+
+@PreviewLightAndDark
+@Composable
+private fun Preview() {
+    AuthenticatorTheme {
+        Box {
+            Image(
+                imageVector = AppIllus.BlueBlur.image(),
+                contentDescription = null,
+                modifier = Modifier.size(AppImages.previewSize),
+            )
+        }
+    }
+}
