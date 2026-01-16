@@ -17,6 +17,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Needed for `com.github.lottiefiles:dotlottie-android` and `com.github.infomaniak:android-login`
         maven(url = "https://jitpack.io")
     }
     versionCatalogs {
