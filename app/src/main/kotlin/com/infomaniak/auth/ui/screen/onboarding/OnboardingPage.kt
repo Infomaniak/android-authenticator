@@ -70,8 +70,9 @@ internal fun Page.toOnboardingPage(pagerState: PagerState, index: Int) = Onboard
 @Composable
 private fun Page.OnboardingPageIllustration(pagerState: PagerState, index: Int) {
     Box {
-        RenderIllustration(background) { pagerState.currentPage == index }
-        RenderIllustration(illustration) { pagerState.currentPage == index }
+        val isCurrentPageVisible = { pagerState.currentPage == index }
+        RenderIllustration(background, isCurrentPageVisible)
+        RenderIllustration(illustration, isCurrentPageVisible)
     }
 }
 

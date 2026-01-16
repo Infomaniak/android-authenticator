@@ -20,6 +20,7 @@ package com.infomaniak.auth.ui.screen.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
@@ -32,5 +33,7 @@ fun HomeScreen() {
 @PreviewSmallWindow
 @Composable
 fun HomeScreenPreview() {
-
+    AuthenticatorTheme {
+        HomeScreen()
+    }
 }
