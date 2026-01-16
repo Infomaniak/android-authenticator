@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.onboarding
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -27,7 +26,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
@@ -35,17 +33,19 @@ import com.infomaniak.auth.ui.images.AppImages.AppIllus
 import com.infomaniak.auth.ui.images.illus.blueBlur.BlueBlur
 import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPerson
 import com.infomaniak.core.onboarding.OnboardingPage
-import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultLottieIllustration
 import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultTitleAndDescription
+import com.infomaniak.core.onboarding.components.OnboardingComponents.ThemedDotLottie
+import com.infomaniak.core.onboarding.models.OnboardingLottieSource
+import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 internal enum class Page(
     val background: IllustrationResource,
     val illustration: IllustrationResource,
-    @field:StringRes val titleRes: Int,
-    @field:StringRes val descriptionRes: Int,
+    @StringRes val titleRes: Int,
+    @StringRes val descriptionRes: Int,
 ) {
-    LOGIN(
+    Login(
         background = IllustrationResource.Vector(AppIllus.BlueBlur),
         illustration = IllustrationResource.Vector(AppIllus.ShieldPerson),
         titleRes = R.string.onBoardingLoginTitle,
@@ -55,13 +55,13 @@ internal enum class Page(
 
 @Composable
 internal fun Page.toOnboardingPage(pagerState: PagerState, index: Int) = OnboardingPage(
-    background = { },
+    background = {},
     illustration = { OnboardingPageIllustration(pagerState, index) },
     text = {
         DefaultTitleAndDescription(
             title = stringResource(titleRes),
             description = stringResource(descriptionRes),
-            titleStyle = MaterialTheme.typography.headlineMedium,
+            titleStyle = MaterialTheme.typography.titleLarge,
             descriptionStyle = MaterialTheme.typography.bodyLarge
         )
     }
@@ -70,39 +70,36 @@ internal fun Page.toOnboardingPage(pagerState: PagerState, index: Int) = Onboard
 @Composable
 private fun Page.OnboardingPageIllustration(pagerState: PagerState, index: Int) {
     Box {
-        RenderIllustration(background, pagerState, index)
-        RenderIllustration(illustration, pagerState, index)
+        RenderIllustration(background) { pagerState.currentPage == index }
+        RenderIllustration(illustration) { pagerState.currentPage == index }
     }
 }
 
-internal sealed class IllustrationResource {
-    data class Static(@field:DrawableRes val res: Int) : IllustrationResource()
-    data class Vector(val image: ThemedImage) : IllustrationResource()
-    data class Animated(@field:RawRes val res: Int) : IllustrationResource()
-}
-
 @Composable
-private fun RenderIllustration(resource: IllustrationResource, pagerState: PagerState, index: Int) {
+private fun RenderIllustration(resource: IllustrationResource, isCurrentPageVisible: () -> Boolean) {
     when (resource) {
-        is IllustrationResource.Static -> {
-            Image(
-                modifier = Modifier.size(350.dp),
-                painter = painterResource(id = resource.res),
-                contentDescription = null,
-            )
-        }
         is IllustrationResource.Vector -> {
             Image(
                 modifier = Modifier.size(350.dp),
-                imageVector = resource.image.image(),
+                imageVector = resource.themedImage.image(),
                 contentDescription = null,
             )
         }
         is IllustrationResource.Animated -> {
-            DefaultLottieIllustration(
-                lottieRawRes = resource.res,
-                isCurrentPageVisible = { pagerState.currentPage == index }
+            ThemedDotLottie(
+                source = OnboardingLottieSource.Res(resource.res),
+                isCurrentPageVisible = isCurrentPageVisible,
+                themeId = { if (LocalIsThemeDarkMode.current) resource.themeIdDark else resource.themeIdLight }
             )
         }
     }
+}
+
+internal sealed class IllustrationResource {
+    data class Vector(val themedImage: ThemedImage) : IllustrationResource()
+    data class Animated(
+        @RawRes val res: Int,
+        val themeIdLight: String? = null,
+        val themeIdDark: String? = null,
+    ) : IllustrationResource()
 }

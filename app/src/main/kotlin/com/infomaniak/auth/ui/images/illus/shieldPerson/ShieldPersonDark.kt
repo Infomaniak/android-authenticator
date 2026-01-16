@@ -37,7 +37,7 @@ import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 
 @Suppress("UnusedReceiverParameter")
-public val AppIllus.ShieldPersonDark: ImageVector
+val AppIllus.ShieldPersonDark: ImageVector
     get() {
         if (_shieldPersonDark != null) {
             return _shieldPersonDark!!

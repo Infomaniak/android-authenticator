@@ -19,7 +19,6 @@ package com.infomaniak.auth.ui.images.illus.blueBlur
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,10 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
-import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPersonLight
 
 @Suppress("UnusedReceiverParameter")
-public val AppIllus.BlueBlurLight: ImageVector
+val AppIllus.BlueBlurLight: ImageVector
     get() {
         if (_blurLight != null) {
             return _blurLight!!
