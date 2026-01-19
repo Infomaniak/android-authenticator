@@ -15,26 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.ui.screen.home
 
-import android.os.Build.VERSION.SDK_INT
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.infomaniak.auth.ui.screen.main.MainScreen
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+@Composable
+fun HomeScreen() {
+    Column {
+        Text("HomeScreen")
+    }
+}
 
-        setContent {
-            AuthenticatorTheme {
-                MainScreen()
-            }
-        }
+@PreviewSmallWindow
+@Composable
+fun HomeScreenPreview() {
+    AuthenticatorTheme {
+        HomeScreen()
     }
 }

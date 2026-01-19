@@ -15,26 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.ui.images
 
-import android.os.Build.VERSION.SDK_INT
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.infomaniak.auth.ui.screen.main.MainScreen
-import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import androidx.compose.ui.unit.dp
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+object AppImages {
+    object AppIcons
+    object AppIllus
 
-        setContent {
-            AuthenticatorTheme {
-                MainScreen()
-            }
-        }
-    }
+    val previewSize = 250.dp
 }
