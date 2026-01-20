@@ -3,7 +3,7 @@ buildscript {
     extra.apply {
         set("androidCompileSdk", 36)
         set("appTargetSdk", 36)
-        set("appMinSdk", 27)
+        set("androidMinSdk", 27)
         set("javaVersion", JavaVersion.VERSION_17)
     }
 }

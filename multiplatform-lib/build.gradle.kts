@@ -6,14 +6,24 @@ plugins {
 }
 
 val androidCompileSdk: Int by rootProject.extra
+val androidMinSdk: Int by rootProject.extra
 
 kotlin {
     @Suppress("UnstableApiUsage")
     androidLibrary {
         namespace = "com.infomaniak.auth.multiplatform"
         compileSdk = androidCompileSdk
+        minSdk = androidMinSdk
     }
     iosArm64()
+
+    sourceSets {
+        androidMain {
+            dependencies {
+                implementation(core.splitties.appctx)
+            }
+        }
+    }
 }
 
 dependencies.commonMainImplementation(core.kotlinx.coroutines.core)
