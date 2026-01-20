@@ -1,6 +1,13 @@
+import android.content.pm.PackageManager
+import android.os.Build.VERSION.SDK_INT
+import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import com.infomaniak.auth.lib.KeysManager
+import com.infomaniak.auth.lib.PublicKey
+import splitties.init.appCtx
 import java.security.KeyPairGenerator
+import java.security.KeyStore
+import kotlin.reflect.KParameter
 
 /*
  * Infomaniak Authenticator - Android
@@ -20,12 +27,69 @@ import java.security.KeyPairGenerator
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class KeysManagerImpl : KeysManager {
-    override suspend fun createAndStoreKeyPair() {
-        val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore")
+    private val keyStoreProvider = "AndroidKeyStore"
+
+    override suspend fun supportsTrustedExecutionEnvironment(): Boolean {
         TODO()
     }
 
-    override suspend fun getPublicKey() {
+    override suspend fun hasEnrolledBiometrics(): Boolean {
+        TODO()
+    }
+
+    override suspend fun updateSecurityParameters(newParameters: KeysManager.SecurityParameters) {
+        TODO()
+    }
+
+    override suspend fun generateSecurelyStoredKeyPairForSigning(
+        securityParameters: KeysManager.SecurityParameters
+    ) {
+        val keyPairGenerator = KeyPairGenerator.getInstance(
+            KeyProperties.KEY_ALGORITHM_EC,
+            keyStoreProvider
+        )
+        val parameterSpec = KeyGenParameterSpec.Builder(
+            "alias",
+            KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
+        ).also {
+            it.setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
+            if (SDK_INT >= 28) {
+                if (appCtx.packageManager.hasSystemFeature(PackageManager.FEATURE_STRONGBOX_KEYSTORE)) {
+                    it.setIsStrongBoxBacked(true)
+                    //TODO: Check if it requires biometrics
+                }
+                it.setUserPresenceRequired(true)
+            }
+            if (securityParameters.biometricsRequired) {
+                it.setUserAuthenticationRequired(true)
+                it.setInvalidatedByBiometricEnrollment(false)
+            } else {
+                if (SDK_INT >= 28) it.setUserConfirmationRequired(true)
+            }
+        }.build()
+
+        keyPairGenerator.initialize(parameterSpec)
+        val keyPair = keyPairGenerator.generateKeyPair()
+        keyPair.private.encoded
+        keyPair.public.encoded
+
+        val ks = KeyStore.getInstance(keyStoreProvider).also {
+            it.load(null)
+        }
+        ks.aliases()
+
+        TODO()
+    }
+
+    override suspend fun createAndStoreMigrationKeys() {
+        TODO()
+    }
+
+    override suspend fun getPublicKey(): PublicKey {
+        TODO()
+    }
+
+    override suspend fun getMostRecentMigrationPublicKey(): PublicKey {
         TODO()
     }
 }

@@ -19,7 +19,56 @@ package com.infomaniak.auth.lib
 
 interface KeysManager {
 
-    suspend fun createAndStoreKeyPair()
+    data class SecurityParameters(
+//        val userPresenceRequired: Boolean,
+        val biometricsRequired: Boolean,
+        val devicePasswordRequired: Boolean,
+    )
 
-    suspend fun getPublicKey()
+    /**
+     * Returns true if the device has a Strongbox security chip or an available Secure Enclave.
+     */
+    suspend fun supportsTrustedExecutionEnvironment(): Boolean
+
+    suspend fun hasEnrolledBiometrics(): Boolean
+
+    /**
+     * Must generate and save a private/public key pair into dedicated hardware, that is,
+     * a TEE (Trusted Execution Environment) like the Secure Enclave on iOS devices, and a strongbox
+     * on Android (if possible).
+     *
+     * The private key must not be accessible directly.
+     *
+     * The public key will be registered against the backend.
+     *
+     * They should be used for signing, and verification.
+     */
+    suspend fun generateSecurelyStoredKeyPairForSigning(securityParameters: SecurityParameters)
+
+    /**
+     * Typically used when the user wants to enable or disable biometrics requirement to access
+     * the app.
+     *
+     *
+     */
+    suspend fun updateSecurityParameters(newParameters: SecurityParameters)
+
+    /**
+     * Must generate and save a private/public key pair that can be saved and restored
+     * as part of app backup, to restore on a new device.
+     */
+    suspend fun createAndStoreMigrationKeys()
+
+    /**
+     * The public key, generated in [generateSecurelyStoredKeyPairForSigning], to be sent to the
+     * backend, so what we sign with the private key is recognized to authenticated further backend
+     * API calls.
+     */
+    suspend fun getPublicKey(): PublicKey
+
+    /**
+     * The public migration key, generated in [createAndStoreMigrationKeys], to be sent to the
+     * backend for the future migration use-case (i.e. restoring from a backup or to another phone).
+     */
+    suspend fun getMostRecentMigrationPublicKey(): PublicKey
 }

@@ -13,7 +13,7 @@ plugins {
 
 val androidCompileSdk: Int by rootProject.extra
 val appTargetSdk: Int by rootProject.extra
-val appMinSdk: Int by rootProject.extra
+val androidMinSdk: Int by rootProject.extra
 val javaVersion: JavaVersion by rootProject.extra
 
 android {
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.infomaniak.auth"
-        minSdk = appMinSdk
+        minSdk = androidMinSdk
         targetSdk = appTargetSdk
         versionCode = 2_00_000_00
         versionName = "2.0.0-DEV"
