@@ -24,6 +24,7 @@ import androidx.navigation3.runtime.entryProvider
 import com.infomaniak.auth.ui.screen.home.HomeScreen
 import com.infomaniak.auth.ui.screen.onboarding.OnboardingScreen
 import com.infomaniak.auth.ui.screen.ready.ReadyScreen
+import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 
 fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Home> {
@@ -31,8 +32,13 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
     }
     entry<NavDestination.Onboarding> {
         OnboardingScreen(
-            onLogin = { backStack.add(NavDestination.Ready) },
+            onLogin = { backStack.add(NavDestination.SecuringAccount) },
             onCreateAccount = {}
+        )
+    }
+    entry<NavDestination.SecuringAccount> {
+        SecuringAccountScreen(
+            onFinish = { backStack.add(NavDestination.Ready) }
         )
     }
     entry<NavDestination.Ready> {
