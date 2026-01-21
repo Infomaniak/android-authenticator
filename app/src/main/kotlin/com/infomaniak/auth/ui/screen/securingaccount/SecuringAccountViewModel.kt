@@ -20,8 +20,18 @@ package com.infomaniak.auth.ui.screen.securingaccount
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 
 @HiltViewModel
 class SecuringAccountViewModel @Inject constructor() : ViewModel() {
-
+    fun doMagicThing(onFinish: () -> Unit) {
+        viewModelScope.launch {
+            delay(5000L)
+            onFinish()
+        }
+    }
 }

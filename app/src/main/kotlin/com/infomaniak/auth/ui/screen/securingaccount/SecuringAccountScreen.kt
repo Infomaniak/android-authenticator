@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.securingaccount
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,6 +48,10 @@ fun SecuringAccountScreen(
     viewModel: SecuringAccountViewModel = viewModel(),
     onFinish: () -> Unit
 ) {
+    LaunchedEffect(viewModel) {
+        viewModel.doMagicThing(onFinish)
+    }
+
     SinglePaneScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
@@ -54,7 +60,9 @@ fun SecuringAccountScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                // TODO[ik-auth]: Remove this when magic thing become not magic
+                .clickable(onClick = onFinish),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
