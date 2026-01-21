@@ -14,16 +14,30 @@ kotlin {
         namespace = "com.infomaniak.auth.multiplatform"
         compileSdk = androidCompileSdk
         minSdk = androidMinSdk
+
+        // withHostTestBuilder {}.configure {}
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }
     }
     iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
+        commonMain {
+            dependencies {
+                implementation(core.kotlinx.coroutines.core)
+            }
+        }
         androidMain {
             dependencies {
                 implementation(core.splitties.appctx)
             }
         }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }
-
-dependencies.commonMainImplementation(core.kotlinx.coroutines.core)

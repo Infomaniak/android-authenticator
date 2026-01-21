@@ -31,13 +31,22 @@ sealed interface AppStatus {
         data class Migrating(val pendingAction: PendingUserAction?) : Onboarding {
             sealed interface PendingUserAction {
 
+                /**
+                 * The actual email of the account might have changed since then, and we can't know about it.
+                 * So, the UI is supposed to pre-fill it with the one in [legacyAccount], and prompt the user to check it's
+                 * correct, letting them replace it if needed (editable text field).
+                 */
                 data class ReLogin(
                     val legacyAccount: Account,
                     val sendCredentials: (CredentialsForMigration) -> Unit,
                 ) : PendingUserAction
 
+                /**
+                 * @property proceed Typically called when the user presses a button labelled "Skip" or "Retry".
+                 */
                 data class Issue(
-                    val shouldRetry: (Boolean) -> Unit,
+                    val proceed: (shouldRetry: Boolean) -> Unit,
+                    //TODO[ik-auth]: Add details on the issue kind or cause.
                 ) : PendingUserAction
             }
         }
