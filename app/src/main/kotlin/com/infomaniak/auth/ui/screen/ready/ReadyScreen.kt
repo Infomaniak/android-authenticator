@@ -33,6 +33,7 @@ import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.TitleAndDescription
 import com.infomaniak.auth.ui.images.AppImages
+import com.infomaniak.auth.ui.images.illus.infomaniakValidated.InfomaniakValidated
 import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPerson
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
@@ -62,7 +63,7 @@ fun ReadyScreen(navigateToHome: () -> Unit) {
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Spacer(modifier = Modifier)
-            IllustrationWithHalo(AppImages.AppIllus.ShieldPerson)
+            IllustrationWithHalo(AppImages.AppIllus.InfomaniakValidated)
             TitleAndDescription(
                 title = stringResource(R.string.onBoardingSuccessTitle),
                 description = stringResource(R.string.onBoardingSuccessDescription)
