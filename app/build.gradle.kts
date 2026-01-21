@@ -128,6 +128,9 @@ dependencies {
     implementation(libs.infomaniak.core.network)
     implementation(libs.infomaniak.core.sentry)
     implementation(libs.infomaniak.core.ui.compose.basics)
+    implementation(libs.infomaniak.core.ui.compose.basicbutton)
+    implementation(libs.infomaniak.core.ui.compose.bottomstickybuttonscaffolds)
+    implementation(libs.infomaniak.core.ui.compose.margin)
     implementation(libs.infomaniak.core.ui.compose.preview)
     implementation(libs.infomaniak.core.ui.compose.theme)
 

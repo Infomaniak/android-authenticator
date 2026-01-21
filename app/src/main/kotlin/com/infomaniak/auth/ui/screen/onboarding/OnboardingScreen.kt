@@ -48,7 +48,8 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 @Composable
 fun OnboardingScreen(
     crossAppLoginViewModel: CrossAppLoginViewModel = viewModel(),
-    navigateToHome: () -> Unit
+    onLogin: () -> Unit,
+    onCreateAccount: () -> Unit
 ) {
     val accountsCheckingState by crossAppLoginViewModel.accountsCheckingState.collectAsStateWithLifecycle()
     val skippedIds by crossAppLoginViewModel.skippedAccountIds.collectAsStateWithLifecycle()
@@ -73,8 +74,8 @@ fun OnboardingScreen(
         onLoginRequest = { accounts -> loginRequest(accounts) },
         onSaveSkippedAccounts = { crossAppLoginViewModel.skippedAccountIds.value = it },
         // TODO[ik-auth]: Use true login or create account
-        onLogin = navigateToHome,
-        onCreateAccount = navigateToHome
+        onLogin = onLogin,
+        onCreateAccount = onCreateAccount
     )
 }
 

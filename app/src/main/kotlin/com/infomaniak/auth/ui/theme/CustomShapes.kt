@@ -15,19 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.navigation
+package com.infomaniak.auth.ui.theme
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.dp
 
-@Serializable
-sealed interface NavDestination : NavKey {
-    @Serializable
-    data object Home : NavDestination
-
-    @Serializable
-    data object Onboarding : NavDestination
-
-    @Serializable
-    data object Ready : NavDestination
+object CustomShapes {
+    val NONE = RoundedCornerShape(0)
+    val ROUNDED = CircleShape
+    val EXTRA_SMALL = RoundedCornerShape(4.dp)
+    val SMALL = RoundedCornerShape(8.dp)
+    val MEDIUM = RoundedCornerShape(16.dp)
+    val LARGE = RoundedCornerShape(24.dp)
 }
