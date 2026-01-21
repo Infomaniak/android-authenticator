@@ -19,7 +19,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 
-private val lightScheme = lightColorScheme(
+// Never access it directly outside of the theme setup
+val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
     primaryContainer = primaryContainerLight,
@@ -97,14 +98,6 @@ private val darkScheme = darkColorScheme(
 
 val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> =
     staticCompositionLocalOf { CustomColorScheme() }
-
-private val lightCustomScheme = lightColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientLight
-)
-
-private val darkCustomScheme = darkColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientDark
-)
 
 @Composable
 fun AuthenticatorTheme(

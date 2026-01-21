@@ -87,7 +87,8 @@ private fun RenderIllustration(resource: IllustrationResource, isCurrentPageVisi
     when (resource) {
         is IllustrationResource.Vector -> {
             Image(
-                modifier = Modifier.size(350.dp)
+                modifier = Modifier
+                    .size(350.dp)
                     .background(
                         Brush.radialGradient(
                             colors = listOf(AuthenticatorTheme.colors.illustrationBackgroundGradient, Color.Transparent),
