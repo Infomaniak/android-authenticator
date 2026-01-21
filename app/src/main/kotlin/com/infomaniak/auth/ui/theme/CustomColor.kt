@@ -25,8 +25,8 @@ data class CustomColorScheme(
     val illustrationBackgroundGradient: Color = Color.Unspecified
 )
 
-val illustrationBackgroundGradientLight = Color(0xFF2F40AB).copy(alpha = 0.28f)
-val illustrationBackgroundGradientDark = Color(0xFF5869D9).copy(alpha = 0.7f)
+val illustrationBackgroundGradientLight = primaryLight.copy(alpha = 0.28f)
+val illustrationBackgroundGradientDark = primaryDark.copy(alpha = 0.6f)
 
 
 fun lightColorScheme(

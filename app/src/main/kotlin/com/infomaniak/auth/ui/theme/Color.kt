@@ -2,7 +2,7 @@ package com.infomaniak.auth.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF525A92)
+val primaryLight = Color(0xFF2B39A8)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFDFE0FF)
 val onPrimaryContainerLight = Color(0xFF3A4279)
@@ -38,7 +38,7 @@ val surfaceContainerLight = Color(0xFFEFEDF4)
 val surfaceContainerHighLight = Color(0xFFE9E7EF)
 val surfaceContainerHighestLight = Color(0xFFE4E1E9)
 
-val primaryDark = Color(0xFFBBC3FF)
+val primaryDark = Color(0XFFBCC2FF)
 val onPrimaryDark = Color(0xFF232C61)
 val primaryContainerDark = Color(0xFF3A4279)
 val onPrimaryContainerDark = Color(0xFFDFE0FF)
