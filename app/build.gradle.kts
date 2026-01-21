@@ -123,7 +123,6 @@ sentry {
 dependencies {
     implementation(libs.infomaniak.core.auth)
     implementation(libs.infomaniak.core.common)
-    implementation(libs.infomaniak.core.crossapplogin.back)
     implementation(libs.infomaniak.core.crossapplogin.front)
     implementation(libs.infomaniak.core.onboarding)
     implementation(libs.infomaniak.core.network)

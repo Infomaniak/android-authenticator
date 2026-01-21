@@ -22,22 +22,14 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.infomaniak.auth.ui.screen.home.HomeScreen
-import com.infomaniak.auth.ui.screen.onboarding.CrossAppLoginViewModel
 import com.infomaniak.auth.ui.screen.onboarding.OnboardingScreen
-import com.infomaniak.core.crossapplogin.back.ExternalAccount
-import com.infomaniak.core.ui.compose.basics.CallableState
-import com.infomaniak.core.ui.compose.basics.rememberCallableState
 
 fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Home> {
         HomeScreen()
     }
     entry<NavDestination.Onboarding> {
-        // TODO: Will move when auth logic will be ready
-        val loginRequest = rememberCallableState<List<ExternalAccount>>()
-
         OnboardingScreen(
-            loginRequest = loginRequest,
             navigateToHome = {
                 backStack.clear()
                 backStack.add(NavDestination.Home)

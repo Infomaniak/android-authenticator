@@ -26,7 +26,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import io.sentry.protocol.User as SentryUser
 
-// TODO: Add better manager with auth logic when ready. It just the minimum for crossapplogin
+// TODO[ik-auth]: Add better manager with auth logic when ready. It's just the minimum for crossapplogin
+// TODO[CrossAppLogin]: When adding/removing users, call MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
 @Singleton
 class AccountsManager @Inject constructor(
     override val userDatabase: UserDatabase

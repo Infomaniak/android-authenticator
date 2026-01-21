@@ -25,7 +25,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,21 +42,22 @@ import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
-import com.infomaniak.core.ui.compose.basics.CallableState
+import com.infomaniak.core.ui.compose.basics.rememberCallableState
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun OnboardingScreen(
     crossAppLoginViewModel: CrossAppLoginViewModel = viewModel(),
-    loginRequest: CallableState<List<ExternalAccount>>,
     navigateToHome: () -> Unit
 ) {
     val accountsCheckingState by crossAppLoginViewModel.accountsCheckingState.collectAsStateWithLifecycle()
     val skippedIds by crossAppLoginViewModel.skippedAccountIds.collectAsStateWithLifecycle()
 
-    // TODO: Update state with login logic
-    val isLoginButtonLoading by remember { mutableStateOf(false) }
-    val isSignUpButtonLoading by remember { mutableStateOf(false) }
+    // TODO[ik-auth]: Will move when auth logic will be ready
+    val loginRequest = rememberCallableState<List<ExternalAccount>>()
+
+    // TODO[ik-auth]: Update state with login logic
+    val isButtonLoading by remember { mutableStateOf(false) }
 
     val hostActivity = LocalActivity.current as ComponentActivity
     LaunchedEffect(crossAppLoginViewModel) {
@@ -68,11 +68,11 @@ fun OnboardingScreen(
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
         // TODO : Use loginRequest When login logic ready
-        isLoginButtonLoading = { /* loginRequest.isAwaitingCall.not() || */ isLoginButtonLoading },
-        isSignUpButtonLoading = { isSignUpButtonLoading },
+        isLoginButtonLoading = { /* loginRequest.isAwaitingCall.not() || */ isButtonLoading },
+        isSignUpButtonLoading = { isButtonLoading },
         onLoginRequest = { accounts -> loginRequest(accounts) },
         onSaveSkippedAccounts = { crossAppLoginViewModel.skippedAccountIds.value = it },
-        // TODO: Use true login or create account
+        // TODO[ik-auth]: Use true login or create account
         onLogin = navigateToHome,
         onCreateAccount = navigateToHome
     )
@@ -113,7 +113,7 @@ private fun OnboardingScreen(
                 ),
                 onContinueWithSelectedAccounts = { selectedAccounts ->
                     onLoginRequest(selectedAccounts)
-                    // TODO: Remove later when login logic will be ready, it just to navigate to home
+                    // TODO[ik-auth]: Remove later when login logic will be ready, it just to navigate to home
                     onLogin()
                 },
                 onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },

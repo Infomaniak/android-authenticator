@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @HiltAndroidApp
 class MainApplication : Application() {
-    val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
+    private val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
 
     override fun onCreate() {
         super.onCreate()
