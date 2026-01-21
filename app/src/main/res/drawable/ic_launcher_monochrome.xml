@@ -1,20 +1,3 @@
-<!--
-  ~ Infomaniak Authenticator - Android
-  ~ Copyright (C) 2026 Infomaniak Network SA
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -22,24 +5,24 @@
     android:viewportHeight="108">
     <path
         android:fillColor="#000000"
-        android:pathData="M65.88,50.9C65.88,44.97 61.59,40.07 55.97,39.12C54.89,38.94 54,38.07 54,36.98C54,35.89 54.89,34.99 55.98,35.12C63.8,36.1 69.84,42.8 69.84,50.9V55.19C69.84,56.28 68.95,57.17 67.86,57.17C66.76,57.17 65.88,56.28 65.88,55.19V50.9Z" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M48.58,35.95C43.1,37.95 39.03,42.86 38.29,48.86C38.15,49.94 39.05,50.83 40.15,50.83C41.24,50.83 42.11,49.94 42.29,48.86C42.97,44.76 45.74,41.39 49.48,39.85C50.49,39.44 51.16,38.39 50.92,37.32C50.68,36.26 49.61,35.58 48.58,35.95Z" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M42.12,57.09V55.98C42.12,54.89 41.24,54 40.15,54C39.05,54 38.17,54.89 38.17,55.98V57.09C38.17,65.87 45.25,73 54,73C60.85,73 66.68,68.63 68.89,62.52C69.26,61.5 68.58,60.43 67.51,60.19C66.45,59.95 65.4,60.63 64.99,61.64C63.21,65.99 58.95,69.04 54,69.04C47.45,69.04 42.12,63.7 42.12,57.09Z" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M54,41.96C51.2,41.96 48.71,43.26 47.08,45.27C46.4,46.12 46.81,47.33 47.79,47.81C48.77,48.3 49.94,47.85 50.77,47.13C51.64,46.38 52.77,45.92 54,45.92C56.05,45.92 57.82,47.18 58.57,48.98C58.99,49.99 59.84,50.91 60.93,50.91C62.02,50.91 62.93,50.01 62.69,48.94C61.8,44.95 58.25,41.96 54,41.96Z" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M58.95,57.1V55.98C58.95,54.89 59.84,54 60.93,54C62.02,54 62.91,54.89 62.91,55.98V57.1C62.91,61.35 59.94,64.92 55.96,65.82C54.9,66.06 54,65.15 54,64.06C54,62.97 54.92,62.12 55.93,61.69C57.7,60.93 58.95,59.17 58.95,57.1Z" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M49.05,57.1V52.81C49.05,51.72 48.17,50.83 47.07,50.83C45.98,50.83 45.09,51.72 45.09,52.81V57.1C45.09,59.89 46.38,62.39 48.38,64.03C49.23,64.72 50.43,64.31 50.92,63.33C51.41,62.36 50.97,61.18 50.26,60.35C49.51,59.48 49.05,58.34 49.05,57.1Z" />
-    <path
-        android:fillColor="#000000"
         android:fillType="evenOdd"
-        android:pathData="M54,49.25C52.91,49.25 52.02,50.14 52.02,51.23V56.77C52.02,57.86 52.91,58.75 54,58.75C55.1,58.75 55.98,57.86 55.98,56.77V51.23C55.98,50.14 55.1,49.25 54,49.25Z" />
+        android:pathData="M52.03,49.32V58.79H55.98V49.32H52.03Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M65.84,50.97C65.84,44.38 60.53,39.06 54,39.06V35.11C62.73,35.11 69.79,42.22 69.79,50.97V57.21H65.84V50.97Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M50.49,35.5C43.47,37.1 38.21,43.34 38.21,50.9H42.16C42.16,45.24 46.09,40.56 51.37,39.35L50.49,35.5Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M42.16,57.14V54.05H38.21V57.14C38.21,65.89 45.27,73 54,73C61.53,73 67.81,67.72 69.4,60.66L65.55,59.79C64.35,65.1 59.63,69.05 54,69.05C47.47,69.05 42.16,63.73 42.16,57.14Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M54.01,42.06C50.51,42.06 47.5,44.09 46.05,47.01L49.59,48.76C50.4,47.12 52.08,46.01 54.01,46.01C56.72,46.01 58.94,48.22 58.94,50.98H62.89C62.89,46.06 58.92,42.06 54.01,42.06Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M58.94,57.15V54.06H62.89V57.15C62.89,62.06 58.92,66.06 54.01,66.06V62.12C56.72,62.12 58.94,59.9 58.94,57.15Z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M49.07,57.15V50.9H45.13V57.15C45.13,60.64 47.13,63.67 50.05,65.13L51.82,61.6C50.19,60.79 49.07,59.1 49.07,57.15Z" />
 </vector>
