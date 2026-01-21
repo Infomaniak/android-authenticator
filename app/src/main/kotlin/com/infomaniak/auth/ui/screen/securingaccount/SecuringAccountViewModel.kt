@@ -15,22 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.navigation
+package com.infomaniak.auth.ui.screen.securingaccount
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-@Serializable
-sealed interface NavDestination : NavKey {
-    @Serializable
-    data object Home : NavDestination
+@HiltViewModel
+class SecuringAccountViewModel @Inject constructor() : ViewModel() {
 
-    @Serializable
-    data object Onboarding : NavDestination
-
-    @Serializable
-    data object SecuringAccount : NavDestination
-
-    @Serializable
-    data object Ready : NavDestination
 }
