@@ -38,6 +38,7 @@ import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.infomaniakValidated.InfomaniakValidated
+import com.infomaniak.auth.ui.images.illus.personKAuthAuthenticator.PersonKAuthAuthenticator
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -66,7 +67,7 @@ fun SecuringAccountScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            IllustrationWithHalo(AppImages.AppIllus.InfomaniakValidated)
+            IllustrationWithHalo(AppImages.AppIllus.PersonKAuthAuthenticator)
             Text(
                 text = stringResource(R.string.onBoardingSecuringAccount)
             )
