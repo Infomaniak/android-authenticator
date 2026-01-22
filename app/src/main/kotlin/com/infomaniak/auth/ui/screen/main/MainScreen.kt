@@ -28,7 +28,7 @@ import com.infomaniak.auth.ui.navigation.baseEntryProvider
 @Composable
 fun MainScreen() {
     // TODO: will change when back give the result of account status
-    val startDestination = if (true) NavDestination.Onboarding else NavDestination.Home
+    val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Home
 
     val backStack = rememberNavBackStack(startDestination)
 

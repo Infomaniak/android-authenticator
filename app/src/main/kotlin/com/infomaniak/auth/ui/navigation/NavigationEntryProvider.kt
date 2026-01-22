@@ -22,27 +22,27 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.infomaniak.auth.ui.screen.home.HomeScreen
-import com.infomaniak.auth.ui.screen.onboarding.OnboardingScreen
-import com.infomaniak.auth.ui.screen.ready.ReadyScreen
+import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
+import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
 import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 
 fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Home> {
         HomeScreen()
     }
-    entry<NavDestination.Onboarding> {
-        OnboardingScreen(
+    entry<NavDestination.Onboarding.Start> {
+        OnboardingStartScreen(
             onLogin = { backStack.add(NavDestination.SecuringAccount) },
             onCreateAccount = {}
         )
     }
     entry<NavDestination.SecuringAccount> {
         SecuringAccountScreen(
-            onFinish = { backStack.add(NavDestination.Ready) }
+            onFinish = { backStack.add(NavDestination.Onboarding.Complete) }
         )
     }
-    entry<NavDestination.Ready> {
-        ReadyScreen(
+    entry<NavDestination.Onboarding.Complete> {
+        OnboardingCompleteScreen(
             navigateToHome = {
                 backStack.clear()
                 backStack.add(NavDestination.Home)

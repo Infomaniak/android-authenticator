@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.onboarding
+package com.infomaniak.auth.ui.screen.onboarding.start
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
@@ -51,7 +51,7 @@ import com.infomaniak.core.ui.compose.basics.rememberCallableState
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun OnboardingScreen(
+fun OnboardingStartScreen(
     crossAppLoginViewModel: CrossAppLoginViewModel = viewModel(),
     onLogin: () -> Unit,
     onCreateAccount: () -> Unit
@@ -70,7 +70,7 @@ fun OnboardingScreen(
         crossAppLoginViewModel.activateUpdates(hostActivity)
     }
 
-    OnboardingScreen(
+    OnboardingStartScreen(
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
         // TODO : Use loginRequest When login logic ready
@@ -85,7 +85,7 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun OnboardingScreen(
+private fun OnboardingStartScreen(
     accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
     isLoginButtonLoading: () -> Boolean,
@@ -141,11 +141,11 @@ private fun OnboardingScreen(
 
 @PreviewSmallWindow
 @Composable
-private fun OnboardingScreenPreview(
+private fun OnboardingStartScreenPreview(
     @PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>
 ) {
     AuthenticatorTheme {
-        OnboardingScreen(
+        OnboardingStartScreen(
             accountsCheckingState = {
                 AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
             },
