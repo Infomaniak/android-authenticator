@@ -21,7 +21,10 @@ class LegacySecret internal constructor()
 
 class LegacyOtp internal constructor()
 
-class PrivateKey internal constructor()
+sealed interface PrivateKey {
+    class InMemory internal constructor() : PrivateKey
+    class InHardware internal constructor() : PrivateKey
+}
 
 class PublicKey internal constructor()
 

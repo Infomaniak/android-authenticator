@@ -41,6 +41,10 @@ class KeysManagerImpl : KeysManager {
         TODO()
     }
 
+    //TODO[android-biometrics]: See how to access stuff via https://developer.android.com/identity/sign-in/biometric-auth
+    //TODO[android-keystore]: See https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec
+    //TODO[android-keystore]: See the doc of the KeyInfo class
+
     override suspend fun generateSecurelyStoredKeyPairForSigning(
         securityParameters: KeysManager.SecurityParameters
     ) {

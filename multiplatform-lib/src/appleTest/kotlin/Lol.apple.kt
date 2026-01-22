@@ -1,3 +1,4 @@
+import com.infomaniak.auth.lib.generateKeyPair
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /*
