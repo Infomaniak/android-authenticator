@@ -15,19 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.navigation
+package com.infomaniak.auth.ui.theme
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.compose.ui.unit.dp
 
-@Serializable
-sealed interface NavDestination : NavKey {
-    @Serializable
-    data object Home : NavDestination
-
-    @Serializable
-    data object Onboarding : NavDestination
-
-    @Serializable
-    data object Ready : NavDestination
+object AppDimens {
+    val LargeButtonHeight = 48.dp
+    val LargeButtonRadius = 16.dp
 }

@@ -17,4 +17,5 @@
   -->
 <resources>
     <string name="appName" translatable="false">Authenticator</string>
+    <string name="appCompleteName" translatable="false">Infomaniak Authenticator</string>
 </resources>

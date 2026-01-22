@@ -15,19 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.navigation
+package com.infomaniak.auth.ui.components
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
-@Serializable
-sealed interface NavDestination : NavKey {
-    @Serializable
-    data object Home : NavDestination
-
-    @Serializable
-    data object Onboarding : NavDestination
-
-    @Serializable
-    data object Ready : NavDestination
+/**
+ * Empty element for SpaceBetween logic to align another element
+ */
+@Composable
+fun EmptyElement() {
+    Spacer(modifier = Modifier)
 }

@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPerson
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -86,17 +87,7 @@ private fun Page.OnboardingPageIllustration(pagerState: PagerState, index: Int) 
 private fun RenderIllustration(resource: IllustrationResource, isCurrentPageVisible: () -> Boolean) {
     when (resource) {
         is IllustrationResource.Vector -> {
-            Image(
-                modifier = Modifier
-                    .size(350.dp)
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(AuthenticatorTheme.colors.illustrationBackgroundGradient, Color.Transparent),
-                        )
-                    ),
-                imageVector = resource.themedImage.image(),
-                contentDescription = null,
-            )
+            IllustrationWithHalo(resource.themedImage)
         }
         is IllustrationResource.Animated -> {
             ThemedDotLottie(
