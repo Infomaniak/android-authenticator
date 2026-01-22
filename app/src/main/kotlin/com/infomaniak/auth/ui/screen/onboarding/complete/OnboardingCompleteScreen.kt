@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.ready
+package com.infomaniak.auth.ui.screen.onboarding.complete
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +40,7 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyBu
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun ReadyScreen(navigateToHome: () -> Unit) {
+fun OnboardingCompleteScreen(navigateToHome: () -> Unit) {
     BottomStickyButtonScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
@@ -70,8 +70,8 @@ fun ReadyScreen(navigateToHome: () -> Unit) {
 
 @PreviewSmallWindow
 @Composable
-fun ReadyScreenPreview() {
+fun OnboardingCompleteScreenPreview() {
     AuthenticatorTheme {
-        ReadyScreen(navigateToHome = {})
+        OnboardingCompleteScreen(navigateToHome = {})
     }
 }
