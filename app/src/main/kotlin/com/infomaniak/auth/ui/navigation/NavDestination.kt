@@ -30,7 +30,7 @@ sealed interface NavDestination : NavKey {
         data object Start : Onboarding
 
         @Serializable
-        data object Complete : NavDestination
+        data object Complete : Onboarding
     }
 
     @Serializable
