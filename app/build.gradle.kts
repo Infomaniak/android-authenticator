@@ -3,9 +3,11 @@ import java.util.Properties
 
 plugins {
     alias(core.plugins.android.application)
+    alias(core.plugins.compose.compiler)
+    alias(core.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.android)
     alias(core.plugins.kotlin.serialization)
-    alias(core.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
     alias(core.plugins.sentry.plugin)
 }
 
@@ -30,6 +32,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
+
+        buildConfigField("String", "CLIENT_ID", "\"TODO: SET PROPERTIY WHEN READY\"")
     }
 
     buildTypes {
@@ -117,8 +121,13 @@ sentry {
 }
 
 dependencies {
+    implementation(libs.infomaniak.core.auth)
+    implementation(libs.infomaniak.core.common)
+    implementation(libs.infomaniak.core.crossapplogin.front)
     implementation(libs.infomaniak.core.onboarding)
+    implementation(libs.infomaniak.core.network)
     implementation(libs.infomaniak.core.sentry)
+    implementation(libs.infomaniak.core.ui.compose.basics)
     implementation(libs.infomaniak.core.ui.compose.preview)
     implementation(libs.infomaniak.core.ui.compose.theme)
 
@@ -128,6 +137,17 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     implementation(core.kotlinx.serialization.json)
+
+    implementation(core.okhttp)
+
+    // Hilt
+    implementation(core.hilt.android)
+    implementation(core.hilt.work)
+    ksp(core.hilt.compiler)
+    ksp(core.hilt.androidx.compiler)
+    // Workaround for Hilt + Kotlin 2.3.0 metadata compatibility
+    // https://github.com/google/dagger/issues/5001
+    annotationProcessor("org.jetbrains.kotlin:kotlin-metadata-jvm:2.3.0")
 
     // Compose
     implementation(platform(core.compose.bom))

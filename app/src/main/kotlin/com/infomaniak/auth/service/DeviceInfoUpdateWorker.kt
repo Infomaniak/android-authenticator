@@ -15,28 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.service
 
-import android.os.Build.VERSION.SDK_INT
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.infomaniak.auth.ui.screen.main.MainScreen
-import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import dagger.hilt.android.AndroidEntryPoint
+import android.content.Context
+import androidx.work.WorkerParameters
+import com.infomaniak.auth.manager.AccountsManager
+import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.AbstractDeviceInfoUpdateWorker
+import okhttp3.OkHttpClient
+import javax.inject.Inject
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
-
-        setContent {
-            AuthenticatorTheme {
-                MainScreen()
-            }
-        }
+class DeviceInfoUpdateWorker @Inject constructor(
+    appContext: Context,
+    params: WorkerParameters,
+    private val accountsManager: AccountsManager
+) : AbstractDeviceInfoUpdateWorker(appContext, params) {
+    override suspend fun getConnectedHttpClient(userId: Int): OkHttpClient {
+        return accountsManager.getHttpClient(userId = userId)
     }
 }

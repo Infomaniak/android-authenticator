@@ -11,9 +11,12 @@ buildscript {
 plugins {
     alias(core.plugins.android.application) apply false
     alias(core.plugins.android.kmp.library) apply false
+    alias(core.plugins.android.library) apply false
+    alias(core.plugins.compose.compiler) apply false
+    alias(core.plugins.dagger.hilt) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(core.plugins.kotlin.serialization) apply false
-    alias(core.plugins.compose.compiler) apply false
+    alias(libs.plugins.ksp) apply false
     alias(core.plugins.sentry.plugin) apply false
 }

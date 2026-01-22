@@ -18,12 +18,41 @@
 package com.infomaniak.auth
 
 import android.app.Application
+import com.infomaniak.auth.service.DeviceInfoUpdateWorker
+import com.infomaniak.core.common.AssociatedUserDataCleanable
+import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfoUpdateManager
+import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.sentry.SentryConfig.configureSentry
+import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@HiltAndroidApp
 class MainApplication : Application() {
+    private val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
+
     override fun onCreate() {
         super.onCreate()
 
+        NetworkConfiguration.init(
+            appId = BuildConfig.APPLICATION_ID,
+            appVersionName = BuildConfig.VERSION_NAME,
+            appVersionCode = BuildConfig.VERSION_CODE,
+        )
+
         configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = true)
+
+        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
+        applicationScope.launch {
+            DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
+            protected set
     }
 }

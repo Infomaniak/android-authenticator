@@ -17,22 +17,78 @@
  */
 package com.infomaniak.auth.ui.screen.onboarding
 
-import androidx.compose.foundation.layout.Box
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
+import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
+import com.infomaniak.core.crossapplogin.back.ExternalAccount
+import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomContent
+import com.infomaniak.core.crossapplogin.front.components.NoCrossAppLoginAccountsContent
+import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
+import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.onboarding.OnboardingScaffold
+import com.infomaniak.core.onboarding.components.OnboardingComponents
+import com.infomaniak.core.ui.compose.basics.rememberCallableState
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun OnboardingScreen(navigateToHome: () -> Unit) {
+fun OnboardingScreen(
+    crossAppLoginViewModel: CrossAppLoginViewModel = viewModel(),
+    navigateToHome: () -> Unit
+) {
+    val accountsCheckingState by crossAppLoginViewModel.accountsCheckingState.collectAsStateWithLifecycle()
+    val skippedIds by crossAppLoginViewModel.skippedAccountIds.collectAsStateWithLifecycle()
+
+    // TODO[ik-auth]: Will move when auth logic will be ready
+    val loginRequest = rememberCallableState<List<ExternalAccount>>()
+
+    // TODO[ik-auth]: Update state with login logic
+    val isButtonLoading by remember { mutableStateOf(false) }
+
+    val hostActivity = LocalActivity.current as ComponentActivity
+    LaunchedEffect(crossAppLoginViewModel) {
+        crossAppLoginViewModel.activateUpdates(hostActivity)
+    }
+
+    OnboardingScreen(
+        accountsCheckingState = { accountsCheckingState },
+        skippedIds = { skippedIds },
+        // TODO : Use loginRequest When login logic ready
+        isLoginButtonLoading = { /* loginRequest.isAwaitingCall.not() || */ isButtonLoading },
+        isSignUpButtonLoading = { isButtonLoading },
+        onLoginRequest = { accounts -> loginRequest(accounts) },
+        onSaveSkippedAccounts = { crossAppLoginViewModel.skippedAccountIds.value = it },
+        // TODO[ik-auth]: Use true login or create account
+        onLogin = navigateToHome,
+        onCreateAccount = navigateToHome
+    )
+}
+
+@Composable
+private fun OnboardingScreen(
+    accountsCheckingState: () -> AccountsCheckingState,
+    skippedIds: () -> Set<Long>,
+    isLoginButtonLoading: () -> Boolean,
+    isSignUpButtonLoading: () -> Boolean,
+    onLoginRequest: (accounts: List<ExternalAccount>) -> Unit,
+    onSaveSkippedAccounts: (Set<Long>) -> Unit,
+    onCreateAccount: () -> Unit,
+    onLogin: () -> Unit,
+) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
 
     OnboardingScaffold(
@@ -41,11 +97,33 @@ fun OnboardingScreen(navigateToHome: () -> Unit) {
             page.toOnboardingPage(pagerState, index)
         },
         bottomContent = { paddingValues ->
-            BottomContent(
+            OnboardingComponents.CrossLoginBottomContent(
                 modifier = Modifier
                     .padding(paddingValues)
                     .consumeWindowInsets(paddingValues),
-                navigateToHome = navigateToHome
+                pagerState = pagerState,
+                accountsCheckingState = accountsCheckingState,
+                skippedIds = skippedIds,
+                isLoginButtonLoading = isLoginButtonLoading,
+                customization = CrossLoginDefaults.customize(
+                    colors = CrossLoginDefaults.colors(
+                        titleColor = MaterialTheme.colorScheme.primary,
+                        descriptionColor = MaterialTheme.colorScheme.secondary
+                    ),
+                ),
+                onContinueWithSelectedAccounts = { selectedAccounts ->
+                    onLoginRequest(selectedAccounts)
+                    // TODO[ik-auth]: Remove later when login logic will be ready, it just to navigate to home
+                    onLogin()
+                },
+                onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },
+                onSaveSkippedAccounts = onSaveSkippedAccounts,
+                noCrossAppLoginAccountsContent = NoCrossAppLoginAccountsContent.accountRequired(
+                    onLogin = onLogin,
+                    onCreateAccount = onCreateAccount,
+                    isLoginButtonLoading = isLoginButtonLoading,
+                    isSignUpButtonLoading = isSignUpButtonLoading,
+                )
             )
         }
     )
@@ -53,24 +131,21 @@ fun OnboardingScreen(navigateToHome: () -> Unit) {
 
 @PreviewSmallWindow
 @Composable
-private fun OnboardingScreenPreview() {
-    AuthenticatorTheme {
-        OnboardingScreen(navigateToHome = {})
-    }
-}
-
-@Composable
-private fun BottomContent(
-    modifier: Modifier = Modifier,
-    navigateToHome: () -> Unit
+private fun OnboardingScreenPreview(
+    @PreviewParameter(AccountsPreviewParameter::class) accounts: List<ExternalAccount>
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Button(onClick = navigateToHome) {
-            Text("Go Home")
-        }
+    AuthenticatorTheme {
+        OnboardingScreen(
+            accountsCheckingState = {
+                AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
+            },
+            skippedIds = { emptySet() },
+            isLoginButtonLoading = { false },
+            isSignUpButtonLoading = { false },
+            onLoginRequest = {},
+            onSaveSkippedAccounts = {},
+            onLogin = {},
+            onCreateAccount = {},
+        )
     }
 }
