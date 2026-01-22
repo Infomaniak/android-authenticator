@@ -44,7 +44,7 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
     entry<NavDestination.Ready> {
         ReadyScreen(
             navigateToHome = {
-                //backStack.clear()
+                backStack.clear()
                 backStack.add(NavDestination.Home)
             }
         )
