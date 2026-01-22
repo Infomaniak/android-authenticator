@@ -23,6 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
@@ -32,7 +34,7 @@ fun InfomaniakAuthenticatorTopAppBar() {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Infomaniak Authenticator",
+                text = stringResource(R.string.appCompleteName),
                 style = MaterialTheme.typography.headlineSmall
             )
         }

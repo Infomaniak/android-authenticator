@@ -46,11 +46,7 @@ fun ReadyScreen(navigateToHome: () -> Unit) {
         },
         bottomButton = { modifier ->
             Column {
-                LargeButton(
-                    modifier = modifier,
-                    title = stringResource(R.string.continueButton),
-                    onClick = navigateToHome
-                )
+                LargeButton(modifier = modifier, title = stringResource(R.string.continueButton), onClick = navigateToHome)
             }
         }
     ) {
@@ -75,6 +71,6 @@ fun ReadyScreen(navigateToHome: () -> Unit) {
 @Composable
 fun ReadyScreenPreview() {
     AuthenticatorTheme {
-        ReadyScreen(navigateToHome = { })
+        ReadyScreen(navigateToHome = {})
     }
 }

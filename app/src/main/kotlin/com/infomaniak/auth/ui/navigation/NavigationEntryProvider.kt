@@ -32,7 +32,7 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
     entry<NavDestination.Onboarding> {
         OnboardingScreen(
             onLogin = { backStack.add(NavDestination.Ready) },
-            onCreateAccount = { }
+            onCreateAccount = {}
         )
     }
     entry<NavDestination.Ready> {

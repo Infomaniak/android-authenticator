@@ -65,14 +65,9 @@ fun LargeButton(
         enabled = enabled,
         showIndeterminateProgress = showIndeterminateProgress,
         progress = progress,
-        contentPadding = PaddingValues(horizontal = Margin.Medium),
     ) {
         imageVector?.let {
-            Icon(
-                modifier = Modifier.size(Dimens.smallIconSize),
-                imageVector = it,
-                contentDescription = null
-            )
+            Icon(modifier = Modifier.size(Dimens.smallIconSize), imageVector = it, contentDescription = null)
             Spacer(Modifier.width(Margin.Mini))
         }
         Text(text = title, style = Typography.bodyMedium)
@@ -102,11 +97,7 @@ enum class ButtonStyle(val colors: @Composable () -> ButtonColors) {
 }
 
 @Preview(name = "Light", widthDp = 800)
-@Preview(
-    name = "Dark",
-    widthDp = 800,
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
-)
+@Preview(name = "Dark", widthDp = 800, uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL)
 @Composable
 private fun LargeButtonPreview() {
     AuthenticatorTheme {

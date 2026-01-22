@@ -41,7 +41,6 @@ fun IllustrationWithHalo(
 ) {
     Image(
         modifier = modifier
-            .size(350.dp)
             .background(
                 Brush.radialGradient(
                     colors = listOf(AuthenticatorTheme.colors.illustrationBackgroundGradient, Color.Transparent),
