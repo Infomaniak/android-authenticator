@@ -38,8 +38,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.theme.AppDimens
+import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.auth.ui.theme.CustomShapes
 import com.infomaniak.core.ui.compose.basicbutton.BasicButton
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.basics.Typography
@@ -58,8 +59,8 @@ fun LargeButton(
 ) {
     BasicButton(
         onClick = onClick,
-        modifier = modifier.height(56.dp),
-        shape = CustomShapes.ROUNDED,
+        modifier = modifier.height(AppDimens.largeButtonHeight),
+        shape = AppShapes.largeButtonShape,
         colors = style.colors(),
         enabled = enabled,
         showIndeterminateProgress = showIndeterminateProgress,

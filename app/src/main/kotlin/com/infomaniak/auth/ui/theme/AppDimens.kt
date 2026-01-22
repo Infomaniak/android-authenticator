@@ -17,15 +17,9 @@
  */
 package com.infomaniak.auth.ui.theme
 
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
-object CustomShapes {
-    val NONE = RoundedCornerShape(0)
-    val ROUNDED = CircleShape
-    val EXTRA_SMALL = RoundedCornerShape(4.dp)
-    val SMALL = RoundedCornerShape(8.dp)
-    val MEDIUM = RoundedCornerShape(16.dp)
-    val LARGE = RoundedCornerShape(24.dp)
+object AppDimens {
+    val largeButtonHeight = 48.dp
+    val largeButtonRadius = 16.dp
 }

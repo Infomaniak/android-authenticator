@@ -29,9 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.infomaniak.auth.ui.theme.AppDimens
+import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
@@ -42,6 +46,7 @@ import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
+import com.infomaniak.core.ui.compose.basics.ButtonStyle
 import com.infomaniak.core.ui.compose.basics.rememberCallableState
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
@@ -111,6 +116,10 @@ private fun OnboardingScreen(
                         titleColor = MaterialTheme.colorScheme.primary,
                         descriptionColor = MaterialTheme.colorScheme.secondary
                     ),
+                    buttonStyle = CrossLoginDefaults.buttonType(object : ButtonStyle {
+                        override val height: Dp = AppDimens.largeButtonHeight
+                        override val shape: Shape = AppShapes.largeButtonShape
+                    })
                 ),
                 onContinueWithSelectedAccounts = { selectedAccounts ->
                     onLoginRequest(selectedAccounts)
