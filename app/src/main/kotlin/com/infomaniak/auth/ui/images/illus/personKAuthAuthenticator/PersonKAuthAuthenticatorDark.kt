@@ -877,7 +877,7 @@ private var _personKAuthAuthenticatorDark: ImageVector? = null
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIllus.PersonKAuthAuthenticatorLight,
+            imageVector = AppIllus.PersonKAuthAuthenticatorDark,
             contentDescription = null,
             modifier = Modifier.size(AppImages.previewSize),
         )

@@ -68,9 +68,7 @@ fun SecuringAccountScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             IllustrationWithHalo(AppImages.AppIllus.PersonKAuthAuthenticator)
-            Text(
-                text = stringResource(R.string.onBoardingSecuringAccount)
-            )
+            Text(text = stringResource(R.string.onBoardingSecuringAccount))
             Spacer(modifier = Modifier.padding(Margin.Medium))
             LinearProgressIndicator()
         }
