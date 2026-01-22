@@ -19,7 +19,6 @@ package com.infomaniak.auth.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -59,8 +58,8 @@ fun LargeButton(
 ) {
     BasicButton(
         onClick = onClick,
-        modifier = modifier.height(AppDimens.largeButtonHeight),
-        shape = AppShapes.largeButtonShape,
+        modifier = modifier.height(AppDimens.LargeButtonHeight),
+        shape = AppShapes.LargeButtonShape,
         colors = style.colors(),
         enabled = enabled,
         showIndeterminateProgress = showIndeterminateProgress,

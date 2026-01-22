@@ -117,8 +117,8 @@ private fun OnboardingScreen(
                         descriptionColor = MaterialTheme.colorScheme.secondary
                     ),
                     buttonStyle = CrossLoginDefaults.buttonType(object : ButtonStyle {
-                        override val height: Dp = AppDimens.largeButtonHeight
-                        override val shape: Shape = AppShapes.largeButtonShape
+                        override val height: Dp = AppDimens.LargeButtonHeight
+                        override val shape: Shape = AppShapes.LargeButtonShape
                     })
                 ),
                 onContinueWithSelectedAccounts = { selectedAccounts ->

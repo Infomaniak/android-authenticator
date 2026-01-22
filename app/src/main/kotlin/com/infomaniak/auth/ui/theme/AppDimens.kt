@@ -20,6 +20,6 @@ package com.infomaniak.auth.ui.theme
 import androidx.compose.ui.unit.dp
 
 object AppDimens {
-    val largeButtonHeight = 48.dp
-    val largeButtonRadius = 16.dp
+    val LargeButtonHeight = 48.dp
+    val LargeButtonRadius = 16.dp
 }

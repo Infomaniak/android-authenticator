@@ -20,5 +20,5 @@ package com.infomaniak.auth.ui.theme
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 object AppShapes {
-    val largeButtonShape = RoundedCornerShape(AppDimens.largeButtonRadius)
+    val LargeButtonShape = RoundedCornerShape(AppDimens.LargeButtonRadius)
 }
