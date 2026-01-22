@@ -20,33 +20,40 @@ package com.infomaniak.auth.ui.screen.onboarding
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
-import com.infomaniak.auth.ui.images.illus.blueBlur.BlueBlur
 import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPerson
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.onboarding.OnboardingPage
+import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents.DefaultTitleAndDescription
 import com.infomaniak.core.onboarding.components.OnboardingComponents.ThemedDotLottie
 import com.infomaniak.core.onboarding.models.OnboardingLottieSource
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 internal enum class Page(
-    val background: IllustrationResource,
     val illustration: IllustrationResource,
     @StringRes val titleRes: Int,
     @StringRes val descriptionRes: Int,
 ) {
     Login(
-        background = IllustrationResource.Vector(AppIllus.BlueBlur),
         illustration = IllustrationResource.Vector(AppIllus.ShieldPerson),
         titleRes = R.string.onBoardingLoginTitle,
         descriptionRes = R.string.onBoardingLoginDescription
@@ -71,7 +78,6 @@ internal fun Page.toOnboardingPage(pagerState: PagerState, index: Int) = Onboard
 private fun Page.OnboardingPageIllustration(pagerState: PagerState, index: Int) {
     Box {
         val isCurrentPageVisible = { pagerState.currentPage == index }
-        RenderIllustration(background, isCurrentPageVisible)
         RenderIllustration(illustration, isCurrentPageVisible)
     }
 }
@@ -81,7 +87,13 @@ private fun RenderIllustration(resource: IllustrationResource, isCurrentPageVisi
     when (resource) {
         is IllustrationResource.Vector -> {
             Image(
-                modifier = Modifier.size(350.dp),
+                modifier = Modifier
+                    .size(350.dp)
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(AuthenticatorTheme.colors.illustrationBackgroundGradient, Color.Transparent),
+                        )
+                    ),
                 imageVector = resource.themedImage.image(),
                 contentDescription = null,
             )
@@ -103,4 +115,28 @@ internal sealed class IllustrationResource {
         val themeIdLight: String? = null,
         val themeIdDark: String? = null,
     ) : IllustrationResource()
+}
+
+@PreviewSmallWindow
+@Composable
+private fun OnboardingPagePreview() {
+    val pagerState = rememberPagerState(pageCount = { 1 })
+    val page = Page.Login.toOnboardingPage(pagerState = pagerState, index = 0)
+
+    AuthenticatorTheme {
+        OnboardingScaffold(
+            pagerState = pagerState,
+            onboardingPages = listOf(page),
+            bottomContent = {
+                Box(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                        .background(Color.LightGray)
+                ) {
+                    Text("Bottom content")
+                }
+            },
+        )
+    }
 }

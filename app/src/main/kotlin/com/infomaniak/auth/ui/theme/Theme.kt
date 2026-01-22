@@ -3,6 +3,7 @@ package com.infomaniak.auth.ui.theme
 import android.app.Activity
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -10,13 +11,16 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 
-private val lightScheme = lightColorScheme(
+// Never access it directly outside of the theme setup
+val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
     primaryContainer = primaryContainerLight,
@@ -92,6 +96,8 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
+val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
+
 @Composable
 fun AuthenticatorTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -119,7 +125,10 @@ fun AuthenticatorTheme(
         }
     }
 
+    val customColors = if (isDarkTheme) darkCustomScheme else lightCustomScheme
+
     CompositionLocalProvider(
+        LocalCustomColorScheme provides customColors,
         LocalIsThemeDarkMode provides isDarkTheme
     ) {
         MaterialTheme(
@@ -129,3 +138,11 @@ fun AuthenticatorTheme(
     }
 }
 
+object AuthenticatorTheme {
+    val colors: CustomColorScheme
+        @Composable
+        get() = LocalCustomColorScheme.current
+    val materialColors: ColorScheme
+        @Composable
+        get() = MaterialTheme.colorScheme
+}
