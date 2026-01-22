@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.infomaniak.auth.R
@@ -37,7 +38,11 @@ fun InfomaniakAuthenticatorTopAppBar() {
                 text = stringResource(R.string.appCompleteName),
                 style = MaterialTheme.typography.headlineSmall
             )
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
+        )
     )
 }
 
