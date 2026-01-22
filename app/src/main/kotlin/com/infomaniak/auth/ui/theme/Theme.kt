@@ -96,8 +96,7 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> =
-    staticCompositionLocalOf { CustomColorScheme() }
+val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
 
 @Composable
 fun AuthenticatorTheme(
