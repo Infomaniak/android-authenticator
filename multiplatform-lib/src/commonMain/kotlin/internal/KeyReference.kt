@@ -17,19 +17,21 @@
  */
 package com.infomaniak.auth.lib.internal
 
-internal sealed interface KeyKind {
+internal sealed interface KeyReference {
 
-    sealed interface GuardedBy : KeyKind {
-        sealed interface Biometrics : GuardedBy {
-            data object Current : Biometrics
-            data object Any : Biometrics
+    sealed interface Replaceable : KeyReference
+
+    sealed interface SensitiveOperations : KeyReference {
+        sealed interface BiometricsGuarded : SensitiveOperations, Replaceable {
+            data object CurrentOnly : BiometricsGuarded
+            data object CurrentAndFuture : BiometricsGuarded
         }
 
-        data object DevicePasscode : GuardedBy
-        data object UserAction : GuardedBy
+        data object DevicePasscodeGuarded : SensitiveOperations, Replaceable
+        data object UserActionGuarded : SensitiveOperations
     }
 
-    data object LessSensitiveOperations : KeyKind
+    data object LessSensitiveOperations : KeyReference
 
-    data object ActivationFromBackup : KeyKind
+    data object ActivationFromBackup : KeyReference
 }
