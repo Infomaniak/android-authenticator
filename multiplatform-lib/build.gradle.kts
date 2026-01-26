@@ -3,6 +3,7 @@ import com.android.build.api.dsl.androidLibrary
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(core.plugins.android.kmp.library)
+    alias(core.plugins.kotlin.serialization)
 }
 
 val androidCompileSdk: Int by rootProject.extra
@@ -27,6 +28,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(core.kotlinx.coroutines.core)
+                implementation(core.kotlinx.serialization.json)
             }
         }
         androidMain {
