@@ -21,5 +21,6 @@ internal interface AuthenticatorBackend {
 
     suspend fun activateAppForUser(payload: ActivationPayload)
 
-    suspend fun rotateKeys()
+    //TODO[ik-auth-back]: Support authorization with the best available key
+    suspend fun rotateKeys(payload: KeyRotationPayload)
 }

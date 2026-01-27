@@ -22,10 +22,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class KeyRotationPayload(
     val rotationReason: Reason,
-    val targetKey: KeyReference.Replaceable,
-    //TODO[ik-auth-back]: Rework and finish this.
-    val obsoleteKeys: List<String>,
+    val replacements: Map<KeyReference.Replaceable, String?>,
 ) {
+
     @Serializable
     enum class Reason {
         NewBiometricsEnrollment,
