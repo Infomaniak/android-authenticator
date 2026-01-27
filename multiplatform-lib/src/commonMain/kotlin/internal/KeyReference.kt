@@ -17,6 +17,10 @@
  */
 package com.infomaniak.auth.lib.internal
 
+import kotlinx.serialization.Serializable
+
+@Serializable
+//TODO[ik-auth-back]: Check if serialization works as-is, or if we need to add the annotation on all sub-declarations.
 internal sealed interface KeyReference {
 
     sealed interface Replaceable : KeyReference
