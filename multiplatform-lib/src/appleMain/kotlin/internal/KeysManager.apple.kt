@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.internal
 
 import cnames.structs.__SecKey
+import com.infomaniak.auth.lib.PublicKey
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.size
@@ -52,34 +53,11 @@ import platform.Security.kSecPrivateKeyAttrs
 import kotlin.test.assertNotEquals
 
 class KeysManagerImpl : KeysManager {
-    override suspend fun supportsTrustedExecutionEnvironment(): Boolean {
+
+    override suspend fun generateNewKeys() {
+
         TODO()
     }
-
-    override suspend fun hasEnrolledBiometrics(): Boolean {
-        TODO()
-    }
-
-    override suspend fun generateSecurelyStoredKeyPairForSigning(securityParameters: KeysManager.SecurityParameters) {
-        TODO()
-    }
-
-    override suspend fun updateSecurityParameters(newParameters: KeysManager.SecurityParameters) {
-        TODO()
-    }
-
-    override suspend fun createAndStoreMigrationKeys() {
-        TODO()
-    }
-
-    override suspend fun getPublicKey(): PublicKey {
-        TODO()
-    }
-
-    override suspend fun getMostRecentMigrationPublicKey(): PublicKey {
-        TODO()
-    }
-
     //TODO[iOS-KeyChain]: Find keys with https://developer.apple.com/documentation/security/secitemcopymatching(_:_:)?language=objc
     //TODO[iOS-Secure-Enclave]: https://developer.apple.com/documentation/security/protecting-keys-with-the-secure-enclave?language=objc
 
@@ -93,7 +71,6 @@ class KeysManagerImpl : KeysManager {
  */
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 fun generateKeyPair(alias: ByteArray): CPointer<__SecKey>? = memScoped {
-    // Convert the alias ByteArray to a CPointer to UByte for the key tag
 
     // Create a CFDictionary with the key generation attributes.
     // This is equivalent to the KeyGenParameterSpec in Android.
