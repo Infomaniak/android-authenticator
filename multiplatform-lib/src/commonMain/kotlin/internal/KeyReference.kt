@@ -31,7 +31,7 @@ internal sealed interface KeyReference {
         data object UserActionGuarded : SensitiveOperations
     }
 
-    data object LessSensitiveOperations : KeyReference
+    data object BasicOperations : KeyReference
 
     data object ActivationFromBackup : KeyReference
 }

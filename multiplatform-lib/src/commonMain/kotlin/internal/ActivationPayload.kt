@@ -25,16 +25,21 @@ internal data class ActivationPayload(
 ) {
     @Serializable
     data class PublicKeys(
-        val biometricsGuarded: BiometricsGuardedKeys?,
-        val devicePasscodeGuarded: String?,
-        val userGuarded: String,
-        val lessSensitiveOperations: String,
+        val sensitiveOperations: SensitiveOperations,
+        val basicOperations: String,
         val backup: String,
     ) {
         @Serializable
-        data class BiometricsGuardedKeys(
-            val current: String,
-            val any: String,
-        )
+        data class SensitiveOperations(
+            val biometricsGuarded: BiometricsGuarded?,
+            val devicePasscodeGuarded: String?,
+            val userGuarded: String,
+        ) {
+            @Serializable
+            data class BiometricsGuarded(
+                val currentOnly: String,
+                val currentAndFuture: String,
+            )
+        }
     }
 }
