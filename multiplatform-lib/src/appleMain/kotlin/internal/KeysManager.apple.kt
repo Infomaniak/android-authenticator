@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalForeignApi::class)
+
 package com.infomaniak.auth.lib.internal
 
 import cnames.structs.__SecKey
@@ -55,73 +57,39 @@ import kotlin.test.assertNotEquals
 class KeysManagerImpl : KeysManager {
 
     override suspend fun generateNewKeys() {
-
+        val keyPurposes = KeyPurposes(
+            signing = true,
+            verifying = true,
+        )
+        generateKey(whichOne = KeyReference.BasicOperations, purposes = keyPurposes)
+        generateKey(whichOne = KeyReference.BasicOperations, purposes = keyPurposes)
         TODO()
     }
+
     //TODO[iOS-KeyChain]: Find keys with https://developer.apple.com/documentation/security/secitemcopymatching(_:_:)?language=objc
     //TODO[iOS-Secure-Enclave]: https://developer.apple.com/documentation/security/protecting-keys-with-the-secure-enclave?language=objc
 
 }
 
-/**
- * Generates an EC key pair in the iOS Keychain for signing and verification.
- *
- * @param alias A unique tag (as bytes) to identify the key pair.
- * @return The private key's reference, or null on failure.
- */
-@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
-fun generateKeyPair(alias: ByteArray): CPointer<__SecKey>? = memScoped {
-
-    // Create a CFDictionary with the key generation attributes.
-    // This is equivalent to the KeyGenParameterSpec in Android.
-
-    // See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
-    val attributes = buildCFDictionary {
-        // See all key gen attributes here: https://developer.apple.com/documentation/security/key-generation-attributes
-        this[kSecAttrType] = kSecAttrKeyTypeECSECPrimeRandom
-        this[kSecAttrKeySizeInBits] = 256
-        this[kSecPrivateKeyAttrs] = buildCFDictionary {
-        //     /*
-        //      * You also specify the kSecAttrApplicationTag attribute with a unique NSData value
-        //      * so that you can find and retrieve it from the keychain later.
-        //      * The tag data is constructed from a string, using reverse DNS notation,
-        //      * though any unique tag will do.
-        //      */
-            this[kSecAttrApplicationTag] = "tag".toNsData()
+@Throws(Exception::class)
+private fun generateKey(whichOne: KeyReference.HardwareSecured, purposes: KeyPurposes): SecKeyRef {
+    val result = generatePrivateKeyInTheSecureEnclave(
+        tag = whichOne.toKeyTagOrAlias(),
+        purposes = purposes,
+        accessibility = accessibilityFor(whichOne)
+    )
+    when (result) {
+        is Xor.First -> return result.value
+        is Xor.Second -> {
+            val errorMessage = result.value.let { it.description ?: it.localizedDescription }
+            throw Exception("Error generating $whichOne key: $errorMessage")
         }
-        this[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-        this[kSecAttrCanSign] = true
-        this[kSecAttrCanDerive] = true
-        this[kSecAttrCanVerify] = true
     }
+}
 
-    println("attributes.size = ${attributes.size}")
-
-
-    // Call the native function to generate the key pair
-    // val private: SecAccessControlRef? = SecAccessControlCreateWithFlags(
-    //     allocator = kCFAllocatorDefault,
-    //     protection = kSecAttrAccessibleAlways,
-    //     flags = kSecAccessControlPrivateKeyUsage,
-    //     error = cValuesOf(error).ptr
-    // )
-
-    val e = alloc<CFErrorRefVar>()
-    val privateKey: SecKeyRef? = SecKeyCreateRandomKey(attributes, e.ptr)
-    val error = CFBridgingRelease(e.value) as NSError?
-    check((privateKey == null) != (error == null))
-
-    println("Result? ${privateKey != null}")
-    privateKey?.let {
-        println(it)
-        println(SecKeyCopyAttributes(it))
-        println(SecKeyCopyPublicKey(it))
-        println(SecKeyGetBlockSize(it))
-    }
-    println("Error? ${error != null}")
-    error?.let {
-        println(it.localizedDescription)
-
-    }
-    return privateKey
+private fun accessibilityFor(
+    reference: KeyReference.HardwareSecured
+): KeyAccessibility.SecureEnclaveCompatible = when (reference) {
+    KeyReference.BasicOperations -> KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly
+    is KeyReference.SensitiveOperations -> KeyAccessibility.WhenUnlocked.ThisDeviceOnly
 }

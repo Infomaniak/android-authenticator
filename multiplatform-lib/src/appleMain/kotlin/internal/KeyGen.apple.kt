@@ -28,6 +28,7 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import platform.CoreFoundation.CFErrorRefVar
+import platform.CoreFoundation.CFStringRef
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.NSError
 import platform.Security.SecKeyCreateRandomKey
@@ -35,6 +36,11 @@ import platform.Security.SecKeyRef
 import platform.Security.kSecAttrAccessible
 import platform.Security.kSecAttrAccessibleAfterFirstUnlock
 import platform.Security.kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+import platform.Security.kSecAttrAccessibleAlways
+import platform.Security.kSecAttrAccessibleAlwaysThisDeviceOnly
+import platform.Security.kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
+import platform.Security.kSecAttrAccessibleWhenUnlocked
+import platform.Security.kSecAttrAccessibleWhenUnlockedThisDeviceOnly
 import platform.Security.kSecAttrApplicationTag
 import platform.Security.kSecAttrCanDecrypt
 import platform.Security.kSecAttrCanDerive
@@ -48,7 +54,7 @@ import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
 import platform.Security.kSecAttrType
 import platform.Security.kSecPrivateKeyAttrs
 
-internal data class Purposes(
+internal data class KeyPurposes(
     val signing: Boolean = false,
     val deriving: Boolean = false,
     val verifying: Boolean = false,
@@ -61,20 +67,34 @@ internal data class Purposes(
 internal sealed interface KeyAccessibility {
     sealed interface SecureEnclaveCompatible : KeyAccessibility
 
+    sealed interface WhenUnlocked : KeyAccessibility {
+        companion object : WhenUnlocked
+        data object ThisDeviceOnly : WhenUnlocked, SecureEnclaveCompatible
+    }
+
     sealed interface AfterFirstUnlock : KeyAccessibility {
         companion object : AfterFirstUnlock
-
         data object ThisDeviceOnly : AfterFirstUnlock, SecureEnclaveCompatible
     }
 
+    sealed interface WhenPasscodeSet : KeyAccessibility {
+        data object ThisDeviceOnly : WhenPasscodeSet, SecureEnclaveCompatible
+    }
+
+    sealed interface Always : KeyAccessibility {
+        companion object : Always
+        data object ThisDeviceOnly : Always, SecureEnclaveCompatible
+    }
 }
 
 /**
- * Generates an EC key pair in the iOS Keychain for future use.
+ * Generates an EC private key in the device Secure Enclave for future use.
+ *
+ * A public key can be generated later from it.
  */
 internal fun generatePrivateKeyInTheSecureEnclave(
     tag: String,
-    purposes: Purposes,
+    purposes: KeyPurposes,
     accessibility: KeyAccessibility.SecureEnclaveCompatible,
 ): Xor<SecKeyRef, NSError> = memScoped {
     val attributes = createKeyAttributes(tag, purposes, accessibility)
@@ -83,25 +103,31 @@ internal fun generatePrivateKeyInTheSecureEnclave(
 
     val privateKey: SecKeyRef? = SecKeyCreateRandomKey(attributes, e.ptr)
 
+    // The cast below is fine because it's a "toll-free bridged" type.
+    // See Apple doc archive on it:
+    // https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html#//apple_ref/doc/uid/TP40010677
     when (val error = CFBridgingRelease(e.value) as NSError?) {
         null -> Xor.First(privateKey!!)
         else -> Xor.Second(error)
     }
 }
 
-private fun KeyAccessibility.toKSecAttrAccessible() {
-    when (this) {
-        KeyAccessibility.AfterFirstUnlock -> kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-        KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly -> kSecAttrAccessibleAfterFirstUnlock
-    }
+private fun KeyAccessibility.toKSecAttrAccessible(): CFStringRef? = when (this) {
+    KeyAccessibility.WhenUnlocked.ThisDeviceOnly -> kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+    KeyAccessibility.WhenUnlocked -> kSecAttrAccessibleWhenUnlocked
+    KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly -> kSecAttrAccessibleAfterFirstUnlock
+    KeyAccessibility.AfterFirstUnlock -> kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    KeyAccessibility.WhenPasscodeSet.ThisDeviceOnly -> kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
+    KeyAccessibility.Always -> kSecAttrAccessibleAlways
+    KeyAccessibility.Always.ThisDeviceOnly -> kSecAttrAccessibleAlwaysThisDeviceOnly
 }
 
 private fun createKeyAttributes(
     tag: String,
-    purposes: Purposes,
+    purposes: KeyPurposes,
     accessibility: KeyAccessibility,
 ) = buildCFDictionary {
-// See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
+    // See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
     // See all key gen attributes here: https://developer.apple.com/documentation/security/key-generation-attributes
     this[kSecAttrType] = kSecAttrKeyTypeECSECPrimeRandom
     this[kSecAttrKeySizeInBits] = 256
@@ -114,7 +140,7 @@ private fun createKeyAttributes(
          */
         this[kSecAttrApplicationTag] = tag.toNsData()
     }
-    this[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    this[kSecAttrAccessible] = accessibility.toKSecAttrAccessible()
 
     if (purposes.signing) this[kSecAttrCanSign] = true
     if (purposes.verifying) this[kSecAttrCanVerify] = true

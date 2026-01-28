@@ -23,9 +23,11 @@ import kotlinx.serialization.Serializable
 //TODO[ik-auth-back]: Check if serialization works as-is, or if we need to add the annotation on all sub-declarations.
 internal sealed interface KeyReference {
 
+    sealed interface HardwareSecured : KeyReference
+
     sealed interface Replaceable : KeyReference
 
-    sealed interface SensitiveOperations : KeyReference {
+    sealed interface SensitiveOperations : HardwareSecured {
         sealed interface BiometricsGuarded : SensitiveOperations, Replaceable {
             data object CurrentOnly : BiometricsGuarded
             data object CurrentAndFuture : BiometricsGuarded
@@ -35,7 +37,7 @@ internal sealed interface KeyReference {
         data object UserActionGuarded : SensitiveOperations
     }
 
-    data object BasicOperations : KeyReference
+    data object BasicOperations : HardwareSecured
 
     data object ActivationFromBackup : KeyReference
 }
