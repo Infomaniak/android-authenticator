@@ -47,6 +47,7 @@ private fun KotlinMultiplatformExtension.setup(
             binaryOption("bundleId", "com.infomaniak.multiplatform-authenticator.${xcframeworkName}")
             xcf.add(this)
             isStatic = true
+            linkerOpts.add("-lsqlite3")
 
             project.afterEvaluate {
                 multiplatformExtension.appleExportedProjects.forEach { stProject ->

@@ -15,13 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package matomo
+package com.infomaniak.multiplatform_authenticator.matomo
 
-enum class MatomoCategory(val value: String) {
-
-    //region Common
-    //endregion
-
-    //region iOS
-    //endregion
+enum class MatomoScreen(val value: String) {
 }

@@ -17,6 +17,7 @@ plugins {
     alias(core.plugins.kotlin.serialization) apply false
     alias(core.plugins.sentry.plugin) apply false
 
+    alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.ksp) apply false

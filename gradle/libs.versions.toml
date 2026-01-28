@@ -1,17 +1,22 @@
 [versions]
+agp = "8.13.0"
 kotlin = "2.3.0"
 ksp = "2.3.4"
-nav3Core = "1.0.0"
 lifecycleViewmodelNav3 = "2.10.0"
+nav3Core = "1.0.0"
+room = "2.8.4"
 skie = "0.10.9"
-agp = "8.13.0"
+sqlite = "2.6.2"
 
 [libraries]
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
-androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 skie-gradle-plugin = { module = "co.touchlab.skie:gradle-plugin-api", version.ref = "skie" }
 
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
@@ -29,6 +34,7 @@ infomaniak-core-ui-compose-preview = { module = "com.infomaniak.core:Ui.Compose.
 infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Theme" }
 
 [plugins]
+androidx-room = { id = "androidx.room", version.ref = "room" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

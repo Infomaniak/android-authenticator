@@ -15,13 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package matomo
+package com.infomaniak.multiplatform_authenticator.database.models
 
-enum class MatomoName(val value: String) {
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-    //region Common
-    //endregion
-
-    //region iOS
-    //endregion
-}
+@Entity
+data class Account(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0
+)

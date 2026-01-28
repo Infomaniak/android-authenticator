@@ -5,10 +5,10 @@ plugins {
     alias(core.plugins.android.application)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.dagger.hilt)
-    alias(libs.plugins.kotlin.android)
     alias(core.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
     alias(core.plugins.sentry.plugin)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 val androidCompileSdk: Int by rootProject.extra

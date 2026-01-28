@@ -15,7 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package matomo
+package com.infomaniak.multiplatform_authenticator.migration.user
 
-enum class MatomoScreen(val value: String) {
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+
+@Dao
+interface OTPUserDao {
+
+    @Delete
+    fun delete(user: OTPUser)
+
+    @Query("SELECT * FROM users WHERE userid = :userID")
+    fun findUserById(userID: Int): OTPUser?
+
+    @Query("SELECT * FROM users")
+    fun getAllUsers(): List<OTPUser>
 }
