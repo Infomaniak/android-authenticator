@@ -29,4 +29,11 @@ internal interface KeysManager {
      * - [KeyReference.ActivationFromBackup]
      */
     suspend fun generateNewKeys()
+
+    companion object {
+        //TODO[ik-auth-back]: Potentially restrict it to signing only.
+        val privateKeyPurposes = KeyPurposes.privateKeyDefaults
+        ///TODO[ik-auth-back]: Potentially restrict it to verifying only.
+        val publicKeyPurposes = KeyPurposes.publicKeyDefaults
+    }
 }

@@ -43,8 +43,8 @@ class KeysManagerImpl : KeysManager {
 private fun generateKey(whichOne: KeyReference.HardwareSecured): SecKeyRef {
     val result = generatePrivateKeyInTheSecureEnclave(
         tag = whichOne.toKeyTagOrAlias(),
-        privateKeyPurposes = KeyPurposes.privateKeyDefaults, //TODO[ik-auth-back]: Potentially restrict it to signing only.
-        publicKeyPurposes = KeyPurposes.publicKeyDefaults, ///TODO[ik-auth-back]: Potentially restrict it to verifying only.
+        privateKeyPurposes = KeysManager.privateKeyPurposes,
+        publicKeyPurposes = KeysManager.publicKeyPurposes,
         accessibility = accessibilityFor(whichOne),
         accessControl = accessControlFor(whichOne)
     )
