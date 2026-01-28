@@ -15,26 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.navigation
+package com.infomaniak.auth.ui.screen.settings
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 
-@Serializable
-sealed interface NavDestination : NavKey {
-    @Serializable
-    data object Home : NavDestination
-    @Serializable
-    data object Settings : NavDestination
-
-    sealed interface Onboarding : NavDestination {
-        @Serializable
-        data object Start : Onboarding
-
-        @Serializable
-        data object Complete : Onboarding
-    }
-
-    @Serializable
-    data object SecuringAccount : NavDestination
+@Composable
+fun SettingsScreen() {
+    Text("SettingsScreen")
 }

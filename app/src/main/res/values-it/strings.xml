@@ -21,6 +21,8 @@
     <string name="accountLossRiskBackupVerificationDescription">Assicurati che un altro metodo di verifica a due passaggi sia configurato e funzionante.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Se Authenticator è il tuo ultimo metodo di verifica a due passaggi, potresti essere bloccato al prossimo accesso.</string>
     <string name="accountLossRiskTitle">Potresti perdere l’accesso a questo account</string>
+    <string name="accountPartiallyProtectedDescription">Aggiorna le impostazioni di sicurezza per proteggere il tuo account.</string>
+    <string name="accountPartiallyProtectedTitle">Account parzialmente protetto</string>
     <string name="accountPasswordTitle">Password account</string>
     <string name="accountProtected">Account protetto</string>
     <string name="accountProtectionDisabledWarningDescription">Questo dispositivo è l’unico utilizzato per convalidare gli accessi al tuo account Infomaniak.\n\nTi consigliamo di aggiungere un altro dispositivo o metodo di verifica prima di continuare.</string>
@@ -32,9 +34,13 @@
     <string name="accountSettingsButton">Impostazioni account</string>
     <string name="actionRequiredDescription">Azioni richieste per proteggere uno dei tuoi account.</string>
     <string name="activityHistoryButton">Cronologia attività</string>
+    <string name="addAccountButton">Aggiungere un account</string>
     <string name="appAccessIsSecure">L’accesso ad Authenticator è sicuro</string>
+    <string name="appSecurityDescription">Proteggete l’accesso alla vostra applicazione attivando il blocco del telefono.</string>
     <string name="authorizationCodeTitle">Il tuo codice di autorizzazione</string>
     <string name="autoCloseTitle">Queste informazioni si chiuderanno automaticamente in 15 secondi.</string>
+    <string name="bottomBarButtonHome">Home</string>
+    <string name="bottomBarButtonSettings">Settings</string>
     <string name="callButton">Chiama</string>
     <string name="cancelButton">Annulla</string>
     <string name="changePasswordButton">Cambia password</string>
@@ -49,6 +55,7 @@
     <string name="continueButton">Continua</string>
     <string name="copyPassword">Copia la password</string>
     <string name="dataManagementTitle">Gestione dati</string>
+    <string name="daysSupportAvailability">%1$d g. / %2$d</string>
     <string name="deletePreventionDescription">Eliminare l’app può compromettere la sicurezza del tuo account.</string>
     <string name="deletePreventionTitle">Hai bisogno di aiuto?</string>
     <string name="denyButton">Nega</string>
@@ -114,6 +121,7 @@
     <string name="supportResponseDelay">Risponderemo entro le prossime 24 ore lavorative.</string>
     <string name="ticketSentSuccessDescription">Stiamo facendo del nostro meglio per garantire che un operatore ti risponda il prima possibile.</string>
     <string name="ticketSentSuccessTitle">Il tuo ticket è stato inviato ai nostri team!</string>
+    <string name="timeSupportAvailability">%1$s - %2$s</string>
     <string name="understandConfirmButton">Capito</string>
     <string name="unlockingWithFaceId">Sblocca con Face ID</string>
     <string name="verifySecurityButton">Verifica la mia sicurezza</string>
