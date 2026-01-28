@@ -20,39 +20,8 @@
 
 package com.infomaniak.auth.lib.internal
 
-import cnames.structs.__SecKey
-import com.infomaniak.auth.lib.PublicKey
-import com.infomaniak.auth.lib.extensions.buildCFDictionary
-import com.infomaniak.auth.lib.extensions.set
-import com.infomaniak.auth.lib.extensions.size
-import com.infomaniak.auth.lib.extensions.toNsData
-import kotlinx.cinterop.BetaInteropApi
-import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.value
-import platform.CoreFoundation.CFErrorRefVar
-import platform.Foundation.CFBridgingRelease
-import platform.Foundation.NSError
-import platform.Security.SecKeyCopyAttributes
-import platform.Security.SecKeyCopyPublicKey
-import platform.Security.SecKeyCreateRandomKey
-import platform.Security.SecKeyGetBlockSize
 import platform.Security.SecKeyRef
-import platform.Security.kSecAttrAccessible
-import platform.Security.kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-import platform.Security.kSecAttrApplicationTag
-import platform.Security.kSecAttrCanDerive
-import platform.Security.kSecAttrCanSign
-import platform.Security.kSecAttrCanVerify
-import platform.Security.kSecAttrIsPermanent
-import platform.Security.kSecAttrKeySizeInBits
-import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
-import platform.Security.kSecAttrType
-import platform.Security.kSecPrivateKeyAttrs
-import kotlin.test.assertNotEquals
 
 class KeysManagerImpl : KeysManager {
 

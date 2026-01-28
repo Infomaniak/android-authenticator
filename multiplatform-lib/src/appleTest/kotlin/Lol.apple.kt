@@ -1,5 +1,13 @@
-import com.infomaniak.auth.lib.generateKeyPair
+@file:OptIn(ExperimentalForeignApi::class)
+
+import com.infomaniak.auth.lib.internal.KeyAccessibility
+import com.infomaniak.auth.lib.internal.KeyPurposes
+import com.infomaniak.auth.lib.internal.Xor
+import com.infomaniak.auth.lib.internal.generatePrivateKeyInTheSecureEnclave
 import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSError
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 /*
  * Infomaniak Authenticator - Android
@@ -21,5 +29,27 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 actual fun lol() {
-    generateKeyPair(ByteArray(8) { 0})
+    generatePrivateKeyInTheSecureEnclave(
+        tag = "tag",
+        purposes = KeyPurposes(signing = true, verifying = true),
+        accessibility = KeyAccessibility.Always.ThisDeviceOnly
+    )
+}
+
+private fun Xor<*, NSError>.assertSucceeded() = assertTrue(this is Xor.First)
+private fun Xor<*, NSError>.assertFailed() = assertTrue(this is Xor.Second)
+
+class Lol {
+
+    @Test
+    fun alwaysFails() {
+        generatePrivateKeyInTheSecureEnclave(
+            tag = "always",
+            purposes = KeyPurposes(signing = true, verifying = true),
+            accessibility = KeyAccessibility.WhenUnlocked.ThisDeviceOnly
+        ).also {
+            if (it is Xor.Second) println(it.value)
+        }.assertFailed()
+
+    }
 }
