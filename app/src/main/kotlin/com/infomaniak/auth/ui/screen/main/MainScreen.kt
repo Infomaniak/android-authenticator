@@ -37,6 +37,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.FloatingActionButton
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -50,6 +51,9 @@ fun MainScreen() {
     val backStack = rememberNavBackStack(startDestination)
 
     SinglePaneScaffold(
+        floatingActionButton = {
+            if (backStack.last() == NavDestination.Home) FloatingActionButton(onClick = {})
+        },
         bottomBar = {
             if (backStack.last() == NavDestination.Home || backStack.last() == NavDestination.Settings) {
                 NavigationBar(
