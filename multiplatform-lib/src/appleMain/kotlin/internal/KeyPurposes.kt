@@ -18,12 +18,66 @@
 package com.infomaniak.auth.lib.internal
 
 //TODO[ik-auth-back]: Possibly move this to common code, to share with Android.
-internal data class KeyPurposes(
-    val signing: Boolean = false,
-    val deriving: Boolean = false,
-    val verifying: Boolean = false,
-    val encrypting: Boolean = false,
-    val decrypting: Boolean = false,
-    val wrapping: Boolean = false,
-    val unwrapping: Boolean = false,
-)
+@ExposedCopyVisibility
+internal data class KeyPurposes private constructor(
+    val signing: Boolean,
+    val deriving: Boolean,
+    val verifying: Boolean,
+    val encrypting: Boolean,
+    val decrypting: Boolean,
+    val wrapping: Boolean,
+    val unwrapping: Boolean,
+) {
+    companion object {
+        val privateKeyDefaults = forPrivateKey()
+        val publicKeyDefaults = forPublicKey()
+
+        operator fun invoke(
+            signing: Boolean = false,
+            deriving: Boolean = false,
+            verifying: Boolean = false,
+            encrypting: Boolean = false,
+            decrypting: Boolean = false,
+            wrapping: Boolean = false,
+            unwrapping: Boolean = false,
+        ): KeyPurposes = KeyPurposes(
+            signing = signing,
+            deriving = deriving,
+            verifying = verifying,
+            encrypting = encrypting,
+            decrypting = decrypting,
+            wrapping = wrapping,
+            unwrapping = unwrapping,
+        )
+
+        fun forPrivateKey(
+            signing: Boolean = true,
+            decrypting: Boolean = true,
+            unwrapping: Boolean = true,
+            deriving: Boolean = true,
+        ): KeyPurposes = KeyPurposes(
+            signing = signing,
+            decrypting = decrypting,
+            unwrapping = unwrapping,
+            deriving = deriving,
+            verifying = false,
+            encrypting = false,
+            wrapping = false,
+        )
+
+        fun forPublicKey(
+            verifying: Boolean = true,
+            encrypting: Boolean = true,
+            wrapping: Boolean = true,
+            deriving: Boolean = true,
+        ): KeyPurposes = KeyPurposes(
+            verifying = verifying,
+            encrypting = encrypting,
+            wrapping = wrapping,
+            deriving = deriving,
+            signing = false,
+            decrypting = false,
+            unwrapping = false,
+        )
+    }
+}

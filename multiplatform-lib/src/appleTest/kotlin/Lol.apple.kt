@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalForeignApi::class)
 
+import com.infomaniak.auth.lib.internal.KeyAccessControl
 import com.infomaniak.auth.lib.internal.KeyAccessibility
 import com.infomaniak.auth.lib.internal.KeyPurposes
 import com.infomaniak.auth.lib.internal.Xor
@@ -31,8 +32,8 @@ import kotlin.test.assertTrue
 actual fun lol() {
     generatePrivateKeyInTheSecureEnclave(
         tag = "tag",
-        purposes = KeyPurposes(signing = true, verifying = true),
-        accessibility = KeyAccessibility.Always.ThisDeviceOnly
+        accessibility = KeyAccessibility.Always.ThisDeviceOnly,
+        accessControl = KeyAccessControl.Unguarded
     )
 }
 
@@ -44,12 +45,13 @@ class Lol {
     @Test
     fun alwaysFails() {
         generatePrivateKeyInTheSecureEnclave(
-            tag = "always",
-            purposes = KeyPurposes(signing = true, verifying = true),
-            accessibility = KeyAccessibility.WhenUnlocked.ThisDeviceOnly
+            tag = "com.infomaniak.test",
+            publicKeyPurposes = KeyPurposes(verifying = true),
+            accessibility = KeyAccessibility.WhenUnlocked.ThisDeviceOnly,
+            accessControl = KeyAccessControl.Unguarded
         ).also {
             if (it is Xor.Second) println(it.value)
-        }.assertFailed()
+        }.assertSucceeded()
 
     }
 }

@@ -20,8 +20,11 @@ package com.infomaniak.auth.lib.internal
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFStringRef
 import platform.Security.SecAccessControlCreateFlags
+import platform.Security.kSecAccessControlAnd
 import platform.Security.kSecAccessControlBiometryAny
 import platform.Security.kSecAccessControlBiometryCurrentSet
+import platform.Security.kSecAccessControlDevicePasscode
+import platform.Security.kSecAccessControlPrivateKeyUsage
 import platform.Security.kSecAccessControlUserPresence
 import platform.Security.kSecAttrAccessibleAfterFirstUnlock
 import platform.Security.kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
@@ -45,5 +48,7 @@ internal fun KeyAccessibility.toKSecAttrAccessible(): CFStringRef? = when (this)
 internal fun KeyAccessControl.toAccessControlFlags(): SecAccessControlCreateFlags = when (this) {
     KeyAccessControl.Biometry.CurrentSet -> kSecAccessControlBiometryCurrentSet
     KeyAccessControl.Biometry.Any -> kSecAccessControlBiometryAny
+    KeyAccessControl.DevicePasscode -> kSecAccessControlDevicePasscode
     KeyAccessControl.UserPresence -> kSecAccessControlUserPresence
-}
+    KeyAccessControl.Unguarded -> 0uL
+} or kSecAccessControlPrivateKeyUsage or kSecAccessControlAnd

@@ -29,23 +29,13 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import platform.CoreFoundation.CFErrorRefVar
 import platform.CoreFoundation.CFMutableDictionaryRef
-import platform.CoreFoundation.CFStringRef
 import platform.CoreFoundation.kCFAllocatorDefault
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.NSError
-import platform.Security.SecAccessControlCreateFlags
 import platform.Security.SecAccessControlCreateWithFlags
 import platform.Security.SecKeyCreateRandomKey
 import platform.Security.SecKeyRef
-import platform.Security.kSecAccessControlTouchIDCurrentSet
-import platform.Security.kSecAttrAccessible
-import platform.Security.kSecAttrAccessibleAfterFirstUnlock
-import platform.Security.kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-import platform.Security.kSecAttrAccessibleAlways
-import platform.Security.kSecAttrAccessibleAlwaysThisDeviceOnly
-import platform.Security.kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
-import platform.Security.kSecAttrAccessibleWhenUnlocked
-import platform.Security.kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+import platform.Security.kSecAttrAccessControl
 import platform.Security.kSecAttrApplicationTag
 import platform.Security.kSecAttrCanDecrypt
 import platform.Security.kSecAttrCanDerive
@@ -54,6 +44,7 @@ import platform.Security.kSecAttrCanSign
 import platform.Security.kSecAttrCanUnwrap
 import platform.Security.kSecAttrCanVerify
 import platform.Security.kSecAttrCanWrap
+import platform.Security.kSecAttrIsPermanent
 import platform.Security.kSecAttrKeySizeInBits
 import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
 import platform.Security.kSecAttrTokenID
@@ -69,10 +60,18 @@ import platform.Security.kSecPublicKeyAttrs
  */
 internal fun generatePrivateKeyInTheSecureEnclave(
     tag: String,
-    purposes: KeyPurposes,
-    accessibility: KeyAccessibility.SecureEnclaveCompatible,
+    privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
+    publicKeyPurposes: KeyPurposes? = null,
+    accessControl: KeyAccessControl,
+    accessibility: KeyAccessibility.SecureEnclaveCompatible
 ): Xor<SecKeyRef, NSError> = memScoped {
-    val attributes = createKeyAttributes(tag, purposes, null, null, accessibility)
+    val attributes = createKeyAttributes(
+        tag = tag,
+        privateKeyPurposes = privateKeyPurposes,
+        publicKeyPurposes = publicKeyPurposes,
+        accessControl = accessControl,
+        accessibility = accessibility,
+    )
 
     val e = alloc<CFErrorRefVar>()
 
@@ -89,9 +88,9 @@ internal fun generatePrivateKeyInTheSecureEnclave(
 
 private fun createKeyAttributes(
     tag: String,
-    commonPurposes: KeyPurposes,
     privateKeyPurposes: KeyPurposes?,
     publicKeyPurposes: KeyPurposes?,
+    accessControl: KeyAccessControl,
     accessibility: KeyAccessibility,
 ) = buildCFDictionary {
     // See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
@@ -99,9 +98,14 @@ private fun createKeyAttributes(
     this[kSecAttrType] = kSecAttrKeyTypeECSECPrimeRandom
     this[kSecAttrKeySizeInBits] = 256
     this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave
-    commonPurposes.applyTo(this)
     this[kSecPrivateKeyAttrs] = buildCFDictionary {
         privateKeyPurposes?.applyTo(this)
+        this[kSecAttrIsPermanent] = true
+        this[kSecAttrAccessControl] = createAccessControl(
+            accessControl = accessControl,
+            accessibility = accessibility,
+        )
+        // No need to specify kSecAttrAccessible since it's already set in kSecAttrAccessControl just above.
         /*
          * You also specify the kSecAttrApplicationTag attribute with a unique NSData value
          * so that you can find and retrieve it from the keychain later.
@@ -111,30 +115,34 @@ private fun createKeyAttributes(
         this[kSecAttrApplicationTag] = tag.toNsData()
     }
     if (publicKeyPurposes != null) this[kSecPublicKeyAttrs] = buildCFDictionary {
+        this[kSecAttrIsPermanent] = true
         publicKeyPurposes.applyTo(this)
+        this[kSecAttrApplicationTag] = "$tag.pub".toNsData()
     }
-    this[kSecAttrAccessible] = accessibility.toKSecAttrAccessible()
 }
 
 private fun KeyPurposes.applyTo(dictionary: CFMutableDictionaryRef?) {
-    if (signing) dictionary[kSecAttrCanSign] = true
-    if (verifying) dictionary[kSecAttrCanVerify] = true
+    dictionary[kSecAttrCanSign] = signing
+    dictionary[kSecAttrCanVerify] = verifying
 
-    if (encrypting) dictionary[kSecAttrCanEncrypt] = true
-    if (decrypting) dictionary[kSecAttrCanDecrypt] = true
+    dictionary[kSecAttrCanEncrypt] = encrypting
+    dictionary[kSecAttrCanDecrypt] = decrypting
 
-    if (deriving) dictionary[kSecAttrCanDerive] = true
+    dictionary[kSecAttrCanDerive] = deriving
 
-    if (wrapping) dictionary[kSecAttrCanWrap] = true
-    if (unwrapping) dictionary[kSecAttrCanUnwrap] = true
+    dictionary[kSecAttrCanWrap] = wrapping
+    dictionary[kSecAttrCanUnwrap] = unwrapping
 }
 
-private fun createAccessControl(accessibility: KeyAccessibility.SecureEnclaveCompatible) = memScoped {
+private fun createAccessControl(
+    accessControl: KeyAccessControl,
+    accessibility: KeyAccessibility
+) = memScoped {
     val e = alloc<CFErrorRefVar>()
     val access = SecAccessControlCreateWithFlags(
         allocator = kCFAllocatorDefault,
-        protection = TODO(),
-        flags = accessibility.toAccessControlFlags(),
+        protection = accessibility.toKSecAttrAccessible(),
+        flags = accessControl.toAccessControlFlags(),
         error = e.ptr
     )
     when (val error = CFBridgingRelease(e.value) as NSError?) {

@@ -26,13 +26,12 @@ import platform.Security.SecKeyRef
 class KeysManagerImpl : KeysManager {
 
     override suspend fun generateNewKeys() {
-        val keyPurposes = KeyPurposes(
-            signing = true,
-            verifying = true,
-        )
-        generateKey(whichOne = KeyReference.BasicOperations, purposes = keyPurposes)
-        generateKey(whichOne = KeyReference.BasicOperations, purposes = keyPurposes)
-        TODO()
+        generateKey(whichOne = KeyReference.BasicOperations)
+        generateKey(whichOne = KeyReference.SensitiveOperations.UserActionGuarded)
+        generateKey(whichOne = KeyReference.SensitiveOperations.DevicePasscodeGuarded)
+        generateKey(whichOne = KeyReference.SensitiveOperations.BiometricsGuarded.CurrentAndFuture)
+        generateKey(whichOne = KeyReference.SensitiveOperations.BiometricsGuarded.CurrentOnly)
+        TODO("Generate the KeyReference.ActivationFromBackup key")
     }
 
     //TODO[iOS-KeyChain]: Find keys with https://developer.apple.com/documentation/security/secitemcopymatching(_:_:)?language=objc
@@ -41,11 +40,13 @@ class KeysManagerImpl : KeysManager {
 }
 
 @Throws(Exception::class)
-private fun generateKey(whichOne: KeyReference.HardwareSecured, purposes: KeyPurposes): SecKeyRef {
+private fun generateKey(whichOne: KeyReference.HardwareSecured): SecKeyRef {
     val result = generatePrivateKeyInTheSecureEnclave(
         tag = whichOne.toKeyTagOrAlias(),
-        purposes = purposes,
-        accessibility = accessibilityFor(whichOne)
+        privateKeyPurposes = KeyPurposes.privateKeyDefaults, //TODO[ik-auth-back]: Potentially restrict it to signing only.
+        publicKeyPurposes = KeyPurposes.publicKeyDefaults, ///TODO[ik-auth-back]: Potentially restrict it to verifying only.
+        accessibility = accessibilityFor(whichOne),
+        accessControl = accessControlFor(whichOne)
     )
     when (result) {
         is Xor.First -> return result.value
@@ -61,4 +62,14 @@ private fun accessibilityFor(
 ): KeyAccessibility.SecureEnclaveCompatible = when (reference) {
     KeyReference.BasicOperations -> KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly
     is KeyReference.SensitiveOperations -> KeyAccessibility.WhenUnlocked.ThisDeviceOnly
+}
+
+private fun accessControlFor(
+    reference: KeyReference.HardwareSecured
+): KeyAccessControl = when (reference) {
+    KeyReference.BasicOperations -> KeyAccessControl.Unguarded
+    KeyReference.SensitiveOperations.BiometricsGuarded.CurrentAndFuture -> KeyAccessControl.Biometry.Any
+    KeyReference.SensitiveOperations.BiometricsGuarded.CurrentOnly -> KeyAccessControl.Biometry.CurrentSet
+    KeyReference.SensitiveOperations.DevicePasscodeGuarded -> KeyAccessControl.UserPresence // Also allow new biometrics.
+    KeyReference.SensitiveOperations.UserActionGuarded -> KeyAccessControl.Unguarded // Hardware user action not available on iOS.
 }

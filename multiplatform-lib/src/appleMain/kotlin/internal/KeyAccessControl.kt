@@ -18,10 +18,14 @@
 package com.infomaniak.auth.lib.internal
 
 internal sealed interface KeyAccessControl {
-    sealed interface Biometry {
+    sealed interface Biometry : KeyAccessControl {
         data object CurrentSet : Biometry
         data object Any : Biometry
     }
 
+    data object DevicePasscode : KeyAccessControl
+
     data object UserPresence : KeyAccessControl
+
+    data object Unguarded : KeyAccessControl
 }
