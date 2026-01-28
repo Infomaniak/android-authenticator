@@ -21,6 +21,8 @@
     <string name="accountLossRiskBackupVerificationDescription">Stellen Sie sicher, dass eine andere Zwei-Faktor-Verifizierungsmethode eingerichtet und funktionsfähig ist.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Wenn Authenticator Ihre letzte Zwei-Faktor-Verifizierungsmethode ist, könnten Sie beim nächsten Anmeldeversuch gesperrt werden.</string>
     <string name="accountLossRiskTitle">Sie könnten den Zugriff auf dieses Konto verlieren</string>
+    <string name="accountPartiallyProtectedDescription">Aktualisieren Sie Ihre Sicherheitseinstellungen, um Ihr Konto zu schützen.</string>
+    <string name="accountPartiallyProtectedTitle">Teilweise geschütztes Konto</string>
     <string name="accountPasswordTitle">Kontopasswort</string>
     <string name="accountProtected">Konto geschützt</string>
     <string name="accountProtectionDisabledWarningDescription">Dieses Gerät ist das einzige, das zur Validierung von Anmeldungen bei Ihrem Infomaniak-Konto verwendet wird.\n\nWir empfehlen, ein weiteres Gerät oder eine andere Verifizierungsmethode hinzuzufügen, bevor Sie fortfahren.</string>
@@ -32,9 +34,13 @@
     <string name="accountSettingsButton">Kontoeinstellungen</string>
     <string name="actionRequiredDescription">Aktion erforderlich, um eines Ihrer Konten zu sichern.</string>
     <string name="activityHistoryButton">Aktivitätsverlauf</string>
+    <string name="addAccountButton">Ein Konto hinzufügen</string>
     <string name="appAccessIsSecure">Der Zugriff auf Authenticator ist sicher</string>
+    <string name="appSecurityDescription">Schützen Sie den Zugriff auf Ihre App, indem Sie Ihre Telefonsperre aktivieren.</string>
     <string name="authorizationCodeTitle">Ihr Autorisierungscode</string>
     <string name="autoCloseTitle">Diese Information schliesst sich automatisch nach 15 Sekunden.</string>
+    <string name="bottomBarButtonHome">Home</string>
+    <string name="bottomBarButtonSettings">Settings</string>
     <string name="callButton">Anrufen</string>
     <string name="cancelButton">Abbrechen</string>
     <string name="changePasswordButton">Passwort ändern</string>
@@ -49,6 +55,7 @@
     <string name="continueButton">Weiter</string>
     <string name="copyPassword">Kennwort kopieren</string>
     <string name="dataManagementTitle">Datenverwaltung</string>
+    <string name="daysSupportAvailability">%1$d T. / %2$d</string>
     <string name="deletePreventionDescription">Das Löschen der App kann die Sicherheit Ihres Kontos gefährden.</string>
     <string name="deletePreventionTitle">Brauchen Sie Hilfe?</string>
     <string name="denyButton">Ablehnen</string>
@@ -114,6 +121,7 @@
     <string name="supportResponseDelay">Wir antworten innerhalb der nächsten 24 Geschäftstage.</string>
     <string name="ticketSentSuccessDescription">Wir tun unser Bestes, um sicherzustellen, dass ein Agent so schnell wie möglich auf Sie antwortet.</string>
     <string name="ticketSentSuccessTitle">Ihr Ticket wurde an unsere Teams gesendet!</string>
+    <string name="timeSupportAvailability">%1$s bis %2$s</string>
     <string name="understandConfirmButton">Ich verstehe</string>
     <string name="unlockingWithFaceId">Mit Face ID entsperren</string>
     <string name="verifySecurityButton">Meine Sicherheit überprüfen</string>
