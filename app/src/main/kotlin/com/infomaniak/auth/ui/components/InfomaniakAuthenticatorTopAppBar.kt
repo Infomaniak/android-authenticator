@@ -22,8 +22,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -31,19 +33,29 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfomaniakAuthenticatorTopAppBar() {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = stringResource(R.string.appCompleteName),
-                style = MaterialTheme.typography.headlineSmall
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
-        )
+fun InfomaniakAuthenticatorTopAppBar(isCentered: Boolean = true, isBackgroundTransparent: Boolean = false) {
+    val colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = if (isBackgroundTransparent) Color.Transparent else MaterialTheme.colorScheme.background,
+        titleContentColor = MaterialTheme.colorScheme.onBackground,
     )
+    val title: @Composable () -> Unit = {
+        Text(
+            text = stringResource(R.string.appCompleteName),
+            style = MaterialTheme.typography.headlineSmall
+        )
+    }
+
+    if (isCentered) {
+        CenterAlignedTopAppBar(
+            title = title,
+            colors = colors
+        )
+    } else {
+        TopAppBar(
+            title = title,
+            colors = colors
+        )
+    }
 }
 
 @PreviewLightAndDark
