@@ -5,16 +5,15 @@ let package = Package(
     name: "Multiplatform-lib",
     platforms: [
         .iOS(.v14),
-        .macOS(.v11)
     ],
     products: [
-        .library(name: "multiplatform-lib", targets: ["MultiplatformLib"])
+        .library(name: "multiplatform-lib", targets: ["CoreAuthenticator"])
     ],
     targets: [
         .binaryTarget(
-            name: "MultiplatformLib",
-            url: "https://github.com/Infomaniak/android-authenticator/multiplatform-lib/releases/download/0.0.2/MultiplatformLib.xcframework.zip",
-            checksum: "6f828b0d757f1a47914c8587cb11821aca755fa2b2b163e60cdd2b7ac5987927"
+            name: "CoreAuthenticator",
+            url: "https://github.com/Infomaniak/android-authenticator/multiplatform-lib/releases/download/0.0.2/CoreAuthenticator.xcframework.zip",
+            checksum: "7de3aec67a8188dd6f5919c8f9678cb04563c4ecf3a45c555fc01758bff9d8f0"
         ),
     ]
 )
