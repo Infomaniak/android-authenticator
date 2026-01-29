@@ -5,7 +5,6 @@ plugins {
     alias(core.plugins.android.kmp.library)
     alias(libs.plugins.skie)
     id("infomaniak.kotlinMultiplatform")
-    id("infomaniak.publishPlugin")
 }
 
 val androidCompileSdk: Int by rootProject.extra

@@ -27,7 +27,8 @@ open class PublishExtension {
     companion object {
         internal const val EXTENSION_NAME = "publishConfig"
 
-        fun Project.publishConfig(configure: Action<PublishExtension>): Unit =
+        fun Project.publishConfig(configure: Action<PublishExtension>): Unit {
             (this as ExtensionAware).extensions.configure(EXTENSION_NAME, configure)
+        }
     }
 }

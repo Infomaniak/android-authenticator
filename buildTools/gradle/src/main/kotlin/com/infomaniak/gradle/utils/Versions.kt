@@ -17,14 +17,6 @@
  */
 package com.infomaniak.gradle.utils
 
-import org.gradle.api.JavaVersion
-
 internal object Versions {
-    const val mavenVersionName = "0.0.1"
-
-    const val minSdk = 27
-    const val compileSdk = 36
     const val skieMaxArgumentCount = 7
-
-    val javaVersion = JavaVersion.VERSION_17
 }

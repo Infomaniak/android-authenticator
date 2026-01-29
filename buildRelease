@@ -36,19 +36,10 @@ function is_valid_version {
 
 # Function to display documentation
 function show_help {
-    echo "Usage: $0 <version> [--ios | --android]"
+    echo "Usage: $0 <version>"
     echo "  <version>   The version number in the format x.x.x"
-    echo "  --ios       Release for iOS platform only"
-    echo "  --android   Release for Android platform only"
     echo "Examples:"
     echo "  $0 1.2.3"
-    echo "  $0 1.2.3 --ios"
-    echo "  $0 1.2.3 --android"
-}
-
-function release_android {
-    echo "Releasing Android version $1"
-    sed -i '' "s|mavenVersionName = \".*\"|mavenVersionName = \"$1\"|g" buildTools/gradle/src/main/kotlin/com/infomaniak/gradle/utils/Versions.kt
 }
 
 function release_ios {
@@ -83,13 +74,6 @@ function release_ios {
     echo -e "${GREEN}Check the${COLOR_OFF} ${GREEN_BOLD}release${COLOR_OFF} ${GREEN}folder to see if the archives are there, then you can upload them to a GitHub release.${COLOR_OFF}"
 }
 
-# Release Android and iOS
-function release_both {
-    echo "Releasing both iOS and Android version $1"
-    release_android "$1"
-    release_ios "$1"
-}
-
 # Check arguments, if no arguments are supplied, the documentation is displayed
 if [ $# -eq 0 ]; then
     show_help
@@ -104,21 +88,4 @@ if ! is_valid_version "$VERSION"; then
     exit 1
 fi
 
-# No options have been provided, so release of both iOS and Android versions
-if [ $# -eq 1 ]; then
-    release_both "$VERSION"
-    exit 0
-fi
-
-# An option has been provided
-OPTION=$2
-
-if [[ "$OPTION" == "--ios" ]]; then
-    release_ios "$VERSION"
-elif [[ "$OPTION" == "--android" ]]; then
-    release_android "$VERSION"
-else
-    echo "Error: Invalid option $OPTION"
-    show_help
-    exit 1
-fi
+release_ios "$1"

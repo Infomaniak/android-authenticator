@@ -27,7 +27,8 @@ open class MultiplatformExtension {
     companion object {
         internal const val EXTENSION_NAME = "kotlinMultiplatformConfig"
 
-        fun Project.kotlinMultiplatformConfig(configure: Action<MultiplatformExtension>): Unit =
+        fun Project.kotlinMultiplatformConfig(configure: Action<MultiplatformExtension>): Unit {
             (this as ExtensionAware).extensions.configure(EXTENSION_NAME, configure)
+        }
     }
 }
