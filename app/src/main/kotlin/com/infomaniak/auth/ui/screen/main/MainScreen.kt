@@ -70,7 +70,7 @@ fun MainScreen() {
                                 backStack.add(NavDestination.Home)
                             },
                             icon = { Icon(painterResource(R.drawable.home), null) },
-                            label = { Text(stringResource(R.string.bottomBarButtonHome)) },
+                            label = { Text(stringResource(R.string.accountTitle)) },
                         )
                         NavigationBarItem(
                             selected = backStack.last() == NavDestination.Settings,
@@ -78,7 +78,7 @@ fun MainScreen() {
                                 backStack.add(NavDestination.Settings)
                             },
                             icon = { Icon(painterResource(R.drawable.settings), null) },
-                            label = { Text(stringResource(R.string.bottomBarButtonSettings)) },
+                            label = { Text(stringResource(R.string.settingsTitle)) },
                         )
                     }
                 }

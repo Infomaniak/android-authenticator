@@ -32,6 +32,8 @@
     <string name="accountSecurityVerificationDescription">Si no realizó esta acción, le recomendamos que cambie su contraseña y verifique sus configuraciones de seguridad.</string>
     <string name="accountSecurityVerificationTitle">Verifique la seguridad de su cuenta</string>
     <string name="accountSettingsButton">Configuración de la cuenta</string>
+    <string name="accountTitle">Cuenta</string>
+    <string name="accountsTitle">Cuentas</string>
     <string name="actionRequiredDescription">Se requiere acción para proteger una de tus cuentas.</string>
     <string name="activityHistoryButton">Historial de actividad</string>
     <string name="addAccountButton">Añadir una cuenta</string>
@@ -39,8 +41,6 @@
     <string name="appSecurityDescription">Protege el acceso a tu aplicación activando el bloqueo del teléfono.</string>
     <string name="authorizationCodeTitle">Tu código de autorización</string>
     <string name="autoCloseTitle">Esta información se cerrará automáticamente en 15 segundos.</string>
-    <string name="bottomBarButtonHome">Home</string>
-    <string name="bottomBarButtonSettings">Settings</string>
     <string name="callButton">Llamar</string>
     <string name="cancelButton">Cancelar</string>
     <string name="changePasswordButton">Cambiar contraseña</string>
@@ -116,6 +116,7 @@
     <string name="showAccountPasswordButton">Mostrar contraseña de la cuenta</string>
     <string name="startButton">Comenzar</string>
     <string name="subjectPlaceholder">Asunto</string>
+    <string name="submitMyTicketButton">Enviar mi billete</string>
     <string name="submitTicketDescription">Para ayudarnos a asistirle eficazmente, proporcione tantos detalles como sea posible sobre su problema.</string>
     <string name="submitTicketTitle">Enviar un ticket</string>
     <string name="supportResponseDelay">Responderemos en las próximas 24 horas hábiles.</string>
