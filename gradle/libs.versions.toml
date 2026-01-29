@@ -3,6 +3,7 @@ kotlin = "2.3.0"
 ksp = "2.3.4"
 nav3Core = "1.0.0"
 lifecycleViewmodelNav3 = "2.10.0"
+skie = "0.10.9"
 
 [libraries]
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
@@ -27,3 +28,4 @@ infomaniak-core-ui-compose-theme = { module = "com.infomaniak.core:Ui.Compose.Th
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }
