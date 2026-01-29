@@ -22,16 +22,26 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class CustomColorScheme(
-    val illustrationBackgroundGradient: Color = Color.Unspecified
+    val illustrationBackgroundGradient: Color = Color.Unspecified,
+    val actionRequiredBorder: Color = Color.Unspecified,
+    val actionRequiredBackground: Color = Color.Unspecified,
 )
 
 private val illustrationBackgroundGradientLight = lightScheme.primary.copy(alpha = 0.28f)
 private val illustrationBackgroundGradientDark = productSecurity.copy(alpha = 0.6f)
+private val actionRequiredBorderLight = warningLight
+private val actionRequiredBorderDark = warningDark
+private val actionRequiredBackgroundLight = warningDimLight
+private val actionRequiredBackgroundDark = warningDimDark
 
 val lightCustomScheme = CustomColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientLight
+    illustrationBackgroundGradient = illustrationBackgroundGradientLight,
+    actionRequiredBorder = actionRequiredBorderLight,
+    actionRequiredBackground = actionRequiredBackgroundLight
 )
 
 val darkCustomScheme = CustomColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientDark
+    illustrationBackgroundGradient = illustrationBackgroundGradientDark,
+    actionRequiredBorder = actionRequiredBorderDark,
+    actionRequiredBackground = actionRequiredBackgroundDark
 )

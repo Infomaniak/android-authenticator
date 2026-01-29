@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,7 +52,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun HomeScreen() {
-    // TODO get accounts from DB
+    //TODO get accounts from DB
     val accounts = listOf(
         FakeAccount(
             name = "Laura Snow",
@@ -72,15 +73,46 @@ fun HomeScreen() {
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .background(AuthenticatorTheme.materialColors.surfaceContainerLow)
                 .padding(paddingValues)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(Margin.Small)
         ) {
-            accounts.forEach {
-                AccountItem(it)
+            //TODO Display this only when at least one accounts has a problem
+            ActionRequired()
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(Margin.Small)
+            ) {
+                accounts.forEach {
+                    AccountItem(it)
+                }
             }
+        }
+
+    }
+}
+
+@Composable
+private fun ActionRequired() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Margin.Medium, vertical = Margin.Large)
+            .clickable(onClick = {}),
+        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.actionRequiredBackground),
+        border = BorderStroke(1.dp, AuthenticatorTheme.colors.actionRequiredBorder),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(R.drawable.alert),
+                contentDescription = null,
+                tint = AuthenticatorTheme.colors.actionRequiredBorder,
+            )
+            Text(
+                modifier = Modifier.padding(start = Margin.Small),
+                text = "Une action est requise pour sécuriser l'un de vos comptes."
+            )
         }
     }
 }
