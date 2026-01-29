@@ -25,23 +25,33 @@ data class CustomColorScheme(
     val illustrationBackgroundGradient: Color = Color.Unspecified,
     val actionRequiredBorder: Color = Color.Unspecified,
     val actionRequiredBackground: Color = Color.Unspecified,
+    val accountSecured: Color = Color.Unspecified,
+    val accountWarning: Color = Color.Unspecified,
 )
 
 private val illustrationBackgroundGradientLight = lightScheme.primary.copy(alpha = 0.28f)
 private val illustrationBackgroundGradientDark = productSecurity.copy(alpha = 0.6f)
-private val actionRequiredBorderLight = warningLight
-private val actionRequiredBorderDark = warningDark
-private val actionRequiredBackgroundLight = warningDimLight
-private val actionRequiredBackgroundDark = warningDimDark
+private val actionRequiredBorderLight = warningDim5Light
+private val actionRequiredBorderDark = warningDim5Dark
+private val actionRequiredBackgroundLight = warningDim4Light
+private val actionRequiredBackgroundDark = warningDim4Dark
+private val accountSecuredLight = successDim5Light
+private val accountSecuredDark = successDim5Dark
+private val accountWarningLight = warningDim5Light
+private val accountWarningDark = warningDim5Dark
 
 val lightCustomScheme = CustomColorScheme(
     illustrationBackgroundGradient = illustrationBackgroundGradientLight,
     actionRequiredBorder = actionRequiredBorderLight,
-    actionRequiredBackground = actionRequiredBackgroundLight
+    actionRequiredBackground = actionRequiredBackgroundLight,
+    accountSecured = accountSecuredLight,
+    accountWarning = accountWarningLight,
 )
 
 val darkCustomScheme = CustomColorScheme(
     illustrationBackgroundGradient = illustrationBackgroundGradientDark,
     actionRequiredBorder = actionRequiredBorderDark,
-    actionRequiredBackground = actionRequiredBackgroundDark
+    actionRequiredBackground = actionRequiredBackgroundDark,
+    accountSecured = accountSecuredDark,
+    accountWarning = accountWarningDark,
 )

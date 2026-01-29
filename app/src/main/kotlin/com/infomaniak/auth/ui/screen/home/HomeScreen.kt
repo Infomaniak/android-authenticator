@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -58,12 +59,17 @@ fun HomeScreen() {
         FakeAccount(
             name = "Laura Snow",
             email = "laura.snow@ik.me",
-            isSafe = true,
+            securityLevel = AccountSecurityLevel.Secured,
         ),
         FakeAccount(
             name = "Laura Snow",
             email = "laura.snow@domain.com",
-            isSafe = true,
+            securityLevel = AccountSecurityLevel.Warning,
+        ),
+        FakeAccount(
+            name = "Laura Snow",
+            email = "laura.snow@subdomain.com",
+            securityLevel = AccountSecurityLevel.Danger,
         ),
     )
 
@@ -76,8 +82,7 @@ fun HomeScreen() {
             modifier = Modifier
                 .padding(paddingValues)
         ) {
-            //TODO Display this only when at least one accounts has a problem
-            ActionRequired()
+            if (accounts.count { it.securityLevel != AccountSecurityLevel.Secured } > 0) ActionRequired()
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -89,7 +94,6 @@ fun HomeScreen() {
                 }
             }
         }
-
     }
 }
 
@@ -148,12 +152,24 @@ private fun AccountItem(account: FakeAccount) {
                 Text(text = account.email)
             }
             Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                modifier = Modifier.padding(end = Margin.Mini),
+                painter = painterResource(id = account.securityLevel.iconResId),
+                contentDescription = null,
+                tint = account.securityLevel.iconTint(),
+            )
             Icon(painterResource(R.drawable.right_arrow), null)
         }
     }
 }
 
-private data class FakeAccount(val name: String, val email: String, val isSafe: Boolean)
+private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
+    Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountSecured }),
+    Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountWarning }),
+    Danger(iconResId = R.drawable.shield_warning, iconTint = { AuthenticatorTheme.colors.accountWarning }),
+}
+
+private data class FakeAccount(val name: String, val email: String, val securityLevel: AccountSecurityLevel)
 
 @PreviewSmallWindow
 @Composable

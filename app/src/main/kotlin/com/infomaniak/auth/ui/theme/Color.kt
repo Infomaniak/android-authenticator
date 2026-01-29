@@ -91,7 +91,9 @@ val red100 = Color(0xFFFFFDFD)
 
 // Custom primitives
 val productSecurity = Color(0xFF5869D9)
-val warningLight = Color(0xFFFFB632)
-val warningDark = Color(0xFFFF9D0A)
-val warningDimLight = Color(0xFFFFFAEC)
-val warningDimDark = Color(0xFF461E04)
+val warningDim5Light = Color(0xFFFFB632)
+val warningDim5Dark = Color(0xFFFF9D0A)
+val warningDim4Light = Color(0xFFFFFAEC)
+val warningDim4Dark = Color(0xFF461E04)
+val successDim5Dark = Color(0xFF95E09D)
+val successDim5Light = Color(0xFF95E09D)
