@@ -32,6 +32,8 @@
     <string name="accountSecurityVerificationDescription">Wenn Sie diese Aktion nicht durchgeführt haben, empfehlen wir Ihnen, Ihr Kennwort zu ändern und Ihre Sicherheitseinstellungen zu überprüfen.</string>
     <string name="accountSecurityVerificationTitle">Überprüfen Sie die Sicherheit Ihres Kontos</string>
     <string name="accountSettingsButton">Kontoeinstellungen</string>
+    <string name="accountTitle">Konto</string>
+    <string name="accountsTitle">Konten</string>
     <string name="actionRequiredDescription">Aktion erforderlich, um eines Ihrer Konten zu sichern.</string>
     <string name="activityHistoryButton">Aktivitätsverlauf</string>
     <string name="addAccountButton">Ein Konto hinzufügen</string>
@@ -39,8 +41,6 @@
     <string name="appSecurityDescription">Schützen Sie den Zugriff auf Ihre App, indem Sie Ihre Telefonsperre aktivieren.</string>
     <string name="authorizationCodeTitle">Ihr Autorisierungscode</string>
     <string name="autoCloseTitle">Diese Information schliesst sich automatisch nach 15 Sekunden.</string>
-    <string name="bottomBarButtonHome">Home</string>
-    <string name="bottomBarButtonSettings">Settings</string>
     <string name="callButton">Anrufen</string>
     <string name="cancelButton">Abbrechen</string>
     <string name="changePasswordButton">Passwort ändern</string>
@@ -116,6 +116,7 @@
     <string name="showAccountPasswordButton">Kontopasswort anzeigen</string>
     <string name="startButton">Starten</string>
     <string name="subjectPlaceholder">Betreff</string>
+    <string name="submitMyTicketButton">Mein Ticket einreichen</string>
     <string name="submitTicketDescription">Um Ihnen effektiv helfen zu können, geben Sie bitte so viele Details wie möglich zu Ihrem Problem an.</string>
     <string name="submitTicketTitle">Ein Ticket einreichen</string>
     <string name="supportResponseDelay">Wir antworten innerhalb der nächsten 24 Geschäftstage.</string>

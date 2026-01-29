@@ -32,6 +32,8 @@
     <string name="accountSecurityVerificationDescription">If you did not perform this action, we recommend changing your password and reviewing your security settings.</string>
     <string name="accountSecurityVerificationTitle">Verify your account security</string>
     <string name="accountSettingsButton">Account settings</string>
+    <string name="accountTitle">Account</string>
+    <string name="accountsTitle">Accounts</string>
     <string name="actionRequiredDescription">Action required to secure one of your accounts.</string>
     <string name="activityHistoryButton">Activity history</string>
     <string name="addAccountButton">Add an account</string>
@@ -39,8 +41,6 @@
     <string name="appSecurityDescription">Protect access to your app by enabling your phone lock.</string>
     <string name="authorizationCodeTitle">Your authorization code</string>
     <string name="autoCloseTitle">This information closes automatically in 15 seconds.</string>
-    <string name="bottomBarButtonHome">Home</string>
-    <string name="bottomBarButtonSettings">Settings</string>
     <string name="callButton">Call</string>
     <string name="cancelButton">Cancel</string>
     <string name="changePasswordButton">Change password</string>
@@ -116,6 +116,7 @@
     <string name="showAccountPasswordButton">Show account password</string>
     <string name="startButton">Start</string>
     <string name="subjectPlaceholder">Subject</string>
+    <string name="submitMyTicketButton">Submit my ticket</string>
     <string name="submitTicketDescription">To help us assist you effectively, please provide as many details as possible regarding your issue.</string>
     <string name="submitTicketTitle">Submit a ticket</string>
     <string name="supportResponseDelay">We will respond within the next 24 business hours.</string>
