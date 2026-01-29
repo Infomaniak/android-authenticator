@@ -3,6 +3,8 @@ import com.android.build.api.dsl.androidLibrary
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(core.plugins.android.kmp.library)
+    alias(libs.plugins.skie)
+    id("infomaniak.kotlinMultiplatform")
 }
 
 val androidCompileSdk: Int by rootProject.extra

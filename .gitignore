@@ -18,3 +18,4 @@ uitest-env.properties
 **/local.properties
 *.mx
 /.kotlin
+/release
