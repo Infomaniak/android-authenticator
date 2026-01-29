@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -111,7 +112,7 @@ private fun ActionRequired() {
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
-                text = "Une action est requise pour sécuriser l'un de vos comptes."
+                text = stringResource(R.string.actionRequiredDescription)
             )
         }
     }
