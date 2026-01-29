@@ -21,6 +21,8 @@
     <string name="accountLossRiskBackupVerificationDescription">Asegúrese de que otro método de verificación en dos pasos esté configurado y funcione correctamente.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Si Authenticator es su último método de verificación en dos pasos, podría quedar bloqueado la próxima vez que inicie sesión.</string>
     <string name="accountLossRiskTitle">Podría perder acceso a esta cuenta</string>
+    <string name="accountPartiallyProtectedDescription">Actualiza tus configuraciones de seguridad para proteger tu cuenta.</string>
+    <string name="accountPartiallyProtectedTitle">Cuenta parcialmente protegida</string>
     <string name="accountPasswordTitle">Contraseña de la cuenta</string>
     <string name="accountProtected">Cuenta protegida</string>
     <string name="accountProtectionDisabledWarningDescription">Este dispositivo es el único utilizado para validar los inicios de sesión en su cuenta de Infomaniak.\n\nLe recomendamos agregar otro dispositivo o método de verificación antes de continuar.</string>
@@ -30,9 +32,13 @@
     <string name="accountSecurityVerificationDescription">Si no realizó esta acción, le recomendamos que cambie su contraseña y verifique sus configuraciones de seguridad.</string>
     <string name="accountSecurityVerificationTitle">Verifique la seguridad de su cuenta</string>
     <string name="accountSettingsButton">Configuración de la cuenta</string>
+    <string name="accountTitle">Cuenta</string>
+    <string name="accountsTitle">Cuentas</string>
     <string name="actionRequiredDescription">Se requiere acción para proteger una de tus cuentas.</string>
     <string name="activityHistoryButton">Historial de actividad</string>
+    <string name="addAccountButton">Añadir una cuenta</string>
     <string name="appAccessIsSecure">El acceso a Authenticator está seguro</string>
+    <string name="appSecurityDescription">Protege el acceso a tu aplicación activando el bloqueo del teléfono.</string>
     <string name="authorizationCodeTitle">Tu código de autorización</string>
     <string name="autoCloseTitle">Esta información se cerrará automáticamente en 15 segundos.</string>
     <string name="callButton">Llamar</string>
@@ -49,6 +55,7 @@
     <string name="continueButton">Continuar</string>
     <string name="copyPassword">Copiar contraseña</string>
     <string name="dataManagementTitle">Gestión de datos</string>
+    <string name="daysSupportAvailability">%1$d d. / %2$d</string>
     <string name="deletePreventionDescription">Eliminar la aplicación puede comprometer la seguridad de su cuenta.</string>
     <string name="deletePreventionTitle">¿Necesita ayuda?</string>
     <string name="denyButton">Denegar</string>
@@ -109,11 +116,13 @@
     <string name="showAccountPasswordButton">Mostrar contraseña de la cuenta</string>
     <string name="startButton">Comenzar</string>
     <string name="subjectPlaceholder">Asunto</string>
+    <string name="submitMyTicketButton">Enviar mi billete</string>
     <string name="submitTicketDescription">Para ayudarnos a asistirle eficazmente, proporcione tantos detalles como sea posible sobre su problema.</string>
     <string name="submitTicketTitle">Enviar un ticket</string>
     <string name="supportResponseDelay">Responderemos en las próximas 24 horas hábiles.</string>
     <string name="ticketSentSuccessDescription">Estamos haciendo todo lo posible para que un agente le responda lo antes posible.</string>
     <string name="ticketSentSuccessTitle">¡Su ticket ha sido enviado a nuestros equipos!</string>
+    <string name="timeSupportAvailability">%1$s a %2$s</string>
     <string name="understandConfirmButton">Entiendo</string>
     <string name="unlockingWithFaceId">Desbloquear con Face ID</string>
     <string name="verifySecurityButton">Verificar mi seguridad</string>
