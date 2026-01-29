@@ -35,15 +35,15 @@ private fun KotlinMultiplatformExtension.setup(
     project: Project,
     multiplatformExtension: MultiplatformExtension
 ) {
-    val xcframeworkName = project.name
-    val xcf = project.XCFramework()
+    val xcframeworkName = "CoreAuthenticator"
+    val xcf = project.XCFramework(xcframeworkName)
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
         macosArm64(),
     ).forEach {
         it.binaries.framework {
-            baseName = "CoreAuthenticator"
+            baseName = xcframeworkName
             binaryOption("bundleId", "com.infomaniak.multiplatform-authenticator.${xcframeworkName}")
             xcf.add(this)
             isStatic = true

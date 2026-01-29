@@ -27,6 +27,6 @@ echo "${bold}Start cleanAll Task${endBold}"
 ./gradlew cleanAll
 echo "${bold}cleanAll task completed.${endBold}"
 
-echo "${bold}Start assembleMultiPlatformLibReleaseXCFramework Task${endBold}"
+echo "${bold}Start assembleCoreAuthenticatorReleaseXCFramework Task${endBold}"
 ./gradlew :multiplatform-lib:assembleMultiPlatformLibReleaseXCFramework
 echo "${bold}cleanAll task completed.${endBold}"
