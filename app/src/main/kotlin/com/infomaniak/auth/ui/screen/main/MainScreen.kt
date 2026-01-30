@@ -44,7 +44,7 @@ import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.infomaniak.auth.R
-import com.infomaniak.auth.ui.components.FloatingActionButton
+import com.infomaniak.auth.ui.components.AuthenticatorFAB
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -71,7 +71,7 @@ fun MainScreen() {
 fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
     SinglePaneScaffold(
         floatingActionButton = {
-            if (backStack.last() == NavDestination.Home) FloatingActionButton(onClick = {})
+            if (backStack.last() == NavDestination.Home) AuthenticatorFAB(onClick = {})
         },
         bottomBar = {
             if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(

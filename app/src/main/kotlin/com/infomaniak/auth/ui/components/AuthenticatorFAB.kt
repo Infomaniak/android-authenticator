@@ -29,7 +29,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 
 
 @Composable
-fun FloatingActionButton(
+fun AuthenticatorFAB(
     onClick: () -> Unit,
 ) {
     FloatingActionButton(
