@@ -27,6 +27,7 @@ data class CustomColorScheme(
     val actionRequiredBackground: Color = Color.Unspecified,
     val accountSecured: Color = Color.Unspecified,
     val accountWarning: Color = Color.Unspecified,
+    val accountItemBackground: Color = Color.Unspecified,
 )
 
 private val illustrationBackgroundGradientLight = lightScheme.primary.copy(alpha = 0.28f)
@@ -39,6 +40,8 @@ private val accountSecuredLight = successDim5Light
 private val accountSecuredDark = successDim5Dark
 private val accountWarningLight = warningDim5Light
 private val accountWarningDark = warningDim5Dark
+private val accountItemBackgroundLight = neutral100
+private val accountItemBackgroundDark = backgroundSurface
 
 val lightCustomScheme = CustomColorScheme(
     illustrationBackgroundGradient = illustrationBackgroundGradientLight,
@@ -46,6 +49,7 @@ val lightCustomScheme = CustomColorScheme(
     actionRequiredBackground = actionRequiredBackgroundLight,
     accountSecured = accountSecuredLight,
     accountWarning = accountWarningLight,
+    accountItemBackground = accountItemBackgroundLight,
 )
 
 val darkCustomScheme = CustomColorScheme(
@@ -54,4 +58,5 @@ val darkCustomScheme = CustomColorScheme(
     actionRequiredBackground = actionRequiredBackgroundDark,
     accountSecured = accountSecuredDark,
     accountWarning = accountWarningDark,
+    accountItemBackground = accountItemBackgroundDark,
 )

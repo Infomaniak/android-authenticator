@@ -80,6 +80,7 @@ fun HomeScreen() {
     ) { paddingValues ->
         Column(
             modifier = Modifier
+                .background(AuthenticatorTheme.materialColors.surfaceContainerLow)
                 .padding(paddingValues)
         ) {
             if (accounts.count { it.securityLevel != AccountSecurityLevel.Secured } > 0) ActionRequired()
@@ -129,7 +130,7 @@ private fun AccountItem(account: FakeAccount) {
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.materialColors.surfaceBright),
+        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.accountItemBackground),
         shape = RoundedCornerShape(24.dp),
     ) {
         Row(

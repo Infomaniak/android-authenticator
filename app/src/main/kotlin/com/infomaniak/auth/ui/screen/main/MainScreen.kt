@@ -17,6 +17,9 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -84,10 +87,17 @@ fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<N
             )
         }
     ) { _ ->
+        val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
+                slideOutHorizontally(targetOffsetX = { -it })
+        val exitAnimation = slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                slideOutHorizontally(targetOffsetX = { it })
         NavDisplay(
             backStack = backStack,
             entryDecorators = entryDecorators,
-            entryProvider = baseEntryProvider(backStack)
+            entryProvider = baseEntryProvider(backStack),
+            transitionSpec = { enterAnimation },
+            popTransitionSpec = { exitAnimation },
+            predictivePopTransitionSpec = { exitAnimation },
         )
     }
 }
