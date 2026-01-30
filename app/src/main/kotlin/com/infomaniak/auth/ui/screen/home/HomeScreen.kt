@@ -140,6 +140,7 @@ private fun AccountItem(account: FakeAccount) {
             ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            //TODO Use initial avatar here (or an image if it exist ?)
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Avatar de l'utilisateur",
