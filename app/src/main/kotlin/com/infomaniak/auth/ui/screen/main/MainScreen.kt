@@ -67,46 +67,47 @@ fun MainScreen() {
 @Composable
 fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: List<NavEntryDecorator<NavKey>>) {
     SinglePaneScaffold(
-        bottomBar = {
-            if (backStack.last() is NavDestination.Root) {
-                NavigationBar(
-                    containerColor = AuthenticatorTheme.materialColors.surfaceContainerHighest,
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = Margin.Micro)
-                            .heightIn(min = 80.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        NavigationBarItem(
-                            selected = backStack.last() == NavDestination.Root.Home,
-                            onClick = {
-                                backStack.clear()
-                                backStack.add(NavDestination.Root.Home)
-                            },
-                            icon = { Icon(painterResource(R.drawable.home), null) },
-                            label = { Text(stringResource(R.string.accountTitle)) },
-                        )
-                        NavigationBarItem(
-                            selected = backStack.last() == NavDestination.Root.Settings,
-                            onClick = {
-                                backStack.add(NavDestination.Root.Settings)
-                            },
-                            icon = { Icon(painterResource(R.drawable.settings), null) },
-                            label = { Text(stringResource(R.string.settingsTitle)) },
-                        )
-                    }
-                }
-            }
-        }
+        bottomBar = { if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(backStack) }
     ) { _ ->
         NavDisplay(
             backStack = backStack,
             entryDecorators = entryDecorators,
             entryProvider = baseEntryProvider(backStack)
         )
+    }
+}
+
+@Composable
+private fun AuthenticatorBottomBar(backStack: NavBackStack<NavKey>) {
+    NavigationBar(
+        containerColor = AuthenticatorTheme.materialColors.surfaceContainerHighest,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Margin.Micro)
+                .heightIn(min = 80.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            NavigationBarItem(
+                selected = backStack.last() == NavDestination.Root.Home,
+                onClick = {
+                    backStack.clear()
+                    backStack.add(NavDestination.Root.Home)
+                },
+                icon = { Icon(painterResource(R.drawable.home), null) },
+                label = { Text(stringResource(R.string.accountTitle)) },
+            )
+            NavigationBarItem(
+                selected = backStack.last() == NavDestination.Root.Settings,
+                onClick = {
+                    backStack.add(NavDestination.Root.Settings)
+                },
+                icon = { Icon(painterResource(R.drawable.settings), null) },
+                label = { Text(stringResource(R.string.settingsTitle)) },
+            )
+        }
     }
 }
 
