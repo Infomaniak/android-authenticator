@@ -19,8 +19,15 @@ package com.infomaniak.auth.ui.screen.settings
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun SettingsScreen() {
     Text("SettingsScreen")
+}
+
+@PreviewSmallWindow
+@Composable
+private fun SettingsScreenPreview() {
+    SettingsScreen()
 }
