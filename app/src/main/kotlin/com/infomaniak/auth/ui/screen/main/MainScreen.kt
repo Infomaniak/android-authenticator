@@ -46,12 +46,12 @@ import com.infomaniak.core.ui.compose.margin.Margin
 @Composable
 fun MainScreen() {
     // TODO: will change when back give the result of account status
-    val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Home
+    val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Root.Home
     val backStack = rememberNavBackStack(startDestination)
 
     SinglePaneScaffold(
         bottomBar = {
-            if (backStack.last() == NavDestination.Home || backStack.last() == NavDestination.Settings) {
+            if (backStack.last() is NavDestination.Root) {
                 NavigationBar(
                     containerColor = AuthenticatorTheme.materialColors.surfaceContainerHighest,
                 ) {
@@ -64,18 +64,18 @@ fun MainScreen() {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         NavigationBarItem(
-                            selected = backStack.last() == NavDestination.Home,
+                            selected = backStack.last() == NavDestination.Root.Home,
                             onClick = {
                                 backStack.clear()
-                                backStack.add(NavDestination.Home)
+                                backStack.add(NavDestination.Root.Home)
                             },
                             icon = { Icon(painterResource(R.drawable.home), null) },
                             label = { Text(stringResource(R.string.accountTitle)) },
                         )
                         NavigationBarItem(
-                            selected = backStack.last() == NavDestination.Settings,
+                            selected = backStack.last() == NavDestination.Root.Settings,
                             onClick = {
-                                backStack.add(NavDestination.Settings)
+                                backStack.add(NavDestination.Root.Settings)
                             },
                             icon = { Icon(painterResource(R.drawable.settings), null) },
                             label = { Text(stringResource(R.string.settingsTitle)) },

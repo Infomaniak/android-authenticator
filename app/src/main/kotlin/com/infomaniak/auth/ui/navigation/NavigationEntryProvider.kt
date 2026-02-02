@@ -28,10 +28,10 @@ import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
 
 fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
-    entry<NavDestination.Home> {
+    entry<NavDestination.Root.Home> {
         HomeScreen()
     }
-    entry<NavDestination.Settings> {
+    entry<NavDestination.Root.Settings> {
         SettingsScreen()
     }
     entry<NavDestination.Onboarding.Start> {
@@ -49,7 +49,7 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
         OnboardingCompleteScreen(
             navigateToHome = {
                 backStack.clear()
-                backStack.add(NavDestination.Home)
+                backStack.add(NavDestination.Root.Home)
             }
         )
     }

@@ -22,10 +22,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface NavDestination : NavKey {
-    @Serializable
-    data object Home : NavDestination
-    @Serializable
-    data object Settings : NavDestination
+
+    sealed interface Root : NavDestination {
+        @Serializable
+        data object Home : Root
+        @Serializable
+        data object Settings : Root
+    }
 
     sealed interface Onboarding : NavDestination {
         @Serializable
