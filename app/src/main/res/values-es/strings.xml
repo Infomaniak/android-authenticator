@@ -30,6 +30,8 @@
     <string name="accountSecurityVerificationDescription">Si no realizó esta acción, le recomendamos que cambie su contraseña y verifique sus configuraciones de seguridad.</string>
     <string name="accountSecurityVerificationTitle">Verifique la seguridad de su cuenta</string>
     <string name="accountSettingsButton">Configuración de la cuenta</string>
+    <string name="accountTitle">Cuenta</string>
+    <string name="accountsTitle">Cuentas</string>
     <string name="actionRequiredDescription">Se requiere acción para proteger una de tus cuentas.</string>
     <string name="activityHistoryButton">Historial de actividad</string>
     <string name="appAccessIsSecure">El acceso a Authenticator está seguro</string>

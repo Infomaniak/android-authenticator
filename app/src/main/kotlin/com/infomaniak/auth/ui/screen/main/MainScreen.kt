@@ -17,27 +17,119 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigationevent.NavigationEventDispatcher
+import androidx.navigationevent.NavigationEventDispatcherOwner
+import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
+import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
+import com.infomaniak.core.ui.compose.margin.Margin
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MainScreen() {
     // TODO: will change when back give the result of account status
-    val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Home
-
+    val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Root.Home
     val backStack = rememberNavBackStack(startDestination)
-
-    NavDisplay(
-        backStack = backStack,
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
-        ),
-        entryProvider = baseEntryProvider(backStack)
+    val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
+        rememberSaveableStateHolderNavEntryDecorator(),
+        rememberViewModelStoreNavEntryDecorator()
     )
+
+    MainScreen(backStack, entryDecorators)
+}
+
+@Composable
+fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
+    SinglePaneScaffold(
+        bottomBar = {
+            if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(
+                backStack = backStack,
+                onMyAccountsClicked = {
+                    backStack.clear()
+                    backStack.add(NavDestination.Root.Home)
+                },
+                onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
+            )
+        }
+    ) { _ ->
+        NavDisplay(
+            backStack = backStack,
+            entryDecorators = entryDecorators,
+            entryProvider = baseEntryProvider(backStack)
+        )
+    }
+}
+
+@Composable
+private fun AuthenticatorBottomBar(
+    backStack: NavBackStack<NavKey>,
+    onMyAccountsClicked: () -> Unit,
+    onSettingsClicked: () -> Unit
+) {
+    NavigationBar {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Margin.Micro)
+                .heightIn(min = 80.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            NavigationBarItem(
+                selected = backStack.last() == NavDestination.Root.Home,
+                onClick = onMyAccountsClicked,
+                icon = { Icon(painterResource(R.drawable.home), null) },
+                label = { Text(stringResource(R.string.accountTitle)) },
+            )
+            NavigationBarItem(
+                selected = backStack.last() == NavDestination.Root.Settings,
+                onClick = onSettingsClicked,
+                icon = { Icon(painterResource(R.drawable.settings), null) },
+                label = { Text(stringResource(R.string.settingsTitle)) },
+            )
+        }
+    }
+}
+
+@PreviewSmallWindow
+@Composable
+private fun MainScreenPreview() {
+    AuthenticatorTheme {
+        val owner = object : NavigationEventDispatcherOwner {
+            override val navigationEventDispatcher: NavigationEventDispatcher = NavigationEventDispatcher()
+        }
+        CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides owner) {
+            val backStack = rememberNavBackStack(NavDestination.Root.Home)
+            val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>()
+            MainScreen(backStack = backStack, entryDecorators = entryDecorators)
+        }
+    }
 }
