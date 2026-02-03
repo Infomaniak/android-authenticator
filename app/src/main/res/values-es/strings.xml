@@ -120,6 +120,7 @@
     <string name="ticketSentSuccessDescription">Estamos haciendo todo lo posible para que un agente le responda lo antes posible.</string>
     <string name="ticketSentSuccessTitle">¡Su ticket ha sido enviado a nuestros equipos!</string>
     <string name="understandConfirmButton">Entiendo</string>
+    <string name="unlockWithBiometrics">Desbloqueo biométrico</string>
     <string name="unlockingWithFaceId">Desbloquear con Face ID</string>
     <string name="verifySecurityButton">Verificar mi seguridad</string>
     <string name="viewGuidesButton">Explorar las guías</string>

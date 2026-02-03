@@ -17,17 +17,74 @@
  */
 package com.infomaniak.auth.ui.screen.settings
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.DividerState
+import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
+import com.infomaniak.auth.ui.components.OptionItem
+import com.infomaniak.auth.ui.components.OptionsSection
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun SettingsScreen() {
-    Text("SettingsScreen")
+    val firstSectionItems = listOf<OptionItem>(
+        OptionItem.WithCheckBox(
+            stringResId = R.string.notificationsTitle,
+            dividerState = DividerState(withUpperDivider = false, withLowerDivider = false)
+        ),
+        OptionItem.WithCheckBox(
+            stringResId = R.string.unlockWithBiometrics,
+            dividerState = DividerState(withUpperDivider = true, withLowerDivider = false)
+        ),
+    )
+    val secondSectionItems = listOf<OptionItem>(
+        OptionItem.WithRightIcon(
+            stringResId = R.string.dataManagementTitle,
+            dividerState = DividerState(withUpperDivider = false, withLowerDivider = false),
+            rightIconResId = R.drawable.right_indicator
+        ),
+        OptionItem.WithRightIcon(
+            stringResId = R.string.feedbackTitle,
+            dividerState = DividerState(withUpperDivider = true, withLowerDivider = true),
+            rightIconResId = R.drawable.square_arrow_up
+        ),
+        OptionItem.WithRightIcon(
+            stringResId = R.string.contactSupportTitle,
+            dividerState = DividerState(withUpperDivider = false, withLowerDivider = false),
+            rightIconResId = R.drawable.right_indicator
+        ),
+    )
+    SinglePaneScaffold(
+        topBar = {
+            InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
+        },
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AuthenticatorTheme.materialColors.inverseOnSurface)
+                .padding(paddingValues)
+                .padding(top = Margin.Large),
+            verticalArrangement = Arrangement.spacedBy(Margin.Large)
+        ) {
+            OptionsSection(firstSectionItems, secondSectionItems)
+        }
+    }
 }
 
 @PreviewSmallWindow
 @Composable
-private fun SettingsScreenPreview() {
-    SettingsScreen()
+fun SettingsScreenPreview() {
+    AuthenticatorTheme {
+        SettingsScreen()
+    }
 }
