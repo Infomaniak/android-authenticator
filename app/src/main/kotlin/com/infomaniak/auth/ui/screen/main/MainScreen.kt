@@ -74,7 +74,7 @@ fun MainScreen() {
 fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
     SinglePaneScaffold(
         floatingActionButton = {
-            if (backStack.last() == NavDestination.Home) AuthenticatorFAB(onClick = {})
+            if (backStack.last() == NavDestination.Root.Home) AuthenticatorFAB(onClick = {})
         },
         bottomBar = {
             if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(
