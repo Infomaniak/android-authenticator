@@ -80,7 +80,7 @@ fun HomeScreen() {
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .background(AuthenticatorTheme.materialColors.surfaceContainerLow)
+                .background(AuthenticatorTheme.materialColors.inverseOnSurface)
                 .padding(paddingValues)
         ) {
             if (accounts.count { it.securityLevel != AccountSecurityLevel.Secured } > 0) ActionRequired()
