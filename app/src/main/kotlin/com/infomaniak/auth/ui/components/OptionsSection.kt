@@ -17,11 +17,15 @@
  */
 package com.infomaniak.auth.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,29 +37,45 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.margin.Margin
-
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun OptionsSection(vararg optionsSections: List<OptionItem>) {
-    optionsSections.forEach { optionsSection ->
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Margin.Medium),
-            colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.optionsSectionBackground),
-            shape = RoundedCornerShape(24.dp),
-        ) {
-            Column {
-                optionsSection.forEach { optionItem ->
-                    OptionItem(optionItem)
+fun OptionsSection(paddingValues: PaddingValues, vararg optionsSections: List<OptionItem>) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AuthenticatorTheme.materialColors.inverseOnSurface)
+            .padding(paddingValues)
+            .padding(top = Margin.Large),
+        verticalArrangement = Arrangement.spacedBy(Margin.Large)
+    ) {
+        optionsSections.forEach { optionsSection ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Margin.Medium),
+                colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.optionsSectionBackground),
+                shape = RoundedCornerShape(24.dp),
+            ) {
+                Column {
+                    optionsSection.forEachIndexed { index, optionItem ->
+                        OptionItem(
+                            hasPreviousItem = index > 0 && index < optionsSection.size,
+                            hasNextItem = index < optionsSection.size,
+                            optionItem = optionItem,
+                        )
+                    }
                 }
             }
         }
@@ -63,8 +83,8 @@ fun OptionsSection(vararg optionsSections: List<OptionItem>) {
 }
 
 @Composable
-private fun OptionItem(optionItem: OptionItem) {
-    if (optionItem.dividerState.withUpperDivider) {
+private fun OptionItem(hasPreviousItem: Boolean, hasNextItem: Boolean, optionItem: OptionItem) {
+    if (hasPreviousItem) {
         HorizontalDivider(
             color = AuthenticatorTheme.materialColors.inverseOnSurface,
         )
@@ -76,7 +96,7 @@ private fun OptionItem(optionItem: OptionItem) {
     ) {
         OptionContent(optionItem)
     }
-    if (optionItem.dividerState.withLowerDivider) {
+    if (hasNextItem) {
         HorizontalDivider(
             color = AuthenticatorTheme.materialColors.inverseOnSurface,
         )
@@ -99,20 +119,46 @@ private fun OptionContent(optionItem: OptionItem) {
                 contentDescription = null,
             )
         } else {
+            val isChecked = remember { mutableStateOf(true) }
             Switch(
                 modifier = Modifier
                     .scale(0.7f),
-                checked = true,
-                onCheckedChange = { },
+                checked = isChecked.value,
+                onCheckedChange = { isChecked.value = it },
             )
         }
     }
 }
 
-sealed class OptionItem(val stringResId: Int, val dividerState: DividerState) {
-    class WithCheckBox(stringResId: Int, dividerState: DividerState) : OptionItem(stringResId, dividerState)
-    class WithRightIcon(stringResId: Int, dividerState: DividerState, val rightIconResId: Int) :
-        OptionItem(stringResId, dividerState)
+sealed class OptionItem(val stringResId: Int) {
+
+    class WithCheckBox(stringResId: Int) : OptionItem(stringResId)
+
+    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItem(stringResId)
 }
 
-data class DividerState(val withUpperDivider: Boolean, val withLowerDivider: Boolean)
+@PreviewSmallWindow
+@Composable
+fun OptionsSectionPreview() {
+    val firstSectionItems = listOf(
+        OptionItem.WithCheckBox(
+            stringResId = R.string.appCompleteName,
+        ),
+        OptionItem.WithRightIcon(
+            stringResId = R.string.appCompleteName,
+            rightIconResId = R.drawable.right_indicator
+        ),
+    )
+
+    val secondSectionItems = listOf(
+        OptionItem.WithCheckBox(
+            stringResId = R.string.appCompleteName,
+        ),
+    )
+
+    AuthenticatorTheme {
+        Column {
+            OptionsSection(paddingValues = PaddingValues(Margin.Small), firstSectionItems, secondSectionItems)
+        }
+    }
+}
