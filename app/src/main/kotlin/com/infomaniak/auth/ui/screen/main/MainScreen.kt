@@ -120,7 +120,7 @@ private fun MainScreenPreview() {
         }
         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides owner) {
             val backStack = rememberNavBackStack(NavDestination.Root.Home)
-            val entryDecorators = listOf<NavEntryDecorator<NavKey>>()
+            val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>()
             MainScreen(backStack = backStack, entryDecorators = entryDecorators)
         }
     }
