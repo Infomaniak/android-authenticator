@@ -81,9 +81,7 @@ fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<N
 
 @Composable
 private fun AuthenticatorBottomBar(backStack: NavBackStack<NavKey>) {
-    NavigationBar(
-        containerColor = AuthenticatorTheme.materialColors.surfaceContainerHighest,
-    ) {
+    NavigationBar {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
