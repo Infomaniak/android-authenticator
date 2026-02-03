@@ -69,7 +69,16 @@ fun MainScreen() {
 @Composable
 fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
     SinglePaneScaffold(
-        bottomBar = { if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(backStack) }
+        bottomBar = {
+            if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(
+                backStack = backStack,
+                onMyAccountsClicked = {
+                    backStack.clear()
+                    backStack.add(NavDestination.Root.Home)
+                },
+                onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
+            )
+        }
     ) { _ ->
         NavDisplay(
             backStack = backStack,
@@ -80,7 +89,11 @@ fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<N
 }
 
 @Composable
-private fun AuthenticatorBottomBar(backStack: NavBackStack<NavKey>) {
+private fun AuthenticatorBottomBar(
+    backStack: NavBackStack<NavKey>,
+    onMyAccountsClicked: () -> Unit,
+    onSettingsClicked: () -> Unit
+) {
     NavigationBar {
         Row(
             modifier = Modifier
@@ -92,18 +105,13 @@ private fun AuthenticatorBottomBar(backStack: NavBackStack<NavKey>) {
         ) {
             NavigationBarItem(
                 selected = backStack.last() == NavDestination.Root.Home,
-                onClick = {
-                    backStack.clear()
-                    backStack.add(NavDestination.Root.Home)
-                },
+                onClick = onMyAccountsClicked,
                 icon = { Icon(painterResource(R.drawable.home), null) },
                 label = { Text(stringResource(R.string.accountTitle)) },
             )
             NavigationBarItem(
                 selected = backStack.last() == NavDestination.Root.Settings,
-                onClick = {
-                    backStack.add(NavDestination.Root.Settings)
-                },
+                onClick = onSettingsClicked,
                 icon = { Icon(painterResource(R.drawable.settings), null) },
                 label = { Text(stringResource(R.string.settingsTitle)) },
             )
