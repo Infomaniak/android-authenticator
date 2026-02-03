@@ -50,13 +50,15 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MainScreen() {
     // TODO: will change when back give the result of account status
     val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Root.Home
     val backStack = rememberNavBackStack(startDestination)
-    val entryDecorators = listOf<NavEntryDecorator<NavKey>>(
+    val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
         rememberSaveableStateHolderNavEntryDecorator(),
         rememberViewModelStoreNavEntryDecorator()
     )
@@ -65,7 +67,7 @@ fun MainScreen() {
 }
 
 @Composable
-fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: List<NavEntryDecorator<NavKey>>) {
+fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
     SinglePaneScaffold(
         bottomBar = { if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(backStack) }
     ) { _ ->
