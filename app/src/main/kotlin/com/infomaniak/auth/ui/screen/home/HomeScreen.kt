@@ -129,9 +129,9 @@ private fun AccountItem(account: FakeAccount) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
+            .clip(RoundedCornerShape(24.dp))
             .clickable(onClick = {}),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.accountItemBackground),
-        shape = RoundedCornerShape(24.dp),
     ) {
         Row(
             modifier = Modifier.padding(
