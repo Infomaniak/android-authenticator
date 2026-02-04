@@ -15,19 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.infomaniak.auth.lib
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 
-abstract class AuthenticatorFacade internal constructor() {
-    companion object {
-        val dummyInstance: AuthenticatorFacade = DummyAuthenticatorFacade()
+internal class DummyAuthenticatorFacade : AuthenticatorFacade() {
+    override val accounts: Flow<List<Account>>
+
+    private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
+        accounts = it.asStateFlow()
+    }::value
+
+    override val appStatus: Flow<AppStatus> = flow {
+        emit(AppStatus.SetupComplete)
+        //TODO[ik-auth]: Add an in-memory demo version that goes through all the possible states
     }
 
-    abstract val accounts: Flow<List<Account>>
-
-    abstract val appStatus: Flow<AppStatus>
-
-    abstract suspend fun addAccounts(connectedAccounts: Map<Account, String>)
+    override suspend fun addAccounts(connectedAccounts: Map<Account, String>) {
+        _accounts += connectedAccounts.keys
+    }
 }
