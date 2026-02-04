@@ -9,12 +9,14 @@ plugins {
 }
 
 val androidCompileSdk: Int by rootProject.extra
+val androidMinSdk: Int by rootProject.extra
 
 kotlin {
     @Suppress("UnstableApiUsage")
     androidLibrary {
         namespace = "com.infomaniak.auth.multiplatform"
         compileSdk = androidCompileSdk
+        minSdk = androidMinSdk
     }
 
     val xcframeworkName = "CoreAuthenticator"
