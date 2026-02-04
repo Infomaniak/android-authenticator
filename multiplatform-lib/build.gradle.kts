@@ -17,6 +17,10 @@ kotlin {
         namespace = "com.infomaniak.auth.multiplatform"
         compileSdk = androidCompileSdk
         minSdk = androidMinSdk
+
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }
     }
 
     val xcframeworkName = "CoreAuthenticator"
@@ -37,6 +41,11 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(core.kotlinx.coroutines.core)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
     }
