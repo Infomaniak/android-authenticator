@@ -62,9 +62,10 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onAccountClicked: (FakeAccount) -> Unit) {
     //TODO get accounts from DB
     val accounts = listOf(
         FakeAccount(
@@ -95,7 +96,6 @@ fun HomeScreen() {
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .background(AuthenticatorTheme.materialColors.inverseOnSurface)
                 .padding(paddingValues)
         ) {
             if (hasUnsecuredAccounts) ActionRequired()
@@ -123,7 +123,7 @@ fun HomeScreen() {
                 ) {
                     accounts.forEach { account ->
                         key(account.email) {
-                            AccountItem(account)
+                            AccountItem(account, , onClick = { account -> onAccountClicked(account) })
                         }
                     }
                 }
@@ -157,13 +157,13 @@ private fun ActionRequired() {
 }
 
 @Composable
-private fun AccountItem(account: FakeAccount) {
+private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .clip(RoundedCornerShape(Dimens.largeCornerRadius))
-            .clickable(onClick = {}),
+            .clickable(onClick = { onClick(account) }),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.accountItemBackground),
     ) {
         Row(
@@ -202,12 +202,13 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.colors.accountWarning }),
 }
 
-private data class FakeAccount(val name: String, val email: String, val securityLevel: AccountSecurityLevel)
+@Serializable
+data class FakeAccount(val name: String, val email: String, val securityLevel: AccountSecurityLevel)
 
 @PreviewSmallWindow
 @Composable
 fun HomeScreenPreview() {
     AuthenticatorTheme {
-        HomeScreen()
+        HomeScreen {}
     }
 }
