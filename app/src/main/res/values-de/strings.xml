@@ -21,6 +21,9 @@
     <string name="accountLossRiskBackupVerificationDescription">Stellen Sie sicher, dass eine andere Zwei-Faktor-Verifizierungsmethode eingerichtet und funktionsfähig ist.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Wenn Authenticator Ihre letzte Zwei-Faktor-Verifizierungsmethode ist, könnten Sie beim nächsten Anmeldeversuch gesperrt werden.</string>
     <string name="accountLossRiskTitle">Sie könnten den Zugriff auf dieses Konto verlieren</string>
+    <string name="accountNotConnectedWarningTitle">Melden Sie sich erneut an, um Ihr Konto zu sichern.</string>
+    <string name="accountPartiallyProtectedDescription">Aktualisieren Sie Ihre Sicherheitseinstellungen, um Ihr Konto zu schützen</string>
+    <string name="accountPartiallyProtectedTitle">Teilweise geschütztes Konto</string>
     <string name="accountPasswordTitle">Kontopasswort</string>
     <string name="accountProtected">Konto geschützt</string>
     <string name="accountProtectionDisabledWarningDescription">Dieses Gerät ist das einzige, das zur Validierung von Anmeldungen bei Ihrem Infomaniak-Konto verwendet wird.\n\nWir empfehlen, ein weiteres Gerät oder eine andere Verifizierungsmethode hinzuzufügen, bevor Sie fortfahren.</string>

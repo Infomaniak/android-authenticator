@@ -21,6 +21,9 @@
     <string name="accountLossRiskBackupVerificationDescription">Asegúrese de que otro método de verificación en dos pasos esté configurado y funcione correctamente.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Si Authenticator es su último método de verificación en dos pasos, podría quedar bloqueado la próxima vez que inicie sesión.</string>
     <string name="accountLossRiskTitle">Podría perder acceso a esta cuenta</string>
+    <string name="accountNotConnectedWarningTitle">Inicie sesión de nuevo para proteger su cuenta.</string>
+    <string name="accountPartiallyProtectedDescription">Actualiza tus configuraciones de seguridad para proteger tu cuenta</string>
+    <string name="accountPartiallyProtectedTitle">Cuenta parcialmente protegida</string>
     <string name="accountPasswordTitle">Contraseña de la cuenta</string>
     <string name="accountProtected">Cuenta protegida</string>
     <string name="accountProtectionDisabledWarningDescription">Este dispositivo es el único utilizado para validar los inicios de sesión en su cuenta de Infomaniak.\n\nLe recomendamos agregar otro dispositivo o método de verificación antes de continuar.</string>
