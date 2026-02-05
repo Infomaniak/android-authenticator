@@ -18,17 +18,11 @@
 package com.infomaniak.auth.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
+import com.infomaniak.auth.ui.screen.home.FakeAccount
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface NavDestination : NavKey {
-
-    sealed interface Root : NavDestination {
-        @Serializable
-        data object Home : Root
-        @Serializable
-        data object Settings : Root
-    }
 
     sealed interface Onboarding : NavDestination {
         @Serializable
@@ -40,4 +34,14 @@ sealed interface NavDestination : NavKey {
 
     @Serializable
     data object SecuringAccount : NavDestination
+
+    sealed interface Root : NavDestination {
+        @Serializable
+        data object Home : Root
+        @Serializable
+        data object Settings : Root
+    }
+
+    @Serializable
+    data class AccountDetails(val account: FakeAccount) : NavDestination
 }
