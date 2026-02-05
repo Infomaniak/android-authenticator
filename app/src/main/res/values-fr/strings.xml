@@ -38,6 +38,7 @@
     <string name="appAccessIsSecure">L’accès à Authenticator\nest sécurisé</string>
     <string name="authorizationCodeTitle">Votre code d’autorisation</string>
     <string name="autoCloseTitle">Cette information se ferme automatiquement dans 15 secondes.</string>
+    <string name="avatarContentDescription">Avatar du compte</string>
     <string name="callButton">Appeler</string>
     <string name="cancelButton">Annuler</string>
     <string name="changePasswordButton">Modifier le mot de passe</string>

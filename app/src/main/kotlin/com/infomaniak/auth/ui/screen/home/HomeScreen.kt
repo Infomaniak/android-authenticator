@@ -153,7 +153,7 @@ private fun AccountItem(account: FakeAccount) {
             //TODO Use initial avatar here (or an image if it exist ?)
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Avatar de l'utilisateur",
+                contentDescription = stringResource(R.string.avatarContentDescription),
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
