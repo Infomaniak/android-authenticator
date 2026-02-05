@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,16 +50,17 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun OptionsSection(paddingValues: PaddingValues, vararg optionsSections: List<OptionItem>) {
+fun OptionsSection(
+    modifier: Modifier = Modifier,
+    vararg sections: List<OptionItem>,
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .background(AuthenticatorTheme.materialColors.inverseOnSurface)
-            .padding(paddingValues)
             .padding(top = Margin.Large),
         verticalArrangement = Arrangement.spacedBy(Margin.Large)
     ) {
-        optionsSections.forEach { optionsSection ->
+        sections.forEach { optionsSection ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,8 +71,8 @@ fun OptionsSection(paddingValues: PaddingValues, vararg optionsSections: List<Op
                 Column {
                     optionsSection.forEachIndexed { index, optionItem ->
                         OptionItem(
-                            hasPreviousItem = index > 0 && index < optionsSection.size,
-                            hasNextItem = index < optionsSection.size,
+                            hasPreviousItem = index > 0,
+                            hasNextItem = index < optionsSection.size - 1,
                             optionItem = optionItem,
                         )
                     }
@@ -92,7 +92,7 @@ private fun OptionItem(hasPreviousItem: Boolean, hasNextItem: Boolean, optionIte
     Box(
         modifier = Modifier
             .height(50.dp)
-            .then(if (optionItem is OptionItem.WithRightIcon) Modifier.clickable(onClick = {}) else Modifier),
+            .clickable(enabled = optionItem is OptionItem.WithRightIcon) {}
     ) {
         OptionContent(optionItem)
     }
@@ -141,24 +141,18 @@ sealed class OptionItem(val stringResId: Int) {
 @Composable
 fun OptionsSectionPreview() {
     val firstSectionItems = listOf(
-        OptionItem.WithCheckBox(
-            stringResId = R.string.appCompleteName,
-        ),
-        OptionItem.WithRightIcon(
-            stringResId = R.string.appCompleteName,
-            rightIconResId = R.drawable.right_indicator
-        ),
+        OptionItem.WithCheckBox(stringResId = R.string.appCompleteName),
+        OptionItem.WithRightIcon(stringResId = R.string.appCompleteName, rightIconResId = R.drawable.right_indicator),
     )
 
-    val secondSectionItems = listOf(
-        OptionItem.WithCheckBox(
-            stringResId = R.string.appCompleteName,
-        ),
-    )
+    val secondSectionItems = listOf(OptionItem.WithCheckBox(stringResId = R.string.appCompleteName))
 
     AuthenticatorTheme {
         Column {
-            OptionsSection(paddingValues = PaddingValues(Margin.Small), firstSectionItems, secondSectionItems)
+            OptionsSection(
+                modifier = Modifier.padding(PaddingValues(Margin.Small)),
+                firstSectionItems, secondSectionItems
+            )
         }
     }
 }

@@ -17,7 +17,10 @@
  */
 package com.infomaniak.auth.ui.screen.settings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItem
@@ -55,7 +58,14 @@ fun SettingsScreen() {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
     ) { paddingValues ->
-        OptionsSection(paddingValues = paddingValues, firstSectionItems, secondSectionItems)
+
+        OptionsSection(
+            modifier = Modifier
+                .background(AuthenticatorTheme.materialColors.inverseOnSurface)
+                .padding(paddingValues),
+            firstSectionItems,
+            secondSectionItems
+        )
     }
 }
 
