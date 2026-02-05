@@ -31,6 +31,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -62,22 +65,27 @@ fun MainScreen() {
     // TODO: will change when back give the result of account status
     val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Root.Home
     val backStack = rememberNavBackStack(startDestination)
+    val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
     val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
         rememberSaveableStateHolderNavEntryDecorator(),
         rememberViewModelStoreNavEntryDecorator()
     )
 
-    MainScreen(backStack, entryDecorators)
+    MainScreen(backStack, currentDestination, entryDecorators)
 }
 
 @Composable
-fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
+fun MainScreen(
+    backStack: NavBackStack<NavKey>,
+    currentDestination: NavKey,
+    entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>,
+) {
     SinglePaneScaffold(
         floatingActionButton = {
-            if (backStack.last() == NavDestination.Root.Home) AuthenticatorFAB(onClick = {})
+            if (currentDestination == NavDestination.Root.Home) AuthenticatorFAB(onClick = {})
         },
         bottomBar = {
-            if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(
+            if (currentDestination is NavDestination.Root) AuthenticatorBottomBar(
                 backStack = backStack,
                 onMyAccountsClicked = {
                     backStack.clear()
@@ -142,8 +150,9 @@ private fun MainScreenPreview() {
         }
         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides owner) {
             val backStack = rememberNavBackStack(NavDestination.Root.Home)
+            val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
             val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>()
-            MainScreen(backStack = backStack, entryDecorators = entryDecorators)
+            MainScreen(backStack, currentDestination, entryDecorators)
         }
     }
 }

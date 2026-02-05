@@ -38,6 +38,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,6 +77,10 @@ fun HomeScreen() {
         ),
     )
 
+    val hasUnsecuredAccounts: Boolean by remember(accounts) {
+        derivedStateOf { accounts.any { it.securityLevel != AccountSecurityLevel.Secured } }
+    }
+
     SinglePaneScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
@@ -83,15 +91,17 @@ fun HomeScreen() {
                 .background(AuthenticatorTheme.materialColors.inverseOnSurface)
                 .padding(paddingValues)
         ) {
-            if (accounts.count { it.securityLevel != AccountSecurityLevel.Secured } > 0) ActionRequired()
+            if (hasUnsecuredAccounts) ActionRequired()
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
-                accounts.forEach {
-                    AccountItem(it)
+                accounts.forEach { account ->
+                    key(account.email) {
+                        AccountItem(account)
+                    }
                 }
             }
         }
