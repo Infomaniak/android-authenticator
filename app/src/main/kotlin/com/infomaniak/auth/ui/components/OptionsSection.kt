@@ -74,8 +74,8 @@ fun OptionsSection(
                     Column {
                         optionsSection.forEachIndexed { index, optionItem ->
                             OptionItem(
-                                optionItemType = optionItem,
                             )
+                                optionItemType = optionItem,
 
                             if (index < optionsSection.lastIndex) {
                                 HorizontalDivider(
@@ -140,6 +140,9 @@ sealed class OptionItemType(val stringResId: Int, val textColor: Color = Color.U
     class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItemType(stringResId)
     class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
 
+    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItem(stringResId)
+
+    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItem(stringResId, textColor)
 }
 
 @PreviewSmallWindow
