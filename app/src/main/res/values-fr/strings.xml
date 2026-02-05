@@ -34,6 +34,7 @@
     <string name="accountsTitle">Comptes</string>
     <string name="actionRequiredDescription">Une action est requise pour sécuriser l’un de vos comptes.</string>
     <string name="activityHistoryButton">Historique des activités</string>
+    <string name="addAccountContentDescription">Ajouter un compte</string>
     <string name="appAccessIsSecure">L’accès à Authenticator\nest sécurisé</string>
     <string name="authorizationCodeTitle">Votre code d’autorisation</string>
     <string name="autoCloseTitle">Cette information se ferme automatiquement dans 15 secondes.</string>

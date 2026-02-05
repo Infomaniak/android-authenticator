@@ -34,6 +34,7 @@
     <string name="accountsTitle">Cuentas</string>
     <string name="actionRequiredDescription">Se requiere acción para proteger una de tus cuentas.</string>
     <string name="activityHistoryButton">Historial de actividad</string>
+    <string name="addAccountContentDescription">Añadir una cuenta</string>
     <string name="appAccessIsSecure">El acceso a Authenticator está seguro</string>
     <string name="authorizationCodeTitle">Tu código de autorización</string>
     <string name="autoCloseTitle">Esta información se cerrará automáticamente en 15 segundos.</string>

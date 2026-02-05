@@ -34,6 +34,7 @@
     <string name="accountsTitle">Accounts</string>
     <string name="actionRequiredDescription">Action required to secure one of your accounts.</string>
     <string name="activityHistoryButton">Activity history</string>
+    <string name="addAccountContentDescription">Add an account</string>
     <string name="appAccessIsSecure">Access to Authenticator is secure</string>
     <string name="authorizationCodeTitle">Your authorization code</string>
     <string name="autoCloseTitle">This information closes automatically in 15 seconds.</string>
