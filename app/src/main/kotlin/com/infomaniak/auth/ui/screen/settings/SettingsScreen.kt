@@ -38,6 +38,10 @@ fun SettingsScreen() {
         OptionItem.WithCheckBox(
             stringResId = R.string.unlockWithBiometrics,
         ),
+        OptionItem.WithRightIcon(
+            stringResId = R.string.themeTitle,
+            rightIconResId = R.drawable.right_indicator
+        ),
     )
     val secondSectionItems = listOf<OptionItem>(
         OptionItem.WithRightIcon(
