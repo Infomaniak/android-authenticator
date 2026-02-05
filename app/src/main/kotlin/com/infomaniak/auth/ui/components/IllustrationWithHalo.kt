@@ -18,15 +18,15 @@
 package com.infomaniak.auth.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPerson
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -39,16 +39,19 @@ fun IllustrationWithHalo(
     themedImage: ThemedImage,
     modifier: Modifier = Modifier
 ) {
-    Image(
-        modifier = modifier
-            .background(
-                Brush.radialGradient(
-                    colors = listOf(AuthenticatorTheme.colors.illustrationBackgroundGradient, Color.Transparent),
-                )
-            ),
-        imageVector = themedImage.image(),
-        contentDescription = null,
-    )
+    Box(contentAlignment = Alignment.Center) {
+        Image(
+            modifier = modifier,
+            imageVector = ImageVector.vectorResource(R.drawable.gradient),
+            contentDescription = null,
+        )
+        Image(
+            modifier = modifier,
+            imageVector = themedImage.image(),
+            contentDescription = null,
+        )
+    }
+
 }
 
 @PreviewLightAndDark
