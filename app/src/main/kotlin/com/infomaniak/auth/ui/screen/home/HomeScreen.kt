@@ -113,8 +113,7 @@ private fun ActionRequired() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Margin.Medium, vertical = Margin.Large)
-            .clickable(onClick = {}),
+            .padding(horizontal = Margin.Medium, vertical = Margin.Large),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.actionRequiredBackground),
         border = BorderStroke(1.dp, AuthenticatorTheme.colors.actionRequiredBorder),
         shape = RoundedCornerShape(16.dp),
