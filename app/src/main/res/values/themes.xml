@@ -16,5 +16,6 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+
     <style name="Theme.AndroidAuthenticator" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
