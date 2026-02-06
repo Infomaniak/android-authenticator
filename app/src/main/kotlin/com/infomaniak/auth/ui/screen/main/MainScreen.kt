@@ -128,8 +128,8 @@ private fun AuthenticatorBottomBar(
             NavigationBarItem(
                 selected = backStack.last() == NavDestination.Root.Home,
                 onClick = onMyAccountsClicked,
-                icon = { Icon(painterResource(R.drawable.home), null) },
-                label = { Text(stringResource(R.string.accountTitle)) },
+                icon = { Icon(painterResource(R.drawable.accounts), null) },
+                label = { Text(stringResource(R.string.accountsTitle)) },
             )
             NavigationBarItem(
                 selected = backStack.last() == NavDestination.Root.Settings,
