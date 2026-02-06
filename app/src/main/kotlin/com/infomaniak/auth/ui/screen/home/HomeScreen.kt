@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -101,6 +102,7 @@ fun HomeScreen() {
 
             val state = rememberPullToRefreshState()
             var isRefreshing by remember { mutableStateOf(false) }
+            // TODO Handle the refresh correctly when we'll have real data to fetch
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
                     delay(2_000)
@@ -138,7 +140,7 @@ private fun ActionRequired() {
             .padding(horizontal = Margin.Medium, vertical = Margin.Large),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.actionRequiredBackground),
         border = BorderStroke(1.dp, AuthenticatorTheme.colors.actionRequiredBorder),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -160,7 +162,7 @@ private fun AccountItem(account: FakeAccount) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(Dimens.largeCornerRadius))
             .clickable(onClick = {}),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.accountItemBackground),
     ) {
@@ -173,7 +175,7 @@ private fun AccountItem(account: FakeAccount) {
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = stringResource(R.string.avatarContentDescription),
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(Dimens.bigAvatarSize)
                     .clip(CircleShape)
                     .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
             )
@@ -182,10 +184,11 @@ private fun AccountItem(account: FakeAccount) {
                 Text(text = account.email)
             }
             Spacer(modifier = Modifier.weight(1f))
+            //TODO Add a different content description when we're sure what represent each state
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
                 painter = painterResource(id = account.securityLevel.iconResId),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
                 tint = account.securityLevel.iconTint(),
             )
             Icon(painterResource(R.drawable.right_arrow), null)
@@ -196,7 +199,7 @@ private fun AccountItem(account: FakeAccount) {
 private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
     Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountSecured }),
     Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountWarning }),
-    Danger(iconResId = R.drawable.shield_warning, iconTint = { AuthenticatorTheme.colors.accountWarning }),
+    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.colors.accountWarning }),
 }
 
 private data class FakeAccount(val name: String, val email: String, val securityLevel: AccountSecurityLevel)

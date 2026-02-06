@@ -28,14 +28,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-
+import com.infomaniak.core.ui.compose.basics.Dimens
 
 @Composable
 fun AuthenticatorFAB(onClick: () -> Unit) {
     FloatingActionButton(
         onClick = onClick,
         containerColor = AuthenticatorTheme.materialColors.primaryContainer,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Dimens.largeCornerRadius),
         elevation = FloatingActionButtonDefaults.elevation(0.dp),
     ) {
         Icon(

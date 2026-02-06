@@ -27,6 +27,7 @@
     <string name="accountProtectionDisabledWarningTitle">Warning: your account will no longer be protected</string>
     <string name="accountRemovedAuthenticatorDescription">You will no longer receive login approvals on this device for account %s</string>
     <string name="accountRemovedAuthenticatorTitle">Account disconnected from Authenticator</string>
+    <string name="accountSecurityLevelContentDescription">Account security level</string>
     <string name="accountSecurityVerificationDescription">If you did not perform this action, we recommend changing your password and reviewing your security settings.</string>
     <string name="accountSecurityVerificationTitle">Verify your account security</string>
     <string name="accountSettingsButton">Account settings</string>
@@ -38,7 +39,7 @@
     <string name="appAccessIsSecure">Access to Authenticator is secure</string>
     <string name="authorizationCodeTitle">Your authorization code</string>
     <string name="autoCloseTitle">This information closes automatically in 15 seconds.</string>
-    <string name="avatarContentDescription">Avatar du compte</string>
+    <string name="avatarContentDescription">Account avatar</string>
     <string name="callButton">Call</string>
     <string name="cancelButton">Cancel</string>
     <string name="changePasswordButton">Change password</string>
