@@ -31,9 +31,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 
 
 @Composable
-fun AuthenticatorFAB(
-    onClick: () -> Unit,
-) {
+fun AuthenticatorFAB(onClick: () -> Unit) {
     FloatingActionButton(
         onClick = onClick,
         containerColor = AuthenticatorTheme.materialColors.primaryContainer,
