@@ -139,14 +139,14 @@ private fun ActionRequired() {
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium, vertical = Margin.Large),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.actionRequiredBackground),
-        border = BorderStroke(1.dp, AuthenticatorTheme.colors.actionRequiredBorder),
+        border = BorderStroke(1.dp, AuthenticatorTheme.colors.actionRequiredPrimary),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(R.drawable.alert),
                 contentDescription = null,
-                tint = AuthenticatorTheme.colors.actionRequiredBorder,
+                tint = AuthenticatorTheme.colors.actionRequiredPrimary,
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),

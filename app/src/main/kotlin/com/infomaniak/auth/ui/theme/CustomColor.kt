@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class CustomColorScheme(
     val illustrationBackgroundGradient: Color = Color.Unspecified,
-    val actionRequiredBorder: Color = Color.Unspecified,
+    val actionRequiredPrimary: Color = Color.Unspecified,
     val actionRequiredBackground: Color = Color.Unspecified,
     val accountSecured: Color = Color.Unspecified,
     val accountWarning: Color = Color.Unspecified,
@@ -32,8 +32,8 @@ data class CustomColorScheme(
 
 private val illustrationBackgroundGradientLight = lightScheme.primary.copy(alpha = 0.28f)
 private val illustrationBackgroundGradientDark = productSecurity.copy(alpha = 0.6f)
-private val actionRequiredBorderLight = warningDim5Light
-private val actionRequiredBorderDark = warningDim5Dark
+private val actionRequiredPrimaryLight = warningDim5Light
+private val actionRequiredPrimaryDark = warningDim5Dark
 private val actionRequiredBackgroundLight = warningDim4Light
 private val actionRequiredBackgroundDark = warningDim4Dark
 private val accountSecuredLight = successDim5Light
@@ -45,7 +45,7 @@ private val accountItemBackgroundDark = backgroundSurface
 
 val lightCustomScheme = CustomColorScheme(
     illustrationBackgroundGradient = illustrationBackgroundGradientLight,
-    actionRequiredBorder = actionRequiredBorderLight,
+    actionRequiredPrimary = actionRequiredPrimaryLight,
     actionRequiredBackground = actionRequiredBackgroundLight,
     accountSecured = accountSecuredLight,
     accountWarning = accountWarningLight,
@@ -54,7 +54,7 @@ val lightCustomScheme = CustomColorScheme(
 
 val darkCustomScheme = CustomColorScheme(
     illustrationBackgroundGradient = illustrationBackgroundGradientDark,
-    actionRequiredBorder = actionRequiredBorderDark,
+    actionRequiredPrimary = actionRequiredPrimaryDark,
     actionRequiredBackground = actionRequiredBackgroundDark,
     accountSecured = accountSecuredDark,
     accountWarning = accountWarningDark,
