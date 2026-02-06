@@ -120,6 +120,9 @@
     <string name="submitTicketDescription">Um Ihnen effektiv helfen zu können, geben Sie bitte so viele Details wie möglich zu Ihrem Problem an.</string>
     <string name="submitTicketTitle">Ein Ticket einreichen</string>
     <string name="supportResponseDelay">Wir antworten innerhalb der nächsten 24 Geschäftstage.</string>
+    <string name="themeDark">Dunkelheit</string>
+    <string name="themeLight">Klares</string>
+    <string name="themeSystem">System</string>
     <string name="themeTitle">Thema</string>
     <string name="ticketSentSuccessDescription">Wir tun unser Bestes, um sicherzustellen, dass ein Agent so schnell wie möglich auf Sie antwortet.</string>
     <string name="ticketSentSuccessTitle">Ihr Ticket wurde an unsere Teams gesendet!</string>

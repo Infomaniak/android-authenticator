@@ -52,9 +52,38 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
+fun SelectableOptionsSection(
+    modifier: Modifier = Modifier,
+    vararg sections: List<OptionItemType>,
+) {
+    OptionsSectionContainer(modifier, *sections) { optionItems ->
+
+    }
+}
+
+@Composable
 fun OptionsSection(
     vararg sections: List<OptionItemType>,
     modifier: Modifier = Modifier,
+) {
+    OptionsSectionContainer(modifier, *sections) { optionItems ->
+        optionItems.forEachIndexed { index, optionItemType ->
+            OptionItem(optionItemType = optionItemType)
+
+            if (index < optionItems.lastIndex) {
+                HorizontalDivider(
+                    color = AuthenticatorTheme.materialColors.outlineVariant,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun OptionsSectionContainer(
+    modifier: Modifier = Modifier,
+    vararg sections: List<OptionItemType>,
+    content: @Composable (optionItem: List<OptionItemType>) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -72,17 +101,7 @@ fun OptionsSection(
                     shape = RoundedCornerShape(24.dp),
                 ) {
                     Column {
-                        optionsSection.forEachIndexed { index, optionItem ->
-                            OptionItem(
-                            )
-                                optionItemType = optionItem,
-
-                            if (index < optionsSection.lastIndex) {
-                                HorizontalDivider(
-                                    color = AuthenticatorTheme.materialColors.outlineVariant,
-                                )
-                            }
-                        }
+                        content(optionsSection)
                     }
                 }
             }
@@ -133,16 +152,20 @@ private fun OptionContent(optionItemType: OptionItemType) {
     }
 }
 
-sealed class OptionItemType(val stringResId: Int, val textColor: Color = Color.Unspecified) {
-
+sealed class OptionItemType(
+    val stringResId: Int,
+    val textColor: Color = Color.Unspecified,
+    val onClick: (() -> Unit)? = null,
+) {
     class WithCheckBox(stringResId: Int) : OptionItemType(stringResId)
 
-    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItemType(stringResId)
+    class WithRightIcon(
+        stringResId: Int,
+        val rightIconResId: Int,
+        onClick: () -> Unit,
+    ) : OptionItemType(stringResId, onClick = onClick)
+
     class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
-
-    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItem(stringResId)
-
-    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItem(stringResId, textColor)
 }
 
 @PreviewSmallWindow
@@ -150,7 +173,10 @@ sealed class OptionItemType(val stringResId: Int, val textColor: Color = Color.U
 fun OptionsSectionPreview() {
     val firstSectionItems = listOf(
         OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName),
-        OptionItemType.WithRightIcon(stringResId = R.string.appCompleteName, rightIconResId = R.drawable.right_indicator),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.appCompleteName,
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {}),
     )
 
     val secondSectionItems = listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName))

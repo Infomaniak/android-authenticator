@@ -30,7 +30,7 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(onThemeClicked: () -> Unit) {
     val firstSectionItems = listOf<OptionItemType>(
         OptionItemType.WithCheckBox(
             stringResId = R.string.notificationsTitle,
@@ -40,21 +40,25 @@ fun SettingsScreen() {
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.themeTitle,
-            rightIconResId = R.drawable.right_indicator
+            rightIconResId = R.drawable.right_indicator,
+            onClick = { onThemeClicked() },
         ),
     )
     val secondSectionItems = listOf<OptionItemType>(
         OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
-            rightIconResId = R.drawable.right_indicator
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {},
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.feedbackTitle,
-            rightIconResId = R.drawable.square_arrow_up
+            rightIconResId = R.drawable.square_arrow_up,
+            onClick = {},
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.contactSupportTitle,
-            rightIconResId = R.drawable.right_indicator
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {},
         ),
     )
     SinglePaneScaffold(
@@ -75,6 +79,6 @@ fun SettingsScreen() {
 @Composable
 fun SettingsScreenPreview() {
     AuthenticatorTheme {
-        SettingsScreen()
+        SettingsScreen(onThemeClicked = {})
     }
 }

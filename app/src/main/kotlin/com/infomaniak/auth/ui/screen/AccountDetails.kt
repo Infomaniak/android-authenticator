@@ -85,7 +85,7 @@ fun AccountDetails(account: FakeAccount, onBackPressed: () -> Unit) {
                     }
                 )
             }
-            SettingsSections(account.securityLevel)
+            SettingsSections(modifier = Modifier.padding(paddingValues), account.securityLevel)
         }
     }
 }
@@ -230,12 +230,13 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 }
 
 @Composable
-private fun SettingsSections(securityLevel: AccountSecurityLevel) {
+private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: AccountSecurityLevel) {
     val firstSectionItem = if (securityLevel == AccountSecurityLevel.Secured) {
         listOf(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
-                rightIconResId = R.drawable.right_indicator
+                rightIconResId = R.drawable.right_indicator,
+                onClick = {},
             ),
         )
     } else listOf()
@@ -243,11 +244,13 @@ private fun SettingsSections(securityLevel: AccountSecurityLevel) {
     val secondSectionItems = listOf(
         OptionItemType.WithRightIcon(
             stringResId = R.string.activityHistoryButton,
-            rightIconResId = R.drawable.square_arrow_up
+            rightIconResId = R.drawable.square_arrow_up,
+            onClick = {},
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.accountSettingsButton,
-            rightIconResId = R.drawable.square_arrow_up
+            rightIconResId = R.drawable.square_arrow_up,
+            onClick = {},
         ),
         OptionItemType.Default(
             stringResId = R.string.disconnectButton,
@@ -255,7 +258,11 @@ private fun SettingsSections(securityLevel: AccountSecurityLevel) {
         ),
     )
 
-    OptionsSection(firstSectionItem, secondSectionItems)
+    OptionsSection(
+        modifier = modifier,
+        firstSectionItem,
+        secondSectionItems
+    )
 }
 
 private enum class AccountStatus(
