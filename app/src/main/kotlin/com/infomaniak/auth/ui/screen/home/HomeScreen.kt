@@ -165,10 +165,7 @@ private fun AccountItem(account: FakeAccount) {
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.accountItemBackground),
     ) {
         Row(
-            modifier = Modifier.padding(
-                vertical = Margin.Small,
-                horizontal = Margin.Medium,
-            ),
+            modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             //TODO Use initial avatar here (or an image if it exist ?)
