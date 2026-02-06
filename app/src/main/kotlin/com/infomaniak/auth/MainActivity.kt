@@ -22,20 +22,53 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.lifecycleScope
+import com.infomaniak.auth.data.repository.ThemeRepository
 import com.infomaniak.auth.ui.screen.main.MainScreen
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.ThemeMode
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var themeRepository: ThemeRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 
         setContent {
-            AuthenticatorTheme {
-                MainScreen()
+            val isSystemInDarkTheme = isSystemInDarkTheme()
+            var themeMode by remember { mutableStateOf(ThemeMode.SYSTEM) }
+            var isLoading by remember { mutableStateOf(true) }
+
+            LaunchedEffect(Unit) {
+                themeRepository.themeMode.first()?.let { themeMode = it }
+                isLoading = false
+            }
+
+            if (!isLoading) {
+                val isDarkTheme = when (themeMode) {
+                    ThemeMode.LIGHT -> false
+                    ThemeMode.DARK -> true
+                    ThemeMode.SYSTEM -> isSystemInDarkTheme
+                }
+
+                AuthenticatorTheme(isDarkTheme = isDarkTheme) {
+                    MainScreen()
+                }
             }
         }
     }

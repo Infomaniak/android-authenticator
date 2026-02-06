@@ -134,7 +134,8 @@ dependencies {
     implementation(core.infomaniak.core.ui.compose.preview)
     implementation(core.infomaniak.core.ui.compose.theme)
 
-    implementation(core.androidx.core.ktx)
+    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
@@ -143,6 +144,9 @@ dependencies {
     implementation(core.kotlinx.serialization.json)
 
     implementation(core.okhttp)
+
+    // DataStore
+    implementation(core.androidx.datastore.preferences)
 
     // Hilt
     implementation(core.hilt.android)

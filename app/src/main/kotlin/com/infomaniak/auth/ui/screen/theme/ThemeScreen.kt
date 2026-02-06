@@ -20,18 +20,26 @@ package com.infomaniak.auth.ui.screen.theme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation3.runtime.NavKey
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItem
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.ThemeMode
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun ThemeScreen(onBackPressed: () -> Unit) {
+fun ThemeScreen(
+    onBackPressed: () -> Unit,
+    viewModel: ThemeViewModel = hiltViewModel()
+) {
+    val currentTheme by viewModel.themeMode.collectAsStateWithLifecycle()
+
     SinglePaneScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
@@ -43,20 +51,20 @@ fun ThemeScreen(onBackPressed: () -> Unit) {
         },
     ) { paddingValues ->
         val section = listOf(
-            OptionItem.WithRightIcon(
+            OptionItem.WithSelection(
                 stringResId = R.string.themeLight,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = {},
+                isSelected = currentTheme == ThemeMode.LIGHT,
+                onClick = { viewModel.setThemeMode(ThemeMode.LIGHT) },
             ),
-            OptionItem.WithRightIcon(
+            OptionItem.WithSelection(
                 stringResId = R.string.themeDark,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = {},
+                isSelected = currentTheme == ThemeMode.DARK,
+                onClick = { viewModel.setThemeMode(ThemeMode.DARK) },
             ),
-            OptionItem.WithRightIcon(
+            OptionItem.WithSelection(
                 stringResId = R.string.themeSystem,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = {},
+                isSelected = currentTheme == ThemeMode.SYSTEM,
+                onClick = { viewModel.setThemeMode(ThemeMode.SYSTEM) },
             ),
         )
 
@@ -75,5 +83,4 @@ fun ThemeScreenPreview() {
     AuthenticatorTheme {
         ThemeScreen(onBackPressed = {})
     }
-
 }

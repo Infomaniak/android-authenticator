@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -114,7 +115,9 @@ private fun OptionItem(optionItemType: OptionItemType) {
     Box(
         modifier = Modifier
             .height(50.dp)
-            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon) {}
+            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon || optionItemType is OptionItem.WithSelection) {
+                optionItem.onClick?.invoke()
+            }
     ) {
         OptionContent(optionItemType)
     }
@@ -147,6 +150,16 @@ private fun OptionContent(optionItemType: OptionItemType) {
                     onCheckedChange = { isChecked.value = it },
                 )
             }
+            is OptionItem.WithSelection -> {
+                if (optionItem.isSelected) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(R.drawable.shield_check),
+                        contentDescription = null,
+                        tint = AuthenticatorTheme.materialColors.primary
+                    )
+                }
+            }
             else -> {}
         }
     }
@@ -166,6 +179,13 @@ sealed class OptionItemType(
     ) : OptionItemType(stringResId, onClick = onClick)
 
     class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
+    class WithSelection(
+        stringResId: Int,
+        val isSelected: Boolean,
+        onClick: () -> Unit,
+    ) : OptionItemType(stringResId, onClick = onClick)
+
+    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItem(stringResId, textColor)
 }
 
 @PreviewSmallWindow
