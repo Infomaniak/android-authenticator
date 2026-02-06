@@ -37,11 +37,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +60,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen() {
@@ -92,15 +98,31 @@ fun HomeScreen() {
                 .padding(paddingValues)
         ) {
             if (hasUnsecuredAccounts) ActionRequired()
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(Margin.Small)
+
+            val state = rememberPullToRefreshState()
+            var isRefreshing by remember { mutableStateOf(false) }
+            LaunchedEffect(isRefreshing) {
+                if (isRefreshing) {
+                    delay(2_000)
+                    isRefreshing = false
+                }
+            }
+
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                state = state,
+                onRefresh = { isRefreshing = true },
             ) {
-                accounts.forEach { account ->
-                    key(account.email) {
-                        AccountItem(account)
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(Margin.Small)
+                ) {
+                    accounts.forEach { account ->
+                        key(account.email) {
+                            AccountItem(account)
+                        }
                     }
                 }
             }
