@@ -16,13 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.auth.lib.matomo
+package com.infomaniak.auth.lib
 
-enum class MatomoName(val value: String) {
-
-    //region Common
-    //endregion
-
-    //region iOS
-    //endregion
-}
+data class CredentialsForMigration(
+    val confirmedEmail: String,
+    val password: String,
+)

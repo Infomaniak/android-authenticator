@@ -16,13 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.auth.lib.matomo
+package com.infomaniak.auth.lib
 
-enum class MatomoName(val value: String) {
+@ConsistentCopyVisibility
+data class Account internal constructor(
+    val id: Long,
+    val fullName: String,
+    val initials: String,
+    val email: String,
+    val avatarUrl: String? = null,
+    val status: Status,
+) {
 
-    //region Common
-    //endregion
-
-    //region iOS
-    //endregion
+    sealed interface Status {
+        data class NotConnected(val action: NotConnectedAction?) : Status
+        data object LoggedIn : Status
+    }
 }

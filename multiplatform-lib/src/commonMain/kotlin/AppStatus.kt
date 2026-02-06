@@ -16,13 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.auth.lib.matomo
+package com.infomaniak.auth.lib
 
-enum class MatomoName(val value: String) {
+sealed interface AppStatus {
 
-    //region Common
-    //endregion
+    /**
+     * When [isMigratingFromLegacyKAuth] is true, look for [AuthenticatorFacade.accounts] to get the list
+     * of accounts that are pending migration.
+     */
+    data class LoginRequired(
+        val isMigratingFromLegacyKAuth: Boolean,
+        val proceed: (() -> Unit)?,
+    ) : AppStatus
 
-    //region iOS
-    //endregion
+    data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
+
+    data object SetupComplete : AppStatus
 }

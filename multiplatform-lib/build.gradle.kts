@@ -9,12 +9,18 @@ plugins {
 }
 
 val androidCompileSdk: Int by rootProject.extra
+val androidMinSdk: Int by rootProject.extra
 
 kotlin {
     @Suppress("UnstableApiUsage")
     androidLibrary {
         namespace = "com.infomaniak.auth.multiplatform"
         compileSdk = androidCompileSdk
+        minSdk = androidMinSdk
+
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }
     }
 
     val xcframeworkName = "CoreAuthenticator"
@@ -28,6 +34,19 @@ kotlin {
             binaryOption("bundleId", "com.infomaniak.multiplatform-authenticator.${xcframeworkName}")
             xcf.add(this)
             isStatic = true
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(core.kotlinx.coroutines.core)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
         }
     }
 

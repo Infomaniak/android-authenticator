@@ -16,13 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.auth.lib.matomo
+package com.infomaniak.auth.lib
 
-enum class MatomoName(val value: String) {
+import kotlinx.coroutines.flow.Flow
 
-    //region Common
-    //endregion
+abstract class AuthenticatorFacade internal constructor() {
+    companion object {
+        val dummyInstance: AuthenticatorFacade = DummyAuthenticatorFacade()
+    }
 
-    //region iOS
-    //endregion
+    abstract val accounts: Flow<List<Account>>
+
+    abstract val appStatus: Flow<AppStatus>
+
+    abstract suspend fun addAccounts(connectedAccounts: Map<Account, String>)
 }
