@@ -48,6 +48,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+        androidMain {
+            dependencies {
+                implementation(core.splitties.appctx)
+                implementation(core.splitties.bitflags)
+            }
+        }
     }
 
     compilerOptions {
