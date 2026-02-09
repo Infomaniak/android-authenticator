@@ -69,6 +69,10 @@ internal operator fun CFMutableDictionaryRef?.set(key: CValuesRef<*>?, value: In
 
 @ExperimentalForeignApi
 internal operator fun CFMutableDictionaryRef?.set(key: CValuesRef<*>?, value: NSData?) {
+    // The cast below is fine because it's a "toll-free bridged" type.
+    // See Apple doc archive on it:
+    // https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html
+    @Suppress("UNCHECKED_CAST")
     this[key] = CFBridgingRetain(value) as CFDataRef
 }
 
