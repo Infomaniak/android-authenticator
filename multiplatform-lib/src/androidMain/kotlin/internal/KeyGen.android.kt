@@ -24,9 +24,30 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import splitties.bitflags.withFlag
 import splitties.init.appCtx
+import java.security.KeyPair
 import java.security.KeyPairGenerator
 
 internal const val keyStoreProvider = "AndroidKeyStore"
+
+internal fun generateEcKeyPair(
+    alias: String,
+    privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
+    publicKeyPurposes: KeyPurposes = KeyPurposes.publicKeyDefaults,
+    keyAccessGuard: KeyAccessGuard,
+): Xor<KeyPair, Exception> {
+    val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC)
+    val parameterSpec = KeyGenParameterSpec.Builder(
+        alias,
+        (privateKeyPurposes + publicKeyPurposes).asFlags()
+    ).also {
+        it.setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
+        keyAccessGuard.applyTo(it)
+    }.build()
+
+    keyPairGenerator.initialize(parameterSpec)
+    val keyPair = keyPairGenerator.generateKeyPair()
+    return Xor.First(keyPair)
+}
 
 internal fun generateKeyPairInTheKeystore(
     alias: String,
@@ -34,7 +55,7 @@ internal fun generateKeyPairInTheKeystore(
     publicKeyPurposes: KeyPurposes = KeyPurposes.publicKeyDefaults,
     keyAccessGuard: KeyAccessGuard,
     preferStrongbox: Boolean,
-): Xor<Unit, Exception> {
+): Xor<Unit, Throwable> = runCatching {
     val keyPairGenerator = KeyPairGenerator.getInstance(
         KeyProperties.KEY_ALGORITHM_EC,
         keyStoreProvider
@@ -57,8 +78,8 @@ internal fun generateKeyPairInTheKeystore(
 
     keyPairGenerator.initialize(parameterSpec)
     val _keyPair = keyPairGenerator.generateKeyPair()
-    return Xor.First(Unit)
-}
+    Xor.First(Unit)
+}.getOrElse { Xor.Second(it) }
 
 private fun KeyPurposes.asFlags(): Int = 0
     .withFlag(if (signing) KeyProperties.PURPOSE_SIGN else 0)
