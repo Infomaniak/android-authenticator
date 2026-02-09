@@ -58,7 +58,7 @@ import platform.Security.kSecPublicKeyAttrs
  *
  * A public key can be generated later from it.
  */
-internal fun generatePrivateKeyInTheKeychain(
+internal fun generateEcPrivateKeyInTheKeychain(
     tag: String,
     privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
     publicKeyPurposes: KeyPurposes? = null,
