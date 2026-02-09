@@ -54,6 +54,27 @@ import platform.Security.kSecPrivateKeyAttrs
 import platform.Security.kSecPublicKeyAttrs
 
 /**
+ * Generates an EC private key in the KeyChain for future use.
+ *
+ * A public key can be generated later from it.
+ */
+internal fun generatePrivateKeyInTheKeychain(
+    tag: String,
+    privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
+    publicKeyPurposes: KeyPurposes? = null,
+    keyAccessGuard: KeyAccessGuard,
+    accessibility: KeyAccessibility
+): Xor<SecKeyRef, NSError> = generatePrivateKey(
+    tag = tag,
+    privateKeyPurposes = privateKeyPurposes,
+    publicKeyPurposes = publicKeyPurposes,
+    keyAccessGuard = keyAccessGuard,
+    accessibility = accessibility,
+    storageLocation = KeyStorageLocation.KeyChain
+)
+
+
+/**
  * Generates an EC private key in the device Secure Enclave for future use.
  *
  * A public key can be generated later from it.
@@ -66,6 +87,22 @@ internal fun generatePrivateKeyInTheSecureEnclave(
     publicKeyPurposes: KeyPurposes? = null,
     keyAccessGuard: KeyAccessGuard,
     accessibility: KeyAccessibility.SecureEnclaveCompatible
+): Xor<SecKeyRef, NSError> = generatePrivateKey(
+    tag = tag,
+    privateKeyPurposes = privateKeyPurposes,
+    publicKeyPurposes = publicKeyPurposes,
+    keyAccessGuard = keyAccessGuard,
+    accessibility = accessibility,
+    storageLocation = KeyStorageLocation.SecureEnclave
+)
+
+private fun generatePrivateKey(
+    tag: String,
+    privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
+    publicKeyPurposes: KeyPurposes? = null,
+    keyAccessGuard: KeyAccessGuard,
+    accessibility: KeyAccessibility,
+    storageLocation: KeyStorageLocation,
 ): Xor<SecKeyRef, NSError> = memScoped {
     val attributes = createKeyAttributes(
         tag = tag,
@@ -73,6 +110,7 @@ internal fun generatePrivateKeyInTheSecureEnclave(
         publicKeyPurposes = publicKeyPurposes,
         accessControl = keyAccessGuard,
         accessibility = accessibility,
+        storageLocation = storageLocation,
     )
 
     val e = alloc<CFErrorRefVar>()
@@ -94,12 +132,16 @@ private fun createKeyAttributes(
     publicKeyPurposes: KeyPurposes?,
     accessControl: KeyAccessGuard,
     accessibility: KeyAccessibility,
+    storageLocation: KeyStorageLocation,
 ) = buildCFDictionary {
     // See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
     // See all key gen attributes here: https://developer.apple.com/documentation/security/key-generation-attributes
     this[kSecAttrType] = kSecAttrKeyTypeECSECPrimeRandom
     this[kSecAttrKeySizeInBits] = 256
-    this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave
+    when (storageLocation) {
+        KeyStorageLocation.SecureEnclave -> { this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave }
+        KeyStorageLocation.KeyChain -> {}
+    }
     this[kSecPrivateKeyAttrs] = buildCFDictionary {
         privateKeyPurposes?.applyTo(this)
         this[kSecAttrIsPermanent] = true
