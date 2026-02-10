@@ -11,9 +11,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -96,8 +94,6 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = neutral22,
 )
 
-val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
-
 @Composable
 fun AuthenticatorTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -125,12 +121,7 @@ fun AuthenticatorTheme(
         }
     }
 
-    val customColors = if (isDarkTheme) darkCustomScheme else lightCustomScheme
-
-    CompositionLocalProvider(
-        LocalCustomColorScheme provides customColors,
-        LocalIsThemeDarkMode provides isDarkTheme
-    ) {
+    CompositionLocalProvider(LocalIsThemeDarkMode provides isDarkTheme) {
         MaterialTheme(
             colorScheme = colorScheme,
             content = content
@@ -139,9 +130,6 @@ fun AuthenticatorTheme(
 }
 
 object AuthenticatorTheme {
-    val colors: CustomColorScheme
-        @Composable
-        get() = LocalCustomColorScheme.current
     val materialColors: ColorScheme
         @Composable
         get() = MaterialTheme.colorScheme
