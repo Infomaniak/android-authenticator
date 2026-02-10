@@ -59,6 +59,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xexport-kdoc") // Provide documentation with kDoc in Objective-C header
         freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
 }
 

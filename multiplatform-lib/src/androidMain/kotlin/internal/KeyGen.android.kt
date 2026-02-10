@@ -76,7 +76,7 @@ internal fun generateKeyPairInTheKeystore(
     }.build()
 
     keyPairGenerator.initialize(parameterSpec)
-    val _keyPair = keyPairGenerator.generateKeyPair()
+    val _ = keyPairGenerator.generateKeyPair()
 }
 
 private fun KeyPurposes.asFlags(): Int = 0
