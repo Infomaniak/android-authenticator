@@ -1,0 +1,47 @@
+<!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M3.375,7.892C3.375,8.991 3.81,10.045 4.584,10.821C5.357,11.598 6.406,12.035 7.5,12.035C8.594,12.035 9.643,11.598 10.417,10.821C11.19,10.045 11.625,8.991 11.625,7.892C11.625,6.794 11.19,5.74 10.417,4.963C9.643,4.186 8.594,3.75 7.5,3.75C6.406,3.75 5.357,4.186 4.584,4.963C3.81,5.74 3.375,6.794 3.375,7.892Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M15.095,10.673C15.095,11.505 15.424,12.303 16.01,12.892C16.596,13.48 17.391,13.811 18.22,13.811C19.049,13.811 19.843,13.48 20.429,12.892C21.015,12.303 21.345,11.505 21.345,10.673C21.345,9.841 21.015,9.042 20.429,8.454C19.843,7.865 19.049,7.535 18.22,7.535C17.391,7.535 16.596,7.865 16.01,8.454C15.424,9.042 15.095,9.841 15.095,10.673Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M0.751,20.25C0.751,18.442 1.462,16.708 2.728,15.43C3.994,14.151 5.71,13.433 7.5,13.433C9.291,13.433 11.007,14.151 12.273,15.43C13.539,16.708 14.25,18.442 14.25,20.25"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M17.315,20.25H23.251C23.251,18.894 22.718,17.594 21.768,16.635C20.819,15.676 19.531,15.137 18.189,15.137C17.481,15.137 16.788,15.287 16.152,15.57"
+        android:strokeWidth="1.5"
+        android:strokeColor="#9F9F9F"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

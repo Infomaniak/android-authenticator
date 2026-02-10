@@ -27,6 +27,7 @@
     <string name="accountProtectionDisabledWarningTitle">Attention, votre compte ne sera plus protégé</string>
     <string name="accountRemovedAuthenticatorDescription">Vous ne recevrez plus les connexions à approuver sur cet appareil pour le compte %s</string>
     <string name="accountRemovedAuthenticatorTitle">Compte déconnecté d’Authenticator</string>
+    <string name="accountSecurityLevelContentDescription">Niveau de sécurité du compte</string>
     <string name="accountSecurityVerificationDescription">Si vous n’avez pas effectué cette action, nous vous recommandons de modifier votre mot de passe et de vérifier vos paramètres de sécurité.</string>
     <string name="accountSecurityVerificationTitle">Vérifiez la sécurité de votre compte</string>
     <string name="accountSettingsButton">Paramètres du compte</string>
@@ -34,9 +35,11 @@
     <string name="accountsTitle">Comptes</string>
     <string name="actionRequiredDescription">Une action est requise pour sécuriser l’un de vos comptes.</string>
     <string name="activityHistoryButton">Historique des activités</string>
+    <string name="addAccountContentDescription">Ajouter un compte</string>
     <string name="appAccessIsSecure">L’accès à Authenticator\nest sécurisé</string>
     <string name="authorizationCodeTitle">Votre code d’autorisation</string>
     <string name="autoCloseTitle">Cette information se ferme automatiquement dans 15 secondes.</string>
+    <string name="avatarContentDescription">Avatar du compte</string>
     <string name="callButton">Appeler</string>
     <string name="cancelButton">Annuler</string>
     <string name="changePasswordButton">Modifier le mot de passe</string>

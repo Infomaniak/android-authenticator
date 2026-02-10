@@ -22,16 +22,41 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class CustomColorScheme(
-    val illustrationBackgroundGradient: Color = Color.Unspecified
+    val illustrationBackgroundGradient: Color = Color.Unspecified,
+    val actionRequiredPrimary: Color = Color.Unspecified,
+    val actionRequiredBackground: Color = Color.Unspecified,
+    val accountSecured: Color = Color.Unspecified,
+    val accountWarning: Color = Color.Unspecified,
+    val accountItemBackground: Color = Color.Unspecified,
 )
 
 private val illustrationBackgroundGradientLight = lightScheme.primary.copy(alpha = 0.28f)
 private val illustrationBackgroundGradientDark = productSecurity.copy(alpha = 0.6f)
+private val actionRequiredPrimaryLight = warningDim5Light
+private val actionRequiredPrimaryDark = warningDim5Dark
+private val actionRequiredBackgroundLight = warningDim4Light
+private val actionRequiredBackgroundDark = warningDim4Dark
+private val accountSecuredLight = successDim5Light
+private val accountSecuredDark = successDim5Dark
+private val accountWarningLight = warningDim5Light
+private val accountWarningDark = warningDim5Dark
+private val accountItemBackgroundLight = neutral100
+private val accountItemBackgroundDark = backgroundSurface
 
 val lightCustomScheme = CustomColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientLight
+    illustrationBackgroundGradient = illustrationBackgroundGradientLight,
+    actionRequiredPrimary = actionRequiredPrimaryLight,
+    actionRequiredBackground = actionRequiredBackgroundLight,
+    accountSecured = accountSecuredLight,
+    accountWarning = accountWarningLight,
+    accountItemBackground = accountItemBackgroundLight,
 )
 
 val darkCustomScheme = CustomColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientDark
+    illustrationBackgroundGradient = illustrationBackgroundGradientDark,
+    actionRequiredPrimary = actionRequiredPrimaryDark,
+    actionRequiredBackground = actionRequiredBackgroundDark,
+    accountSecured = accountSecuredDark,
+    accountWarning = accountWarningDark,
+    accountItemBackground = accountItemBackgroundDark,
 )

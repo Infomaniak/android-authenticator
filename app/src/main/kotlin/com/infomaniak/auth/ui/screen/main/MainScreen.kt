@@ -17,6 +17,9 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +31,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -44,6 +50,7 @@ import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.AuthenticatorFAB
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -58,19 +65,27 @@ fun MainScreen() {
     // TODO: will change when back give the result of account status
     val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Root.Home
     val backStack = rememberNavBackStack(startDestination)
+    val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
     val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
         rememberSaveableStateHolderNavEntryDecorator(),
         rememberViewModelStoreNavEntryDecorator()
     )
 
-    MainScreen(backStack, entryDecorators)
+    MainScreen(backStack, currentDestination, entryDecorators)
 }
 
 @Composable
-fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>) {
+fun MainScreen(
+    backStack: NavBackStack<NavKey>,
+    currentDestination: NavKey,
+    entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>,
+) {
     SinglePaneScaffold(
+        floatingActionButton = {
+            if (currentDestination == NavDestination.Root.Home) AuthenticatorFAB(onClick = {})
+        },
         bottomBar = {
-            if (backStack.last() is NavDestination.Root) AuthenticatorBottomBar(
+            if (currentDestination is NavDestination.Root) AuthenticatorBottomBar(
                 backStack = backStack,
                 onMyAccountsClicked = {
                     backStack.clear()
@@ -80,10 +95,17 @@ fun MainScreen(backStack: NavBackStack<NavKey>, entryDecorators: ImmutableList<N
             )
         }
     ) { _ ->
+        val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
+                slideOutHorizontally(targetOffsetX = { -it })
+        val exitAnimation = slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                slideOutHorizontally(targetOffsetX = { it })
         NavDisplay(
             backStack = backStack,
             entryDecorators = entryDecorators,
-            entryProvider = baseEntryProvider(backStack)
+            entryProvider = baseEntryProvider(backStack),
+            transitionSpec = { enterAnimation },
+            popTransitionSpec = { exitAnimation },
+            predictivePopTransitionSpec = { exitAnimation },
         )
     }
 }
@@ -106,8 +128,8 @@ private fun AuthenticatorBottomBar(
             NavigationBarItem(
                 selected = backStack.last() == NavDestination.Root.Home,
                 onClick = onMyAccountsClicked,
-                icon = { Icon(painterResource(R.drawable.home), null) },
-                label = { Text(stringResource(R.string.accountTitle)) },
+                icon = { Icon(painterResource(R.drawable.accounts), null) },
+                label = { Text(stringResource(R.string.accountsTitle)) },
             )
             NavigationBarItem(
                 selected = backStack.last() == NavDestination.Root.Settings,
@@ -128,8 +150,9 @@ private fun MainScreenPreview() {
         }
         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides owner) {
             val backStack = rememberNavBackStack(NavDestination.Root.Home)
+            val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
             val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>()
-            MainScreen(backStack = backStack, entryDecorators = entryDecorators)
+            MainScreen(backStack, currentDestination, entryDecorators)
         }
     }
 }

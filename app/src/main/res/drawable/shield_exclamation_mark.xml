@@ -1,0 +1,33 @@
+<!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+    <path
+        android:fillColor="#FFD46D"
+        android:pathData="M10,13.751C10.518,13.751 10.938,14.17 10.938,14.688C10.937,15.206 10.518,15.626 10,15.626C9.482,15.626 9.063,15.206 9.063,14.688C9.063,14.17 9.482,13.751 10,13.751Z" />
+    <path
+        android:fillColor="#FFD46D"
+        android:pathData="M10,4.376C10.345,4.376 10.625,4.656 10.625,5.001V11.667C10.625,12.012 10.345,12.292 10,12.292C9.655,12.292 9.375,12.012 9.375,11.667V5.001C9.375,4.656 9.655,4.376 10,4.376Z" />
+    <path
+        android:fillColor="#FFD46D"
+        android:fillType="evenOdd"
+        android:pathData="M10,0.001C12.632,-0.023 15.239,0.509 17.651,1.562L17.662,1.567C17.989,1.716 18.265,1.958 18.458,2.26C18.651,2.562 18.752,2.914 18.75,3.272V9.615C18.75,11.747 18.104,13.828 16.897,15.585C15.69,17.343 13.979,18.693 11.99,19.459L11.122,19.792C10.761,19.931 10.38,20.001 10,20.001C9.62,20.001 9.239,19.931 8.878,19.792L8.01,19.459C6.021,18.693 4.31,17.343 3.103,15.585C1.896,13.828 1.25,11.747 1.25,9.615V3.272C1.248,2.914 1.349,2.562 1.542,2.26C1.735,1.958 2.011,1.716 2.338,1.567L2.349,1.562C4.761,0.509 7.368,-0.023 10,0.001ZM9.994,1.251C7.538,1.228 5.105,1.723 2.854,2.705C2.748,2.754 2.659,2.833 2.596,2.932C2.533,3.031 2.499,3.148 2.5,3.266V9.615C2.5,11.494 3.069,13.33 4.133,14.879C5.197,16.428 6.706,17.618 8.46,18.293L9.327,18.626C9.544,18.709 9.772,18.751 10,18.751C10.228,18.751 10.456,18.709 10.673,18.626L11.541,18.293C13.294,17.618 14.803,16.428 15.867,14.879C16.931,13.33 17.5,11.494 17.5,9.615V3.266C17.501,3.148 17.467,3.031 17.404,2.932C17.341,2.833 17.252,2.754 17.146,2.705C14.895,1.723 12.462,1.228 10.006,1.251H9.994Z" />
+</vector>
