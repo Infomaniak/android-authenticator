@@ -34,7 +34,7 @@ internal fun generateEcKeyPair(
     privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
     publicKeyPurposes: KeyPurposes = KeyPurposes.publicKeyDefaults,
     keyAccessGuard: KeyAccessGuard,
-): Xor<KeyPair, Exception> {
+): Result<KeyPair> = runCatching {
     val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC)
     val parameterSpec = KeyGenParameterSpec.Builder(
         alias,
@@ -45,8 +45,7 @@ internal fun generateEcKeyPair(
     }.build()
 
     keyPairGenerator.initialize(parameterSpec)
-    val keyPair = keyPairGenerator.generateKeyPair()
-    return Xor.First(keyPair)
+    keyPairGenerator.generateKeyPair()
 }
 
 internal fun generateKeyPairInTheKeystore(
@@ -55,7 +54,7 @@ internal fun generateKeyPairInTheKeystore(
     publicKeyPurposes: KeyPurposes = KeyPurposes.publicKeyDefaults,
     keyAccessGuard: KeyAccessGuard,
     preferStrongbox: Boolean,
-): Xor<Unit, Throwable> = runCatching {
+): Result<Unit> = runCatching {
     val keyPairGenerator = KeyPairGenerator.getInstance(
         KeyProperties.KEY_ALGORITHM_EC,
         keyStoreProvider
@@ -78,8 +77,7 @@ internal fun generateKeyPairInTheKeystore(
 
     keyPairGenerator.initialize(parameterSpec)
     val _keyPair = keyPairGenerator.generateKeyPair()
-    Xor.First(Unit)
-}.getOrElse { Xor.Second(it) }
+}
 
 private fun KeyPurposes.asFlags(): Int = 0
     .withFlag(if (signing) KeyProperties.PURPOSE_SIGN else 0)
