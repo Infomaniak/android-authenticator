@@ -26,6 +26,7 @@ import splitties.bitflags.withFlag
 import splitties.init.appCtx
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import kotlin.time.Duration.Companion.seconds
 
 internal const val keyStoreProvider = "AndroidKeyStore"
 
@@ -112,9 +113,10 @@ private fun KeyAccessGuard.Authenticated.applyTo(builder: KeyGenParameterSpec.Bu
     } else {
         when (this) {
             is KeyAccessGuard.DevicePasscode, is KeyAccessGuard.DevicePasscodeOrNewBiometrics -> {
-                @Suppress("deprecation")
                 // Before API 30, setting this to a positive value is the only way to allow passcode.
-                builder.setUserAuthenticationValidityDurationSeconds(10)
+                val validityDuration = 10.seconds
+                @Suppress("deprecation")
+                builder.setUserAuthenticationValidityDurationSeconds(validityDuration.inWholeSeconds.toInt())
             }
             else -> Unit
         }
