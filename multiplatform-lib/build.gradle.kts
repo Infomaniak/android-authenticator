@@ -48,11 +48,18 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+        androidMain {
+            dependencies {
+                implementation(core.splitties.appctx)
+                implementation(core.splitties.bitflags)
+            }
+        }
     }
 
     compilerOptions {
         freeCompilerArgs.add("-Xexport-kdoc") // Provide documentation with kDoc in Objective-C header
         freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
 }
 
