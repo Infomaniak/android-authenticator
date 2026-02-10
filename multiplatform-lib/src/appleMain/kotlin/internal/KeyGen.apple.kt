@@ -73,7 +73,6 @@ internal fun generateEcPrivateKeyInTheKeychain(
     storageLocation = KeyStorageLocation.KeyChain
 )
 
-
 /**
  * Generates an EC private key in the device Secure Enclave for future use.
  *
