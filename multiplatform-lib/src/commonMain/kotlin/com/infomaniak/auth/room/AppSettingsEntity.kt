@@ -15,23 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.theme
+package com.infomaniak.auth.room
 
-import kotlinx.serialization.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Serializable
-enum class ThemeMode {
-    LIGHT,
-    DARK,
-    SYSTEM;
-
-    companion object {
-        fun fromString(value: String?): ThemeMode = when (value) {
-            "LIGHT" -> LIGHT
-            "DARK" -> DARK
-            else -> SYSTEM
-        }
-    }
-
-    override fun toString(): String = name
-}
+@Entity
+data class AppSettingsEntity(
+    @PrimaryKey val id: Long = 0,
+    val isNotificationEnabled: Boolean = false,
+    val isAppLockEnabled: Boolean = false,
+    val theme: Theme = Theme.SYSTEM,
+)

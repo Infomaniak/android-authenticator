@@ -121,6 +121,8 @@ sentry {
 }
 
 dependencies {
+    implementation(project(":multiplatform-lib"))
+
     implementation(core.infomaniak.core.auth)
     implementation(core.infomaniak.core.common)
     implementation(core.infomaniak.core.crossapplogin.front)
@@ -145,8 +147,10 @@ dependencies {
 
     implementation(core.okhttp)
 
-    // DataStore
-    implementation(core.androidx.datastore.preferences)
+    // Room
+    implementation(core.room.ktx)
+    implementation(core.room.runtime)
+    ksp(core.room.compiler)
 
     // Hilt
     implementation(core.hilt.android)

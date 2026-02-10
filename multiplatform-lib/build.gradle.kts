@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(core.plugins.android.kmp.library)
     alias(libs.plugins.skie)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.ksp)
+    kotlin("plugin.parcelize")
 }
 
 val androidCompileSdk: Int by rootProject.extra
@@ -34,6 +37,14 @@ kotlin {
             binaryOption("bundleId", "com.infomaniak.multiplatform-authenticator.${xcframeworkName}")
             xcf.add(this)
             isStatic = true
+            linkerOpts.add("-lsqlite3")
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
         }
     }
 
@@ -80,4 +91,14 @@ skie {
     build {
         produceDistributableFramework()
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
 }

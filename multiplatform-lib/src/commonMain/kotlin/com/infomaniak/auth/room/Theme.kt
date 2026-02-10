@@ -15,28 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.di
+package com.infomaniak.auth.room
 
-import android.content.Context
-import com.infomaniak.auth.getRoomDatabase
-import com.infomaniak.auth.repository.AppSettingsRepository
-import com.infomaniak.auth.room.AppSettingsDatabase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import androidx.room.TypeConverter
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
+enum class Theme {
+    LIGHT,
+    DARK,
+    SYSTEM;
+}
 
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext context: Context) = getRoomDatabase(context)
+class ThemeConverter {
 
-    @Provides
-    @Singleton
-    fun provideRepository(database: AppSettingsDatabase) = AppSettingsRepository(database)
+    @TypeConverter
+    fun fromTheme(theme: Theme): String {
+        return theme.name
+    }
+
+    @TypeConverter
+    fun toTheme(value: String): Theme {
+        return Theme.valueOf(value)
+    }
 }

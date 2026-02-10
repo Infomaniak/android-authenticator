@@ -20,47 +20,66 @@ package com.infomaniak.auth.ui.screen.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
+import com.infomaniak.auth.ui.screen.theme.AppSettingsViewModel
+import com.infomaniak.auth.ui.screen.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun SettingsScreen(onThemeClicked: () -> Unit) {
-    val firstSectionItems = listOf<OptionItemType>(
-        OptionItemType.WithCheckBox(
-            stringResId = R.string.notificationsTitle,
-        ),
-        OptionItemType.WithCheckBox(
-            stringResId = R.string.unlockWithBiometrics,
-        ),
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.themeTitle,
-            rightIconResId = R.drawable.right_indicator,
-            onClick = { onThemeClicked() },
-        ),
-    )
-    val secondSectionItems = listOf<OptionItemType>(
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.dataManagementTitle,
-            rightIconResId = R.drawable.right_indicator,
-            onClick = {},
-        ),
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.feedbackTitle,
-            rightIconResId = R.drawable.square_arrow_up,
-            onClick = {},
-        ),
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.contactSupportTitle,
-            rightIconResId = R.drawable.right_indicator,
-            onClick = {},
-        ),
-    )
+fun SettingsScreen(
+    appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>(),
+    onThemeClicked: () -> Unit,
+) {
+    val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
+
+    val firstSectionItems = remember(uiState) {
+        listOf(
+            OptionItemType.WithCheckBox(
+                stringResId = R.string.notificationsTitle,
+                isChecked = uiState.isNotificationEnabled,
+                onCheckedChange = { appSettingsViewModel.setIsNotificationEnabled(it) }
+            ),
+            OptionItemType.WithCheckBox(
+                stringResId = R.string.unlockWithBiometrics,
+                isChecked = uiState.isAppLocked,
+                onCheckedChange = { appSettingsViewModel.setIsAppLockEnabled(it) }
+            ),
+            OptionItemType.WithRightIcon(
+                stringResId = R.string.themeTitle,
+                rightIconResId = R.drawable.right_indicator,
+                onClick = { onThemeClicked() },
+            ),
+        )
+    }
+
+    val secondSectionItems =
+        listOf(
+            OptionItemType.WithRightIcon(
+                stringResId = R.string.dataManagementTitle,
+                rightIconResId = R.drawable.right_indicator,
+                onClick = {},
+            ),
+            OptionItemType.WithRightIcon(
+                stringResId = R.string.feedbackTitle,
+                rightIconResId = R.drawable.square_arrow_up,
+                onClick = {},
+            ),
+            OptionItemType.WithRightIcon(
+                stringResId = R.string.contactSupportTitle,
+                rightIconResId = R.drawable.right_indicator,
+                onClick = {},
+            ),
+        )
     SinglePaneScaffold(
         modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
         topBar = {

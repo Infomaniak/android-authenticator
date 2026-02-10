@@ -25,20 +25,20 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
+import com.infomaniak.auth.room.Theme
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItem
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.auth.ui.theme.ThemeMode
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun ThemeScreen(
     onBackPressed: () -> Unit,
-    viewModel: ThemeViewModel = hiltViewModel()
+    themeViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>(),
 ) {
-    val currentTheme by viewModel.themeMode.collectAsStateWithLifecycle()
+    val uiState by themeViewModel.uiState.collectAsStateWithLifecycle(null)
 
     SinglePaneScaffold(
         topBar = {
@@ -53,18 +53,18 @@ fun ThemeScreen(
         val section = listOf(
             OptionItem.WithSelection(
                 stringResId = R.string.themeLight,
-                isSelected = currentTheme == ThemeMode.LIGHT,
-                onClick = { viewModel.setThemeMode(ThemeMode.LIGHT) },
+                isSelected = uiState?.theme == Theme.LIGHT,
+                onClick = { themeViewModel.setTheme(Theme.LIGHT) },
             ),
             OptionItem.WithSelection(
                 stringResId = R.string.themeDark,
-                isSelected = currentTheme == ThemeMode.DARK,
-                onClick = { viewModel.setThemeMode(ThemeMode.DARK) },
+                isSelected = uiState?.theme == Theme.DARK,
+                onClick = { themeViewModel.setTheme(Theme.DARK) },
             ),
             OptionItem.WithSelection(
                 stringResId = R.string.themeSystem,
-                isSelected = currentTheme == ThemeMode.SYSTEM,
-                onClick = { viewModel.setThemeMode(ThemeMode.SYSTEM) },
+                isSelected = uiState?.theme == Theme.SYSTEM,
+                onClick = { themeViewModel.setTheme(Theme.SYSTEM) },
             ),
         )
 

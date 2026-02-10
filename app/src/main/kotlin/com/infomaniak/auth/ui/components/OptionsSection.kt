@@ -38,8 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -51,16 +49,6 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
-
-@Composable
-fun SelectableOptionsSection(
-    modifier: Modifier = Modifier,
-    vararg sections: List<OptionItemType>,
-) {
-    OptionsSectionContainer(modifier, *sections) { optionItems ->
-
-    }
-}
 
 @Composable
 fun OptionsSection(
@@ -142,21 +130,20 @@ private fun OptionContent(optionItemType: OptionItemType) {
                 )
             }
             is OptionItemType.WithCheckBox -> {
-                val isChecked = remember { mutableStateOf(true) }
                 Switch(
                     modifier = Modifier
                         .scale(0.7f),
-                    checked = isChecked.value,
-                    onCheckedChange = { isChecked.value = it },
+                    checked = optionItem.isChecked,
+                    onCheckedChange = { optionItem.onCheckedChange.invoke(it) },
                 )
             }
             is OptionItem.WithSelection -> {
                 if (optionItem.isSelected) {
                     Icon(
                         modifier = Modifier.size(20.dp),
-                        painter = painterResource(R.drawable.shield_check),
+                        painter = painterResource(R.drawable.check),
                         contentDescription = null,
-                        tint = AuthenticatorTheme.materialColors.primary
+                        tint = AuthenticatorTheme.materialColors.primary,
                     )
                 }
             }
@@ -170,7 +157,12 @@ sealed class OptionItemType(
     val textColor: Color = Color.Unspecified,
     val onClick: (() -> Unit)? = null,
 ) {
-    class WithCheckBox(stringResId: Int) : OptionItemType(stringResId)
+
+    class WithCheckBox(
+        stringResId: Int,
+        val isChecked: Boolean,
+        val onCheckedChange: ((isChecked: Boolean) -> Unit)
+    ) : OptionItemType(stringResId)
 
     class WithRightIcon(
         stringResId: Int,
@@ -192,14 +184,15 @@ sealed class OptionItemType(
 @Composable
 fun OptionsSectionPreview() {
     val firstSectionItems = listOf(
-        OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName),
+        OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName, isChecked = false, onCheckedChange = {}),
         OptionItemType.WithRightIcon(
             stringResId = R.string.appCompleteName,
             rightIconResId = R.drawable.right_indicator,
             onClick = {}),
     )
 
-    val secondSectionItems = listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName))
+    val secondSectionItems =
+        listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName, isChecked = false, onCheckedChange = {}))
 
     AuthenticatorTheme {
         Column(modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface)) {

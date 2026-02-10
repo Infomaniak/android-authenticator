@@ -23,26 +23,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.lifecycleScope
-import com.infomaniak.auth.data.repository.ThemeRepository
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.repository.AppSettingsRepository
+import com.infomaniak.auth.room.Theme
 import com.infomaniak.auth.ui.screen.main.MainScreen
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.auth.ui.theme.ThemeMode
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var themeRepository: ThemeRepository
+    lateinit var appSettingsRepository: AppSettingsRepository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,24 +45,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val isSystemInDarkTheme = isSystemInDarkTheme()
-            var themeMode by remember { mutableStateOf(ThemeMode.SYSTEM) }
-            var isLoading by remember { mutableStateOf(true) }
+            val appSettings = appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
 
-            LaunchedEffect(Unit) {
-                themeRepository.themeMode.first()?.let { themeMode = it }
-                isLoading = false
+            val isDarkTheme = when (appSettings.value?.theme) {
+                Theme.LIGHT -> false
+                Theme.DARK -> true
+                else -> isSystemInDarkTheme
             }
 
-            if (!isLoading) {
-                val isDarkTheme = when (themeMode) {
-                    ThemeMode.LIGHT -> false
-                    ThemeMode.DARK -> true
-                    ThemeMode.SYSTEM -> isSystemInDarkTheme
-                }
-
-                AuthenticatorTheme(isDarkTheme = isDarkTheme) {
-                    MainScreen()
-                }
+            AuthenticatorTheme(isDarkTheme = isDarkTheme) {
+                MainScreen()
             }
         }
     }
