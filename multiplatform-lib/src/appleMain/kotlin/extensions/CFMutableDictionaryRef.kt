@@ -51,7 +51,6 @@ internal fun buildCFDictionary(
     ).apply(builderAction)
 }
 
-
 @ExperimentalForeignApi
 internal operator fun CFMutableDictionaryRef?.set(key: CValuesRef<*>?, value: CValuesRef<*>?) {
     CFDictionaryAddValue(this, key, value)
