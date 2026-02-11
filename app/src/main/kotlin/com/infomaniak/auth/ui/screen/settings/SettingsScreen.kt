@@ -17,17 +17,65 @@
  */
 package com.infomaniak.auth.ui.screen.settings
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
+import com.infomaniak.auth.ui.components.OptionItemType
+import com.infomaniak.auth.ui.components.OptionsSection
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun SettingsScreen() {
-    Text("SettingsScreen")
+    val firstSectionItems = listOf<OptionItemType>(
+        OptionItemType.WithCheckBox(
+            stringResId = R.string.notificationsTitle,
+        ),
+        OptionItemType.WithCheckBox(
+            stringResId = R.string.unlockWithBiometrics,
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.themeTitle,
+            rightIconResId = R.drawable.right_indicator
+        ),
+    )
+    val secondSectionItems = listOf<OptionItemType>(
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.dataManagementTitle,
+            rightIconResId = R.drawable.right_indicator
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.feedbackTitle,
+            rightIconResId = R.drawable.square_arrow_up
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.contactSupportTitle,
+            rightIconResId = R.drawable.right_indicator
+        ),
+    )
+    SinglePaneScaffold(
+        modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
+        topBar = {
+            InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
+        },
+    ) { paddingValues ->
+
+        OptionsSection(
+            modifier = Modifier.padding(paddingValues),
+            firstSectionItems,
+            secondSectionItems
+        )
+    }
 }
 
 @PreviewSmallWindow
 @Composable
-private fun SettingsScreenPreview() {
-    SettingsScreen()
+fun SettingsScreenPreview() {
+    AuthenticatorTheme {
+        SettingsScreen()
+    }
 }

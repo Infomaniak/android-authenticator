@@ -117,9 +117,11 @@
     <string name="submitTicketDescription">Per aiutarci a supportarti efficacemente, fornisci il maggior numero possibile di dettagli riguardo al tuo problema.</string>
     <string name="submitTicketTitle">Invia un ticket</string>
     <string name="supportResponseDelay">Risponderemo entro le prossime 24 ore lavorative.</string>
+    <string name="themeTitle">Tema</string>
     <string name="ticketSentSuccessDescription">Stiamo facendo del nostro meglio per garantire che un operatore ti risponda il prima possibile.</string>
     <string name="ticketSentSuccessTitle">Il tuo ticket è stato inviato ai nostri team!</string>
     <string name="understandConfirmButton">Capito</string>
+    <string name="unlockWithBiometrics">Sblocco con la biometria</string>
     <string name="unlockingWithFaceId">Sblocca con Face ID</string>
     <string name="verifySecurityButton">Verifica la mia sicurezza</string>
     <string name="viewGuidesButton">Sfoglia le guide</string>
