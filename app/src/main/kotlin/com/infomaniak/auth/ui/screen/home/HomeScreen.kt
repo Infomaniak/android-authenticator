@@ -123,7 +123,7 @@ fun HomeScreen(onAccountClicked: (FakeAccount) -> Unit) {
                 ) {
                     accounts.forEach { account ->
                         key(account.email) {
-                            AccountItem(account, , onClick = { account -> onAccountClicked(account) })
+                            AccountItem(account, onClick = { account -> onAccountClicked(account) })
                         }
                     }
                 }
@@ -196,7 +196,7 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
     }
 }
 
-private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
+enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
     Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountSecured }),
     Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountWarning }),
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.colors.accountWarning }),

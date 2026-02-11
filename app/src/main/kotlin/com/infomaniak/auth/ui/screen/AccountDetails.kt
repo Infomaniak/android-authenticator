@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
-import com.infomaniak.auth.ui.components.OptionItem
+import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
 import com.infomaniak.auth.ui.screen.home.FakeAccount
@@ -137,7 +137,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 Icon(
                     painter = painterResource(accountStatus.iconResId),
                     contentDescription = null,
-                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.colors.actionRequiredBorder,
+                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.colors.accountWarning,
                 )
             }
             accountStatus.descriptionResId?.let {
@@ -173,10 +173,10 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
     } else {
         ActionRequiredConfiguration(
             text = stringResource(R.string.accountNotConnectedWarningTitle),
-            borderColor = AuthenticatorTheme.colors.actionRequiredBorder,
+            borderColor = AuthenticatorTheme.colors.accountWarning,
             containerColor = AuthenticatorTheme.colors.actionRequiredBackground,
             textColor = Color.Unspecified,
-            iconColor = AuthenticatorTheme.colors.actionRequiredBorder,
+            iconColor = AuthenticatorTheme.colors.accountWarning,
             iconRes = R.drawable.alert,
         )
     }
@@ -256,7 +256,7 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 private fun SettingsSections(securityLevel: AccountSecurityLevel) {
     val firstSectionItem = if (securityLevel == AccountSecurityLevel.Secured) {
         listOf(
-            OptionItem.WithRightIcon(
+            OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
                 rightIconResId = R.drawable.right_indicator
             ),
@@ -264,15 +264,15 @@ private fun SettingsSections(securityLevel: AccountSecurityLevel) {
     } else listOf()
 
     val secondSectionItems = listOf(
-        OptionItem.WithRightIcon(
+        OptionItemType.WithRightIcon(
             stringResId = R.string.activityHistoryButton,
             rightIconResId = R.drawable.square_arrow_up
         ),
-        OptionItem.WithRightIcon(
+        OptionItemType.WithRightIcon(
             stringResId = R.string.accountSettingsButton,
             rightIconResId = R.drawable.square_arrow_up
         ),
-        OptionItem.Default(
+        OptionItemType.Default(
             stringResId = R.string.disconnectButton,
             textColor = AuthenticatorTheme.materialColors.error,
         ),
@@ -294,7 +294,7 @@ private enum class AccountStatus(
     PartiallyProtected(
         titleResId = R.string.accountPartiallyProtectedTitle,
         descriptionResId = R.string.accountPartiallyProtectedDescription,
-        iconResId = R.drawable.shield_warning,
+        iconResId = R.drawable.shield_exclamation_mark,
         iconTint = { AuthenticatorTheme.colors.accountWarning }),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
