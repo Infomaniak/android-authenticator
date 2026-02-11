@@ -55,6 +55,12 @@ kotlin {
                 implementation(core.splitties.bitflags)
             }
         }
+        val androidDeviceTest by getting {
+            dependencies {
+                implementation("androidx.test.ext:junit:1.1.5")
+                implementation("androidx.test.espresso:espresso-core:3.5.1")
+            }
+        }
     }
 
     compilerOptions {

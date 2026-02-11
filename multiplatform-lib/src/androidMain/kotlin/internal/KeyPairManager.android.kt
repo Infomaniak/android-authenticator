@@ -17,28 +17,34 @@
  */
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.internal.KeyPairManager.Companion.ALIAS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
-import java.security.KeyStore
+import splitties.init.appCtx
+import java.io.File
+
 
 internal class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)
     override suspend fun generateNewKey() {
-        generateEcKeyPair(
-            alias = ALIAS,
-            privateKeyPurposes = KeyPairManager.privateKeyPurposes,
-            publicKeyPurposes = KeyPairManager.publicKeyPurposes,
-            keyAccessGuard = KeyAccessGuard.Unguarded,
-        ).getOrThrow() // TODO Use return value to store it in fileDir
+        val keyPair = generateEcKeyPair().getOrThrow()
+
+        saveKeyToFilesDir(PRIVATE_KEY_NAME, keyPair.private.encoded)
+        saveKeyToFilesDir(PUBLIC_KEY_NAME, keyPair.public.encoded)
     }
 
     override suspend fun retrievePublicKey(): ByteArray = Dispatchers.IO {
-        val ks = KeyStore.getInstance(keyStoreProvider).also {
-            it.load(null)
-        }
-        val aliases = ks.aliases()
-        ks.getCertificate(aliases.nextElement()).publicKey.encoded
+        val file = File(appCtx.filesDir, PUBLIC_KEY_NAME)
+        file.readBytes()
+    }
+
+    private fun saveKeyToFilesDir(fileName: String, key: ByteArray) {
+        val file = File(appCtx.filesDir, fileName)
+        file.writeBytes(key)
+    }
+
+    companion object {
+        private const val PUBLIC_KEY_NAME = "public.key"
+        private const val PRIVATE_KEY_NAME = "private.key"
     }
 }

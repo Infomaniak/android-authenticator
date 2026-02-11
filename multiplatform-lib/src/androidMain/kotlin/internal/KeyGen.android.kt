@@ -26,26 +26,16 @@ import splitties.bitflags.withFlag
 import splitties.init.appCtx
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import java.security.spec.ECGenParameterSpec
 import kotlin.time.Duration.Companion.seconds
 
 internal const val keyStoreProvider = "AndroidKeyStore"
 
-internal fun generateEcKeyPair(
-    alias: String,
-    privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
-    publicKeyPurposes: KeyPurposes = KeyPurposes.publicKeyDefaults,
-    keyAccessGuard: KeyAccessGuard,
-): Result<KeyPair> = runCatching {
+internal fun generateEcKeyPair(): Result<KeyPair> = runCatching {
     val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC)
-    val parameterSpec = KeyGenParameterSpec.Builder(
-        alias,
-        (privateKeyPurposes + publicKeyPurposes).asFlags()
-    ).also {
-        it.setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
-        keyAccessGuard.applyTo(it)
-    }.build()
+    val ecGenParamSpec = ECGenParameterSpec("secp256r1")
 
-    keyPairGenerator.initialize(parameterSpec)
+    keyPairGenerator.initialize(ecGenParamSpec)
     keyPairGenerator.generateKeyPair()
 }
 

@@ -28,7 +28,7 @@ internal interface KeyPairManager {
     suspend fun retrievePublicKey(): ByteArray
 
     companion object {
-        const val ALIAS = "default"
+        protected const val ALIAS = "default"
 
         val privateKeyPurposes = KeyPurposes.privateKeyDefaults
         val publicKeyPurposes = KeyPurposes.publicKeyDefaults
