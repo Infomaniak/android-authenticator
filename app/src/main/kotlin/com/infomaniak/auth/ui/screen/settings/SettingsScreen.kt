@@ -17,12 +17,13 @@
  */
 package com.infomaniak.auth.ui.screen.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
-import com.infomaniak.auth.ui.components.OptionItem
+import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -30,33 +31,34 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun SettingsScreen() {
-    val firstSectionItems = listOf<OptionItem>(
-        OptionItem.WithCheckBox(
+    val firstSectionItems = listOf<OptionItemType>(
+        OptionItemType.WithCheckBox(
             stringResId = R.string.notificationsTitle,
         ),
-        OptionItem.WithCheckBox(
+        OptionItemType.WithCheckBox(
             stringResId = R.string.unlockWithBiometrics,
         ),
-        OptionItem.WithRightIcon(
+        OptionItemType.WithRightIcon(
             stringResId = R.string.themeTitle,
             rightIconResId = R.drawable.right_indicator
         ),
     )
-    val secondSectionItems = listOf<OptionItem>(
-        OptionItem.WithRightIcon(
+    val secondSectionItems = listOf<OptionItemType>(
+        OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
             rightIconResId = R.drawable.right_indicator
         ),
-        OptionItem.WithRightIcon(
+        OptionItemType.WithRightIcon(
             stringResId = R.string.feedbackTitle,
             rightIconResId = R.drawable.square_arrow_up
         ),
-        OptionItem.WithRightIcon(
+        OptionItemType.WithRightIcon(
             stringResId = R.string.contactSupportTitle,
             rightIconResId = R.drawable.right_indicator
         ),
     )
     SinglePaneScaffold(
+        modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },

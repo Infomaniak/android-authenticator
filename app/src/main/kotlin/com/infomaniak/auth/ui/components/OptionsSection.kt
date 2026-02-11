@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,7 +53,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 @Composable
 fun OptionsSection(
     modifier: Modifier = Modifier,
-    vararg sections: List<OptionItem>,
+    vararg sections: List<OptionItemType>,
 ) {
     Column(
         modifier = modifier
@@ -71,10 +72,14 @@ fun OptionsSection(
                 Column {
                     optionsSection.forEachIndexed { index, optionItem ->
                         OptionItem(
-                            hasPreviousItem = index > 0,
-                            hasNextItem = index < optionsSection.size - 1,
-                            optionItem = optionItem,
+                            optionItemType = optionItem,
                         )
+
+                        if (index < optionsSection.lastIndex) {
+                            HorizontalDivider(
+                                color = AuthenticatorTheme.materialColors.outlineVariant,
+                            )
+                        }
                     }
                 }
             }
@@ -83,69 +88,63 @@ fun OptionsSection(
 }
 
 @Composable
-private fun OptionItem(hasPreviousItem: Boolean, hasNextItem: Boolean, optionItem: OptionItem) {
-    if (hasPreviousItem) {
-        HorizontalDivider(
-            color = AuthenticatorTheme.materialColors.inverseOnSurface,
-        )
-    }
+private fun OptionItem(optionItemType: OptionItemType) {
     Box(
         modifier = Modifier
             .height(50.dp)
-            .clickable(enabled = optionItem is OptionItem.WithRightIcon) {}
+            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon) {}
     ) {
-        OptionContent(optionItem)
-    }
-    if (hasNextItem) {
-        HorizontalDivider(
-            color = AuthenticatorTheme.materialColors.inverseOnSurface,
-        )
+        OptionContent(optionItemType)
     }
 }
 
 @Composable
-private fun OptionContent(optionItem: OptionItem) {
+private fun OptionContent(optionItemType: OptionItemType) {
     Row(
         modifier = Modifier
             .padding(horizontal = Margin.Medium)
             .height(50.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = stringResource(optionItem.stringResId))
+        Text(text = stringResource(optionItemType.stringResId))
         Spacer(modifier = Modifier.weight(1f))
-        if (optionItem is OptionItem.WithRightIcon) {
-            Icon(
-                painter = painterResource(optionItem.rightIconResId),
-                contentDescription = null,
-            )
-        } else {
-            val isChecked = remember { mutableStateOf(true) }
-            Switch(
-                modifier = Modifier
-                    .scale(0.7f),
-                checked = isChecked.value,
-                onCheckedChange = { isChecked.value = it },
-            )
+
+        when(optionItemType) {
+            is OptionItemType.WithRightIcon -> {
+                Icon(
+                    painter = painterResource(optionItemType.rightIconResId),
+                    contentDescription = null,
+                )
+            }
+            else -> {
+                val isChecked = remember { mutableStateOf(true) }
+                Switch(
+                    modifier = Modifier
+                        .scale(0.7f),
+                    checked = isChecked.value,
+                    onCheckedChange = { isChecked.value = it },
+                )
+            }
         }
     }
 }
 
-sealed class OptionItem(val stringResId: Int) {
+sealed class OptionItemType(val stringResId: Int) {
 
-    class WithCheckBox(stringResId: Int) : OptionItem(stringResId)
+    class WithCheckBox(stringResId: Int) : OptionItemType(stringResId)
 
-    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItem(stringResId)
+    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItemType(stringResId)
 }
 
 @PreviewSmallWindow
 @Composable
 fun OptionsSectionPreview() {
     val firstSectionItems = listOf(
-        OptionItem.WithCheckBox(stringResId = R.string.appCompleteName),
-        OptionItem.WithRightIcon(stringResId = R.string.appCompleteName, rightIconResId = R.drawable.right_indicator),
+        OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName),
+        OptionItemType.WithRightIcon(stringResId = R.string.appCompleteName, rightIconResId = R.drawable.right_indicator),
     )
 
-    val secondSectionItems = listOf(OptionItem.WithCheckBox(stringResId = R.string.appCompleteName))
+    val secondSectionItems = listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName))
 
     AuthenticatorTheme {
         Column(modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface)) {
