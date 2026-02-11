@@ -148,7 +148,7 @@ fun OptionsSectionPreview() {
     val secondSectionItems = listOf(OptionItem.WithCheckBox(stringResId = R.string.appCompleteName))
 
     AuthenticatorTheme {
-        Column {
+        Column(modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface)) {
             OptionsSection(
                 modifier = Modifier.padding(PaddingValues(Margin.Small)),
                 firstSectionItems, secondSectionItems
