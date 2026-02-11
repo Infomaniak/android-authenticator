@@ -15,17 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.extensions
+package internal
 
-import kotlinx.cinterop.BetaInteropApi
-import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.create
-import platform.Foundation.dataUsingEncoding
+import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 
-internal fun String.toNsData(): NSData? {
-    @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
+class KeyPairManagerTest {
+
+    @Test
+    fun testKeyPairManager() {
+        val keyPairManager = KeyPairManagerImpl()
+
+        runTest {
+            val keyPair = keyPairManager.generateNewKey()
+            assertNotNull(keyPair)
+        }
+    }
 }

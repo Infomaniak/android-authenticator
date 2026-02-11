@@ -15,17 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.extensions
+package com.infomaniak.auth.lib.internal
 
-import kotlinx.cinterop.BetaInteropApi
-import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.create
-import platform.Foundation.dataUsingEncoding
+internal interface KeyPairManager {
 
-internal fun String.toNsData(): NSData? {
-    @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
+    /**
+     * Generates key pair for a new registration
+     * (migrating from kAuth v1 or a backup, or a fresh new login)
+     */
+    suspend fun generateNewKey()
+
+    suspend fun retrievePublicKey(): ByteArray
+
+    companion object {
+        const val ALIAS = "default"
+
+        val privateKeyPurposes = KeyPurposes.privateKeyDefaults
+        val publicKeyPurposes = KeyPurposes.publicKeyDefaults
+    }
 }

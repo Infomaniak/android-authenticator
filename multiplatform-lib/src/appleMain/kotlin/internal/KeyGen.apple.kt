@@ -46,10 +46,10 @@ import platform.Security.kSecAttrCanVerify
 import platform.Security.kSecAttrCanWrap
 import platform.Security.kSecAttrIsPermanent
 import platform.Security.kSecAttrKeySizeInBits
+import platform.Security.kSecAttrKeyType
 import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
 import platform.Security.kSecAttrTokenID
 import platform.Security.kSecAttrTokenIDSecureEnclave
-import platform.Security.kSecAttrType
 import platform.Security.kSecPrivateKeyAttrs
 import platform.Security.kSecPublicKeyAttrs
 
@@ -135,10 +135,12 @@ private fun createKeyAttributes(
 ) = buildCFDictionary {
     // See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
     // See all key gen attributes here: https://developer.apple.com/documentation/security/key-generation-attributes
-    this[kSecAttrType] = kSecAttrKeyTypeECSECPrimeRandom
+    this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
     this[kSecAttrKeySizeInBits] = 256
     when (storageLocation) {
-        KeyStorageLocation.SecureEnclave -> { this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave }
+        KeyStorageLocation.SecureEnclave -> {
+            this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave
+        }
         KeyStorageLocation.KeyChain -> {}
     }
     this[kSecPrivateKeyAttrs] = buildCFDictionary {
