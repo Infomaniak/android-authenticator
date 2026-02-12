@@ -20,6 +20,7 @@ package com.infomaniak.auth.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,7 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.ButtonStyle
-import com.infomaniak.auth.ui.components.CardFlavor
+import com.infomaniak.auth.ui.components.CardVariant
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.OptionItemType
@@ -117,10 +118,13 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
             .padding(top = Margin.Large)
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
-        cardFlavor = CardFlavor.Neutral,
+        variant = CardVariant.Neutral,
         shape = RoundedCornerShape(16.dp),
     ) {
-        Column(modifier = Modifier.padding(Margin.Medium)) {
+        Column(
+            modifier = Modifier.padding(Margin.Medium),
+            verticalArrangement = Arrangement.spacedBy(Margin.Mini)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -137,10 +141,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 )
             }
             accountStatus.descriptionResId?.let {
-                Text(
-                    modifier = Modifier.padding(top = Margin.Mini),
-                    text = stringResource(accountStatus.descriptionResId)
-                )
+                Text(text = stringResource(accountStatus.descriptionResId))
             }
         }
     }
@@ -150,7 +151,7 @@ private data class ActionRequiredConfiguration(
     val text: String,
     val iconColor: Color,
     val iconRes: Int,
-    val cardFlavor: CardFlavor
+    val cardVariant: CardVariant
 )
 
 @Composable
@@ -160,14 +161,14 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
             text = stringResource(R.string.errorLoginFailed, 0),
             iconRes = R.drawable.triangle_alert,
             iconColor = AuthenticatorTheme.customColors.iconTintError,
-            cardFlavor = CardFlavor.Error
+            cardVariant = CardVariant.Error
         )
     } else {
         ActionRequiredConfiguration(
             text = stringResource(R.string.accountNotConnectedWarningTitle),
             iconRes = R.drawable.alert,
             iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-            cardFlavor = CardFlavor.Warning
+            cardVariant = CardVariant.Warning
         )
     }
 
@@ -177,7 +178,7 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
             .padding(horizontal = Margin.Medium)
             .padding(top = Margin.Large),
         shape = RoundedCornerShape(16.dp),
-        cardFlavor = configuration.cardFlavor,
+        variant = configuration.cardVariant,
     ) {
         Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
             Icon(

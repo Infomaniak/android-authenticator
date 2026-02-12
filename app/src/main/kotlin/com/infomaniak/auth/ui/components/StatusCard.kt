@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,8 +43,8 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
 @Immutable
-sealed interface CardFlavor {
-    data object Neutral : CardFlavor {
+sealed interface CardVariant {
+    data object Neutral : CardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
             surface = MaterialTheme.colorScheme.surfaceContainer,
@@ -53,7 +52,7 @@ sealed interface CardFlavor {
         )
     }
 
-    data object Warning : CardFlavor {
+    data object Warning : CardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
             primary = AuthenticatorTheme.statusColors.warningHighest,
@@ -65,7 +64,7 @@ sealed interface CardFlavor {
         )
     }
 
-    data object Error : CardFlavor {
+    data object Error : CardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
             primary = AuthenticatorTheme.statusColors.errorHighest,
@@ -83,16 +82,15 @@ sealed interface CardFlavor {
 
 @Composable
 fun StatusCard(
-    cardFlavor: CardFlavor,
     modifier: Modifier = Modifier,
+    variant: CardVariant = CardVariant.Neutral,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    MaterialTheme(colorScheme = cardFlavor.getMaterialTheme()) {
+    MaterialTheme(colorScheme = variant.getMaterialTheme()) {
         OutlinedCard(
             modifier = modifier,
             shape = shape,
-            border = CardDefaults.outlinedCardBorder().copy(),
             content = content
         )
     }
@@ -109,13 +107,13 @@ private fun StatusCardPreview() {
             ) {
                 val themeCardModifier = Modifier.fillMaxWidth()
 
-                StatusCard(CardFlavor.Neutral, themeCardModifier) {
+                StatusCard(modifier = themeCardModifier, variant = CardVariant.Neutral) {
                     PreviewContent()
                 }
-                StatusCard(CardFlavor.Error, themeCardModifier) {
+                StatusCard(modifier = themeCardModifier, variant = CardVariant.Error) {
                     PreviewContent()
                 }
-                StatusCard(CardFlavor.Warning, themeCardModifier) {
+                StatusCard(modifier = themeCardModifier, variant = CardVariant.Warning) {
                     PreviewContent()
                 }
             }

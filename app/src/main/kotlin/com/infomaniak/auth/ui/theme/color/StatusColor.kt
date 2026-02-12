@@ -22,11 +22,6 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class StatusColorScheme(
-    val neutralLow: Color = Color.Unspecified,
-    val neutralMedium: Color = Color.Unspecified,
-    val neutralHigh: Color = Color.Unspecified,
-    val neutralHighest: Color = Color.Unspecified,
-
     val warningLow: Color = Color.Unspecified,
     val warningMedium: Color = Color.Unspecified,
     val warningHigh: Color = Color.Unspecified,
