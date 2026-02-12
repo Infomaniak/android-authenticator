@@ -15,24 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal
+package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.Failure
-
-internal interface KeyPairManager {
-
-    /**
-     * Generates key pair for a new registration
-     * (migrating from kAuth v1 or a backup, or a fresh new login)
-     */
-    suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed?
-
-    suspend fun retrievePublicKey(): ByteArray
-
-    companion object {
-        protected const val ALIAS = "default"
-
-        val privateKeyPurposes = KeyPurposes.privateKeyDefaults
-        val publicKeyPurposes = KeyPurposes.publicKeyDefaults
+sealed interface Failure {
+    sealed interface KeyManagement : Failure {
+        data class GenerationFailed(val details: String) : KeyManagement
     }
 }

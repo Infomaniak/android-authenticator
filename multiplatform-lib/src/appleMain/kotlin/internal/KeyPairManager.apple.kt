@@ -19,9 +19,11 @@
 
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.Failure
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.toNsData
+import com.infomaniak.auth.lib.extensions.use
 import com.infomaniak.auth.lib.internal.KeyPairManager.Companion.ALIAS
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.MemScope
@@ -54,7 +56,7 @@ import toByteArray
 
 internal class KeyPairManagerImpl : KeyPairManager {
 
-    override suspend fun generateNewKey(): Unit = Dispatchers.IO {
+    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
         val result = generateEcPrivateKeyInTheKeychain(
             tag = ALIAS,
             privateKeyPurposes = KeyPairManager.privateKeyPurposes,
@@ -63,11 +65,8 @@ internal class KeyPairManagerImpl : KeyPairManager {
             accessibility = KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly,
         )
         when (result) {
-            is Xor.First -> CFRelease(result.value)
-            is Xor.Second -> {
-                val errorMessage = result.value.let { it.description ?: it.localizedDescription }
-                throw Exception("Error generating key: $errorMessage")
-            }
+            is Xor.First -> result.value.use { null }
+            is Xor.Second -> Failure.KeyManagement.GenerationFailed(result.value.toString())
         }
     }
 

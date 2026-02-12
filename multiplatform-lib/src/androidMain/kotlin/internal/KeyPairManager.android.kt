@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.Failure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import splitties.init.appCtx
@@ -26,11 +27,14 @@ import java.io.File
 internal class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)
-    override suspend fun generateNewKey() {
-        val keyPair = generateEcKeyPair().getOrThrow()
+    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? {
+        val keyPair = generateEcKeyPair().getOrElse {
+            return Failure.KeyManagement.GenerationFailed(it.toString())
+        }
 
         saveKeyToFilesDir(PRIVATE_KEY_NAME, keyPair.private.encoded)
         saveKeyToFilesDir(PUBLIC_KEY_NAME, keyPair.public.encoded)
+        return null
     }
 
     override suspend fun retrievePublicKey(): ByteArray = Dispatchers.IO {
