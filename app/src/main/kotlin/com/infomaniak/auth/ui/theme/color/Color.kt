@@ -90,7 +90,6 @@ val red99 = Color(0xFFFFFCFB)
 val red100 = Color(0xFFFFFDFD)
 
 // Custom primitives
-val productSecurity = Color(0xFF5869D9)
 val errorDim1Light = Color(0xFFFEF3F2)
 val errorDim1Dark = Color(0xFF470C08)
 val errorDim3Light = Color(0xFFFFCCC8)

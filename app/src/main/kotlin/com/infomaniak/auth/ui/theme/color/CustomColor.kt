@@ -19,7 +19,6 @@ package com.infomaniak.auth.ui.theme.color
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import com.infomaniak.auth.ui.theme.lightScheme
 
 @Immutable
 data class CustomColorScheme(
@@ -32,8 +31,6 @@ data class CustomColorScheme(
     val accountDisconnected: Color = Color.Unspecified,
 )
 
-private val illustrationBackgroundGradientLight = lightScheme.primary.copy(alpha = 0.28f)
-private val illustrationBackgroundGradientDark = productSecurity.copy(alpha = 0.6f)
 private val accountSecuredLight = successDim5Light
 private val accountSecuredDark = successDim5Dark
 private val iconTintWarningLight = warningDim5Light
@@ -48,7 +45,6 @@ private val accountDisconnectedLight = neutralDim4
 private val accountDisconnectedDark = neutralDim4
 
 val lightCustomScheme = CustomColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientLight,
     accountSecured = accountSecuredLight,
     iconTintWarning = iconTintWarningLight,
     iconTintError = iconTintErrorLight,
@@ -58,7 +54,6 @@ val lightCustomScheme = CustomColorScheme(
 )
 
 val darkCustomScheme = CustomColorScheme(
-    illustrationBackgroundGradient = illustrationBackgroundGradientDark,
     accountSecured = accountSecuredDark,
     iconTintWarning = iconTintWarningDark,
     iconTintError = iconTintErrorDark,
