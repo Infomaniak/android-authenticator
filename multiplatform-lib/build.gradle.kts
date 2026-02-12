@@ -46,12 +46,19 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(core.kotlinx.coroutines.test)
             }
         }
         androidMain {
             dependencies {
                 implementation(core.splitties.appctx)
                 implementation(core.splitties.bitflags)
+            }
+        }
+        val androidDeviceTest by getting {
+            dependencies {
+                implementation(core.androidx.junit)
+                implementation(core.androidx.espresso.core)
             }
         }
     }

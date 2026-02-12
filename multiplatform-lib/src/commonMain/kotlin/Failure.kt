@@ -15,17 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.extensions
+package com.infomaniak.auth.lib
 
-import kotlinx.cinterop.BetaInteropApi
-import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.create
-import platform.Foundation.dataUsingEncoding
-
-internal fun String.toNsData(): NSData? {
-    @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
+sealed interface Failure {
+    sealed interface KeyManagement : Failure {
+        data class GenerationFailed(val details: String) : KeyManagement
+        data class KeyExtractionFailed(val details: String) : KeyManagement
+    }
 }

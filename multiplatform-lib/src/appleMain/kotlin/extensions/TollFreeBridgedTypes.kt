@@ -15,17 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalForeignApi::class)
+
 package com.infomaniak.auth.lib.extensions
 
-import kotlinx.cinterop.BetaInteropApi
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreFoundation.CFDataRef
+import platform.CoreFoundation.CFErrorRef
+import platform.Foundation.CFBridgingRelease
 import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.create
-import platform.Foundation.dataUsingEncoding
+import platform.Foundation.NSError
 
-internal fun String.toNsData(): NSData? {
-    @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
-}
+// The casts below are fine because they involve "toll-free bridged" types.
+// See Apple doc archive on it:
+// https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html#//apple_ref/doc/uid/TP40010677
+
+fun CFDataRef.toNSData(): NSData = CFBridgingRelease(this) as NSData
+fun CFErrorRef.toNSError(): NSError = CFBridgingRelease(this) as NSError

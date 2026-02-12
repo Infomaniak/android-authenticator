@@ -15,17 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.extensions
+package com.infomaniak.auth.lib.internal
 
-import kotlinx.cinterop.BetaInteropApi
-import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.create
-import platform.Foundation.dataUsingEncoding
+import com.infomaniak.auth.lib.internal.Xor.First
+import com.infomaniak.auth.lib.internal.Xor.Second
 
-internal fun String.toNsData(): NSData? {
-    @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
+internal inline fun <FirstT, SecondT> Xor<FirstT, SecondT>.firstOrElse(block: (SecondT) -> FirstT): FirstT = when (this) {
+    is First -> value
+    is Second -> block(value)
+}
+
+internal inline fun <FirstT, SecondT> Xor<FirstT, SecondT>.secondOrElse(block: (FirstT) -> SecondT): SecondT = when (this) {
+    is First -> block(value)
+    is Second -> value
 }

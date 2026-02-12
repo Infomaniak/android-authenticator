@@ -15,17 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalContracts::class)
+
 package com.infomaniak.auth.lib.extensions
 
-import kotlinx.cinterop.BetaInteropApi
-import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.create
-import platform.Foundation.dataUsingEncoding
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreFoundation.CFRelease
+import platform.CoreFoundation.CFTypeRef
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-internal fun String.toNsData(): NSData? {
-    @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
+@OptIn(ExperimentalForeignApi::class)
+inline fun <T : CFTypeRef, R> T.use(block: (T) -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    try {
+        return block(this)
+    } finally {
+        CFRelease(this)
+    }
 }
