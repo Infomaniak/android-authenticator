@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.theme
+package com.infomaniak.auth.ui.theme.color
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import com.infomaniak.auth.ui.theme.lightScheme
 
 @Immutable
 data class CustomColorScheme(

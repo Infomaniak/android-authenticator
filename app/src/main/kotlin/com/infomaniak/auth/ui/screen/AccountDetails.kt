@@ -48,10 +48,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.CardFlavor
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
+import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
 import com.infomaniak.auth.ui.screen.home.FakeAccount
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -119,7 +121,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.materialColors.surfaceContainerHigh),
-        border = BorderStroke(1.dp, AuthenticatorTheme.colors.outline),
+        border = BorderStroke(1.dp, AuthenticatorTheme.customColors.outline),
         shape = RoundedCornerShape(16.dp),
     ) {
 
@@ -137,7 +139,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 Icon(
                     painter = painterResource(accountStatus.iconResId),
                     contentDescription = null,
-                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.colors.accountWarning,
+                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.customColors.accountWarning,
                 )
             }
             accountStatus.descriptionResId?.let {
@@ -157,6 +159,7 @@ private data class ActionRequiredConfiguration(
     val textColor: Color,
     val iconColor: Color,
     val iconRes: Int,
+    val cardFlavor: CardFlavor
 )
 
 @Composable
@@ -164,31 +167,32 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
     val configuration = if (hasLogin) {
         ActionRequiredConfiguration(
             text = stringResource(R.string.errorLoginFailed, 0),
-            borderColor = AuthenticatorTheme.colors.outlineError,
-            containerColor = AuthenticatorTheme.colors.accountErrorLoginBackground,
-            textColor = AuthenticatorTheme.colors.accountErrorLoginText,
-            iconColor = AuthenticatorTheme.colors.accountErrorLoginIcon,
+            borderColor = AuthenticatorTheme.customColors.outlineError,
+            containerColor = AuthenticatorTheme.customColors.accountErrorLoginBackground,
+            textColor = AuthenticatorTheme.customColors.accountErrorLoginText,
+            iconColor = AuthenticatorTheme.customColors.accountErrorLoginIcon,
             iconRes = R.drawable.triangle_alert,
+            cardFlavor = CardFlavor.Error
         )
     } else {
         ActionRequiredConfiguration(
             text = stringResource(R.string.accountNotConnectedWarningTitle),
-            borderColor = AuthenticatorTheme.colors.accountWarning,
-            containerColor = AuthenticatorTheme.colors.actionRequiredBackground,
+            borderColor = AuthenticatorTheme.customColors.accountWarning,
+            containerColor = AuthenticatorTheme.customColors.actionRequiredBackground,
             textColor = Color.Unspecified,
-            iconColor = AuthenticatorTheme.colors.accountWarning,
+            iconColor = AuthenticatorTheme.customColors.accountWarning,
             iconRes = R.drawable.alert,
+            cardFlavor = CardFlavor.Warning
         )
     }
 
-    Card(
+    StatusCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(top = Margin.Large),
-        colors = CardDefaults.cardColors(containerColor = configuration.containerColor),
-        border = BorderStroke(1.dp, configuration.borderColor),
         shape = RoundedCornerShape(16.dp),
+        cardFlavor = configuration.cardFlavor,
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -217,8 +221,8 @@ private fun ContactSupportButton() {
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.contactSupportTitle),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AuthenticatorTheme.colors.accountErrorContactSupportButton,
-            contentColor = AuthenticatorTheme.colors.contactSupportButtonText,
+            containerColor = AuthenticatorTheme.customColors.accountErrorContactSupportButton,
+            contentColor = AuthenticatorTheme.customColors.contactSupportButtonText,
         ),
         onClick = {}
     )
@@ -229,12 +233,12 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
     val loginButtonColor = if (hasLoggedInWithError) {
         ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = AuthenticatorTheme.colors.accountErrorLoginButtonText,
+            contentColor = AuthenticatorTheme.customColors.accountErrorLoginButtonText,
         )
     } else {
         ButtonDefaults.buttonColors(
-            containerColor = AuthenticatorTheme.colors.loginAgainButton,
-            contentColor = AuthenticatorTheme.colors.loginAgainButtonText,
+            containerColor = AuthenticatorTheme.customColors.loginAgainButton,
+            contentColor = AuthenticatorTheme.customColors.loginAgainButtonText,
         )
     }
 
@@ -290,16 +294,16 @@ private enum class AccountStatus(
     Secured(
         titleResId = R.string.accountProtected,
         iconResId = R.drawable.shield_check,
-        iconTint = { AuthenticatorTheme.colors.accountSecured }),
+        iconTint = { AuthenticatorTheme.customColors.accountSecured }),
     PartiallyProtected(
         titleResId = R.string.accountPartiallyProtectedTitle,
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
-        iconTint = { AuthenticatorTheme.colors.accountWarning }),
+        iconTint = { AuthenticatorTheme.customColors.accountWarning }),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
         iconResId = R.drawable.circle_cross,
-        iconTint = { AuthenticatorTheme.colors.accountDisconnected });
+        iconTint = { AuthenticatorTheme.customColors.accountDisconnected });
 
     companion object {
 

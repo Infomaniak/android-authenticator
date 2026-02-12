@@ -138,15 +138,15 @@ private fun ActionRequired() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium, vertical = Margin.Large),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.actionRequiredBackground),
-        border = BorderStroke(1.dp, AuthenticatorTheme.colors.actionRequiredPrimary),
+        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.actionRequiredBackground),
+        border = BorderStroke(1.dp, AuthenticatorTheme.customColors.actionRequiredPrimary),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(R.drawable.alert),
                 contentDescription = null,
-                tint = AuthenticatorTheme.colors.actionRequiredPrimary,
+                tint = AuthenticatorTheme.customColors.actionRequiredPrimary,
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
@@ -164,7 +164,7 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
             .padding(horizontal = Margin.Medium)
             .clip(RoundedCornerShape(Dimens.largeCornerRadius))
             .clickable(onClick = { onClick(account) }),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.accountItemBackground),
+        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.accountItemBackground),
     ) {
         Row(
             modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
@@ -197,9 +197,9 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
 }
 
 enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
-    Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountSecured }),
-    Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.colors.accountWarning }),
-    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.colors.accountWarning }),
+    Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.accountSecured }),
+    Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.accountWarning }),
+    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.accountWarning }),
 }
 
 @Serializable
