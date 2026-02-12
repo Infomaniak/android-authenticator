@@ -88,9 +88,7 @@ fun StatusCard(
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    MaterialTheme(
-        colorScheme = cardFlavor.getMaterialTheme()
-    ) {
+    MaterialTheme(colorScheme = cardFlavor.getMaterialTheme()) {
         OutlinedCard(
             modifier = modifier,
             shape = shape,
@@ -109,8 +107,7 @@ private fun StatusCardPreview() {
                 modifier = Modifier.padding(Margin.Medium),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                val themeCardModifier = Modifier
-                    .fillMaxWidth()
+                val themeCardModifier = Modifier.fillMaxWidth()
 
                 StatusCard(CardFlavor.Neutral, themeCardModifier) {
                     PreviewContent()
