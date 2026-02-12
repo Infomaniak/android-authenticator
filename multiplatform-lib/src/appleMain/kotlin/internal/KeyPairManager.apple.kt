@@ -22,6 +22,7 @@ package com.infomaniak.auth.lib.internal
 import com.infomaniak.auth.lib.Failure
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
+import com.infomaniak.auth.lib.extensions.toByteArray
 import com.infomaniak.auth.lib.extensions.toNsData
 import com.infomaniak.auth.lib.extensions.use
 import com.infomaniak.auth.lib.internal.KeyPairManager.Companion.ALIAS
@@ -52,7 +53,6 @@ import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
 import platform.Security.kSecClass
 import platform.Security.kSecClassKey
 import platform.Security.kSecReturnRef
-import toByteArray
 
 internal class KeyPairManagerImpl : KeyPairManager {
 

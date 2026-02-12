@@ -15,10 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.lib.extensions
+
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.allocArrayOf
+import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.usePinned
 import platform.Foundation.NSData
+import platform.Foundation.create
 import platform.Foundation.getBytes
 
 @OptIn(ExperimentalForeignApi::class)
@@ -29,4 +35,12 @@ fun NSData.toByteArray(): ByteArray {
             this@toByteArray.getBytes(pinned.addressOf(0))
         }
     }
+}
+
+@OptIn(ExperimentalUnsignedTypes::class, ExperimentalForeignApi::class, BetaInteropApi::class)
+fun ByteArray.toNSData(): NSData = memScoped {
+    NSData.create(
+        bytes = allocArrayOf(this@toNSData),
+        length = size.toULong()
+    )
 }
