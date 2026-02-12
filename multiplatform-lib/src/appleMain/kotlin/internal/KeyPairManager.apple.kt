@@ -23,7 +23,9 @@ import com.infomaniak.auth.lib.Failure
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.toByteArray
+import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.toNsData
+import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.extensions.use
 import com.infomaniak.auth.lib.internal.KeyPairManager.Companion.ALIAS
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -35,11 +37,8 @@ import kotlinx.cinterop.value
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.invoke
-import platform.CoreFoundation.CFErrorRefVar
 import platform.CoreFoundation.CFRelease
 import platform.CoreFoundation.CFTypeRefVar
-import platform.Foundation.CFBridgingRelease
-import platform.Foundation.NSData
 import platform.Security.SecItemCopyMatching
 import platform.Security.SecKeyCopyExternalRepresentation
 import platform.Security.SecKeyCopyPublicKey
@@ -71,29 +70,22 @@ internal class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    override suspend fun retrievePublicKey(): ByteArray = Dispatchers.IO {
+    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
-            // Get private and public key
-            val privateKeyRef = getPrivateKeyRef()
-            val publicKeyRef =
+            // Get private key to retrieve public key
+            getPrivateKeyRef().use { privateKeyRef ->
                 SecKeyCopyPublicKey(privateKeyRef) ?: throw Exception("Failed to extract public key from private key")
-            CFRelease(privateKeyRef)
+            }.use { publicKeyRef ->
 
-            // Handling error
-            val errorVar = alloc<CFErrorRefVar>()
-            val publicKeyDataCF = SecKeyCopyExternalRepresentation(publicKeyRef, errorVar.ptr)
+                val result = tryIt { errorPointer -> SecKeyCopyExternalRepresentation(publicKeyRef, errorPointer) }
 
-            val error = CFBridgingRelease(errorVar.value)
-            if (error != null || publicKeyDataCF == null) {
-                CFRelease(publicKeyRef)
-                throw Exception("Failed to export public key as data: $error")
+                val publicKeyData = when (result) {
+                    is Xor.First -> result.value.toNSData()
+                    is Xor.Second -> return@IO Xor.Second(Failure.KeyManagement.KeyExtractionFailed(result.value.toString()))
+                }
+
+                Xor.First(publicKeyData.toByteArray())
             }
-
-            CFRelease(publicKeyRef)
-
-            // Extract data from public key
-            val publicKeyData = CFBridgingRelease(publicKeyDataCF) as NSData
-            publicKeyData.toByteArray()
         }
     }
 

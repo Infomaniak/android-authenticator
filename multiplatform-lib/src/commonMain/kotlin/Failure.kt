@@ -20,5 +20,6 @@ package com.infomaniak.auth.lib
 sealed interface Failure {
     sealed interface KeyManagement : Failure {
         data class GenerationFailed(val details: String) : KeyManagement
+        data class KeyExtractionFailed(val details: String) : KeyManagement
     }
 }

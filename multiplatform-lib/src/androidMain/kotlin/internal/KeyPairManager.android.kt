@@ -37,9 +37,11 @@ internal class KeyPairManagerImpl : KeyPairManager {
         return null
     }
 
-    override suspend fun retrievePublicKey(): ByteArray = Dispatchers.IO {
+    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         val file = File(appCtx.filesDir, PUBLIC_KEY_NAME)
-        file.readBytes()
+        runCatching {
+            Xor.First(file.readBytes())
+        }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
     private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
