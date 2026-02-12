@@ -22,15 +22,10 @@ package com.infomaniak.auth.lib.internal
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.toNsData
+import com.infomaniak.auth.lib.extensions.tryIt
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.value
-import platform.CoreFoundation.CFErrorRefVar
 import platform.CoreFoundation.CFMutableDictionaryRef
 import platform.CoreFoundation.kCFAllocatorDefault
-import platform.Foundation.CFBridgingRelease
 import platform.Foundation.NSError
 import platform.Security.SecAccessControlCreateWithFlags
 import platform.Security.SecKeyCreateRandomKey
@@ -102,7 +97,7 @@ private fun generatePrivateKey(
     keyAccessGuard: KeyAccessGuard,
     accessibility: KeyAccessibility,
     storageLocation: KeyStorageLocation,
-): Xor<SecKeyRef, NSError> = memScoped {
+): Xor<SecKeyRef, NSError> {
     val attributes = createKeyAttributes(
         tag = tag,
         privateKeyPurposes = privateKeyPurposes,
@@ -112,17 +107,7 @@ private fun generatePrivateKey(
         storageLocation = storageLocation,
     )
 
-    val e = alloc<CFErrorRefVar>()
-
-    val privateKey: SecKeyRef? = SecKeyCreateRandomKey(attributes, e.ptr)
-
-    // The cast below is fine because it's a "toll-free bridged" type.
-    // See Apple doc archive on it:
-    // https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html#//apple_ref/doc/uid/TP40010677
-    when (val error = CFBridgingRelease(e.value) as NSError?) {
-        null -> Xor.First(privateKey!!)
-        else -> Xor.Second(error)
-    }
+    return tryIt { e -> SecKeyCreateRandomKey(attributes, e) }
 }
 
 private fun createKeyAttributes(
@@ -182,16 +167,11 @@ private fun KeyPurposes.applyTo(dictionary: CFMutableDictionaryRef?) {
 private fun createAccessControl(
     accessControl: KeyAccessGuard,
     accessibility: KeyAccessibility
-) = memScoped {
-    val e = alloc<CFErrorRefVar>()
-    val access = SecAccessControlCreateWithFlags(
+) = tryIt { errorPointer ->
+    SecAccessControlCreateWithFlags(
         allocator = kCFAllocatorDefault,
         protection = accessibility.toKSecAttrAccessible(),
         flags = accessControl.toAccessControlFlags(),
-        error = e.ptr
+        error = errorPointer
     )
-    when (val error = CFBridgingRelease(e.value) as NSError?) {
-        null -> access!!
-        else -> throw Exception("Error creating access control: $error")
-    }
-}
+}.firstOrElse { error -> throw Exception("Error creating access control: $error") }

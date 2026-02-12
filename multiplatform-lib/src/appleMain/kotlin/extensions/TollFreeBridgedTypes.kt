@@ -26,5 +26,9 @@ import platform.Foundation.CFBridgingRelease
 import platform.Foundation.NSData
 import platform.Foundation.NSError
 
+// The casts below are fine because they involve "toll-free bridged" types.
+// See Apple doc archive on it:
+// https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html#//apple_ref/doc/uid/TP40010677
+
 fun CFDataRef.toNSData(): NSData = CFBridgingRelease(this) as NSData
 fun CFErrorRef.toNSError(): NSError = CFBridgingRelease(this) as NSError
