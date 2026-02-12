@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,9 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -48,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.CardFlavor
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -114,24 +111,21 @@ private fun Header(account: FakeAccount) {
 
 @Composable
 private fun SecurityCheck(accountStatus: AccountStatus) {
-    Card(
+    StatusCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = Margin.Large)
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.materialColors.surfaceContainerHigh),
-        border = BorderStroke(1.dp, AuthenticatorTheme.customColors.outline),
+        cardFlavor = CardFlavor.Neutral,
         shape = RoundedCornerShape(16.dp),
     ) {
-
-        Column(modifier = Modifier.padding(Margin.Small)) {
+        Column(modifier = Modifier.padding(Margin.Medium)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    modifier = Modifier.padding(start = Margin.Small),
                     text = stringResource(accountStatus.titleResId),
                     style = if (accountStatus.descriptionResId != null) Typography.h2 else LocalTextStyle.current
                 )
@@ -139,12 +133,12 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 Icon(
                     painter = painterResource(accountStatus.iconResId),
                     contentDescription = null,
-                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.customColors.accountWarning,
+                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
                 )
             }
             accountStatus.descriptionResId?.let {
                 Text(
-                    modifier = Modifier.padding(start = Margin.Small, top = Margin.Mini),
+                    modifier = Modifier.padding(top = Margin.Mini),
                     text = stringResource(accountStatus.descriptionResId)
                 )
             }
@@ -154,9 +148,6 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
 
 private data class ActionRequiredConfiguration(
     val text: String,
-    val borderColor: Color,
-    val containerColor: Color,
-    val textColor: Color,
     val iconColor: Color,
     val iconRes: Int,
     val cardFlavor: CardFlavor
@@ -167,21 +158,15 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
     val configuration = if (hasLogin) {
         ActionRequiredConfiguration(
             text = stringResource(R.string.errorLoginFailed, 0),
-            borderColor = AuthenticatorTheme.customColors.outlineError,
-            containerColor = AuthenticatorTheme.customColors.accountErrorLoginBackground,
-            textColor = AuthenticatorTheme.customColors.accountErrorLoginText,
-            iconColor = AuthenticatorTheme.customColors.accountErrorLoginIcon,
             iconRes = R.drawable.triangle_alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintError,
             cardFlavor = CardFlavor.Error
         )
     } else {
         ActionRequiredConfiguration(
             text = stringResource(R.string.accountNotConnectedWarningTitle),
-            borderColor = AuthenticatorTheme.customColors.accountWarning,
-            containerColor = AuthenticatorTheme.customColors.actionRequiredBackground,
-            textColor = Color.Unspecified,
-            iconColor = AuthenticatorTheme.customColors.accountWarning,
             iconRes = R.drawable.alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
             cardFlavor = CardFlavor.Warning
         )
     }
@@ -194,16 +179,15 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
         shape = RoundedCornerShape(16.dp),
         cardFlavor = configuration.cardFlavor,
     ) {
-        Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(configuration.iconRes),
                 contentDescription = null,
-                tint = configuration.iconColor,
+                tint = configuration.iconColor
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
                 text = configuration.text,
-                color = configuration.textColor,
             )
         }
 
@@ -220,35 +204,20 @@ private fun ContactSupportButton() {
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.contactSupportTitle),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AuthenticatorTheme.customColors.accountErrorContactSupportButton,
-            contentColor = AuthenticatorTheme.customColors.contactSupportButtonText,
-        ),
+        style = ButtonStyle.Secondary,
         onClick = {}
     )
 }
 
 @Composable
 private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
-    val loginButtonColor = if (hasLoggedInWithError) {
-        ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = AuthenticatorTheme.customColors.accountErrorLoginButtonText,
-        )
-    } else {
-        ButtonDefaults.buttonColors(
-            containerColor = AuthenticatorTheme.customColors.loginAgainButton,
-            contentColor = AuthenticatorTheme.customColors.loginAgainButtonText,
-        )
-    }
-
     LargeButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.logInButton),
-        colors = loginButtonColor,
+        style = if (hasLoggedInWithError) ButtonStyle.Tertiary else ButtonStyle.Secondary,
         onClick = {
             // TODO An error appear if we already tried to log in on figma so for now, we're doing like this
             logIn()
@@ -299,7 +268,7 @@ private enum class AccountStatus(
         titleResId = R.string.accountPartiallyProtectedTitle,
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
-        iconTint = { AuthenticatorTheme.customColors.accountWarning }),
+        iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
         iconResId = R.drawable.circle_cross,

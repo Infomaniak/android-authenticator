@@ -56,8 +56,9 @@ sealed interface CardFlavor {
     data object Warning : CardFlavor {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
-            primary = AuthenticatorTheme.statusColors.warningMedium,
-            onPrimary = AuthenticatorTheme.statusColors.warningHighest,
+            primary = AuthenticatorTheme.statusColors.warningHighest,
+            secondary = AuthenticatorTheme.statusColors.warningMedium,
+            onSecondary = AuthenticatorTheme.statusColors.warningHighest,
             surface = AuthenticatorTheme.statusColors.warningLow,
             onSurface = AuthenticatorTheme.statusColors.warningHighest,
             outlineVariant = AuthenticatorTheme.statusColors.warningHigh,
@@ -67,8 +68,9 @@ sealed interface CardFlavor {
     data object Error : CardFlavor {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
-            primary = AuthenticatorTheme.statusColors.errorMedium,
-            onPrimary = AuthenticatorTheme.statusColors.errorHighest,
+            primary = AuthenticatorTheme.statusColors.errorHighest,
+            secondary = AuthenticatorTheme.statusColors.errorMedium,
+            onSecondary = AuthenticatorTheme.statusColors.errorHighest,
             surface = AuthenticatorTheme.statusColors.errorLow,
             onSurface = AuthenticatorTheme.statusColors.errorHighest,
             outlineVariant = AuthenticatorTheme.statusColors.errorHigh,
@@ -142,7 +144,26 @@ private fun PreviewContent() {
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
+        style = ButtonStyle.Primary,
         title = stringResource(R.string.logInButton),
+        onClick = {}
+    )
+    LargeButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Margin.Medium)
+            .padding(bottom = Margin.Medium),
+        style = ButtonStyle.Secondary,
+        title = stringResource(R.string.logInButton),
+        onClick = {}
+    )
+    LargeButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Margin.Medium)
+            .padding(bottom = Margin.Medium),
+        title = stringResource(R.string.appName),
+        style = ButtonStyle.Tertiary,
         onClick = {}
     )
 }

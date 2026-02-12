@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,9 +52,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.CardFlavor
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
+import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -134,19 +134,17 @@ fun HomeScreen(onAccountClicked: (FakeAccount) -> Unit) {
 
 @Composable
 private fun ActionRequired() {
-    Card(
+    StatusCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium, vertical = Margin.Large),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.actionRequiredBackground),
-        border = BorderStroke(1.dp, AuthenticatorTheme.customColors.actionRequiredPrimary),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        cardFlavor = CardFlavor.Warning,
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(R.drawable.alert),
                 contentDescription = null,
-                tint = AuthenticatorTheme.customColors.actionRequiredPrimary,
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
@@ -198,8 +196,8 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
 
 enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
     Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.accountSecured }),
-    Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.accountWarning }),
-    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.accountWarning }),
+    Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
+    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
 }
 
 @Serializable

@@ -41,23 +41,23 @@ data class StatusColorScheme(
 val lightStatusColorScheme = StatusColorScheme(
     warningLow = warningDim1Light,
     warningMedium = warningDim3Light,
-    warningHigh = warningDim4Light,
+    warningHigh = warningDim5Light,
     warningHighest = warningDim6Light,
 
     errorLow = errorDim1Light,
     errorMedium = errorDim3Light,
-    errorHigh = errorDim4Light,
+    errorHigh = errorDim5Light,
     errorHighest = errorDim6Light,
 )
 
 val darkStatusColorScheme = StatusColorScheme(
     warningLow = warningDim1Dark,
     warningMedium = warningDim3Dark,
-    warningHigh = warningDim4Dark,
+    warningHigh = warningDim5Dark,
     warningHighest = warningDim6Dark,
 
     errorLow = errorDim1Dark,
     errorMedium = errorDim3Dark,
-    errorHigh = errorDim4Dark,
+    errorHigh = errorDim5Dark,
     errorHighest = errorDim6Dark,
 )
