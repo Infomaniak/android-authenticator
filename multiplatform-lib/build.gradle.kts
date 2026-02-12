@@ -57,8 +57,8 @@ kotlin {
         }
         val androidDeviceTest by getting {
             dependencies {
-                implementation(libs.androidx.junit)
-                implementation(libs.androidx.espresso.core)
+                implementation(core.androidx.junit)
+                implementation(core.androidx.espresso.core)
             }
         }
     }

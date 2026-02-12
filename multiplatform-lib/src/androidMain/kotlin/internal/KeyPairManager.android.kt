@@ -38,7 +38,7 @@ internal class KeyPairManagerImpl : KeyPairManager {
         file.readBytes()
     }
 
-    private fun saveKeyToFilesDir(fileName: String, key: ByteArray) {
+    private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
         val file = File(appCtx.filesDir, fileName)
         file.writeBytes(key)
     }
