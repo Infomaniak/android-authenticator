@@ -33,6 +33,8 @@ import com.infomaniak.auth.ui.theme.color.lightCustomScheme
 import com.infomaniak.auth.ui.theme.color.lightStatusColorScheme
 import com.infomaniak.auth.ui.theme.color.neutral0
 import com.infomaniak.auth.ui.theme.color.neutral10
+import com.infomaniak.auth.ui.theme.color.neutral100
+import com.infomaniak.auth.ui.theme.color.neutral12
 import com.infomaniak.auth.ui.theme.color.neutral17
 import com.infomaniak.auth.ui.theme.color.neutral20
 import com.infomaniak.auth.ui.theme.color.neutral22
@@ -46,11 +48,8 @@ import com.infomaniak.auth.ui.theme.color.neutral80
 import com.infomaniak.auth.ui.theme.color.neutral87
 import com.infomaniak.auth.ui.theme.color.neutral90
 import com.infomaniak.auth.ui.theme.color.neutral92
-import com.infomaniak.auth.ui.theme.color.neutral94
 import com.infomaniak.auth.ui.theme.color.neutral95
-import com.infomaniak.auth.ui.theme.color.neutral96
 import com.infomaniak.auth.ui.theme.color.neutral98
-import com.infomaniak.auth.ui.theme.color.neutral99
 import com.infomaniak.auth.ui.theme.color.red10
 import com.infomaniak.auth.ui.theme.color.red20
 import com.infomaniak.auth.ui.theme.color.red40
