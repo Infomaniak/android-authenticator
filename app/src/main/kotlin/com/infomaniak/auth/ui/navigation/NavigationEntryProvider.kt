@@ -40,9 +40,12 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
         SettingsScreen()
     }
     entry<NavDestination.AccountDetails> {
-        AccountDetails(it.account, onBackPressed = {
-            backStack.removeAt(backStack.lastIndex)
-        })
+        AccountDetails(
+            it.account,
+            onBackPressed = {
+                backStack.removeAt(backStack.lastIndex)
+            }
+        )
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(

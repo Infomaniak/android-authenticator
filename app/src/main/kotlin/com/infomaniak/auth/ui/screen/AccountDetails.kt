@@ -78,9 +78,12 @@ fun AccountDetails(account: FakeAccount, onBackPressed: () -> Unit) {
             SecurityCheck(AccountStatus.from(account.securityLevel))
             if (account.securityLevel != AccountSecurityLevel.Secured) {
                 var hasLogin by remember { mutableStateOf(false) }
-                ActionRequired(hasLogin, logIn = {
-                    hasLogin = true
-                })
+                ActionRequired(
+                    hasLogin,
+                    logIn = {
+                        hasLogin = true
+                    }
+                )
             }
             SettingsSections(account.securityLevel)
         }

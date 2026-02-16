@@ -60,7 +60,6 @@ fun InfomaniakAuthenticatorTopAppBar(
             IconButton(onClick = onBackPressed) {
                 Icon(painterResource(R.drawable.arrow_left), contentDescription = null)
             }
-
     }
 
     if (isCentered) {
