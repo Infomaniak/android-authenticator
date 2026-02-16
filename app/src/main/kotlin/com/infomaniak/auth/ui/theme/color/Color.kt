@@ -89,6 +89,7 @@ val red98 = Color(0xFFFFF8F7)
 val red99 = Color(0xFFFFFCFB)
 val red100 = Color(0xFFFFFDFD)
 
+// TODO: Have custom primitives without responsibilities like dark/light
 // Custom primitives
 val errorDim1Light = Color(0xFFFEF3F2)
 val errorDim1Dark = Color(0xFF470C08)
