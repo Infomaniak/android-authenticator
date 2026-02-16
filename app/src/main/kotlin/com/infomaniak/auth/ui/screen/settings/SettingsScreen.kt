@@ -86,7 +86,6 @@ fun SettingsScreen(
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
     ) { paddingValues ->
-
         OptionsSection(
             firstSectionItems, secondSectionItems,
             modifier = Modifier.padding(paddingValues),

@@ -27,7 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.room.Theme
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
-import com.infomaniak.auth.ui.components.OptionItem
+import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -41,6 +41,7 @@ fun ThemeScreen(
     val uiState by themeViewModel.uiState.collectAsStateWithLifecycle(null)
 
     SinglePaneScaffold(
+        modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
@@ -51,17 +52,17 @@ fun ThemeScreen(
         },
     ) { paddingValues ->
         val section = listOf(
-            OptionItem.WithSelection(
+            OptionItemType.WithSelection(
                 stringResId = R.string.themeLight,
                 isSelected = uiState?.theme == Theme.LIGHT,
                 onClick = { themeViewModel.setTheme(Theme.LIGHT) },
             ),
-            OptionItem.WithSelection(
+            OptionItemType.WithSelection(
                 stringResId = R.string.themeDark,
                 isSelected = uiState?.theme == Theme.DARK,
                 onClick = { themeViewModel.setTheme(Theme.DARK) },
             ),
-            OptionItem.WithSelection(
+            OptionItemType.WithSelection(
                 stringResId = R.string.themeSystem,
                 isSelected = uiState?.theme == Theme.SYSTEM,
                 onClick = { themeViewModel.setTheme(Theme.SYSTEM) },
@@ -69,10 +70,9 @@ fun ThemeScreen(
         )
 
         OptionsSection(
+            section,
             modifier = Modifier
-                .background(AuthenticatorTheme.materialColors.inverseOnSurface)
                 .padding(paddingValues),
-            section
         )
     }
 }

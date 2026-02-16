@@ -103,8 +103,8 @@ private fun OptionItem(optionItemType: OptionItemType) {
     Box(
         modifier = Modifier
             .height(50.dp)
-            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon || optionItemType is OptionItem.WithSelection) {
-                optionItem.onClick?.invoke()
+            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon || optionItemType is OptionItemType.WithSelection) {
+                optionItemType.onClick?.invoke()
             }
     ) {
         OptionContent(optionItemType)
@@ -133,12 +133,12 @@ private fun OptionContent(optionItemType: OptionItemType) {
                 Switch(
                     modifier = Modifier
                         .scale(0.7f),
-                    checked = optionItem.isChecked,
-                    onCheckedChange = { optionItem.onCheckedChange.invoke(it) },
+                    checked = optionItemType.isChecked,
+                    onCheckedChange = { optionItemType.onCheckedChange.invoke(it) },
                 )
             }
-            is OptionItem.WithSelection -> {
-                if (optionItem.isSelected) {
+            is OptionItemType.WithSelection -> {
+                if (optionItemType.isSelected) {
                     Icon(
                         modifier = Modifier.size(20.dp),
                         painter = painterResource(R.drawable.check),
@@ -170,14 +170,13 @@ sealed class OptionItemType(
         onClick: () -> Unit,
     ) : OptionItemType(stringResId, onClick = onClick)
 
-    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
     class WithSelection(
         stringResId: Int,
         val isSelected: Boolean,
         onClick: () -> Unit,
     ) : OptionItemType(stringResId, onClick = onClick)
 
-    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItem(stringResId, textColor)
+    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
 }
 
 @PreviewSmallWindow
