@@ -53,9 +53,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.infomaniak.auth.R
-import com.infomaniak.auth.ui.components.CardVariant
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
+import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -139,7 +139,7 @@ private fun ActionRequired() {
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium, vertical = Margin.Large),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
-        variant = CardVariant.Warning,
+        variant = StatusCardVariant.Warning,
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
             Icon(

@@ -46,12 +46,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.ButtonStyle
-import com.infomaniak.auth.ui.components.CardVariant
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.components.StatusCard
+import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
 import com.infomaniak.auth.ui.screen.home.FakeAccount
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -118,7 +118,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
             .padding(top = Margin.Large)
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
-        variant = CardVariant.Neutral,
+        variant = StatusCardVariant.Neutral,
         shape = RoundedCornerShape(16.dp),
     ) {
         Column(
@@ -151,7 +151,7 @@ private data class ActionRequiredConfiguration(
     val text: String,
     val iconColor: Color,
     val iconRes: Int,
-    val cardVariant: CardVariant
+    val statusCardVariant: StatusCardVariant
 )
 
 @Composable
@@ -161,14 +161,14 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
             text = stringResource(R.string.errorLoginFailed, 0),
             iconRes = R.drawable.triangle_alert,
             iconColor = AuthenticatorTheme.customColors.iconTintError,
-            cardVariant = CardVariant.Error
+            statusCardVariant = StatusCardVariant.Error
         )
     } else {
         ActionRequiredConfiguration(
             text = stringResource(R.string.accountNotConnectedWarningTitle),
             iconRes = R.drawable.alert,
             iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-            cardVariant = CardVariant.Warning
+            statusCardVariant = StatusCardVariant.Warning
         )
     }
 
@@ -178,7 +178,7 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
             .padding(horizontal = Margin.Medium)
             .padding(top = Margin.Large),
         shape = RoundedCornerShape(16.dp),
-        variant = configuration.cardVariant,
+        variant = configuration.statusCardVariant,
     ) {
         Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
             Icon(

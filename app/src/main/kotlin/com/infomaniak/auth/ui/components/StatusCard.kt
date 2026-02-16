@@ -43,8 +43,8 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
 @Immutable
-sealed interface CardVariant {
-    data object Neutral : CardVariant {
+sealed interface StatusCardVariant {
+    data object Neutral : StatusCardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
             surface = MaterialTheme.colorScheme.surfaceContainer,
@@ -52,7 +52,7 @@ sealed interface CardVariant {
         )
     }
 
-    data object Warning : CardVariant {
+    data object Warning : StatusCardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
             primary = AuthenticatorTheme.statusColors.warningHighest,
@@ -64,7 +64,7 @@ sealed interface CardVariant {
         )
     }
 
-    data object Error : CardVariant {
+    data object Error : StatusCardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
             primary = AuthenticatorTheme.statusColors.errorHighest,
@@ -83,7 +83,7 @@ sealed interface CardVariant {
 @Composable
 fun StatusCard(
     modifier: Modifier = Modifier,
-    variant: CardVariant = CardVariant.Neutral,
+    variant: StatusCardVariant = StatusCardVariant.Neutral,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -107,13 +107,13 @@ private fun StatusCardPreview() {
             ) {
                 val themeCardModifier = Modifier.fillMaxWidth()
 
-                StatusCard(modifier = themeCardModifier, variant = CardVariant.Neutral) {
+                StatusCard(modifier = themeCardModifier, variant = StatusCardVariant.Neutral) {
                     PreviewContent()
                 }
-                StatusCard(modifier = themeCardModifier, variant = CardVariant.Error) {
+                StatusCard(modifier = themeCardModifier, variant = StatusCardVariant.Error) {
                     PreviewContent()
                 }
-                StatusCard(modifier = themeCardModifier, variant = CardVariant.Warning) {
+                StatusCard(modifier = themeCardModifier, variant = StatusCardVariant.Warning) {
                     PreviewContent()
                 }
             }
