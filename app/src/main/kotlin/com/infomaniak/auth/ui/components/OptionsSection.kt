@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -69,7 +68,7 @@ fun OptionsSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Margin.Medium),
-                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.optionsSectionBackground),
+                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.optionsSectionBackground),
                     shape = RoundedCornerShape(24.dp),
                 ) {
                     Column {

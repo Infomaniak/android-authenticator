@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.theme
+package com.infomaniak.auth.ui.theme.color
 
 import androidx.compose.ui.graphics.Color
 
@@ -89,8 +89,8 @@ val red98 = Color(0xFFFFF8F7)
 val red99 = Color(0xFFFFFCFB)
 val red100 = Color(0xFFFFFDFD)
 
+// TODO: Have custom primitives without responsibilities like dark/light
 // Custom primitives
-val productSecurity = Color(0xFF5869D9)
 val errorDim1Light = Color(0xFFFEF3F2)
 val errorDim1Dark = Color(0xFF470C08)
 val errorDim3Light = Color(0xFFFFCCC8)
@@ -101,13 +101,16 @@ val errorDim5Light = Color(0xFFF44336)
 val errorDim5Dark = Color(0xFFFFA8A2)
 val errorDim6Light = Color(0xFF82211A)
 val errorDim6Dark = Color(0XFFFFE3E1)
+val warningDim1Light = Color(0XFFFFFAEC)
+val warningDim1Dark = Color(0xFF461E04)
 val warningDim3Light = Color(0XFFFFE7A5)
 val warningDim3Dark = Color(0xFF523322)
-val warningDim4Light = Color(0xFFFFFAEC)
-val warningDim4Dark = Color(0xFF461E04)
+val warningDim4Light = Color(0xFFFFB632)
+val warningDim4Dark = Color(0xFFFF9D0A)
 val warningDim5Light = Color(0xFFFFB632)
-val warningDim5Dark = Color(0xFFFF9D0A)
+val warningDim5Dark = Color(0xFFFFD46D)
 val warningDim6Light = Color(0xFF823F0C)
+val warningDim6Dark = Color(0xFFFFF5D3)
 val successDim5Dark = Color(0xFF95E09D)
 val successDim5Light = Color(0xFF95E09D)
 val backgroundSurface = Color(0xFF282C39)

@@ -17,10 +17,10 @@
  */
 package com.infomaniak.auth.ui.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,9 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -48,10 +45,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
+import com.infomaniak.auth.ui.components.StatusCard
+import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
 import com.infomaniak.auth.ui.screen.home.FakeAccount
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -112,24 +112,24 @@ private fun Header(account: FakeAccount) {
 
 @Composable
 private fun SecurityCheck(accountStatus: AccountStatus) {
-    Card(
+    StatusCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = Margin.Large)
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.materialColors.surfaceContainerHigh),
-        border = BorderStroke(1.dp, AuthenticatorTheme.colors.outline),
+        variant = StatusCardVariant.Neutral,
         shape = RoundedCornerShape(16.dp),
     ) {
-
-        Column(modifier = Modifier.padding(Margin.Small)) {
+        Column(
+            modifier = Modifier.padding(Margin.Medium),
+            verticalArrangement = Arrangement.spacedBy(Margin.Mini)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    modifier = Modifier.padding(start = Margin.Small),
                     text = stringResource(accountStatus.titleResId),
                     style = if (accountStatus.descriptionResId != null) Typography.h2 else LocalTextStyle.current
                 )
@@ -137,14 +137,11 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 Icon(
                     painter = painterResource(accountStatus.iconResId),
                     contentDescription = null,
-                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.colors.accountWarning,
+                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
                 )
             }
             accountStatus.descriptionResId?.let {
-                Text(
-                    modifier = Modifier.padding(start = Margin.Small, top = Margin.Mini),
-                    text = stringResource(accountStatus.descriptionResId)
-                )
+                Text(text = stringResource(accountStatus.descriptionResId))
             }
         }
     }
@@ -152,11 +149,9 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
 
 private data class ActionRequiredConfiguration(
     val text: String,
-    val borderColor: Color,
-    val containerColor: Color,
-    val textColor: Color,
     val iconColor: Color,
     val iconRes: Int,
+    val statusCardVariant: StatusCardVariant
 )
 
 @Composable
@@ -164,42 +159,36 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
     val configuration = if (hasLogin) {
         ActionRequiredConfiguration(
             text = stringResource(R.string.errorLoginFailed, 0),
-            borderColor = AuthenticatorTheme.colors.outlineError,
-            containerColor = AuthenticatorTheme.colors.accountErrorLoginBackground,
-            textColor = AuthenticatorTheme.colors.accountErrorLoginText,
-            iconColor = AuthenticatorTheme.colors.accountErrorLoginIcon,
             iconRes = R.drawable.triangle_alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintError,
+            statusCardVariant = StatusCardVariant.Error
         )
     } else {
         ActionRequiredConfiguration(
             text = stringResource(R.string.accountNotConnectedWarningTitle),
-            borderColor = AuthenticatorTheme.colors.accountWarning,
-            containerColor = AuthenticatorTheme.colors.actionRequiredBackground,
-            textColor = Color.Unspecified,
-            iconColor = AuthenticatorTheme.colors.accountWarning,
             iconRes = R.drawable.alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
+            statusCardVariant = StatusCardVariant.Warning
         )
     }
 
-    Card(
+    StatusCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(top = Margin.Large),
-        colors = CardDefaults.cardColors(containerColor = configuration.containerColor),
-        border = BorderStroke(1.dp, configuration.borderColor),
         shape = RoundedCornerShape(16.dp),
+        variant = configuration.statusCardVariant,
     ) {
-        Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(configuration.iconRes),
                 contentDescription = null,
-                tint = configuration.iconColor,
+                tint = configuration.iconColor
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
                 text = configuration.text,
-                color = configuration.textColor,
             )
         }
 
@@ -216,35 +205,20 @@ private fun ContactSupportButton() {
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.contactSupportTitle),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AuthenticatorTheme.colors.accountErrorContactSupportButton,
-            contentColor = AuthenticatorTheme.colors.contactSupportButtonText,
-        ),
+        style = ButtonStyle.Secondary,
         onClick = {}
     )
 }
 
 @Composable
 private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
-    val loginButtonColor = if (hasLoggedInWithError) {
-        ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = AuthenticatorTheme.colors.accountErrorLoginButtonText,
-        )
-    } else {
-        ButtonDefaults.buttonColors(
-            containerColor = AuthenticatorTheme.colors.loginAgainButton,
-            contentColor = AuthenticatorTheme.colors.loginAgainButtonText,
-        )
-    }
-
     LargeButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.logInButton),
-        colors = loginButtonColor,
+        style = if (hasLoggedInWithError) ButtonStyle.Tertiary else ButtonStyle.Secondary,
         onClick = {
             // TODO An error appear if we already tried to log in on figma so for now, we're doing like this
             logIn()
@@ -290,16 +264,16 @@ private enum class AccountStatus(
     Secured(
         titleResId = R.string.accountProtected,
         iconResId = R.drawable.shield_check,
-        iconTint = { AuthenticatorTheme.colors.accountSecured }),
+        iconTint = { AuthenticatorTheme.customColors.accountSecured }),
     PartiallyProtected(
         titleResId = R.string.accountPartiallyProtectedTitle,
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
-        iconTint = { AuthenticatorTheme.colors.accountWarning }),
+        iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
         iconResId = R.drawable.circle_cross,
-        iconTint = { AuthenticatorTheme.colors.accountDisconnected });
+        iconTint = { AuthenticatorTheme.customColors.accountDisconnected });
 
     companion object {
 
