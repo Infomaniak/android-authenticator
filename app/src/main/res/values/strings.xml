@@ -21,6 +21,9 @@
     <string name="accountLossRiskBackupVerificationDescription">Make sure another two-step verification method is set up and working.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">If Authenticator is your last two-step verification method, you could be locked out next time you log in.</string>
     <string name="accountLossRiskTitle">You may lose access to this account</string>
+    <string name="accountNotConnectedWarningTitle">Log in again to secure your account.</string>
+    <string name="accountPartiallyProtectedDescription">Update your security settings to protect your account</string>
+    <string name="accountPartiallyProtectedTitle">Partially protected account</string>
     <string name="accountPasswordTitle">Account password</string>
     <string name="accountProtected">Account protected</string>
     <string name="accountProtectionDisabledWarningDescription">This device is the only one used to validate logins to your Infomaniak account.\n\nWe recommend adding another device or verification method before continuing.</string>

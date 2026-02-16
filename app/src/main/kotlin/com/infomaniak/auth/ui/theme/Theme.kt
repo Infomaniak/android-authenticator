@@ -17,6 +17,46 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.infomaniak.auth.ui.theme.color.CustomColorScheme
+import com.infomaniak.auth.ui.theme.color.StatusColorScheme
+import com.infomaniak.auth.ui.theme.color.brand10
+import com.infomaniak.auth.ui.theme.color.brand20
+import com.infomaniak.auth.ui.theme.color.brand30
+import com.infomaniak.auth.ui.theme.color.brand40
+import com.infomaniak.auth.ui.theme.color.brand70
+import com.infomaniak.auth.ui.theme.color.brand80
+import com.infomaniak.auth.ui.theme.color.brand90
+import com.infomaniak.auth.ui.theme.color.brand99
+import com.infomaniak.auth.ui.theme.color.darkCustomScheme
+import com.infomaniak.auth.ui.theme.color.darkStatusColorScheme
+import com.infomaniak.auth.ui.theme.color.lightCustomScheme
+import com.infomaniak.auth.ui.theme.color.lightStatusColorScheme
+import com.infomaniak.auth.ui.theme.color.neutral0
+import com.infomaniak.auth.ui.theme.color.neutral10
+import com.infomaniak.auth.ui.theme.color.neutral100
+import com.infomaniak.auth.ui.theme.color.neutral12
+import com.infomaniak.auth.ui.theme.color.neutral17
+import com.infomaniak.auth.ui.theme.color.neutral20
+import com.infomaniak.auth.ui.theme.color.neutral22
+import com.infomaniak.auth.ui.theme.color.neutral24
+import com.infomaniak.auth.ui.theme.color.neutral30
+import com.infomaniak.auth.ui.theme.color.neutral4
+import com.infomaniak.auth.ui.theme.color.neutral5
+import com.infomaniak.auth.ui.theme.color.neutral6
+import com.infomaniak.auth.ui.theme.color.neutral60
+import com.infomaniak.auth.ui.theme.color.neutral80
+import com.infomaniak.auth.ui.theme.color.neutral87
+import com.infomaniak.auth.ui.theme.color.neutral90
+import com.infomaniak.auth.ui.theme.color.neutral92
+import com.infomaniak.auth.ui.theme.color.neutral95
+import com.infomaniak.auth.ui.theme.color.neutral98
+import com.infomaniak.auth.ui.theme.color.red10
+import com.infomaniak.auth.ui.theme.color.red20
+import com.infomaniak.auth.ui.theme.color.red40
+import com.infomaniak.auth.ui.theme.color.red50
+import com.infomaniak.auth.ui.theme.color.red60
+import com.infomaniak.auth.ui.theme.color.red80
+import com.infomaniak.auth.ui.theme.color.red99
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 
 // Never access it directly outside of the theme setup
@@ -97,6 +137,7 @@ private val darkScheme = darkColorScheme(
 )
 
 val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
+val LocalStatusColorScheme: ProvidableCompositionLocal<StatusColorScheme> = staticCompositionLocalOf { StatusColorScheme() }
 
 @Composable
 fun AuthenticatorTheme(
@@ -126,8 +167,10 @@ fun AuthenticatorTheme(
     }
 
     val customColors = if (isDarkTheme) darkCustomScheme else lightCustomScheme
+    val statusColors = if (isDarkTheme) darkStatusColorScheme else lightStatusColorScheme
 
     CompositionLocalProvider(
+        LocalStatusColorScheme provides statusColors,
         LocalCustomColorScheme provides customColors,
         LocalIsThemeDarkMode provides isDarkTheme
     ) {
@@ -139,7 +182,10 @@ fun AuthenticatorTheme(
 }
 
 object AuthenticatorTheme {
-    val colors: CustomColorScheme
+    val statusColors: StatusColorScheme
+        @Composable
+        get() = LocalStatusColorScheme.current
+    val customColors: CustomColorScheme
         @Composable
         get() = LocalCustomColorScheme.current
     val materialColors: ColorScheme

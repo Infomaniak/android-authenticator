@@ -65,9 +65,8 @@ fun SettingsScreen() {
     ) { paddingValues ->
 
         OptionsSection(
+            firstSectionItems, secondSectionItems,
             modifier = Modifier.padding(paddingValues),
-            firstSectionItems,
-            secondSectionItems
         )
     }
 }

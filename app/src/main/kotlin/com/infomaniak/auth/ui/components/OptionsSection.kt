@@ -42,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -52,8 +53,8 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun OptionsSection(
-    modifier: Modifier = Modifier,
     vararg sections: List<OptionItemType>,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -62,23 +63,25 @@ fun OptionsSection(
         verticalArrangement = Arrangement.spacedBy(Margin.Large)
     ) {
         sections.forEach { optionsSection ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Margin.Medium),
-                colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.colors.optionsSectionBackground),
-                shape = RoundedCornerShape(24.dp),
-            ) {
-                Column {
-                    optionsSection.forEachIndexed { index, optionItem ->
-                        OptionItem(
-                            optionItemType = optionItem,
-                        )
-
-                        if (index < optionsSection.lastIndex) {
-                            HorizontalDivider(
-                                color = AuthenticatorTheme.materialColors.outlineVariant,
+            if (optionsSection.isNotEmpty()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Margin.Medium),
+                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.optionsSectionBackground),
+                    shape = RoundedCornerShape(24.dp),
+                ) {
+                    Column {
+                        optionsSection.forEachIndexed { index, optionItem ->
+                            OptionItem(
+                                optionItemType = optionItem,
                             )
+
+                            if (index < optionsSection.lastIndex) {
+                                HorizontalDivider(
+                                    color = AuthenticatorTheme.materialColors.outlineVariant,
+                                )
+                            }
                         }
                     }
                 }
@@ -106,17 +109,17 @@ private fun OptionContent(optionItemType: OptionItemType) {
             .height(50.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = stringResource(optionItemType.stringResId))
+        Text(text = stringResource(optionItemType.stringResId), color = optionItemType.textColor)
         Spacer(modifier = Modifier.weight(1f))
 
-        when(optionItemType) {
+        when (optionItemType) {
             is OptionItemType.WithRightIcon -> {
                 Icon(
                     painter = painterResource(optionItemType.rightIconResId),
                     contentDescription = null,
                 )
             }
-            else -> {
+            is OptionItemType.WithCheckBox -> {
                 val isChecked = remember { mutableStateOf(true) }
                 Switch(
                     modifier = Modifier
@@ -125,15 +128,18 @@ private fun OptionContent(optionItemType: OptionItemType) {
                     onCheckedChange = { isChecked.value = it },
                 )
             }
+            else -> {}
         }
     }
 }
 
-sealed class OptionItemType(val stringResId: Int) {
+sealed class OptionItemType(val stringResId: Int, val textColor: Color = Color.Unspecified) {
 
     class WithCheckBox(stringResId: Int) : OptionItemType(stringResId)
 
     class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItemType(stringResId)
+    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
+
 }
 
 @PreviewSmallWindow
@@ -149,8 +155,8 @@ fun OptionsSectionPreview() {
     AuthenticatorTheme {
         Column(modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface)) {
             OptionsSection(
+                firstSectionItems, secondSectionItems,
                 modifier = Modifier.padding(PaddingValues(Margin.Small)),
-                firstSectionItems, secondSectionItems
             )
         }
     }
