@@ -103,7 +103,7 @@ private fun OptionItem(optionItemType: OptionItemType) {
     Box(
         modifier = Modifier
             .height(50.dp)
-            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon || optionItemType is OptionItemType.WithSelection) {
+            .clickable(enabled = optionItemType is OptionItemType.Clickable) {
                 optionItemType.onClick?.invoke()
             }
     ) {
@@ -157,6 +157,9 @@ sealed class OptionItemType(
     val textColor: Color = Color.Unspecified,
     val onClick: (() -> Unit)? = null,
 ) {
+    sealed interface Clickable
+
+    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
 
     class WithCheckBox(
         stringResId: Int,
@@ -168,15 +171,13 @@ sealed class OptionItemType(
         stringResId: Int,
         val rightIconResId: Int,
         onClick: () -> Unit,
-    ) : OptionItemType(stringResId, onClick = onClick)
+    ) : OptionItemType(stringResId, onClick = onClick), Clickable
 
     class WithSelection(
         stringResId: Int,
         val isSelected: Boolean,
         onClick: () -> Unit,
-    ) : OptionItemType(stringResId, onClick = onClick)
-
-    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
+    ) : OptionItemType(stringResId, onClick = onClick), Clickable
 }
 
 @PreviewSmallWindow
