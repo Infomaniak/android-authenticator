@@ -15,23 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.repository
 
-import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import com.infomaniak.auth.lib.room.accounts.AccountEntity
+import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
 
-fun getAppSettingsDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSettingsDatabase> {
-    val appContext = context.applicationContext
-    val dbFile = appContext.getDatabasePath("app_settings.db")
-    return Room.databaseBuilder<AppSettingsDatabase>(
-        context = appContext,
-        name = dbFile.absolutePath
-    )
-}
+class AccountsRepository(
+    private val database: AccountsDatabase
+) {
+    private val dao = database.getDao()
 
-fun getAppSettingsRoomDatabase(context: Context): AppSettingsDatabase {
-    return getRoomDatabase(getAppSettingsDatabaseBuilder(context))
+    fun getAccounts() = dao.getAsFlow()
+
+    suspend fun updateAccount(account: AccountEntity) {
+        dao.update(account)
+    }
+
+    suspend fun insertAccount(account: AccountEntity) {
+        dao.insert(account)
+    }
+
+    suspend fun deleteAccount(id: Long) {
+        dao.delete(id)
+    }
 }

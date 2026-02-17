@@ -15,23 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.room.accounts
 
-import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-fun getAppSettingsDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSettingsDatabase> {
-    val appContext = context.applicationContext
-    val dbFile = appContext.getDatabasePath("app_settings.db")
-    return Room.databaseBuilder<AppSettingsDatabase>(
-        context = appContext,
-        name = dbFile.absolutePath
-    )
-}
+@Entity
+data class AccountEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val fullName: String,
+    val initials: String,
+    val email: String,
+    val avatarUrl: String? = null,
+    val status: StatusEntity,
+)
 
-fun getAppSettingsRoomDatabase(context: Context): AppSettingsDatabase {
-    return getRoomDatabase(getAppSettingsDatabaseBuilder(context))
+enum class StatusEntity {
+    LoggedIn,
+    NotConnectedEmpty,
+    NotConnectedReLogin,
+    NotConnectedIssue,
 }

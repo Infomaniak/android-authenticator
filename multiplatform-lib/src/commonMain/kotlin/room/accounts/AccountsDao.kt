@@ -15,23 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.room.accounts
 
-import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
-fun getAppSettingsDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSettingsDatabase> {
-    val appContext = context.applicationContext
-    val dbFile = appContext.getDatabasePath("app_settings.db")
-    return Room.databaseBuilder<AppSettingsDatabase>(
-        context = appContext,
-        name = dbFile.absolutePath
-    )
-}
+@Dao
+interface AccountsDao {
 
-fun getAppSettingsRoomDatabase(context: Context): AppSettingsDatabase {
-    return getRoomDatabase(getAppSettingsDatabaseBuilder(context))
+    @Query("SELECT * FROM AccountEntity")
+    fun getAsFlow(): Flow<List<AccountEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun update(account: AccountEntity)
+
+    @Insert
+    fun insert(account: AccountEntity)
+
+    @Query("DELETE FROM AccountEntity WHERE id = :id")
+    fun delete(id: Long)
 }

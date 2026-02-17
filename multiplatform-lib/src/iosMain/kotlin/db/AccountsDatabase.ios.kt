@@ -19,22 +19,22 @@ package com.infomaniak.auth.lib.db
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
+import com.infomaniak.auth.lib.room.accounts.getRoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-fun getAppSettingsDatabaseBuilder(): RoomDatabase.Builder<AppSettingsDatabase> {
-    val dbFilePath = documentDirectory() + "/app_settings.db"
-    return Room.databaseBuilder<AppSettingsDatabase>(
+fun getAccountsDatabaseBuilder(): RoomDatabase.Builder<AccountsDatabase> {
+    val dbFilePath = documentDirectory() + "/accounts.db"
+    return Room.databaseBuilder<AccountsDatabase>(
         name = dbFilePath,
     )
 }
 
-fun getAppSettingsRoomDatabase(): AppSettingsDatabase {
-    return getRoomDatabase(getAppSettingsDatabaseBuilder())
+fun getAccountsRoomDatabase(): AccountsDatabase {
+    return getRoomDatabase(getAccountsDatabaseBuilder())
 }
 
 @OptIn(ExperimentalForeignApi::class)
