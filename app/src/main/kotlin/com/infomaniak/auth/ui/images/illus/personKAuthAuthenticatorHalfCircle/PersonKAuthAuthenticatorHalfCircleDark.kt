@@ -1,4 +1,4 @@
-package com.infomaniak.auth.ui.images.illus.personKAuthAuthenticator
+package com.infomaniak.auth.ui.images.illus.personKAuthAuthenticatorHalfCircle
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.PathFillType.Companion.EvenOdd
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
-import androidx.compose.ui.graphics.StrokeCap.Companion.Round
 import androidx.compose.ui.graphics.StrokeJoin.Companion.Miter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.ImageVector.Builder
@@ -21,31 +20,128 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 
-@Suppress("UnusedReceiverParameter")
-val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
+val AppIllus.PersonKAuthAuthenticatorHalfCircleDark: ImageVector
     get() {
-        if (_personKAuthAuthenticatorLight != null) {
-            return _personKAuthAuthenticatorLight!!
+        if (_personKAuthAuthenticatorHalfCircleDark != null) {
+            return _personKAuthAuthenticatorHalfCircleDark!!
         }
-        _personKAuthAuthenticatorLight = Builder(
-            name = "PersonKAuthAuthenticatorLight",
+        _personKAuthAuthenticatorHalfCircleDark = Builder(
+            name = "PersonKAuthAuthenticatorHalfCircleDark",
             defaultWidth = 302.0.dp,
             defaultHeight = 302.0.dp,
             viewportWidth = 302.0f,
             viewportHeight = 302.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)),
-                stroke = SolidColor(Color(0xFFffffff)),
-                strokeLineWidth = 2.0f,
-                strokeLineCap = Round,
+                fill = SolidColor(Color(0xFF5869D9)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
                 strokeLineJoin = Miter,
                 strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
-                moveTo(67.17f, 167.13f)
-                curveTo(67.17f, 167.13f, 87.05f, 107.82f, 153.98f, 107.82f)
-                curveTo(215.61f, 107.82f, 234.83f, 162.83f, 234.83f, 162.83f)
+                moveTo(68.0f, 162.42f)
+                curveTo(68.22f, 161.92f, 68.82f, 161.69f, 69.32f, 161.92f)
+                curveTo(69.82f, 162.15f, 70.05f, 162.74f, 69.83f, 163.24f)
+                curveTo(69.23f, 164.57f, 68.8f, 165.63f, 68.53f, 166.35f)
+                curveTo(68.39f, 166.71f, 68.28f, 166.99f, 68.22f, 167.18f)
+                curveTo(68.18f, 167.27f, 68.16f, 167.34f, 68.14f, 167.39f)
+                curveTo(68.13f, 167.41f, 68.13f, 167.43f, 68.12f, 167.44f)
+                lineTo(68.12f, 167.45f)
+                curveTo(67.94f, 167.98f, 67.38f, 168.26f, 66.85f, 168.08f)
+                curveTo(66.33f, 167.91f, 66.05f, 167.34f, 66.22f, 166.82f)
+                lineTo(66.22f, 166.81f)
+                curveTo(66.22f, 166.81f, 66.23f, 166.81f, 66.23f, 166.81f)
+                curveTo(66.23f, 166.8f, 66.23f, 166.8f, 66.23f, 166.79f)
+                curveTo(66.24f, 166.78f, 66.24f, 166.76f, 66.25f, 166.73f)
+                curveTo(66.27f, 166.68f, 66.3f, 166.6f, 66.33f, 166.5f)
+                curveTo(66.41f, 166.3f, 66.51f, 166.01f, 66.66f, 165.63f)
+                curveTo(66.95f, 164.88f, 67.39f, 163.79f, 68.0f, 162.42f)
+                close()
+                moveTo(232.75f, 157.94f)
+                curveTo(233.25f, 157.71f, 233.84f, 157.93f, 234.07f, 158.43f)
+                curveTo(234.65f, 159.69f, 235.07f, 160.7f, 235.35f, 161.4f)
+                curveTo(235.49f, 161.75f, 235.6f, 162.02f, 235.67f, 162.2f)
+                curveTo(235.7f, 162.3f, 235.73f, 162.37f, 235.74f, 162.42f)
+                curveTo(235.75f, 162.44f, 235.76f, 162.46f, 235.76f, 162.47f)
+                curveTo(235.77f, 162.48f, 235.77f, 162.49f, 235.77f, 162.49f)
+                lineTo(235.77f, 162.49f)
+                lineTo(235.77f, 162.49f)
+                curveTo(235.96f, 163.02f, 235.68f, 163.59f, 235.16f, 163.77f)
+                curveTo(234.64f, 163.95f, 234.07f, 163.68f, 233.88f, 163.16f)
+                verticalLineTo(163.15f)
+                curveTo(233.88f, 163.15f, 233.88f, 163.15f, 233.88f, 163.14f)
+                curveTo(233.88f, 163.13f, 233.87f, 163.12f, 233.86f, 163.1f)
+                curveTo(233.85f, 163.05f, 233.82f, 162.99f, 233.79f, 162.9f)
+                curveTo(233.73f, 162.73f, 233.63f, 162.48f, 233.5f, 162.14f)
+                curveTo(233.23f, 161.47f, 232.82f, 160.49f, 232.26f, 159.27f)
+                curveTo(232.03f, 158.77f, 232.25f, 158.17f, 232.75f, 157.94f)
+                close()
+                moveTo(77.36f, 146.07f)
+                curveTo(77.68f, 145.62f, 78.3f, 145.51f, 78.75f, 145.83f)
+                curveTo(79.21f, 146.14f, 79.31f, 146.77f, 79.0f, 147.22f)
+                curveTo(77.06f, 149.97f, 75.41f, 152.61f, 74.03f, 155.02f)
+                curveTo(73.75f, 155.5f, 73.14f, 155.66f, 72.66f, 155.39f)
+                curveTo(72.18f, 155.11f, 72.02f, 154.5f, 72.29f, 154.02f)
+                curveTo(73.7f, 151.57f, 75.38f, 148.88f, 77.36f, 146.07f)
+                close()
+                moveTo(223.85f, 143.08f)
+                curveTo(224.3f, 142.76f, 224.92f, 142.86f, 225.24f, 143.31f)
+                curveTo(227.1f, 145.91f, 228.68f, 148.4f, 230.01f, 150.66f)
+                curveTo(230.29f, 151.14f, 230.13f, 151.75f, 229.65f, 152.03f)
+                curveTo(229.18f, 152.31f, 228.56f, 152.15f, 228.28f, 151.68f)
+                curveTo(226.98f, 149.45f, 225.43f, 147.02f, 223.61f, 144.47f)
+                curveTo(223.29f, 144.02f, 223.4f, 143.4f, 223.85f, 143.08f)
+                close()
+                moveTo(89.63f, 131.76f)
+                curveTo(90.02f, 131.38f, 90.66f, 131.39f, 91.04f, 131.79f)
+                curveTo(91.42f, 132.19f, 91.41f, 132.82f, 91.01f, 133.2f)
+                curveTo(88.7f, 135.42f, 86.59f, 137.68f, 84.67f, 139.92f)
+                curveTo(84.31f, 140.34f, 83.68f, 140.39f, 83.26f, 140.03f)
+                curveTo(82.84f, 139.67f, 82.79f, 139.04f, 83.15f, 138.62f)
+                curveTo(85.11f, 136.33f, 87.26f, 134.02f, 89.63f, 131.76f)
+                close()
+                moveTo(212.37f, 130.1f)
+                curveTo(212.75f, 129.7f, 213.38f, 129.69f, 213.78f, 130.07f)
+                curveTo(215.98f, 132.17f, 217.99f, 134.3f, 219.82f, 136.42f)
+                curveTo(220.19f, 136.84f, 220.14f, 137.47f, 219.72f, 137.83f)
+                curveTo(219.3f, 138.19f, 218.67f, 138.15f, 218.31f, 137.73f)
+                curveTo(216.52f, 135.65f, 214.55f, 133.57f, 212.4f, 131.52f)
+                curveTo(212.0f, 131.13f, 211.99f, 130.5f, 212.37f, 130.1f)
+                close()
+                moveTo(104.51f, 120.2f)
+                curveTo(104.98f, 119.91f, 105.6f, 120.05f, 105.89f, 120.52f)
+                curveTo(106.18f, 120.99f, 106.03f, 121.61f, 105.56f, 121.9f)
+                curveTo(102.87f, 123.56f, 100.35f, 125.33f, 97.99f, 127.16f)
+                curveTo(97.56f, 127.5f, 96.93f, 127.42f, 96.59f, 126.99f)
+                curveTo(96.25f, 126.55f, 96.33f, 125.92f, 96.77f, 125.58f)
+                curveTo(99.18f, 123.71f, 101.76f, 121.9f, 104.51f, 120.2f)
+                close()
+                moveTo(198.56f, 119.66f)
+                curveTo(198.85f, 119.19f, 199.47f, 119.04f, 199.93f, 119.33f)
+                curveTo(202.49f, 120.92f, 204.89f, 122.6f, 207.13f, 124.34f)
+                curveTo(207.57f, 124.68f, 207.65f, 125.31f, 207.31f, 125.74f)
+                curveTo(206.97f, 126.18f, 206.34f, 126.26f, 205.91f, 125.92f)
+                curveTo(203.72f, 124.22f, 201.38f, 122.58f, 198.88f, 121.03f)
+                curveTo(198.41f, 120.74f, 198.27f, 120.13f, 198.56f, 119.66f)
+                close()
+                moveTo(121.54f, 112.09f)
+                curveTo(122.06f, 111.91f, 122.63f, 112.18f, 122.81f, 112.7f)
+                curveTo(122.99f, 113.22f, 122.71f, 113.79f, 122.19f, 113.98f)
+                curveTo(119.2f, 115.02f, 116.36f, 116.2f, 113.66f, 117.49f)
+                curveTo(113.16f, 117.72f, 112.57f, 117.51f, 112.33f, 117.01f)
+                curveTo(112.09f, 116.51f, 112.3f, 115.92f, 112.8f, 115.68f)
+                curveTo(115.57f, 114.36f, 118.47f, 113.16f, 121.54f, 112.09f)
+                close()
+                moveTo(182.85f, 112.38f)
+                curveTo(183.04f, 111.86f, 183.61f, 111.58f, 184.13f, 111.77f)
+                curveTo(186.97f, 112.77f, 189.67f, 113.89f, 192.24f, 115.12f)
+                curveTo(192.74f, 115.36f, 192.95f, 115.96f, 192.71f, 116.46f)
+                curveTo(192.47f, 116.96f, 191.87f, 117.17f, 191.38f, 116.93f)
+                curveTo(188.87f, 115.73f, 186.24f, 114.63f, 183.46f, 113.65f)
+                curveTo(182.94f, 113.47f, 182.67f, 112.9f, 182.85f, 112.38f)
+                close()
             }
             path(
                 fill = SolidColor(Color(0xFFffffff)),
@@ -110,7 +206,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 curveTo(88.09f, 195.6f, 88.05f, 195.2f, 87.96f, 194.79f)
                 curveTo(87.91f, 194.44f, 87.83f, 194.13f, 87.78f, 193.77f)
                 curveTo(85.82f, 184.52f, 77.81f, 177.62f, 68.34f, 177.04f)
-                curveTo(67.98f, 177.04f, 67.76f, 177.27f, 67.71f, 177.58f)
+                curveTo(67.98f, 177.04f, 67.76f, 177.26f, 67.71f, 177.58f)
                 curveTo(67.71f, 177.89f, 67.94f, 178.15f, 68.25f, 178.2f)
                 curveTo(77.24f, 178.73f, 84.84f, 185.23f, 86.67f, 193.99f)
                 curveTo(86.76f, 194.3f, 86.8f, 194.62f, 86.84f, 194.97f)
@@ -119,7 +215,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 curveTo(87.07f, 197.46f, 87.11f, 197.78f, 87.11f, 198.13f)
                 curveTo(87.11f, 198.44f, 87.38f, 198.71f, 87.69f, 198.71f)
                 curveTo(88.0f, 198.71f, 88.27f, 198.44f, 88.27f, 198.13f)
-                curveTo(88.27f, 197.78f, 88.27f, 197.42f, 88.22f, 196.98f)
+                curveTo(88.27f, 197.78f, 88.27f, 197.42f, 88.22f, 196.97f)
                 curveTo(88.22f, 196.66f, 88.18f, 196.31f, 88.14f, 196.0f)
                 close()
             }
@@ -141,7 +237,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 curveTo(59.8f, 179.49f, 60.42f, 179.27f, 61.09f, 179.04f)
                 curveTo(61.35f, 178.96f, 61.66f, 178.87f, 61.98f, 178.78f)
                 curveTo(62.11f, 178.73f, 62.24f, 178.69f, 62.42f, 178.69f)
-                curveTo(62.69f, 178.64f, 62.91f, 178.6f, 63.13f, 178.56f)
+                curveTo(62.69f, 178.64f, 62.91f, 178.6f, 63.13f, 178.55f)
                 curveTo(63.53f, 178.47f, 63.93f, 178.38f, 64.38f, 178.33f)
                 curveTo(64.56f, 178.29f, 64.78f, 178.29f, 64.96f, 178.24f)
                 curveTo(65.27f, 178.2f, 65.49f, 177.93f, 65.49f, 177.62f)
@@ -170,11 +266,11 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 pathFillType = NonZero,
             ) {
                 moveTo(82.8f, 190.08f)
-                curveTo(83.06f, 189.95f, 83.15f, 189.59f, 83.02f, 189.32f)
+                curveTo(83.06f, 189.94f, 83.15f, 189.59f, 83.02f, 189.32f)
                 curveTo(79.77f, 183.54f, 73.63f, 179.93f, 67.0f, 179.93f)
                 curveTo(65.18f, 179.93f, 63.35f, 180.24f, 61.62f, 180.78f)
                 curveTo(61.31f, 180.87f, 61.17f, 181.18f, 61.26f, 181.49f)
-                curveTo(61.35f, 181.8f, 61.66f, 181.94f, 61.97f, 181.85f)
+                curveTo(61.35f, 181.8f, 61.66f, 181.93f, 61.97f, 181.85f)
                 curveTo(63.62f, 181.31f, 65.31f, 181.05f, 67.05f, 181.05f)
                 curveTo(73.27f, 181.05f, 79.01f, 184.43f, 82.08f, 189.81f)
                 curveTo(82.17f, 189.99f, 82.4f, 190.12f, 82.57f, 190.12f)
@@ -395,7 +491,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
             ) {
                 moveTo(57.57f, 202.32f)
                 curveTo(57.62f, 202.01f, 57.88f, 201.74f, 58.19f, 201.78f)
-                curveTo(58.51f, 201.83f, 58.77f, 202.09f, 58.73f, 202.4f)
+                curveTo(58.51f, 201.82f, 58.77f, 202.09f, 58.73f, 202.4f)
                 curveTo(58.28f, 207.08f, 57.08f, 211.21f, 55.17f, 214.73f)
                 curveTo(55.08f, 214.95f, 54.9f, 215.04f, 54.68f, 215.04f)
                 curveTo(54.54f, 215.04f, 54.46f, 215.04f, 54.37f, 214.99f)
@@ -432,7 +528,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 moveTo(68.41f, 188.84f)
                 curveTo(70.22f, 189.1f, 71.9f, 189.88f, 73.28f, 191.07f)
                 horizontalLineTo(71.32f)
-                curveTo(70.44f, 190.55f, 69.46f, 190.19f, 68.44f, 190.02f)
+                curveTo(70.44f, 190.55f, 69.46f, 190.19f, 68.44f, 190.01f)
                 verticalLineTo(189.21f)
                 curveTo(68.44f, 189.08f, 68.43f, 188.96f, 68.41f, 188.84f)
                 close()
@@ -453,7 +549,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 curveTo(71.94f, 218.42f, 71.81f, 218.11f, 71.89f, 217.8f)
                 curveTo(73.24f, 214.38f, 74.1f, 210.98f, 74.62f, 207.82f)
                 horizontalLineTo(74.93f)
-                curveTo(75.24f, 207.82f, 75.54f, 207.77f, 75.82f, 207.66f)
+                curveTo(75.24f, 207.82f, 75.54f, 207.76f, 75.82f, 207.66f)
                 close()
             }
             path(
@@ -486,7 +582,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
             ) {
                 moveTo(67.05f, 185.81f)
                 curveTo(73.85f, 185.81f, 79.42f, 191.28f, 79.46f, 198.04f)
-                curveTo(79.51f, 204.72f, 78.53f, 211.08f, 76.57f, 216.87f)
+                curveTo(79.51f, 204.72f, 78.53f, 211.08f, 76.57f, 216.86f)
                 curveTo(76.48f, 217.13f, 76.26f, 217.26f, 76.03f, 217.26f)
                 curveTo(75.99f, 217.26f, 75.9f, 217.22f, 75.86f, 217.22f)
                 lineTo(75.86f, 217.22f)
@@ -544,7 +640,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 close()
             }
             path(
-                fill = SolidColor(Color(0xFF3243AE)),
+                fill = SolidColor(Color(0xFF5869D9)),
                 stroke = null,
                 strokeLineWidth = 0.0f,
                 strokeLineCap = Butt,
@@ -694,7 +790,7 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 close()
             }
             path(
-                fill = SolidColor(Color(0xFFffffff)),
+                fill = SolidColor(Color(0xFF5869D9)),
                 stroke = null,
                 fillAlpha = 0.5f,
                 strokeLineWidth = 0.0f,
@@ -703,20 +799,20 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                 strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
-                moveTo(175.1f, 72.87f)
-                curveTo(177.4f, 72.87f, 179.27f, 74.73f, 179.27f, 77.04f)
+                moveTo(176.1f, 72.87f)
+                curveTo(178.4f, 72.87f, 180.27f, 74.73f, 180.27f, 77.04f)
                 verticalLineTo(142.66f)
-                curveTo(179.27f, 144.97f, 177.4f, 146.84f, 175.1f, 146.84f)
-                horizontalLineTo(128.49f)
-                curveTo(126.19f, 146.84f, 124.32f, 144.97f, 124.32f, 142.66f)
+                curveTo(180.27f, 144.97f, 178.4f, 146.84f, 176.1f, 146.84f)
+                horizontalLineTo(129.49f)
+                curveTo(127.19f, 146.84f, 125.32f, 144.97f, 125.32f, 142.66f)
                 verticalLineTo(77.04f)
-                curveTo(124.32f, 74.73f, 126.19f, 72.87f, 128.49f, 72.87f)
-                horizontalLineTo(175.1f)
+                curveTo(125.32f, 74.73f, 127.19f, 72.87f, 129.49f, 72.87f)
+                horizontalLineTo(176.1f)
                 close()
             }
             group {
                 path(
-                    fill = SolidColor(Color(0xFFffffff)),
+                    fill = SolidColor(Color(0xFF5869D9)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
                     strokeLineCap = Butt,
@@ -724,103 +820,103 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                     strokeLineMiter = 4.0f,
                     pathFillType = NonZero,
                 ) {
-                    moveTo(175.1f, 72.87f)
-                    lineTo(175.1f, 70.87f)
-                    horizontalLineTo(175.1f)
+                    moveTo(176.1f, 72.87f)
+                    lineTo(176.1f, 70.87f)
+                    horizontalLineTo(176.1f)
                     verticalLineTo(72.87f)
                     close()
-                    moveTo(179.27f, 77.04f)
-                    horizontalLineTo(181.27f)
+                    moveTo(180.27f, 77.04f)
+                    horizontalLineTo(182.27f)
                     verticalLineTo(77.04f)
-                    lineTo(179.27f, 77.04f)
+                    lineTo(180.27f, 77.04f)
                     close()
-                    moveTo(175.1f, 146.84f)
+                    moveTo(176.1f, 146.84f)
                     verticalLineTo(148.84f)
-                    horizontalLineTo(175.1f)
-                    lineTo(175.1f, 146.84f)
+                    horizontalLineTo(176.1f)
+                    lineTo(176.1f, 146.84f)
                     close()
-                    moveTo(128.49f, 146.84f)
-                    lineTo(128.49f, 148.84f)
-                    horizontalLineTo(128.49f)
+                    moveTo(129.49f, 146.84f)
+                    lineTo(129.49f, 148.84f)
+                    horizontalLineTo(129.49f)
                     verticalLineTo(146.84f)
                     close()
-                    moveTo(124.32f, 77.04f)
-                    lineTo(122.32f, 77.04f)
+                    moveTo(125.32f, 77.04f)
+                    lineTo(123.32f, 77.04f)
                     verticalLineTo(77.04f)
-                    horizontalLineTo(124.32f)
+                    horizontalLineTo(125.32f)
                     close()
-                    moveTo(128.49f, 72.87f)
+                    moveTo(129.49f, 72.87f)
                     verticalLineTo(70.87f)
-                    horizontalLineTo(128.49f)
-                    lineTo(128.49f, 72.87f)
+                    horizontalLineTo(129.49f)
+                    lineTo(129.49f, 72.87f)
                     close()
-                    moveTo(175.1f, 72.87f)
-                    lineTo(175.1f, 74.87f)
-                    curveTo(176.29f, 74.87f, 177.27f, 75.84f, 177.27f, 77.04f)
-                    lineTo(179.27f, 77.04f)
-                    lineTo(181.27f, 77.04f)
-                    curveTo(181.27f, 73.63f, 178.5f, 70.87f, 175.1f, 70.87f)
-                    lineTo(175.1f, 72.87f)
+                    moveTo(176.1f, 72.87f)
+                    lineTo(176.1f, 74.87f)
+                    curveTo(177.29f, 74.87f, 178.27f, 75.84f, 178.27f, 77.04f)
+                    lineTo(180.27f, 77.04f)
+                    lineTo(182.27f, 77.04f)
+                    curveTo(182.27f, 73.63f, 179.5f, 70.87f, 176.1f, 70.87f)
+                    lineTo(176.1f, 72.87f)
                     close()
-                    moveTo(179.27f, 77.04f)
-                    horizontalLineTo(177.27f)
+                    moveTo(180.27f, 77.04f)
+                    horizontalLineTo(178.27f)
                     verticalLineTo(142.66f)
-                    horizontalLineTo(179.27f)
-                    horizontalLineTo(181.27f)
+                    horizontalLineTo(180.27f)
+                    horizontalLineTo(182.27f)
                     verticalLineTo(77.04f)
-                    horizontalLineTo(179.27f)
+                    horizontalLineTo(180.27f)
                     close()
-                    moveTo(179.27f, 142.66f)
-                    horizontalLineTo(177.27f)
-                    curveTo(177.27f, 143.87f, 176.29f, 144.84f, 175.1f, 144.84f)
-                    lineTo(175.1f, 146.84f)
-                    lineTo(175.1f, 148.84f)
-                    curveTo(178.51f, 148.84f, 181.27f, 146.07f, 181.27f, 142.66f)
-                    horizontalLineTo(179.27f)
+                    moveTo(180.27f, 142.66f)
+                    horizontalLineTo(178.27f)
+                    curveTo(178.27f, 143.87f, 177.29f, 144.84f, 176.1f, 144.84f)
+                    lineTo(176.1f, 146.84f)
+                    lineTo(176.1f, 148.84f)
+                    curveTo(179.51f, 148.84f, 182.27f, 146.07f, 182.27f, 142.66f)
+                    horizontalLineTo(180.27f)
                     close()
-                    moveTo(175.1f, 146.84f)
+                    moveTo(176.1f, 146.84f)
                     verticalLineTo(144.84f)
-                    horizontalLineTo(128.49f)
+                    horizontalLineTo(129.49f)
                     verticalLineTo(146.84f)
                     verticalLineTo(148.84f)
-                    horizontalLineTo(175.1f)
+                    horizontalLineTo(176.1f)
                     verticalLineTo(146.84f)
                     close()
-                    moveTo(128.49f, 146.84f)
-                    lineTo(128.49f, 144.84f)
-                    curveTo(127.29f, 144.84f, 126.32f, 143.87f, 126.32f, 142.66f)
-                    horizontalLineTo(124.32f)
-                    horizontalLineTo(122.32f)
-                    curveTo(122.32f, 146.07f, 125.08f, 148.84f, 128.49f, 148.84f)
-                    lineTo(128.49f, 146.84f)
+                    moveTo(129.49f, 146.84f)
+                    lineTo(129.49f, 144.84f)
+                    curveTo(128.29f, 144.84f, 127.32f, 143.87f, 127.32f, 142.66f)
+                    horizontalLineTo(125.32f)
+                    horizontalLineTo(123.32f)
+                    curveTo(123.32f, 146.07f, 126.08f, 148.84f, 129.49f, 148.84f)
+                    lineTo(129.49f, 146.84f)
                     close()
-                    moveTo(124.32f, 142.66f)
-                    horizontalLineTo(126.32f)
+                    moveTo(125.32f, 142.66f)
+                    horizontalLineTo(127.32f)
                     verticalLineTo(77.04f)
-                    horizontalLineTo(124.32f)
-                    horizontalLineTo(122.32f)
+                    horizontalLineTo(125.32f)
+                    horizontalLineTo(123.32f)
                     verticalLineTo(142.66f)
-                    horizontalLineTo(124.32f)
+                    horizontalLineTo(125.32f)
                     close()
-                    moveTo(124.32f, 77.04f)
-                    lineTo(126.32f, 77.04f)
-                    curveTo(126.32f, 75.84f, 127.29f, 74.87f, 128.49f, 74.87f)
-                    lineTo(128.49f, 72.87f)
-                    lineTo(128.49f, 70.87f)
-                    curveTo(125.08f, 70.87f, 122.32f, 73.63f, 122.32f, 77.04f)
-                    lineTo(124.32f, 77.04f)
+                    moveTo(125.32f, 77.04f)
+                    lineTo(127.32f, 77.04f)
+                    curveTo(127.32f, 75.84f, 128.29f, 74.87f, 129.49f, 74.87f)
+                    lineTo(129.49f, 72.87f)
+                    lineTo(129.49f, 70.87f)
+                    curveTo(126.08f, 70.87f, 123.32f, 73.63f, 123.32f, 77.04f)
+                    lineTo(125.32f, 77.04f)
                     close()
-                    moveTo(128.49f, 72.87f)
+                    moveTo(129.49f, 72.87f)
                     verticalLineTo(74.87f)
-                    horizontalLineTo(175.1f)
+                    horizontalLineTo(176.1f)
                     verticalLineTo(72.87f)
                     verticalLineTo(70.87f)
-                    horizontalLineTo(128.49f)
+                    horizontalLineTo(129.49f)
                     verticalLineTo(72.87f)
                     close()
                 }
                 path(
-                    fill = SolidColor(Color(0xFF3041AB)),
+                    fill = SolidColor(Color(0xFFffffff)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
                     strokeLineCap = Butt,
@@ -828,56 +924,56 @@ val AppIllus.PersonKAuthAuthenticatorLight: ImageVector
                     strokeLineMiter = 4.0f,
                     pathFillType = EvenOdd,
                 ) {
-                    moveTo(144.78f, 95.13f)
-                    curveTo(146.64f, 93.27f, 149.16f, 92.23f, 151.79f, 92.23f)
-                    curveTo(154.42f, 92.23f, 156.94f, 93.27f, 158.8f, 95.13f)
-                    curveTo(160.66f, 96.99f, 161.71f, 99.51f, 161.71f, 102.14f)
-                    curveTo(161.71f, 104.77f, 160.66f, 107.29f, 158.8f, 109.15f)
-                    curveTo(157.66f, 110.29f, 156.27f, 111.12f, 154.77f, 111.6f)
-                    curveTo(157.74f, 112.17f, 160.51f, 113.59f, 162.69f, 115.72f)
-                    curveTo(165.58f, 118.54f, 167.21f, 122.37f, 167.21f, 126.38f)
-                    curveTo(167.21f, 126.67f, 167.1f, 126.95f, 166.89f, 127.15f)
-                    curveTo(166.68f, 127.36f, 166.4f, 127.48f, 166.11f, 127.48f)
-                    horizontalLineTo(137.47f)
-                    curveTo(137.18f, 127.48f, 136.9f, 127.36f, 136.69f, 127.15f)
-                    curveTo(136.49f, 126.95f, 136.37f, 126.67f, 136.37f, 126.38f)
-                    curveTo(136.37f, 122.37f, 138.0f, 118.54f, 140.9f, 115.72f)
-                    curveTo(143.08f, 113.59f, 145.84f, 112.17f, 148.82f, 111.6f)
-                    curveTo(147.31f, 111.12f, 145.92f, 110.29f, 144.78f, 109.15f)
-                    curveTo(142.92f, 107.29f, 141.88f, 104.77f, 141.88f, 102.14f)
-                    curveTo(141.88f, 99.51f, 142.92f, 96.99f, 144.78f, 95.13f)
+                    moveTo(145.78f, 95.13f)
+                    curveTo(147.64f, 93.27f, 150.16f, 92.23f, 152.79f, 92.23f)
+                    curveTo(155.42f, 92.23f, 157.94f, 93.27f, 159.8f, 95.13f)
+                    curveTo(161.66f, 96.99f, 162.71f, 99.51f, 162.71f, 102.14f)
+                    curveTo(162.71f, 104.77f, 161.66f, 107.29f, 159.8f, 109.15f)
+                    curveTo(158.66f, 110.29f, 157.27f, 111.12f, 155.77f, 111.6f)
+                    curveTo(158.74f, 112.17f, 161.51f, 113.59f, 163.69f, 115.72f)
+                    curveTo(166.58f, 118.54f, 168.21f, 122.37f, 168.21f, 126.38f)
+                    curveTo(168.21f, 126.67f, 168.1f, 126.95f, 167.89f, 127.15f)
+                    curveTo(167.68f, 127.36f, 167.4f, 127.48f, 167.11f, 127.48f)
+                    horizontalLineTo(138.47f)
+                    curveTo(138.18f, 127.48f, 137.9f, 127.36f, 137.69f, 127.15f)
+                    curveTo(137.49f, 126.95f, 137.37f, 126.67f, 137.37f, 126.38f)
+                    curveTo(137.37f, 122.37f, 139.0f, 118.54f, 141.9f, 115.72f)
+                    curveTo(144.08f, 113.59f, 146.84f, 112.17f, 149.82f, 111.6f)
+                    curveTo(148.31f, 111.12f, 146.92f, 110.29f, 145.78f, 109.15f)
+                    curveTo(143.92f, 107.29f, 142.88f, 104.77f, 142.88f, 102.14f)
+                    curveTo(142.88f, 99.51f, 143.92f, 96.99f, 145.78f, 95.13f)
                     close()
-                    moveTo(151.79f, 94.43f)
-                    curveTo(149.75f, 94.43f, 147.79f, 95.24f, 146.34f, 96.69f)
-                    curveTo(144.89f, 98.14f, 144.08f, 100.1f, 144.08f, 102.14f)
-                    curveTo(144.08f, 104.19f, 144.89f, 106.15f, 146.34f, 107.59f)
-                    curveTo(147.79f, 109.04f, 149.75f, 109.85f, 151.79f, 109.85f)
-                    curveTo(153.84f, 109.85f, 155.8f, 109.04f, 157.24f, 107.59f)
-                    curveTo(158.69f, 106.15f, 159.5f, 104.19f, 159.5f, 102.14f)
-                    curveTo(159.5f, 100.1f, 158.69f, 98.14f, 157.24f, 96.69f)
-                    curveTo(155.8f, 95.24f, 153.84f, 94.43f, 151.79f, 94.43f)
+                    moveTo(152.79f, 94.43f)
+                    curveTo(150.75f, 94.43f, 148.79f, 95.24f, 147.34f, 96.69f)
+                    curveTo(145.89f, 98.13f, 145.08f, 100.1f, 145.08f, 102.14f)
+                    curveTo(145.08f, 104.19f, 145.89f, 106.15f, 147.34f, 107.59f)
+                    curveTo(148.79f, 109.04f, 150.75f, 109.85f, 152.79f, 109.85f)
+                    curveTo(154.84f, 109.85f, 156.8f, 109.04f, 158.24f, 107.59f)
+                    curveTo(159.69f, 106.15f, 160.5f, 104.19f, 160.5f, 102.14f)
+                    curveTo(160.5f, 100.1f, 159.69f, 98.13f, 158.24f, 96.69f)
+                    curveTo(156.8f, 95.24f, 154.84f, 94.43f, 152.79f, 94.43f)
                     close()
-                    moveTo(151.79f, 113.52f)
-                    curveTo(148.28f, 113.52f, 144.91f, 114.88f, 142.44f, 117.29f)
-                    curveTo(140.23f, 119.45f, 138.89f, 122.28f, 138.62f, 125.27f)
-                    horizontalLineTo(164.96f)
-                    curveTo(164.7f, 122.28f, 163.36f, 119.45f, 161.15f, 117.29f)
-                    curveTo(158.67f, 114.88f, 155.31f, 113.52f, 151.79f, 113.52f)
+                    moveTo(152.79f, 113.52f)
+                    curveTo(149.28f, 113.52f, 145.91f, 114.88f, 143.44f, 117.29f)
+                    curveTo(141.23f, 119.45f, 139.89f, 122.28f, 139.62f, 125.27f)
+                    horizontalLineTo(165.96f)
+                    curveTo(165.7f, 122.28f, 164.36f, 119.45f, 162.15f, 117.29f)
+                    curveTo(159.67f, 114.88f, 156.31f, 113.52f, 152.79f, 113.52f)
                     close()
                 }
             }
         }.build()
-        return _personKAuthAuthenticatorLight!!
+        return _personKAuthAuthenticatorHalfCircleDark!!
     }
 
-private var _personKAuthAuthenticatorLight: ImageVector? = null
+private var _personKAuthAuthenticatorHalfCircleDark: ImageVector? = null
 
 @Preview
 @Composable
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIllus.PersonKAuthAuthenticatorLight,
+            imageVector = AppIllus.PersonKAuthAuthenticatorHalfCircleDark,
             contentDescription = null,
             modifier = Modifier.size(AppImages.previewSize),
         )
