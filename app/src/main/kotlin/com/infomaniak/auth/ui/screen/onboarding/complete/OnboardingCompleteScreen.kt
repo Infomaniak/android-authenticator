@@ -34,7 +34,7 @@ import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.TitleAndDescription
 import com.infomaniak.auth.ui.images.AppImages
-import com.infomaniak.auth.ui.images.illus.infomaniakValidated.InfomaniakValidated
+import com.infomaniak.auth.ui.images.illus.infomaniakValidated.InfomaniakShieldCheckmark
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -59,7 +59,7 @@ fun OnboardingCompleteScreen(navigateToHome: () -> Unit) {
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             EmptyElement()
-            IllustrationWithHalo(AppImages.AppIllus.InfomaniakValidated)
+            IllustrationWithHalo(AppImages.AppIllus.InfomaniakShieldCheckmark)
             TitleAndDescription(
                 title = stringResource(R.string.onBoardingSuccessTitle),
                 description = stringResource(R.string.onBoardingSuccessDescription)

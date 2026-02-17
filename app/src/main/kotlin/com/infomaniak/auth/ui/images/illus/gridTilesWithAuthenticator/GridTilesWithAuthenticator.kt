@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.images.illus.personKAuthAuthenticator
+package com.infomaniak.auth.ui.images.illus.gridTilesWithAuthenticator
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -29,13 +29,13 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 @Suppress("UnusedReceiverParameter")
-val AppIllus.PersonKAuthAuthenticator: ThemedImage
-    get() = _personKAuthAuthenticator ?: object : ThemedImage {
-        override val light = AppIllus.PersonKAuthAuthenticatorLight
-        override val dark = AppIllus.PersonKAuthAuthenticatorDark
-    }.also { _personKAuthAuthenticator = it }
+val AppIllus.GridTilesWithAuthenticator: ThemedImage
+    get() = _gridTilesWithAuthenticator ?: object : ThemedImage {
+        override val light = AppIllus.GridTilesWithAuthenticatorLight
+        override val dark = AppIllus.GridTilesWithAuthenticatorDark
+    }.also { _gridTilesWithAuthenticator = it }
 
-private var _personKAuthAuthenticator: ThemedImage? = null
+private var _gridTilesWithAuthenticator: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable
@@ -43,7 +43,7 @@ private fun Preview() {
     AuthenticatorTheme {
         Box {
             Image(
-                imageVector = AppIllus.PersonKAuthAuthenticator.image(),
+                imageVector = AppIllus.GridTilesWithAuthenticator.image(),
                 contentDescription = null,
                 modifier = Modifier.size(AppImages.previewSize),
             )
