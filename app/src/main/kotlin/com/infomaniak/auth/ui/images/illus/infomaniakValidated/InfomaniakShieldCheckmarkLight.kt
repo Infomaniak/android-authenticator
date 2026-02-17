@@ -20,13 +20,13 @@ import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 
 @Suppress("UnusedReceiverParameter")
-val AppIllus.InfomaniakValidatedLight: ImageVector
+val AppIllus.InfomaniakShieldCheckmarkLight: ImageVector
     get() {
-        if (_infomaniakValidatedLight != null) {
-            return _infomaniakValidatedLight!!
+        if (_infomaniakShieldCheckmarkLight != null) {
+            return _infomaniakShieldCheckmarkLight!!
         }
-        _infomaniakValidatedLight = Builder(
-            name = "InfomaniakValidatedLight",
+        _infomaniakShieldCheckmarkLight = Builder(
+            name = "InfomaniakShieldCheckmarkLight",
             defaultWidth = 302.0.dp,
             defaultHeight = 302.0.dp,
             viewportWidth = 302.0f,
@@ -178,17 +178,17 @@ val AppIllus.InfomaniakValidatedLight: ImageVector
                 close()
             }
         }.build()
-        return _infomaniakValidatedLight!!
+        return _infomaniakShieldCheckmarkLight!!
     }
 
-private var _infomaniakValidatedLight: ImageVector? = null
+private var _infomaniakShieldCheckmarkLight: ImageVector? = null
 
 @Preview
 @Composable
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIllus.InfomaniakValidatedLight,
+            imageVector = AppIllus.InfomaniakShieldCheckmarkLight,
             contentDescription = null,
             modifier = Modifier.size(AppImages.previewSize),
         )

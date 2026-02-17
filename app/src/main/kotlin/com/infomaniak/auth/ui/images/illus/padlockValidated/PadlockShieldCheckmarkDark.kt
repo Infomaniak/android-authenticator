@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 
-val AppIllus.PadlockValidatedDark: ImageVector
+val AppIllus.PadlockShieldCheckmarkDark: ImageVector
     get() {
-        if (_padlockValidatedDark != null) {
-            return _padlockValidatedDark!!
+        if (_padlockShieldCheckmarkDark != null) {
+            return _padlockShieldCheckmarkDark!!
         }
-        _padlockValidatedDark = Builder(
-            name = "PadlockValidatedDark",
+        _padlockShieldCheckmarkDark = Builder(
+            name = "PadlockShieldCheckmarkDark",
             defaultWidth = 302.0.dp,
             defaultHeight = 302.0.dp,
             viewportWidth = 302.0f,
@@ -181,17 +181,17 @@ val AppIllus.PadlockValidatedDark: ImageVector
                 close()
             }
         }.build()
-        return _padlockValidatedDark!!
+        return _padlockShieldCheckmarkDark!!
     }
 
-private var _padlockValidatedDark: ImageVector? = null
+private var _padlockShieldCheckmarkDark: ImageVector? = null
 
 @Preview
 @Composable
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIllus.PadlockValidatedDark,
+            imageVector = AppIllus.PadlockShieldCheckmarkDark,
             contentDescription = null,
             modifier = Modifier.size(AppImages.previewSize),
         )

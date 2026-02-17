@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.images.illus.infomaniakValidated
+package com.infomaniak.auth.ui.images.illus.padlockValidated
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -29,13 +29,13 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 @Suppress("UnusedReceiverParameter")
-val AppIllus.InfomaniakValidated: ThemedImage
-    get() = _infomaniakValidated ?: object : ThemedImage {
-        override val light = AppIllus.InfomaniakValidatedLight
-        override val dark = AppIllus.InfomaniakValidatedDark
-    }.also { _infomaniakValidated = it }
+val AppIllus.PadlockShieldCheckmark: ThemedImage
+    get() = _padlockShieldCheckmark ?: object : ThemedImage {
+        override val light = AppIllus.PadlockShieldCheckmarkLight
+        override val dark = AppIllus.PadlockShieldCheckmarkDark
+    }.also { _padlockShieldCheckmark = it }
 
-private var _infomaniakValidated: ThemedImage? = null
+private var _padlockShieldCheckmark: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable
@@ -43,7 +43,7 @@ private fun Preview() {
     AuthenticatorTheme {
         Box {
             Image(
-                imageVector = AppIllus.InfomaniakValidated.image(),
+                imageVector = AppIllus.PadlockShieldCheckmark.image(),
                 contentDescription = null,
                 modifier = Modifier.size(AppImages.previewSize),
             )
