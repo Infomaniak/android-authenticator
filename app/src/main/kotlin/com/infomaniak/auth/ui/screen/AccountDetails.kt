@@ -260,7 +260,6 @@ private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: Accou
 
     OptionsSection(
         firstSectionItem, secondSectionItems,
-        modifier = modifier,
     )
 }
 
