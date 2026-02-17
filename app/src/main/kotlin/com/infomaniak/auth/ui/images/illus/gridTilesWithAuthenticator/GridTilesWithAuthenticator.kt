@@ -30,12 +30,12 @@ import com.infomaniak.core.ui.compose.theme.ThemedImage
 
 @Suppress("UnusedReceiverParameter")
 val AppIllus.GridTilesWithAuthenticator: ThemedImage
-    get() = _GridTilesWithAuthenticator ?: object : ThemedImage {
+    get() = _gridTilesWithAuthenticator ?: object : ThemedImage {
         override val light = AppIllus.GridTilesWithAuthenticatorLight
         override val dark = AppIllus.GridTilesWithAuthenticatorDark
-    }.also { _GridTilesWithAuthenticator = it }
+    }.also { _gridTilesWithAuthenticator = it }
 
-private var _GridTilesWithAuthenticator: ThemedImage? = null
+private var _gridTilesWithAuthenticator: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable
