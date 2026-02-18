@@ -24,8 +24,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.infomaniak.auth.repository.AppSettingsRepository
-import com.infomaniak.auth.room.Theme
+import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.auth.lib.room.Theme
 import com.infomaniak.auth.ui.screen.main.MainScreen
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var appSettingsRepository: AppSettingsRepository
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -48,8 +47,8 @@ class MainActivity : ComponentActivity() {
             val appSettings = appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
 
             val isDarkTheme = when (appSettings.value?.theme) {
-                Theme.LIGHT -> false
-                Theme.DARK -> true
+                Theme.Light -> false
+                Theme.Dark -> true
                 else -> isSystemInDarkTheme
             }
 

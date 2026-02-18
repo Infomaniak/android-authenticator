@@ -15,18 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.repository
+package com.infomaniak.auth.lib.repository
 
-import com.infomaniak.auth.room.AppSettingsDatabase
-import com.infomaniak.auth.room.AppSettingsEntity
-import com.infomaniak.auth.room.Theme
+import com.infomaniak.auth.lib.room.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.AppSettingsEntity
+import com.infomaniak.auth.lib.room.Theme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 
-class AppSettingsRepository(
-    private val database: AppSettingsDatabase
-) {
+class AppSettingsRepository(private val database: AppSettingsDatabase) {
     private val dao = database.getDao()
 
     @OptIn(ExperimentalCoroutinesApi::class)

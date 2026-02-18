@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+
+package com.infomaniak.auth.lib
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.infomaniak.auth.room.AppSettingsDatabase
-import com.infomaniak.auth.room.getRoomDatabase
+import com.infomaniak.auth.lib.room.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.getRoomDatabase
 
 fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSettingsDatabase> {
     val appContext = context.applicationContext

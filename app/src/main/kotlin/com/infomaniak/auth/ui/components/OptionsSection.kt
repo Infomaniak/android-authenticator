@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -103,7 +104,7 @@ private fun OptionItem(optionItemType: OptionItemType) {
     Box(
         modifier = Modifier
             .height(50.dp)
-            .clickable(enabled = optionItemType is OptionItemType.Clickable) {
+            .clickable(enabled = optionItemType.onClick != null) {
                 optionItemType.onClick?.invoke()
             }
     ) {
@@ -119,6 +120,14 @@ private fun OptionContent(optionItemType: OptionItemType) {
             .height(50.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (optionItemType is OptionItemType.WithSelection && optionItemType.leftIconResId != null) {
+            Image(
+                painterResource(optionItemType.leftIconResId),
+                modifier = Modifier.padding(end = Margin.Small),
+                contentDescription = null,
+            )
+        }
+
         Text(text = stringResource(optionItemType.stringResId), color = optionItemType.textColor)
         Spacer(modifier = Modifier.weight(1f))
 
@@ -152,43 +161,53 @@ private fun OptionContent(optionItemType: OptionItemType) {
     }
 }
 
-sealed class OptionItemType(
-    val stringResId: Int,
-    val textColor: Color = Color.Unspecified,
-    val onClick: (() -> Unit)? = null,
-) {
-    sealed interface Clickable
+sealed interface OptionItemType {
+    val stringResId: Int
+    val textColor: Color get() = Color.Unspecified
+    val onClick: (() -> Unit)? get() = null
 
-    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
+    class Default(override val stringResId: Int, override val textColor: Color) : OptionItemType
 
     class WithCheckBox(
-        stringResId: Int,
+        override val stringResId: Int,
         val isChecked: Boolean,
         val onCheckedChange: ((isChecked: Boolean) -> Unit)
-    ) : OptionItemType(stringResId)
+    ) : OptionItemType
 
     class WithRightIcon(
-        stringResId: Int,
+        override val stringResId: Int,
+        override val onClick: () -> Unit,
         val rightIconResId: Int,
-        onClick: () -> Unit,
-    ) : OptionItemType(stringResId, onClick = onClick), Clickable
+    ) : OptionItemType
 
     class WithSelection(
-        stringResId: Int,
+        override val stringResId: Int,
+        override val onClick: () -> Unit,
+        val leftIconResId: Int? = null,
         val isSelected: Boolean,
-        onClick: () -> Unit,
-    ) : OptionItemType(stringResId, onClick = onClick), Clickable
+    ) : OptionItemType
 }
 
 @PreviewSmallWindow
 @Composable
 fun OptionsSectionPreview() {
     val firstSectionItems = listOf(
-        OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName, isChecked = false, onCheckedChange = {}),
+        OptionItemType.WithCheckBox(
+            stringResId = R.string.appCompleteName,
+            isChecked = false,
+            onCheckedChange = {}
+        ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.appCompleteName,
             rightIconResId = R.drawable.right_indicator,
-            onClick = {}),
+            onClick = {}
+        ),
+        OptionItemType.WithSelection(
+            leftIconResId = R.drawable.ic_theme_system,
+            stringResId = R.string.appCompleteName,
+            isSelected = true,
+            onClick = {},
+        ),
     )
 
     val secondSectionItems =

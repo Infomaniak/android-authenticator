@@ -18,9 +18,9 @@
 package com.infomaniak.auth.di
 
 import android.content.Context
-import com.infomaniak.auth.getRoomDatabase
-import com.infomaniak.auth.repository.AppSettingsRepository
-import com.infomaniak.auth.room.AppSettingsDatabase
+import com.infomaniak.auth.lib.getRoomDatabase
+import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.auth.lib.room.AppSettingsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

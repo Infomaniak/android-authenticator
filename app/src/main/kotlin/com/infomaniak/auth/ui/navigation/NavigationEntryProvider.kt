@@ -26,8 +26,8 @@ import com.infomaniak.auth.ui.screen.home.HomeScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
 import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
-import com.infomaniak.auth.ui.screen.settings.SettingsScreen
-import com.infomaniak.auth.ui.screen.theme.ThemeScreen
+import com.infomaniak.auth.ui.screen.settings.SettingsScreenWrapper
+import com.infomaniak.auth.ui.screen.theme.ThemeScreenWrapper
 
 fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Root.Home> {
@@ -38,16 +38,18 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
         )
     }
     entry<NavDestination.Root.Settings> {
-        SettingsScreen(
+        SettingsScreenWrapper(
             onThemeClicked = {
                 backStack.add(NavDestination.Theme)
             }
         )
     }
     entry<NavDestination.Theme> {
-        ThemeScreen(onBackPressed = {
-            backStack.removeAt(backStack.lastIndex)
-        })
+        ThemeScreenWrapper(
+            onBackPressed = {
+                backStack.removeAt(backStack.lastIndex)
+            }
+        )
     }
     entry<NavDestination.AccountDetails> {
         AccountDetails(

@@ -19,8 +19,8 @@ package com.infomaniak.auth.ui.screen.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.auth.repository.AppSettingsRepository
-import com.infomaniak.auth.room.Theme
+import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.auth.lib.room.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted

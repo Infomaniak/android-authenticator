@@ -21,15 +21,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class ThemeMode {
-    LIGHT,
-    DARK,
-    SYSTEM;
+    Light,
+    Dark,
+    System;
 
     companion object {
         fun fromString(value: String?): ThemeMode = when (value) {
-            "LIGHT" -> LIGHT
-            "DARK" -> DARK
-            else -> SYSTEM
+            "Light" -> Light
+            "Dark" -> Dark
+            else -> System
         }
     }
 

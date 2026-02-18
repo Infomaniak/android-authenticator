@@ -20,9 +20,9 @@ package com.infomaniak.auth.lib.room
 import androidx.room.TypeConverter
 
 enum class Theme {
-    LIGHT,
-    DARK,
-    SYSTEM;
+    Light,
+    Dark,
+    System;
 }
 
 class ThemeConverter {

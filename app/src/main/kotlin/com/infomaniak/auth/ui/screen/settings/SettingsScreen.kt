@@ -21,7 +21,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,54 +31,67 @@ import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.theme.AppSettingsViewModel
 import com.infomaniak.auth.ui.screen.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
+fun SettingsScreenWrapper(onThemeClicked: () -> Unit) {
+    val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
+    val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
+    val notificationEnabled = GetSetCallbacks(
+        get = { uiState.isNotificationEnabled },
+        set = { appSettingsViewModel.setIsNotificationEnabled(it) }
+    )
+    val appLocked = GetSetCallbacks(
+        get = { uiState.isAppLocked },
+        set = { appSettingsViewModel.setIsAppLockEnabled(it) }
+    )
+
+    SettingsScreen(notificationEnabled, appLocked, onThemeClicked)
+}
+
+@Composable
 fun SettingsScreen(
-    appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>(),
+    notificationEnabled: GetSetCallbacks<Boolean>,
+    appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
 ) {
-    val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
+    val firstSectionItems = listOf(
+        OptionItemType.WithCheckBox(
+            stringResId = R.string.notificationsTitle,
+            isChecked = notificationEnabled.get(),
+            onCheckedChange = { notificationEnabled.set(it) }
+        ),
+        OptionItemType.WithCheckBox(
+            stringResId = R.string.unlockWithBiometrics,
+            isChecked = appLocked.get(),
+            onCheckedChange = { appLocked.set(it) }
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.themeTitle,
+            rightIconResId = R.drawable.right_indicator,
+            onClick = { onThemeClicked() },
+        ),
+    )
 
-    val firstSectionItems = remember(uiState) {
-        listOf(
-            OptionItemType.WithCheckBox(
-                stringResId = R.string.notificationsTitle,
-                isChecked = uiState.isNotificationEnabled,
-                onCheckedChange = { appSettingsViewModel.setIsNotificationEnabled(it) }
-            ),
-            OptionItemType.WithCheckBox(
-                stringResId = R.string.unlockWithBiometrics,
-                isChecked = uiState.isAppLocked,
-                onCheckedChange = { appSettingsViewModel.setIsAppLockEnabled(it) }
-            ),
-            OptionItemType.WithRightIcon(
-                stringResId = R.string.themeTitle,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = { onThemeClicked() },
-            ),
-        )
-    }
-
-    val secondSectionItems =
-        listOf(
-            OptionItemType.WithRightIcon(
-                stringResId = R.string.dataManagementTitle,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = {},
-            ),
-            OptionItemType.WithRightIcon(
-                stringResId = R.string.feedbackTitle,
-                rightIconResId = R.drawable.square_arrow_up,
-                onClick = {},
-            ),
-            OptionItemType.WithRightIcon(
-                stringResId = R.string.contactSupportTitle,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = {},
-            ),
-        )
+    val secondSectionItems = listOf(
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.dataManagementTitle,
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {},
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.feedbackTitle,
+            rightIconResId = R.drawable.square_arrow_up,
+            onClick = {},
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.contactSupportTitle,
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {},
+        ),
+    )
     SinglePaneScaffold(
         modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
         topBar = {
@@ -97,6 +109,10 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenPreview() {
     AuthenticatorTheme {
-        SettingsScreen(onThemeClicked = {})
+        SettingsScreen(
+            notificationEnabled = GetSetCallbacks(get = { true }, set = {}),
+            appLocked = GetSetCallbacks(get = { true }, set = {}),
+            onThemeClicked = {}
+        )
     }
 }

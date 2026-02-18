@@ -25,21 +25,29 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
-import com.infomaniak.auth.room.Theme
+import com.infomaniak.auth.lib.room.Theme
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun ThemeScreen(
-    onBackPressed: () -> Unit,
-    themeViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>(),
-) {
-    val uiState by themeViewModel.uiState.collectAsStateWithLifecycle(null)
+fun ThemeScreenWrapper(onBackPressed: () -> Unit) {
+    val themeViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
+    val uiState by themeViewModel.uiState.collectAsStateWithLifecycle()
+    val theme = GetSetCallbacks(get = { uiState.theme }, set = { it?.let { themeViewModel.setTheme(it) } })
 
+    ThemeScreen(theme, onBackPressed)
+}
+
+@Composable
+fun ThemeScreen(
+    theme: GetSetCallbacks<Theme?>,
+    onBackPressed: () -> Unit,
+) {
     SinglePaneScaffold(
         modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
         topBar = {
@@ -47,25 +55,28 @@ fun ThemeScreen(
                 withTitle = false,
                 isCentered = false,
                 isBackgroundTransparent = true,
-                onBackPressed = { onBackPressed() }
+                onBackPressed = onBackPressed
             )
         },
     ) { paddingValues ->
         val section = listOf(
             OptionItemType.WithSelection(
+                leftIconResId = R.drawable.ic_theme_light,
                 stringResId = R.string.themeLight,
-                isSelected = uiState?.theme == Theme.LIGHT,
-                onClick = { themeViewModel.setTheme(Theme.LIGHT) },
+                isSelected = theme.get() == Theme.Light,
+                onClick = { theme.set(Theme.Light) },
             ),
             OptionItemType.WithSelection(
+                leftIconResId = R.drawable.ic_theme_dark,
                 stringResId = R.string.themeDark,
-                isSelected = uiState?.theme == Theme.DARK,
-                onClick = { themeViewModel.setTheme(Theme.DARK) },
+                isSelected = theme.get() == Theme.Dark,
+                onClick = { theme.set(Theme.Dark) },
             ),
             OptionItemType.WithSelection(
+                leftIconResId = R.drawable.ic_theme_system,
                 stringResId = R.string.themeSystem,
-                isSelected = uiState?.theme == Theme.SYSTEM,
-                onClick = { themeViewModel.setTheme(Theme.SYSTEM) },
+                isSelected = theme.get() == Theme.System,
+                onClick = { theme.set(Theme.System) },
             ),
         )
 
@@ -81,6 +92,9 @@ fun ThemeScreen(
 @Composable
 fun ThemeScreenPreview() {
     AuthenticatorTheme {
-        ThemeScreen(onBackPressed = {})
+        ThemeScreen(
+            theme = GetSetCallbacks(get = { Theme.Light }, set = {}),
+            onBackPressed = {},
+        )
     }
 }

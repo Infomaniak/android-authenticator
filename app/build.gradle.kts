@@ -136,8 +136,6 @@ dependencies {
     implementation(core.infomaniak.core.ui.compose.preview)
     implementation(core.infomaniak.core.ui.compose.theme)
 
-    implementation(libs.androidx.hilt.navigation.compose)
-
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
@@ -153,6 +151,7 @@ dependencies {
     ksp(core.room.compiler)
 
     // Hilt
+    implementation(core.hilt.navigation.compose)
     implementation(core.hilt.android)
     implementation(core.hilt.work)
     ksp(core.hilt.compiler)
