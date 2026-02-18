@@ -21,6 +21,7 @@ import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class KeyPairManagerTest {
 
@@ -29,10 +30,10 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
+            assertNull(keyPairManager.generateNewKey())
             val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
+            assertNotNull(publicKey.firstOrNull())
+            assertNull(publicKey.secondOrNull())
         }
     }
 }
