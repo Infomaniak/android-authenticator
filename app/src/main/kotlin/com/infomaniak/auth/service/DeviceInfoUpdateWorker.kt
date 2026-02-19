@@ -18,18 +18,21 @@
 package com.infomaniak.auth.service
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
-import com.infomaniak.auth.manager.AccountsManager
+import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.AbstractDeviceInfoUpdateWorker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import okhttp3.OkHttpClient
-import javax.inject.Inject
 
-class DeviceInfoUpdateWorker @Inject constructor(
-    appContext: Context,
-    params: WorkerParameters,
-    private val accountsManager: AccountsManager
+@HiltWorker
+class DeviceInfoUpdateWorker @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted params: WorkerParameters,
+    private val accountsUtils: AccountUtils
 ) : AbstractDeviceInfoUpdateWorker(appContext, params) {
     override suspend fun getConnectedHttpClient(userId: Int): OkHttpClient {
-        return accountsManager.getHttpClient(userId = userId)
+        return accountsUtils.getHttpClient(userId = userId)
     }
 }

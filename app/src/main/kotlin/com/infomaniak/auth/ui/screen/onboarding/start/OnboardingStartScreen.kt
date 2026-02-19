@@ -22,7 +22,6 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +45,7 @@ import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
+import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.ui.compose.basics.ButtonStyle
 import com.infomaniak.core.ui.compose.basics.rememberCallableState
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -69,6 +69,8 @@ fun OnboardingStartScreen(
     LaunchedEffect(crossAppLoginViewModel) {
         crossAppLoginViewModel.activateUpdates(hostActivity)
     }
+
+    SentryLog.i("OnboardingStartScreen", "Got ${accountsCheckingState.checkedAccounts.count()} accounts from other apps")
 
     OnboardingStartScreen(
         accountsCheckingState = { accountsCheckingState },
@@ -112,10 +114,6 @@ private fun OnboardingStartScreen(
                 skippedIds = skippedIds,
                 isLoginButtonLoading = isLoginButtonLoading,
                 customization = CrossLoginDefaults.customize(
-                    colors = CrossLoginDefaults.colors(
-                        titleColor = MaterialTheme.colorScheme.primary,
-                        descriptionColor = MaterialTheme.colorScheme.secondary
-                    ),
                     buttonStyle = CrossLoginDefaults.buttonType(object : ButtonStyle {
                         override val height: Dp = AppDimens.LargeButtonHeight
                         override val shape: Shape = AppShapes.LargeButtonShape

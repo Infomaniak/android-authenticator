@@ -17,36 +17,25 @@
  */
 package com.infomaniak.auth.manager
 
-import com.infomaniak.core.auth.CredentialManager
-import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
-import io.sentry.Sentry
-import kotlinx.coroutines.flow.Flow
+import android.content.Context
+import com.infomaniak.auth.MainApplication
+import com.infomaniak.core.auth.UserAccountUtils
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import io.sentry.protocol.User as SentryUser
 
 // TODO[ik-auth]: Add better manager with auth logic when ready. It's just the minimum for crossapplogin
 // TODO[CrossAppLogin]: When adding/removing users, call MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
 @Singleton
-class AccountsManager @Inject constructor(
-    override val userDatabase: UserDatabase
-) : CredentialManager() {
-    override var currentUser: User? = null
-        set(user) {
-            field = user
-            currentUserId = user?.id ?: DEFAULT_USER_ID
-            Sentry.setUser(SentryUser().apply {
-                id = currentUserId.toString()
-                email = user?.email
-            })
-        }
-
-    override var currentUserId: Int = currentUser?.id ?: DEFAULT_USER_ID
-
-    fun getCurrentUserFlow(): Flow<User?> = userDatabase.userDao().getFirstFlow()
-
-    companion object {
-        private const val DEFAULT_USER_ID = -1
-    }
+class AccountUtils @Inject constructor(
+    @ApplicationContext context: Context,
+) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
+    // suspend fun init() {
+    //     currentUserFlow.collect { user ->
+    //         Sentry.setUser(SentryUser().apply {
+    //             id = user?.id?.toString() ?: "-1"
+    //             email = user?.email
+    //         })
+    //     }
+    // }
 }

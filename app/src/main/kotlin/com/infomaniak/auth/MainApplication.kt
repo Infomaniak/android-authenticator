@@ -33,14 +33,16 @@ import kotlinx.coroutines.launch
 class MainApplication : Application() {
     private val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
 
-    override fun onCreate() {
-        super.onCreate()
-
+    init {
         NetworkConfiguration.init(
             appId = BuildConfig.APPLICATION_ID,
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
         )
+    }
+
+    override fun onCreate() {
+        super.onCreate()
 
         configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = true)
 
