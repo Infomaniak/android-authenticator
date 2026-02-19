@@ -258,9 +258,7 @@ private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: Accou
         ),
     )
 
-    OptionsSection(
-        firstSectionItem, secondSectionItems,
-    )
+    OptionsSection(firstSectionItem, secondSectionItems)
 }
 
 private enum class AccountStatus(
