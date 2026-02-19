@@ -15,26 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.db
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.appsettings.getAppSettingsRoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-fun getDatabaseBuilder(): RoomDatabase.Builder<AppSettingsDatabase> {
+fun getAppSettingsDatabaseBuilder(): RoomDatabase.Builder<AppSettingsDatabase> {
     val dbFilePath = documentDirectory() + "/app_settings.db"
     return Room.databaseBuilder<AppSettingsDatabase>(
         name = dbFilePath,
     )
 }
 
-fun getRoomDatabase(): AppSettingsDatabase {
-    return getRoomDatabase(getDatabaseBuilder())
+fun getAppSettingsRoomDatabase(): AppSettingsDatabase {
+    return getAppSettingsRoomDatabase(getAppSettingsDatabaseBuilder())
 }
 
 @OptIn(ExperimentalForeignApi::class)

@@ -25,7 +25,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
-import com.infomaniak.auth.lib.room.Theme
+import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.screen.main.MainScreen
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import dagger.hilt.android.AndroidEntryPoint

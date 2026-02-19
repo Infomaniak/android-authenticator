@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room
+package com.infomaniak.auth.lib.room.accounts
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -24,20 +24,17 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AppSettingsDao {
+interface AccountsDao {
 
-    @Query("SELECT * FROM AppSettingsEntity WHERE id = 0")
-    fun getAsFlow(): Flow<AppSettingsEntity?>
+    @Query("SELECT * FROM AccountEntity")
+    fun getAsFlow(): Flow<List<AccountEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(item: AppSettingsEntity)
+    fun update(account: AccountEntity)
 
-    @Query("UPDATE AppSettingsEntity SET isNotificationEnabled = :isNotificationEnabled")
-    suspend fun setIsNotificationEnabled(isNotificationEnabled: Boolean)
+    @Insert
+    fun insert(account: AccountEntity)
 
-    @Query("UPDATE AppSettingsEntity SET isAppLockEnabled = :isAppLockEnabled")
-    suspend fun setIsAppLockEnabled(isAppLockEnabled: Boolean)
-
-    @Query("UPDATE AppSettingsEntity SET theme = :theme")
-    suspend fun setTheme(theme: Theme)
+    @Query("DELETE FROM AccountEntity WHERE id = :id")
+    fun delete(id: Long)
 }

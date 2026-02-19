@@ -18,9 +18,12 @@
 package com.infomaniak.auth.di
 
 import android.content.Context
-import com.infomaniak.auth.lib.getRoomDatabase
+import com.infomaniak.auth.lib.db.getAccountsRoomDatabase
+import com.infomaniak.auth.lib.db.getAppSettingsRoomDatabase
+import com.infomaniak.auth.lib.repository.AccountsRepository
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,9 +37,17 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context) = getRoomDatabase(context)
+    fun provideAppSettingsDatabase(@ApplicationContext context: Context) = getAppSettingsRoomDatabase(context)
 
     @Provides
     @Singleton
-    fun provideRepository(database: AppSettingsDatabase) = AppSettingsRepository(database)
+    fun provideAppSettingsRepository(database: AppSettingsDatabase) = AppSettingsRepository(database)
+
+    @Provides
+    @Singleton
+    fun provideAccountsDatabase(@ApplicationContext context: Context) = getAccountsRoomDatabase(context)
+
+    @Provides
+    @Singleton
+    fun provideAccountsRepository(database: AccountsDatabase) = AccountsRepository(database)
 }

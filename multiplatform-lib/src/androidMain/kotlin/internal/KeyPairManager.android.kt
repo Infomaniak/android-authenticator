@@ -23,7 +23,6 @@ import kotlinx.coroutines.invoke
 import splitties.init.appCtx
 import java.io.File
 
-
 internal class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)

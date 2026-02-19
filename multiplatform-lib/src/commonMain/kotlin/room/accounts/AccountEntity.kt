@@ -15,15 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room
+package com.infomaniak.auth.lib.room.accounts
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class AppSettingsEntity(
-    @PrimaryKey val id: Long = 0,
-    val isNotificationEnabled: Boolean = false,
-    val isAppLockEnabled: Boolean = false,
-    val theme: Theme = Theme.System,
+data class AccountEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val fullName: String,
+    val initials: String,
+    val email: String,
+    val avatarUrl: String? = null,
+    val status: StatusEntity,
 )
+
+enum class StatusEntity {
+    LoggedIn,
+    NotConnectedEmpty,
+    NotConnectedReLogin,
+    NotConnectedIssue,
+}

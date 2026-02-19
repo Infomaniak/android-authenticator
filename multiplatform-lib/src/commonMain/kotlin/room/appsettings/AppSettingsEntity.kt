@@ -15,25 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room
+package com.infomaniak.auth.lib.room.appsettings
 
-import androidx.room.TypeConverter
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-enum class Theme {
-    Light,
-    Dark,
-    System;
-}
-
-class ThemeConverter {
-
-    @TypeConverter
-    fun fromTheme(theme: Theme): String {
-        return theme.name
-    }
-
-    @TypeConverter
-    fun toTheme(value: String): Theme {
-        return Theme.valueOf(value)
-    }
-}
+@Entity
+data class AppSettingsEntity(
+    @PrimaryKey val id: Long = 0,
+    val isNotificationEnabled: Boolean = false,
+    val isAppLockEnabled: Boolean = false,
+    val theme: Theme = Theme.System,
+)

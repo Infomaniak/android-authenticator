@@ -17,9 +17,9 @@
  */
 package com.infomaniak.auth.lib.repository
 
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.AppSettingsEntity
-import com.infomaniak.auth.lib.room.Theme
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsEntity
+import com.infomaniak.auth.lib.room.appsettings.Theme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
