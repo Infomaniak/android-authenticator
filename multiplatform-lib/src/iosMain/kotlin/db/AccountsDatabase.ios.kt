@@ -20,7 +20,7 @@ package com.infomaniak.auth.lib.db
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
-import com.infomaniak.auth.lib.room.accounts.getRoomDatabase
+import com.infomaniak.auth.lib.room.accounts.getAccountsRoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -34,7 +34,7 @@ fun getAccountsDatabaseBuilder(): RoomDatabase.Builder<AccountsDatabase> {
 }
 
 fun getAccountsRoomDatabase(): AccountsDatabase {
-    return getRoomDatabase(getAccountsDatabaseBuilder())
+    return getAccountsRoomDatabase(getAccountsDatabaseBuilder())
 }
 
 @OptIn(ExperimentalForeignApi::class)

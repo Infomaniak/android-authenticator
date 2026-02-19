@@ -21,7 +21,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
-import com.infomaniak.auth.lib.room.accounts.getRoomDatabase
+import com.infomaniak.auth.lib.room.accounts.getAccountsRoomDatabase
 
 fun getAccountsDatabaseBuilder(context: Context): RoomDatabase.Builder<AccountsDatabase> {
     val appContext = context.applicationContext
@@ -33,5 +33,5 @@ fun getAccountsDatabaseBuilder(context: Context): RoomDatabase.Builder<AccountsD
 }
 
 fun getAccountsRoomDatabase(context: Context): AccountsDatabase {
-    return getRoomDatabase(getAccountsDatabaseBuilder(context))
+    return getAccountsRoomDatabase(getAccountsDatabaseBuilder(context))
 }

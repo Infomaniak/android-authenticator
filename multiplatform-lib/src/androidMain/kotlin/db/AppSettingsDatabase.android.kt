@@ -20,8 +20,8 @@ package com.infomaniak.auth.lib.db
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.appsettings.getAppSettingsRoomDatabase
 
 fun getAppSettingsDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSettingsDatabase> {
     val appContext = context.applicationContext
@@ -33,5 +33,5 @@ fun getAppSettingsDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSet
 }
 
 fun getAppSettingsRoomDatabase(context: Context): AppSettingsDatabase {
-    return getRoomDatabase(getAppSettingsDatabaseBuilder(context))
+    return getAppSettingsRoomDatabase(getAppSettingsDatabaseBuilder(context))
 }

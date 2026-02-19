@@ -39,7 +39,7 @@ expect object AccountsDatabaseConstructor : RoomDatabaseConstructor<AccountsData
     override fun initialize(): AccountsDatabase
 }
 
-fun getRoomDatabase(builder: RoomDatabase.Builder<AccountsDatabase>): AccountsDatabase {
+fun getAccountsRoomDatabase(builder: RoomDatabase.Builder<AccountsDatabase>): AccountsDatabase {
     return builder
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)

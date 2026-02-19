@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room
+package com.infomaniak.auth.lib.room.appsettings
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
@@ -38,7 +38,7 @@ expect object AppSettingsDatabaseConstructor : RoomDatabaseConstructor<AppSettin
     override fun initialize(): AppSettingsDatabase
 }
 
-fun getRoomDatabase(builder: RoomDatabase.Builder<AppSettingsDatabase>): AppSettingsDatabase {
+fun getAppSettingsRoomDatabase(builder: RoomDatabase.Builder<AppSettingsDatabase>): AppSettingsDatabase {
     return builder
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)

@@ -19,8 +19,8 @@ package com.infomaniak.auth.lib.db
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.AppSettingsDatabase
-import com.infomaniak.auth.lib.room.getRoomDatabase
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.appsettings.getAppSettingsRoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -34,7 +34,7 @@ fun getAppSettingsDatabaseBuilder(): RoomDatabase.Builder<AppSettingsDatabase> {
 }
 
 fun getAppSettingsRoomDatabase(): AppSettingsDatabase {
-    return getRoomDatabase(getAppSettingsDatabaseBuilder())
+    return getAppSettingsRoomDatabase(getAppSettingsDatabaseBuilder())
 }
 
 @OptIn(ExperimentalForeignApi::class)

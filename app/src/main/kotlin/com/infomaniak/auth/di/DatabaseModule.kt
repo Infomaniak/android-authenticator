@@ -18,17 +18,17 @@
 package com.infomaniak.auth.di
 
 import android.content.Context
+import com.infomaniak.auth.lib.db.getAccountsRoomDatabase
+import com.infomaniak.auth.lib.db.getAppSettingsRoomDatabase
 import com.infomaniak.auth.lib.repository.AccountsRepository
+import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
-import com.infomaniak.auth.repository.AppSettingsRepository
-import com.infomaniak.auth.room.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import db.getAccountsRoomDatabase
-import db.getAppSettingsRoomDatabase
 import javax.inject.Singleton
 
 @Module
