@@ -28,8 +28,8 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
-import com.infomaniak.auth.ui.screen.theme.AppSettingsViewModel
-import com.infomaniak.auth.ui.screen.theme.SettingsUiState
+import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
+import com.infomaniak.auth.ui.screen.settings.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold

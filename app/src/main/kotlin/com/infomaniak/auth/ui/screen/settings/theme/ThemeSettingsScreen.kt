@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.theme
+package com.infomaniak.auth.ui.screen.settings.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -35,7 +35,7 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun ThemeSettingsScreenWrapper(onBackPressed: () -> Unit) {
+fun ThemeSettingsScreen(onBackPressed: () -> Unit) {
     val themeViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by themeViewModel.uiState.collectAsStateWithLifecycle()
     val theme = GetSetCallbacks(get = { uiState.theme }, set = { it?.let { themeViewModel.setTheme(it) } })
@@ -44,7 +44,7 @@ fun ThemeSettingsScreenWrapper(onBackPressed: () -> Unit) {
 }
 
 @Composable
-fun ThemeSettingsScreen(
+private fun ThemeSettingsScreen(
     theme: GetSetCallbacks<Theme?>,
     onBackPressed: () -> Unit,
 ) {
