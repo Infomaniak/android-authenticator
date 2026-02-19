@@ -20,41 +20,76 @@ package com.infomaniak.auth.ui.screen.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
+import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
+import com.infomaniak.auth.ui.screen.settings.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun SettingsScreen() {
-    val firstSectionItems = listOf<OptionItemType>(
+fun SettingsScreen(onThemeClicked: () -> Unit) {
+    val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
+    val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
+    val notificationEnabled = GetSetCallbacks(
+        get = { uiState.isNotificationEnabled },
+        set = { appSettingsViewModel.setIsNotificationEnabled(it) }
+    )
+    val appLocked = GetSetCallbacks(
+        get = { uiState.isAppLocked },
+        set = { appSettingsViewModel.setIsAppLockEnabled(it) }
+    )
+
+    SettingsScreen(notificationEnabled, appLocked, onThemeClicked)
+}
+
+@Composable
+private fun SettingsScreen(
+    notificationEnabled: GetSetCallbacks<Boolean>,
+    appLocked: GetSetCallbacks<Boolean>,
+    onThemeClicked: () -> Unit,
+) {
+    val firstSectionItems = listOf(
         OptionItemType.WithCheckBox(
             stringResId = R.string.notificationsTitle,
+            isChecked = notificationEnabled.get(),
+            onCheckedChange = { notificationEnabled.set(it) }
         ),
         OptionItemType.WithCheckBox(
             stringResId = R.string.unlockWithBiometrics,
+            isChecked = appLocked.get(),
+            onCheckedChange = { appLocked.set(it) }
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.themeTitle,
-            rightIconResId = R.drawable.right_indicator
+            rightIconResId = R.drawable.right_indicator,
+            onClick = { onThemeClicked() },
         ),
     )
-    val secondSectionItems = listOf<OptionItemType>(
+
+    val secondSectionItems = listOf(
         OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
-            rightIconResId = R.drawable.right_indicator
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {},
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.feedbackTitle,
-            rightIconResId = R.drawable.square_arrow_up
+            rightIconResId = R.drawable.square_arrow_up,
+            onClick = {},
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.contactSupportTitle,
-            rightIconResId = R.drawable.right_indicator
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {},
         ),
     )
     SinglePaneScaffold(
@@ -63,7 +98,6 @@ fun SettingsScreen() {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
     ) { paddingValues ->
-
         OptionsSection(
             firstSectionItems, secondSectionItems,
             modifier = Modifier.padding(paddingValues),
@@ -75,6 +109,10 @@ fun SettingsScreen() {
 @Composable
 fun SettingsScreenPreview() {
     AuthenticatorTheme {
-        SettingsScreen()
+        SettingsScreen(
+            notificationEnabled = GetSetCallbacks(get = { true }, set = {}),
+            appLocked = GetSetCallbacks(get = { true }, set = {}),
+            onThemeClicked = {}
+        )
     }
 }

@@ -16,23 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.infomaniak.auth.lib.internal
+package com.infomaniak.auth.lib
 
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
+import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.infomaniak.auth.lib.room.AppSettingsDatabase
+import com.infomaniak.auth.lib.room.getRoomDatabase
 
-class KeyPairManagerTest {
+fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSettingsDatabase> {
+    val appContext = context.applicationContext
+    val dbFile = appContext.getDatabasePath("app_settings.db")
+    return Room.databaseBuilder<AppSettingsDatabase>(
+        context = appContext,
+        name = dbFile.absolutePath
+    )
+}
 
-    @Test
-    fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
-
-        runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
-            val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
-        }
-    }
+fun getRoomDatabase(context: Context): AppSettingsDatabase {
+    return getRoomDatabase(getDatabaseBuilder(context))
 }

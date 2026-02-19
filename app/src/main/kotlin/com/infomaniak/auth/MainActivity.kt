@@ -22,19 +22,37 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.auth.lib.room.Theme
 import com.infomaniak.auth.ui.screen.main.MainScreen
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var appSettingsRepository: AppSettingsRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 
         setContent {
-            AuthenticatorTheme {
+            val isSystemInDarkTheme = isSystemInDarkTheme()
+            val appSettings = appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
+
+            val isDarkTheme = when (appSettings.value?.theme) {
+                Theme.Light -> false
+                Theme.Dark -> true
+                else -> isSystemInDarkTheme
+            }
+
+            AuthenticatorTheme(isDarkTheme = isDarkTheme) {
                 MainScreen()
             }
         }

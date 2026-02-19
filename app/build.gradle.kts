@@ -121,6 +121,8 @@ sentry {
 }
 
 dependencies {
+    implementation(project(":multiplatform-lib"))
+
     implementation(core.infomaniak.core.auth)
     implementation(core.infomaniak.core.common)
     implementation(core.infomaniak.core.crossapplogin.front)
@@ -134,7 +136,6 @@ dependencies {
     implementation(core.infomaniak.core.ui.compose.preview)
     implementation(core.infomaniak.core.ui.compose.theme)
 
-    implementation(core.androidx.core.ktx)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
@@ -144,7 +145,13 @@ dependencies {
 
     implementation(core.okhttp)
 
+    // Room
+    implementation(core.room.ktx)
+    implementation(core.room.runtime)
+    ksp(core.room.compiler)
+
     // Hilt
+    implementation(core.hilt.navigation.compose)
     implementation(core.hilt.android)
     implementation(core.hilt.work)
     ksp(core.hilt.compiler)

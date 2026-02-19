@@ -15,24 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.lib.room
 
-package com.infomaniak.auth.lib.internal
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-
-class KeyPairManagerTest {
-
-    @Test
-    fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
-
-        runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
-            val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
-        }
-    }
-}
+@Entity
+data class AppSettingsEntity(
+    @PrimaryKey val id: Long = 0,
+    val isNotificationEnabled: Boolean = false,
+    val isAppLockEnabled: Boolean = false,
+    val theme: Theme = Theme.System,
+)

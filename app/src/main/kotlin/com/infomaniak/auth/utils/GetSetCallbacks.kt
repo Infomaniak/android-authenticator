@@ -15,24 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.utils
 
-package com.infomaniak.auth.lib.internal
+import androidx.compose.runtime.Immutable
 
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-
-class KeyPairManagerTest {
-
-    @Test
-    fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
-
-        runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
-            val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
-        }
-    }
-}
+@Immutable
+class GetSetCallbacks<T>(
+    val get: () -> T,
+    val set: (T) -> Unit,
+)

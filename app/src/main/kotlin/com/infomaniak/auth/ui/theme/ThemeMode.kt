@@ -15,24 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.ui.theme
 
-package com.infomaniak.auth.lib.internal
+import kotlinx.serialization.Serializable
 
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
+@Serializable
+enum class ThemeMode {
+    Light,
+    Dark,
+    System;
 
-class KeyPairManagerTest {
-
-    @Test
-    fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
-
-        runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
-            val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
+    companion object {
+        fun fromString(value: String?): ThemeMode = when (value) {
+            "Light" -> Light
+            "Dark" -> Dark
+            else -> System
         }
     }
+
+    override fun toString(): String = name
 }

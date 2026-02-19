@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,8 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -56,6 +57,25 @@ fun OptionsSection(
     vararg sections: List<OptionItemType>,
     modifier: Modifier = Modifier,
 ) {
+    OptionsSectionContainer(modifier, *sections) { optionItems ->
+        optionItems.forEachIndexed { index, optionItemType ->
+            OptionItem(optionItemType = optionItemType)
+
+            if (index < optionItems.lastIndex) {
+                HorizontalDivider(
+                    color = AuthenticatorTheme.materialColors.outlineVariant,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun OptionsSectionContainer(
+    modifier: Modifier = Modifier,
+    vararg sections: List<OptionItemType>,
+    content: @Composable (optionItem: List<OptionItemType>) -> Unit,
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -72,17 +92,7 @@ fun OptionsSection(
                     shape = RoundedCornerShape(24.dp),
                 ) {
                     Column {
-                        optionsSection.forEachIndexed { index, optionItem ->
-                            OptionItem(
-                                optionItemType = optionItem,
-                            )
-
-                            if (index < optionsSection.lastIndex) {
-                                HorizontalDivider(
-                                    color = AuthenticatorTheme.materialColors.outlineVariant,
-                                )
-                            }
-                        }
+                        content(optionsSection)
                     }
                 }
             }
@@ -95,7 +105,9 @@ private fun OptionItem(optionItemType: OptionItemType) {
     Box(
         modifier = Modifier
             .height(50.dp)
-            .clickable(enabled = optionItemType is OptionItemType.WithRightIcon) {}
+            .clickable(enabled = optionItemType.onClick != null) {
+                optionItemType.onClick?.invoke()
+            }
     ) {
         OptionContent(optionItemType)
     }
@@ -109,6 +121,14 @@ private fun OptionContent(optionItemType: OptionItemType) {
             .height(50.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (optionItemType is OptionItemType.WithSelection && optionItemType.leftIconResId != null) {
+            Image(
+                painterResource(optionItemType.leftIconResId),
+                modifier = Modifier.padding(end = Margin.Small),
+                contentDescription = null,
+            )
+        }
+
         Text(text = stringResource(optionItemType.stringResId), color = optionItemType.textColor)
         Spacer(modifier = Modifier.weight(1f))
 
@@ -120,37 +140,80 @@ private fun OptionContent(optionItemType: OptionItemType) {
                 )
             }
             is OptionItemType.WithCheckBox -> {
-                val isChecked = remember { mutableStateOf(true) }
                 Switch(
                     modifier = Modifier
                         .scale(0.7f),
-                    checked = isChecked.value,
-                    onCheckedChange = { isChecked.value = it },
+                    checked = optionItemType.isChecked,
+                    onCheckedChange = { optionItemType.onCheckedChange.invoke(it) },
                 )
+            }
+            is OptionItemType.WithSelection -> {
+                if (optionItemType.isSelected) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(R.drawable.check),
+                        contentDescription = null,
+                        tint = AuthenticatorTheme.materialColors.primary,
+                    )
+                }
             }
             else -> {}
         }
     }
 }
 
-sealed class OptionItemType(val stringResId: Int, val textColor: Color = Color.Unspecified) {
+@Immutable
+sealed interface OptionItemType {
+    val stringResId: Int
+    val textColor: Color get() = Color.Unspecified
+    val onClick: (() -> Unit)? get() = null
 
-    class WithCheckBox(stringResId: Int) : OptionItemType(stringResId)
+    class Default(override val stringResId: Int, override val textColor: Color) : OptionItemType
 
-    class WithRightIcon(stringResId: Int, val rightIconResId: Int) : OptionItemType(stringResId)
-    class Default(stringResId: Int, textColor: Color = Color.Unspecified) : OptionItemType(stringResId, textColor)
+    class WithCheckBox(
+        override val stringResId: Int,
+        val isChecked: Boolean,
+        val onCheckedChange: ((isChecked: Boolean) -> Unit)
+    ) : OptionItemType
 
+    class WithRightIcon(
+        override val stringResId: Int,
+        override val onClick: () -> Unit,
+        val rightIconResId: Int,
+    ) : OptionItemType
+
+    class WithSelection(
+        override val stringResId: Int,
+        override val onClick: () -> Unit,
+        val leftIconResId: Int? = null,
+        val isSelected: Boolean,
+    ) : OptionItemType
 }
 
 @PreviewSmallWindow
 @Composable
 fun OptionsSectionPreview() {
     val firstSectionItems = listOf(
-        OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName),
-        OptionItemType.WithRightIcon(stringResId = R.string.appCompleteName, rightIconResId = R.drawable.right_indicator),
+        OptionItemType.WithCheckBox(
+            stringResId = R.string.appCompleteName,
+            isChecked = false,
+            onCheckedChange = {}
+        ),
+        OptionItemType.WithRightIcon(
+            stringResId = R.string.appCompleteName,
+            rightIconResId = R.drawable.right_indicator,
+            onClick = {}
+        ),
+        OptionItemType.WithSelection(
+            leftIconResId = R.drawable.ic_theme_system,
+            stringResId = R.string.appCompleteName,
+            isSelected = true,
+            onClick = {},
+        ),
     )
 
-    val secondSectionItems = listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName))
+    val secondSectionItems =
+        listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName, isChecked = false, onCheckedChange = {}))
 
     AuthenticatorTheme {
         Column(modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface)) {

@@ -15,24 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.lib.room
 
-package com.infomaniak.auth.lib.internal
+import androidx.room.TypeConverter
 
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
+enum class Theme {
+    Light,
+    Dark,
+    System;
+}
 
-class KeyPairManagerTest {
+class ThemeConverter {
 
-    @Test
-    fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
+    @TypeConverter
+    fun fromTheme(theme: Theme): String {
+        return theme.name
+    }
 
-        runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
-            val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
-        }
+    @TypeConverter
+    fun toTheme(value: String): Theme {
+        return Theme.valueOf(value)
     }
 }

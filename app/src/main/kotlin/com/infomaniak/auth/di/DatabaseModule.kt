@@ -17,17 +17,26 @@
  */
 package com.infomaniak.auth.di
 
-import com.infomaniak.core.auth.room.UserDatabase
+import android.content.Context
+import com.infomaniak.auth.lib.getRoomDatabase
+import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.auth.lib.room.AppSettingsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
+
     @Provides
     @Singleton
-    fun providesUserDatabase() = UserDatabase.getDatabase()
+    fun provideDatabase(@ApplicationContext context: Context) = getRoomDatabase(context)
+
+    @Provides
+    @Singleton
+    fun provideRepository(database: AppSettingsDatabase) = AppSettingsRepository(database)
 }
