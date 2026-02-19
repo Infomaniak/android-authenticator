@@ -52,6 +52,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(core.kotlinx.coroutines.core)
+                implementation(core.kotlinx.serialization.cbor)
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negociation)
                 implementation(libs.ktor.client.json)

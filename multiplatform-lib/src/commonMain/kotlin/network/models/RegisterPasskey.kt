@@ -21,8 +21,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterCredential(
-    @SerialName("device_uid")
-    val deviceUid: String,
-    val data: Answer,
+data class RegisterPasskey(
+    val device: String,
+    val id: String,
+    val rawId: String,
+    @SerialName("response")
+    val registerPasskeyResponse: RegisterPasskeyResponse,
+    val type: String,
+    val clientExtensionResults: ClientExtensionResults,
+    val authenticatorAttachment: String,
 )

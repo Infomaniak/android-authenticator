@@ -20,11 +20,11 @@ package network.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Answer(
-    val id: String,
-    val rawId: String,
-    val response: RegisterCredentialResponse,
-    val type: String,
-    val clientExtensionResults: ClientExtensionResults,
-    val authenticatorAttachment: String,
+data class RegisterPasskeyResponse(
+    val attestationObject: String,
+    val clientDataJSON: String,
+    val transports: List<String>,
+    val publicKeyAlgorithm: Int,
+    val publicKey: String,
+    val authenticatorData: String,
 )

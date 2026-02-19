@@ -22,5 +22,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VerifyAuthenticationData(
     val identity: Long,
-    val answer: Answer,
+    val id: String,
+    val rawId: String,
+    val response: VerifyResponse,
+    val type: String,
+    val clientExtensionResults: ClientExtensionResults,
+    val authenticatorAttachment: String,
 )

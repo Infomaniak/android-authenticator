@@ -21,8 +21,8 @@ internal object ApiRoutes {
 
     fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/authenticator/"
 
-    const val getAuthenticationOptions = "challenge"
-    const val verifyAuthentication = "verify"
-    const val getRegistrationOptions = "credentials/options"
-    const val registerCredential = "credentials"
+    const val getPasskeysOptions = "passkeys/options"
+    const val registerPasskey = "passkey"
+    const val challenge = "challenge"
+    const val verify = "verify"
 }

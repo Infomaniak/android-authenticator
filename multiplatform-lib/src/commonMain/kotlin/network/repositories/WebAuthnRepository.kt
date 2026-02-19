@@ -20,12 +20,13 @@ package network.repositories
 import com.infomaniak.auth.lib.network.ApiClientProvider
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
-import network.models.Answer
 import network.models.AuthResult
 import network.models.AuthenticationOptions
-import network.models.RegisterCredential
-import network.models.RegistrationOptions
+import network.models.ClientExtensionResults
+import network.models.PasskeysOptions
+import network.models.RegisterPasskey
 import network.models.VerifyAuthenticationData
+import network.models.VerifyResponse
 import network.requests.AuthenticatorRequest
 import network.utils.ApiEnvironment
 
@@ -43,23 +44,41 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
 
     // Authentification challenge (not authentified)
     suspend fun getAuthenticationOptions(identity: Long): AuthenticationOptions {
-        return authenticatorRequest.getAuthenticationOptions(identity)
+        return authenticatorRequest.challenge(identity)
     }
 
     // Authentification verification (not authentified)
-    suspend fun verifyAuthentication(identity: Long, answer: Answer): AuthResult {
-        return authenticatorRequest.verifyAuthentication(VerifyAuthenticationData(identity, answer))
+    suspend fun verifyAuthentication(
+        identity: Long,
+        id: String,
+        rawId: String,
+        verifyResponse: VerifyResponse,
+        type: String,
+        clientExtensionResult: ClientExtensionResults,
+        authenticatorAttachment: String,
+    ): AuthResult {
+        return authenticatorRequest.verify(
+            VerifyAuthenticationData(
+                identity,
+                id,
+                rawId,
+                verifyResponse,
+                type,
+                clientExtensionResult,
+                authenticatorAttachment,
+            )
+        )
     }
 
     // Generate WebAuthn registration options (authentified)
-    suspend fun getRegistrationOptions(): RegistrationOptions {
+    suspend fun getRegistrationOptions(): PasskeysOptions {
         //TODO where to get the bearer ?
-        return authenticatorRequest.getRegistrationOptions()
+        return authenticatorRequest.getPasskeysOptions()
     }
 
     // Validate WebAuthn registration and save public key (authentified)
-    suspend fun registerCredential(registerCredential: RegisterCredential): Result<Unit> {
+    suspend fun registerCredential(registerPasskey: RegisterPasskey): Result<Unit> {
         //TODO where to get the bearer ?
-        return authenticatorRequest.registerCredential(registerCredential)
+        return authenticatorRequest.registerPasskey(registerPasskey)
     }
 }

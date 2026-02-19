@@ -17,10 +17,15 @@
  */
 package network.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterCredentialResponse(
-    val attestationObject: String,
-    val clientDataJSON: String,
+data class PasskeysOptions(
+    val challenge: String,
+    @SerialName("rp")
+    val relyingParty: RelyingParty,
+    val user: User,
+    val pubKeyCredParams: List<PubKeyCredParam>,
+    val excludeCredentials: List<ExcludeCredential>,
 )

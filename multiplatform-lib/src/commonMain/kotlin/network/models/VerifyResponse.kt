@@ -17,16 +17,12 @@
  */
 package network.models
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegistrationOptions(
-    val challenge: String,
-    val timeout: Long,
-    @SerialName("rp")
-    val relyingParty: RelyingParty,
-    val user: User,
-    val pubKeyCredParams: List<PubKeyCredParam>,
-    val excludeCredentials: List<ExcludeCredential>,
+data class VerifyResponse(
+    val authenticatorData: String,
+    val clientDataJSON: String,
+    val signature: String,
+    val userHandle: String,
 )

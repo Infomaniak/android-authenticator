@@ -23,7 +23,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AuthenticationOptions(
     val challenge: String,
-    val timeout: Long,
     @SerialName("rpId")
     val relyingPartyId: String,
     val allowCredentials: List<AllowCredential>,

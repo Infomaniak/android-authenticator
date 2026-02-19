@@ -19,11 +19,11 @@ package network.requests
 
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
-import network.repositories.AuthResult
-import network.repositories.AuthenticationOptions
-import network.repositories.RegisterCredential
-import network.repositories.RegistrationOptions
-import network.repositories.VerifyAuthenticationData
+import network.models.AuthResult
+import network.models.AuthenticationOptions
+import network.models.PasskeysOptions
+import network.models.RegisterPasskey
+import network.models.VerifyAuthenticationData
 import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
 
@@ -33,19 +33,19 @@ internal class AuthenticatorRequest(
     httpClient: HttpClient,
 ) : BaseRequest(environment, json, httpClient) {
 
-    suspend fun getAuthenticationOptions(identity: Long): AuthenticationOptions {
-        return post(createUrl(ApiRoutes.getAuthenticationOptions), mapOf("identity" to identity))
+    suspend fun getPasskeysOptions(): PasskeysOptions {
+        return get(createUrl(ApiRoutes.getPasskeysOptions))
     }
 
-    suspend fun verifyAuthentication(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
-        return post(createUrl(ApiRoutes.verifyAuthentication), verifyAuthenticationData)
+    suspend fun registerPasskey(registerPasskey: RegisterPasskey): Result<Unit> {
+        return post(createUrl(ApiRoutes.registerPasskey), registerPasskey)
     }
 
-    suspend fun getRegistrationOptions(): RegistrationOptions {
-        return get(createUrl(ApiRoutes.getRegistrationOptions))
+    suspend fun challenge(identity: Long): AuthenticationOptions {
+        return post(createUrl(ApiRoutes.challenge), mapOf("identity" to identity))
     }
 
-    suspend fun registerCredential(registerCredential: RegisterCredential): Result<Unit> {
-        return post(createUrl(ApiRoutes.registerCredential), registerCredential)
+    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
+        return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
     }
 }
