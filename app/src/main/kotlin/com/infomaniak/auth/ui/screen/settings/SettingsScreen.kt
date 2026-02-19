@@ -36,7 +36,7 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun SettingsScreenWrapper(onThemeClicked: () -> Unit) {
+fun SettingsScreen(onThemeClicked: () -> Unit) {
     val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
     val notificationEnabled = GetSetCallbacks(
@@ -52,7 +52,7 @@ fun SettingsScreenWrapper(onThemeClicked: () -> Unit) {
 }
 
 @Composable
-fun SettingsScreen(
+private fun SettingsScreen(
     notificationEnabled: GetSetCallbacks<Boolean>,
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
