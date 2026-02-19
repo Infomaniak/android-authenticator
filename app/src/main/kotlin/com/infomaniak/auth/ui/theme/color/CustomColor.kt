@@ -23,41 +23,25 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class CustomColorScheme(
     val illustrationBackgroundGradient: Color = Color.Unspecified,
-    val accountSecured: Color = Color.Unspecified,
+    val iconTintSuccess: Color = Color.Unspecified,
     val iconTintWarning: Color = Color.Unspecified,
     val iconTintError: Color = Color.Unspecified,
-    val accountItemBackground: Color = Color.Unspecified,
-    val optionsSectionBackground: Color = Color.Unspecified,
-    val accountDisconnected: Color = Color.Unspecified,
+    val iconTintDisconnected: Color = Color.Unspecified,
+    val sectionBackground: Color = Color.Unspecified,
 )
 
-private val accountSecuredLight = successDim5Light
-private val accountSecuredDark = successDim5Dark
-private val iconTintWarningLight = warningDim5Light
-private val iconTintWarningDark = warningDim5Dark
-private val iconTintErrorLight = errorDim5Light
-private val iconTintErrorDark = errorDim5Dark
-private val accountItemBackgroundLight = neutral100
-private val accountItemBackgroundDark = backgroundSurface
-private val optionsSectionBackgroundLight = neutral100
-private val optionsSectionBackgroundDark = backgroundSurface
-private val accountDisconnectedLight = neutralDim4
-private val accountDisconnectedDark = neutralDim4
-
 val lightCustomScheme = CustomColorScheme(
-    accountSecured = accountSecuredLight,
-    iconTintWarning = iconTintWarningLight,
-    iconTintError = iconTintErrorLight,
-    accountItemBackground = accountItemBackgroundLight,
-    optionsSectionBackground = optionsSectionBackgroundLight,
-    accountDisconnected = accountDisconnectedLight,
+    iconTintSuccess = green40,
+    iconTintWarning = orange40,
+    iconTintError = red40,
+    iconTintDisconnected = neutral30,
+    sectionBackground = neutral100,
 )
 
 val darkCustomScheme = CustomColorScheme(
-    accountSecured = accountSecuredDark,
-    iconTintWarning = iconTintWarningDark,
-    iconTintError = iconTintErrorDark,
-    accountItemBackground = accountItemBackgroundDark,
-    optionsSectionBackground = optionsSectionBackgroundDark,
-    accountDisconnected = accountDisconnectedDark,
+    iconTintSuccess = green80,
+    iconTintWarning = orange80,
+    iconTintError = red20,
+    iconTintDisconnected = neutral80,
+    sectionBackground = neutral15
 )

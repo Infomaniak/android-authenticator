@@ -116,7 +116,6 @@ private fun LargeButtonPreview() {
                             progress = { 0.3f },
                             onClick = {},
                         )
-
                         Spacer(Modifier.width(Margin.Mini))
                         LargeButton(
                             modifier = Modifier.width(250.dp),

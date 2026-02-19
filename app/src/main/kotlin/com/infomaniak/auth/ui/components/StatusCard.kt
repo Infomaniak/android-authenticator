@@ -55,24 +55,20 @@ sealed interface StatusCardVariant {
     data object Warning : StatusCardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
-            primary = AuthenticatorTheme.statusColors.warningHighest,
-            secondary = AuthenticatorTheme.statusColors.warningMedium,
-            onSecondary = AuthenticatorTheme.statusColors.warningHighest,
-            surface = AuthenticatorTheme.statusColors.warningLow,
-            onSurface = AuthenticatorTheme.statusColors.warningHighest,
-            outlineVariant = AuthenticatorTheme.statusColors.warningHigh,
+            primary = AuthenticatorTheme.statusColors.warning,
+            onPrimary = AuthenticatorTheme.statusColors.onWarning,
+            surface = AuthenticatorTheme.customColors.sectionBackground,
+            outlineVariant = AuthenticatorTheme.statusColors.warning,
         )
     }
 
     data object Error : StatusCardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
-            primary = AuthenticatorTheme.statusColors.errorHighest,
-            secondary = AuthenticatorTheme.statusColors.errorMedium,
-            onSecondary = AuthenticatorTheme.statusColors.errorHighest,
-            surface = AuthenticatorTheme.statusColors.errorLow,
-            onSurface = AuthenticatorTheme.statusColors.errorHighest,
-            outlineVariant = AuthenticatorTheme.statusColors.errorHigh,
+            primary = AuthenticatorTheme.statusColors.error,
+            onPrimary = AuthenticatorTheme.statusColors.onError,
+            surface = AuthenticatorTheme.customColors.sectionBackground,
+            outlineVariant = AuthenticatorTheme.statusColors.error,
         )
     }
 
@@ -126,6 +122,7 @@ private fun PreviewContent() {
     Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(R.drawable.triangle_alert),
+            tint = MaterialTheme.colorScheme.primary,
             contentDescription = null,
         )
         Text(
@@ -140,15 +137,6 @@ private fun PreviewContent() {
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         style = ButtonStyle.Primary,
-        title = stringResource(R.string.logInButton),
-        onClick = {}
-    )
-    LargeButton(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium)
-            .padding(bottom = Margin.Medium),
-        style = ButtonStyle.Secondary,
         title = stringResource(R.string.logInButton),
         onClick = {}
     )

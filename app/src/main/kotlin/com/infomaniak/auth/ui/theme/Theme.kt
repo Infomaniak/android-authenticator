@@ -20,9 +20,13 @@ import androidx.core.view.WindowCompat
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.StatusColorScheme
 import com.infomaniak.auth.ui.theme.color.brand10
+import com.infomaniak.auth.ui.theme.color.brand15
 import com.infomaniak.auth.ui.theme.color.brand20
+import com.infomaniak.auth.ui.theme.color.brand25
 import com.infomaniak.auth.ui.theme.color.brand30
+import com.infomaniak.auth.ui.theme.color.brand35
 import com.infomaniak.auth.ui.theme.color.brand40
+import com.infomaniak.auth.ui.theme.color.brand5
 import com.infomaniak.auth.ui.theme.color.brand70
 import com.infomaniak.auth.ui.theme.color.brand80
 import com.infomaniak.auth.ui.theme.color.brand90
@@ -42,53 +46,60 @@ import com.infomaniak.auth.ui.theme.color.neutral24
 import com.infomaniak.auth.ui.theme.color.neutral30
 import com.infomaniak.auth.ui.theme.color.neutral4
 import com.infomaniak.auth.ui.theme.color.neutral5
+import com.infomaniak.auth.ui.theme.color.neutral50
 import com.infomaniak.auth.ui.theme.color.neutral6
 import com.infomaniak.auth.ui.theme.color.neutral60
 import com.infomaniak.auth.ui.theme.color.neutral80
 import com.infomaniak.auth.ui.theme.color.neutral87
 import com.infomaniak.auth.ui.theme.color.neutral90
-import com.infomaniak.auth.ui.theme.color.neutral92
+import com.infomaniak.auth.ui.theme.color.neutral94
 import com.infomaniak.auth.ui.theme.color.neutral95
 import com.infomaniak.auth.ui.theme.color.neutral98
-import com.infomaniak.auth.ui.theme.color.red10
+import com.infomaniak.auth.ui.theme.color.red15
 import com.infomaniak.auth.ui.theme.color.red20
 import com.infomaniak.auth.ui.theme.color.red40
-import com.infomaniak.auth.ui.theme.color.red50
-import com.infomaniak.auth.ui.theme.color.red60
 import com.infomaniak.auth.ui.theme.color.red80
+import com.infomaniak.auth.ui.theme.color.red95
 import com.infomaniak.auth.ui.theme.color.red99
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 
-// Never access it directly outside of the theme setup
+// Never access it directly outside the theme setup
 val lightScheme = lightColorScheme(
     primary = brand30,
     onPrimary = brand99,
     primaryContainer = brand40,
-    onPrimaryContainer = brand90,
+    onPrimaryContainer = brand80,
+    primaryFixed = brand90,
+    onPrimaryFixed = brand10,
+    primaryFixedDim = brand80,
+    onPrimaryFixedVariant = brand30,
     secondary = brand40,
     onSecondary = brand99,
     secondaryContainer = brand70,
-    onSecondaryContainer = brand10,
+    onSecondaryContainer = brand25,
+    secondaryFixed = brand90,
+    onSecondaryFixed = brand5,
+    secondaryFixedDim = brand80,
+    onSecondaryFixedVariant = brand30,
     tertiary = brand40,
     onTertiary = brand99,
     tertiaryContainer = brand70,
-    onTertiaryContainer = brand10,
+    onTertiaryContainer = brand25,
+    tertiaryFixed = brand90,
+    onTertiaryFixed = brand5,
+    tertiaryFixedDim = brand80,
+    onTertiaryFixedVariant = brand30,
     error = red40,
     onError = red99,
-    errorContainer = red50,
-    onErrorContainer = red99,
-    background = neutral98,
-    onBackground = neutral10,
-    surface = neutral92,
+    errorContainer = red80,
+    onErrorContainer = red15,
+    background = neutral94,
+    onBackground = neutral5,
+    surface = neutral95,
     onSurface = neutral4,
     surfaceVariant = neutral87,
     onSurfaceVariant = neutral30,
-    outline = neutral60,
-    outlineVariant = neutral30,
-    scrim = neutral0,
-    inverseSurface = neutral20,
-    inverseOnSurface = neutral90,
-    inversePrimary = brand80,
+    surfaceTint = brand35,
     surfaceDim = neutral90,
     surfaceBright = neutral98,
     surfaceContainerLowest = neutral100,
@@ -96,6 +107,12 @@ val lightScheme = lightColorScheme(
     surfaceContainer = neutral90,
     surfaceContainerHigh = neutral90,
     surfaceContainerHighest = neutral87,
+    scrim = neutral0,
+    outline = neutral50,
+    outlineVariant = neutral87,
+    inverseSurface = neutral20,
+    inverseOnSurface = neutral90,
+    inversePrimary = brand80,
 )
 
 private val darkScheme = darkColorScheme(
@@ -103,30 +120,37 @@ private val darkScheme = darkColorScheme(
     onPrimary = brand20,
     primaryContainer = brand40,
     onPrimaryContainer = brand90,
+    primaryFixed = brand90,
+    onPrimaryFixed = brand10,
+    primaryFixedDim = brand80,
+    onPrimaryFixedVariant = brand30,
     secondary = brand80,
     onSecondary = brand10,
     secondaryContainer = brand70,
     onSecondaryContainer = brand10,
+    secondaryFixed = brand90,
+    onSecondaryFixed = brand5,
+    secondaryFixedDim = brand80,
+    onSecondaryFixedVariant = brand15,
     tertiary = brand80,
     onTertiary = brand10,
     tertiaryContainer = brand70,
     onTertiaryContainer = brand10,
+    tertiaryFixed = brand90,
+    onTertiaryFixed = brand5,
+    tertiaryFixedDim = brand80,
+    onTertiaryFixedVariant = brand15,
     error = red80,
     onError = red20,
-    errorContainer = red60,
-    onErrorContainer = red10,
+    errorContainer = red20,
+    onErrorContainer = red95,
     background = neutral5,
     onBackground = neutral90,
     surface = neutral6,
     onSurface = neutral90,
     surfaceVariant = neutral30,
     onSurfaceVariant = neutral80,
-    outline = neutral60,
-    outlineVariant = neutral30,
-    scrim = neutral0,
-    inverseSurface = neutral90,
-    inverseOnSurface = neutral20,
-    inversePrimary = brand40,
+    surfaceTint = brand80,
     surfaceDim = neutral6,
     surfaceBright = neutral24,
     surfaceContainerLowest = neutral4,
@@ -134,6 +158,12 @@ private val darkScheme = darkColorScheme(
     surfaceContainer = neutral12,
     surfaceContainerHigh = neutral17,
     surfaceContainerHighest = neutral22,
+    scrim = neutral0,
+    outline = neutral60,
+    outlineVariant = neutral30,
+    inverseSurface = neutral90,
+    inverseOnSurface = neutral20,
+    inversePrimary = brand40,
 )
 
 val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }

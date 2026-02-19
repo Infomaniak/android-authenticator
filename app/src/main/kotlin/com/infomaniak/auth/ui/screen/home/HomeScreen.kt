@@ -145,6 +145,7 @@ private fun ActionRequired() {
             Icon(
                 painter = painterResource(R.drawable.alert),
                 contentDescription = null,
+                tint = AuthenticatorTheme.customColors.iconTintWarning
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
@@ -162,7 +163,7 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
             .padding(horizontal = Margin.Medium)
             .clip(RoundedCornerShape(Dimens.largeCornerRadius))
             .clickable(onClick = { onClick(account) }),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.accountItemBackground),
+        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
     ) {
         Row(
             modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
@@ -195,7 +196,7 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
 }
 
 enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
-    Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.accountSecured }),
+    Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }),
     Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
 }
