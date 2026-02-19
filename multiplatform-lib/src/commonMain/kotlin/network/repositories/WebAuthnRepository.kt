@@ -82,4 +82,16 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
             )
         )
     }
+
+    // Generate WebAuthn registration options (authentified)
+    suspend fun getRegistrationOptions(): PasskeysOptions {
+        //TODO where to get the bearer ?
+        return authenticatorRequest.getPasskeysOptions()
+    }
+
+    // Validate WebAuthn registration and save public key (authentified)
+    suspend fun registerCredential(registerPasskey: RegisterPasskey): Result<Unit> {
+        //TODO where to get the bearer ?
+        return authenticatorRequest.registerPasskey(registerPasskey)
+    }
 }
