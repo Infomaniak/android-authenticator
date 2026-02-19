@@ -35,16 +35,16 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun ThemeScreenWrapper(onBackPressed: () -> Unit) {
+fun ThemeSettingsScreenWrapper(onBackPressed: () -> Unit) {
     val themeViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by themeViewModel.uiState.collectAsStateWithLifecycle()
     val theme = GetSetCallbacks(get = { uiState.theme }, set = { it?.let { themeViewModel.setTheme(it) } })
 
-    ThemeScreen(theme, onBackPressed)
+    ThemeSettingsScreen(theme, onBackPressed)
 }
 
 @Composable
-fun ThemeScreen(
+fun ThemeSettingsScreen(
     theme: GetSetCallbacks<Theme?>,
     onBackPressed: () -> Unit,
 ) {
@@ -90,9 +90,9 @@ fun ThemeScreen(
 
 @PreviewSmallWindow
 @Composable
-fun ThemeScreenPreview() {
+fun ThemeSettingsScreenPreview() {
     AuthenticatorTheme {
-        ThemeScreen(
+        ThemeSettingsScreen(
             theme = GetSetCallbacks(get = { Theme.Light }, set = {}),
             onBackPressed = {},
         )
