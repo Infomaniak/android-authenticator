@@ -208,7 +208,7 @@ private fun ContactSupportButton() {
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.contactSupportTitle),
-        style = ButtonStyle.Secondary,
+        style = ButtonStyle.Primary,
         onClick = {}
     )
 }
@@ -221,7 +221,7 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
             .padding(horizontal = Margin.Medium)
             .padding(bottom = Margin.Medium),
         title = stringResource(R.string.logInButton),
-        style = if (hasLoggedInWithError) ButtonStyle.Tertiary else ButtonStyle.Secondary,
+        style = if (hasLoggedInWithError) ButtonStyle.Tertiary else ButtonStyle.Primary,
         onClick = {
             // TODO An error appear if we already tried to log in on figma so for now, we're doing like this
             logIn()
@@ -267,16 +267,19 @@ private enum class AccountStatus(
     Secured(
         titleResId = R.string.accountProtected,
         iconResId = R.drawable.shield_check,
-        iconTint = { AuthenticatorTheme.customColors.accountSecured }),
+        iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }
+    ),
     PartiallyProtected(
         titleResId = R.string.accountPartiallyProtectedTitle,
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
-        iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
+        iconTint = { AuthenticatorTheme.customColors.iconTintWarning }
+    ),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
         iconResId = R.drawable.circle_cross,
-        iconTint = { AuthenticatorTheme.customColors.accountDisconnected });
+        iconTint = { AuthenticatorTheme.customColors.iconTintDisconnected }
+    );
 
     companion object {
 

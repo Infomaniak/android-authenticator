@@ -68,7 +68,7 @@ fun OptionsSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Margin.Medium),
-                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.optionsSectionBackground),
+                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
                     shape = RoundedCornerShape(24.dp),
                 ) {
                     Column {

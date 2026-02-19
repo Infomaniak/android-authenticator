@@ -22,37 +22,37 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class StatusColorScheme(
-    val warningLow: Color = Color.Unspecified,
-    val warningMedium: Color = Color.Unspecified,
-    val warningHigh: Color = Color.Unspecified,
-    val warningHighest: Color = Color.Unspecified,
+    val warning: Color = Color.Unspecified,
+    val onWarning: Color = Color.Unspecified,
+    val warningContainer: Color = Color.Unspecified,
+    val onWarningContainer: Color = Color.Unspecified,
 
-    val errorLow: Color = Color.Unspecified,
-    val errorMedium: Color = Color.Unspecified,
-    val errorHigh: Color = Color.Unspecified,
-    val errorHighest: Color = Color.Unspecified,
+    val error: Color = Color.Unspecified,
+    val onError: Color = Color.Unspecified,
+    val errorContainer: Color = Color.Unspecified,
+    val onErrorContainer: Color = Color.Unspecified,
 )
 
 val lightStatusColorScheme = StatusColorScheme(
-    warningLow = warningDim1Light,
-    warningMedium = warningDim3Light,
-    warningHigh = warningDim5Light,
-    warningHighest = warningDim6Light,
+    warning = orange40,
+    onWarning = orange99,
+    warningContainer = orange80,
+    onWarningContainer = orange15,
 
-    errorLow = errorDim1Light,
-    errorMedium = errorDim3Light,
-    errorHigh = errorDim5Light,
-    errorHighest = errorDim6Light,
+    error = red40,
+    onError = red99,
+    errorContainer = red80,
+    onErrorContainer = red15,
 )
 
 val darkStatusColorScheme = StatusColorScheme(
-    warningLow = warningDim1Dark,
-    warningMedium = warningDim3Dark,
-    warningHigh = warningDim5Dark,
-    warningHighest = warningDim6Dark,
+    warning = orange80,
+    onWarning = orange20,
+    warningContainer = orange20,
+    onWarningContainer = orange95,
 
-    errorLow = errorDim1Dark,
-    errorMedium = errorDim3Dark,
-    errorHigh = errorDim5Dark,
-    errorHighest = errorDim6Dark,
+    error = red80,
+    onError = red20,
+    errorContainer = red20,
+    onErrorContainer = red95,
 )
