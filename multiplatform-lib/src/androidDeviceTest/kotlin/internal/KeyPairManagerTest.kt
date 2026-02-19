@@ -18,9 +18,11 @@
 package internal
 
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.Xor
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.fail
 
 class KeyPairManagerTest {
 
@@ -29,10 +31,14 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
-            val keyPair = keyPairManager.generateNewKey()
-            assertNotNull(keyPair)
+            val error = keyPairManager.generateNewKey()
+            assertNull(error)
+
             val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
+            when (publicKey) {
+                is Xor.First -> Unit // OK
+                is Xor.Second -> fail("Couldn't generate the key")
+            }
         }
     }
 }
