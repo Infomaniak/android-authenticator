@@ -39,6 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -161,6 +162,7 @@ private fun OptionContent(optionItemType: OptionItemType) {
     }
 }
 
+@Immutable
 sealed interface OptionItemType {
     val stringResId: Int
     val textColor: Color get() = Color.Unspecified
