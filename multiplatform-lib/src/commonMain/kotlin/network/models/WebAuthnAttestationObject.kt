@@ -32,7 +32,7 @@ data class WebAuthnAttestationObject(
 )
 
 private object ByteArrayAsByteListSerializer : KSerializer<ByteArray> {
-    private val delegate = ByteArraySerializer() // appelle la fonction pour obtenir le serializer
+    private val delegate = ByteArraySerializer()
 
     override val descriptor: SerialDescriptor = delegate.descriptor
 

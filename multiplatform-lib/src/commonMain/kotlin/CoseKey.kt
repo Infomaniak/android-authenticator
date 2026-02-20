@@ -38,17 +38,11 @@ data class CoseKey(
 )
 
 object ByteArrayAsByteListSerializer : KSerializer<ByteArray> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("ByteArrayAsByteList", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayAsByteList", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ByteArray) {
-        // On encode le ByteArray comme une string Base64 URL-safe
-        val base64 = Base64.UrlSafe.encode(value)
-        encoder.encodeString(base64)
+        encoder.encodeString(Base64.UrlSafe.encode(value))
     }
 
-    override fun deserialize(decoder: Decoder): ByteArray {
-        val base64 = decoder.decodeString()
-        return Base64.UrlSafe.decode(base64)
-    }
+    override fun deserialize(decoder: Decoder) = Base64.UrlSafe.decode(decoder.decodeString())
 }
