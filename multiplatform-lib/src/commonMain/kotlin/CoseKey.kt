@@ -31,14 +31,14 @@ data class CoseKey(
     val kty: Int,
     val alg: Int,
     val crv: Int,
-    @Serializable(with = ByteArrayAsByteListSerializer::class)
+    @Serializable(with = ByteArrayAsByteListBase64Serializer::class)
     val x: ByteArray,
-    @Serializable(with = ByteArrayAsByteListSerializer::class)
+    @Serializable(with = ByteArrayAsByteListBase64Serializer::class)
     val y: ByteArray,
 )
 
-object ByteArrayAsByteListSerializer : KSerializer<ByteArray> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayAsByteList", PrimitiveKind.STRING)
+object ByteArrayAsByteListBase64Serializer : KSerializer<ByteArray> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayAsByteListBase64", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ByteArray) {
         encoder.encodeString(Base64.UrlSafe.encode(value))
