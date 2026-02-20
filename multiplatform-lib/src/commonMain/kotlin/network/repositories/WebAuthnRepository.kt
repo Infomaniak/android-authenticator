@@ -56,12 +56,12 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
     }
 
     // Authentification challenge (not authentified)
-    suspend fun getAuthenticationOptions(identity: Long): AuthenticationOptions {
+    suspend fun challenge(identity: Long): AuthenticationOptions {
         return authenticatorRequest.challenge(identity)
     }
 
     // Authentification verification (not authentified)
-    suspend fun verifyAuthentication(
+    suspend fun verify(
         identity: Long,
         id: String,
         rawId: String,
