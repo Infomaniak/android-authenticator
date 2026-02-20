@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.skie)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.ksp)
+    alias(core.plugins.kotlin.serialization)
     kotlin("plugin.parcelize")
 }
 
@@ -52,11 +53,13 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(core.kotlinx.coroutines.core)
+                implementation(core.kotlinx.serialization.core)
                 implementation(core.kotlinx.serialization.cbor)
                 implementation(core.ktor.client.core)
                 implementation(core.ktor.client.content.negociation)
                 implementation(core.ktor.client.json)
                 implementation(core.ktor.client.encoding)
+                implementation(core.okio)
             }
         }
         commonTest {
