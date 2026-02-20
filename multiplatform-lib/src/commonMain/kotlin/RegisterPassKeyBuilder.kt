@@ -112,17 +112,4 @@ class RegisterPasskeyBuilder(
 
         return Cbor.encodeToByteArray(attestationObject)
     }
-
-    companion object {
-
-        fun ByteArray.padTo32Bytes(): ByteArray {
-            return if (this.size == 32) {
-                this
-            } else if (this.size > 32) {
-                this.copyOfRange(this.size - 32, this.size)
-            } else {
-                ByteArray(32 - this.size) { 0x00 } + this
-            }
-        }
-    }
 }

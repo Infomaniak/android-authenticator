@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.RegisterPasskeyBuilder.Companion.padTo32Bytes
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.encodeToByteArray
@@ -48,5 +47,15 @@ actual object PublicKeyUtils {
         val keySpec = X509EncodedKeySpec(bytes)
         val keyFactory = KeyFactory.getInstance("EC")
         return keyFactory.generatePublic(keySpec)
+    }
+
+    private fun ByteArray.padTo32Bytes(): ByteArray {
+        return if (this.size == 32) {
+            this
+        } else if (this.size > 32) {
+            this.copyOfRange(this.size - 32, this.size)
+        } else {
+            ByteArray(32 - this.size) { 0x00 } + this
+        }
     }
 }
