@@ -35,7 +35,31 @@ data class CoseKey(
     val x: ByteArray,
     @Serializable(with = ByteArrayAsByteListBase64Serializer::class)
     val y: ByteArray,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as CoseKey
+
+        if (kty != other.kty) return false
+        if (alg != other.alg) return false
+        if (crv != other.crv) return false
+        if (!x.contentEquals(other.x)) return false
+        if (!y.contentEquals(other.y)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = kty
+        result = 31 * result + alg
+        result = 31 * result + crv
+        result = 31 * result + x.contentHashCode()
+        result = 31 * result + y.contentHashCode()
+        return result
+    }
+}
 
 object ByteArrayAsByteListBase64Serializer : KSerializer<ByteArray> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayAsByteListBase64", PrimitiveKind.STRING)

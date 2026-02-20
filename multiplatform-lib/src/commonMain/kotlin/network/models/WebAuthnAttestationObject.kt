@@ -29,7 +29,25 @@ data class WebAuthnAttestationObject(
     val fmt: String,
     @Serializable(with = ByteArrayAsByteListSerializer::class)
     val authData: ByteArray,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as WebAuthnAttestationObject
+
+        if (fmt != other.fmt) return false
+        if (!authData.contentEquals(other.authData)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = fmt.hashCode()
+        result = 31 * result + authData.contentHashCode()
+        return result
+    }
+}
 
 private object ByteArrayAsByteListSerializer : KSerializer<ByteArray> {
     private val delegate = ByteArraySerializer()
