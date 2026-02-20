@@ -5,10 +5,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(core.plugins.android.kmp.library)
+    alias(core.plugins.kotlin.serialization)
     alias(libs.plugins.skie)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.ksp)
-    alias(core.plugins.kotlin.serialization)
     kotlin("plugin.parcelize")
 }
 
