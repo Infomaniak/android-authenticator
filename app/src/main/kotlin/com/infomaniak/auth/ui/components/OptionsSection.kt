@@ -51,13 +51,15 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun OptionsSection(
-    vararg sections: List<OptionItemType>,
+    sections: ImmutableList<ImmutableList<OptionItemType>>,
     modifier: Modifier = Modifier,
 ) {
-    OptionsSectionContainer(modifier, *sections) { optionItems ->
+    OptionsSectionContainer(modifier, sections) { optionItems ->
         optionItems.forEachIndexed { index, optionItemType ->
             OptionItem(optionItemType = optionItemType)
 
@@ -73,7 +75,7 @@ fun OptionsSection(
 @Composable
 private fun OptionsSectionContainer(
     modifier: Modifier = Modifier,
-    vararg sections: List<OptionItemType>,
+    sections: ImmutableList<ImmutableList<OptionItemType>>,
     content: @Composable (optionItem: List<OptionItemType>) -> Unit,
 ) {
     Column(
@@ -193,7 +195,7 @@ sealed interface OptionItemType {
 @PreviewSmallWindow
 @Composable
 fun OptionsSectionPreview() {
-    val firstSectionItems = listOf(
+    val firstSectionItems = persistentListOf(
         OptionItemType.WithCheckBox(
             stringResId = R.string.appCompleteName,
             isChecked = false,
@@ -213,12 +215,17 @@ fun OptionsSectionPreview() {
     )
 
     val secondSectionItems =
-        listOf(OptionItemType.WithCheckBox(stringResId = R.string.appCompleteName, isChecked = false, onCheckedChange = {}))
+        persistentListOf(
+            OptionItemType.WithCheckBox(
+                stringResId = R.string.appCompleteName,
+                isChecked = false,
+                onCheckedChange = {})
+        )
 
     AuthenticatorTheme {
         Column(modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface)) {
             OptionsSection(
-                firstSectionItems, secondSectionItems,
+                sections = persistentListOf(firstSectionItems, secondSectionItems),
                 modifier = Modifier.padding(PaddingValues(Margin.Small)),
             )
         }
