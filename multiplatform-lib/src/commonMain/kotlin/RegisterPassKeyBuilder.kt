@@ -24,6 +24,7 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.RegisterPasskeyResponse
 import com.infomaniak.auth.lib.network.models.WebAuthnAttestationObject
 import com.infomaniak.auth.lib.network.models.WebAuthnClientData
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
@@ -33,7 +34,7 @@ import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 class RegisterPasskeyBuilder(
     private val passkeysOptions: PasskeysOptions,
     private val publicKey: ByteArray,
