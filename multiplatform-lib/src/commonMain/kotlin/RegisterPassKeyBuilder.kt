@@ -63,7 +63,7 @@ class RegisterPasskeyBuilder(
         val clientData = WebAuthnClientData(
             type = "webauthn.create",
             challenge = passkeysOptions.challenge,
-            origin = "infomaniak.com",
+            origin = passkeysOptions.relyingParty.id,
             crossOrigin = false,
         )
 
