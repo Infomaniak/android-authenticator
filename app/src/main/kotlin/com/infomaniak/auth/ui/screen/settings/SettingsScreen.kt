@@ -34,6 +34,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SettingsScreen(onThemeClicked: () -> Unit) {
@@ -57,7 +58,7 @@ private fun SettingsScreen(
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
 ) {
-    val firstSectionItems = listOf(
+    val firstSectionItems = persistentListOf(
         OptionItemType.WithCheckBox(
             stringResId = R.string.notificationsTitle,
             isChecked = notificationEnabled.get(),
@@ -75,7 +76,7 @@ private fun SettingsScreen(
         ),
     )
 
-    val secondSectionItems = listOf(
+    val secondSectionItems = persistentListOf(
         OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
             rightIconResId = R.drawable.right_indicator,
@@ -99,7 +100,7 @@ private fun SettingsScreen(
         },
     ) { paddingValues ->
         OptionsSection(
-            firstSectionItems, secondSectionItems,
+            sections = persistentListOf(firstSectionItems, secondSectionItems),
             modifier = Modifier.padding(paddingValues),
         )
     }

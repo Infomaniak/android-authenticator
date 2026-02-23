@@ -33,6 +33,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ThemeSettingsScreen(onBackPressed: () -> Unit) {
@@ -59,7 +60,7 @@ private fun ThemeSettingsScreen(
             )
         },
     ) { paddingValues ->
-        val section = listOf(
+        val section = persistentListOf(
             OptionItemType.WithSelection(
                 leftIconResId = R.drawable.ic_theme_light,
                 stringResId = R.string.themeLight,
@@ -81,7 +82,7 @@ private fun ThemeSettingsScreen(
         )
 
         OptionsSection(
-            section,
+            sections = persistentListOf(section),
             modifier = Modifier
                 .padding(paddingValues),
         )
