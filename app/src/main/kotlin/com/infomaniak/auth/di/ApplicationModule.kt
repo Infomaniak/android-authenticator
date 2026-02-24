@@ -15,19 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.manager
+package com.infomaniak.auth.di
 
 import android.content.Context
-import com.infomaniak.auth.MainApplication
-import com.infomaniak.core.auth.UserAccountUtils
+import com.infomaniak.auth.BuildConfig
+import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
+import com.infomaniak.lib.login.InfomaniakLogin
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.firstOrNull
-import javax.inject.Inject
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Singleton
-class AccountUtils @Inject constructor(
-    @ApplicationContext context: Context,
-) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
-    suspend fun isUserConnected(): Boolean = users.firstOrNull()?.isNotEmpty() ?: false
+@Module
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
+    @Provides
+    @Singleton
+    fun providesInfomaniakLogin(@ApplicationContext appContext: Context): InfomaniakLogin {
+        return InfomaniakLogin(
+            context = appContext,
+            loginUrl = "${LOGIN_ENDPOINT_URL}/",
+            appUID = BuildConfig.APPLICATION_ID,
+            clientID = BuildConfig.CLIENT_ID,
+            accessType = null,
+        )
+    }
 }

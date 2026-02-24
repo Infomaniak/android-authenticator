@@ -6,7 +6,7 @@
 
     <application
         android:name=".MainApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -27,8 +27,19 @@
             android:name="io.sentry.dsn"
             android:value="https://adacdde66d0ca8cca50da9d92847d49f@sentry-mobile.infomaniak.com/23" />
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.screen.main.MainActivity"
             android:configChanges="colorMode|density|fontScale|fontWeightAdjustment|grammaticalGender|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
             android:exported="true"
             android:launchMode="singleTop">
@@ -38,8 +49,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+        <activity
+            android:name="com.infomaniak.lib.login.WebViewLoginActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/LoginWebViewTheme" />
 
         <!-- The CrossAppLoginService is designed to be bound, and checks the identity of its clients. -->
         <service

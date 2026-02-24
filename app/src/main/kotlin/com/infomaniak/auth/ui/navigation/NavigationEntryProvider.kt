@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -29,7 +30,7 @@ import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
 import com.infomaniak.auth.ui.screen.settings.theme.ThemeSettingsScreen
 
-fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
+fun baseEntryProvider(backStack: NavBackStack<NavKey>, snackbarHostState: SnackbarHostState): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Root.Home> {
         HomeScreen(
             onAccountClicked = {
@@ -61,7 +62,8 @@ fun baseEntryProvider(backStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<Nav
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(
-            onLogin = { backStack.add(NavDestination.SecuringAccount) },
+            snackbarHostState = snackbarHostState,
+            onLoginFinished = { backStack.add(NavDestination.SecuringAccount) },
             onCreateAccount = {}
         )
     }

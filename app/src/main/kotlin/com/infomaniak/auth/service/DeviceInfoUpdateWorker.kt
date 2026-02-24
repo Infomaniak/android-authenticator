@@ -30,9 +30,9 @@ import okhttp3.OkHttpClient
 class DeviceInfoUpdateWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
-    private val accountsUtils: AccountUtils
+    private val accountUtils: AccountUtils
 ) : AbstractDeviceInfoUpdateWorker(appContext, params) {
     override suspend fun getConnectedHttpClient(userId: Int): OkHttpClient {
-        return accountsUtils.getHttpClient(userId = userId)
+        return accountUtils.getHttpClient(userId = userId)
     }
 }
