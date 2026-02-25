@@ -26,6 +26,8 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.network.models.VerifyResponse
+import kotlinx.serialization.json.Json
+import network.requests.ApiResponse
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import network.requests.AuthenticatorRequest

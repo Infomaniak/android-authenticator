@@ -17,48 +17,61 @@
  */
 package com.infomaniak.auth.lib.network.models
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ByteArraySerializer
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
+import okio.Buffer
+import okio.ByteString
 
 @Serializable
 data class WebAuthnAttestationObject(
     val fmt: String,
-    @Serializable(with = ByteArrayAsByteListSerializer::class)
+    val attStmt: Unit,
     val authData: ByteArray,
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
+    companion object {
 
-        other as WebAuthnAttestationObject
+        fun toCborByteArray(fmt: String, authData: ByteArray): ByteString {
+            val buffer = Buffer()
 
-        if (fmt != other.fmt) return false
-        if (!authData.contentEquals(other.authData)) return false
+            // Map start
+            buffer.writeByte(0xA2) // 2 items
 
-        return true
-    }
+            // "fmt": "none"
+            writeText(buffer, "fmt")
+            writeText(buffer, fmt)
 
-    override fun hashCode(): Int {
-        var result = fmt.hashCode()
-        result = 31 * result + authData.contentHashCode()
-        return result
-    }
-}
+            // "authData": <bytes>
+            writeText(buffer, "authData")
+            writeByteString(buffer, authData)
 
-private object ByteArrayAsByteListSerializer : KSerializer<ByteArray> {
-    private val delegate = ByteArraySerializer()
+            return buffer.readByteString()
+        }
 
-    override val descriptor: SerialDescriptor = delegate.descriptor
+        private fun writeText(buffer: Buffer, text: String) {
+            val bytes = text.encodeToByteArray()
+            buffer.writeByte(0x60 + bytes.size) // 0x60 = text string base
+            buffer.write(bytes)
+        }
 
-    override fun serialize(encoder: Encoder, value: ByteArray) {
-        delegate.serialize(encoder, value)
-    }
-
-    override fun deserialize(decoder: Decoder): ByteArray {
-        return delegate.deserialize(decoder)
+        private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
+            when {
+                bytes.size <= 23 -> {
+                    buffer.writeByte(0x40 + bytes.size) // 0x40 = byte string base
+                }
+                bytes.size <= 255 -> {
+                    buffer.writeByte(0x58) // byte string, 1-byte length follows
+                    buffer.writeByte(bytes.size)
+                }
+                bytes.size <= 65535 -> {
+                    buffer.writeByte(0x59) // byte string, 2-byte length follows
+                    buffer.writeByte(bytes.size shr 8)
+                    buffer.writeByte(bytes.size and 0xFF)
+                }
+                else -> {
+                    buffer.writeByte(0x5A) // byte string, 4-byte length follows
+                    buffer.writeInt(bytes.size)
+                }
+            }
+            buffer.write(bytes)
+        }
     }
 }

@@ -17,18 +17,30 @@
  */
 package com.infomaniak.auth.lib.network.models
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.cbor.ByteString
 
 @Serializable
-data class RegisterPasskey(
-    val session: String,
-    val device: String,
-    val id: String,
-    val rawId: String,
-    @SerialName("response")
-    val registerPasskeyResponse: RegisterPasskeyResponse,
+data class AuthenticatorData(
     val type: String,
-    val clientExtensionResults: ClientExtensionResults,
-    val authenticatorAttachment: String,
-)
+    @ByteString
+    val data: ByteArray,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as AuthenticatorData
+
+        if (type != other.type) return false
+        if (!data.contentEquals(other.data)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = type.hashCode()
+        result = 31 * result + data.contentHashCode()
+        return result
+    }
+}

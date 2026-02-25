@@ -24,9 +24,9 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.RegisterPasskeyResponse
 import com.infomaniak.auth.lib.network.models.WebAuthnAttestationObject
 import com.infomaniak.auth.lib.network.models.WebAuthnClientData
+import kotlinx.io.Buffer
+import kotlinx.io.readByteArray
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.cbor.Cbor
-import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.encodeUtf8
 import kotlin.io.encoding.Base64
@@ -42,48 +42,44 @@ class RegisterPasskeyBuilder(
 
     fun build(): RegisterPasskey {
         val publicKeyCose = getPublicKeyCose(publicKey)
-        val randomInt = Random(passkeysOptions.challenge.hashCode().toLong())
-        val stringId = "$randomInt${passkeysOptions.user}${passkeysOptions.relyingParty}"
-        val rawId = stringId.encodeToByteArray()
-        val id = Base64.encode(rawId)
+        val rawId = Random.nextBytes(16)
+        val id = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId)
 
-        // AttestationObject
-        val attestationObject = generateAttestationObject(
+        val authenticatorData = generateAuthenticatorData(
             rpId = passkeysOptions.relyingParty.id,
             credentialId = rawId,
             publicKeyCose = publicKeyCose,
         )
-
-        // AuthenticatorData
-        // Using rawId for credentialId because it has to be something unique
-        val authenticatorData = generateAuthData(
-            rpId = passkeysOptions.relyingParty.id,
-            credentialId = rawId,
-            publicKeyCose = publicKeyCose
-        )
         val clientData = WebAuthnClientData(
             type = "webauthn.create",
             challenge = passkeysOptions.challenge,
-            origin = passkeysOptions.relyingParty.id,
+            origin = "https://infomaniak.ch",
             crossOrigin = false,
         )
 
+        // AttestationObject
+        val attestationObject = WebAuthnAttestationObject.toCborByteArray(
+            fmt = "none",
+            authData = authenticatorData
+        )
         val response = RegisterPasskeyResponse(
-            attestationObject = Base64.encode(Cbor.encodeToByteArray(attestationObject)),
-            clientDataJSON = Base64.encode(Json.encodeToString(clientData).encodeToByteArray()),
+            attestationObject = attestationObject.base64Url().trimEnd('='),
+            clientDataJSON = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+                .encode(Json.encodeToString(clientData).encodeToByteArray()),
             transports = listOf("internal"),
             publicKeyAlgorithm = -7,
-            publicKey = Base64.UrlSafe.encode(publicKey),
-            authenticatorData = Base64.encode(authenticatorData),
+            publicKey = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(publicKey),
+            authenticatorData = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(authenticatorData),
         )
         val type = "public-key"
         val clientExtensionResult = ClientExtensionResults
         val authenticatorAttachment = "platform"
 
         return RegisterPasskey(
-            device = Uuid.random().toHexDashString(),
+            session = passkeysOptions.session,
+            device = "c812eb96-4757-4565-8b2d-850604458607", //TODO get this device UUID from /devices (DeviceInfoUpdateWorker)
             id = id,
-            rawId = Base64.encode(rawId),
+            rawId = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId),
             registerPasskeyResponse = response,
             type = type,
             clientExtensionResults = clientExtensionResult,
@@ -91,26 +87,22 @@ class RegisterPasskeyBuilder(
         )
     }
 
-    private fun generateAuthData(rpId: String, credentialId: ByteArray, publicKeyCose: ByteArray): ByteArray {
+    private fun generateAuthenticatorData(rpId: String, credentialId: ByteArray, publicKeyCose: ByteArray): ByteArray {
         val rpIdHash = rpId.encodeUtf8().sha256().toByteArray()
         val flags: Byte = 0x41
         val signCount = byteArrayOf(0x00, 0x00, 0x00, 0x00)
 
-        // attestedCredentialData = AAGUID (16 bytes) + credentialId length + credentialId + publicKeyCose
-        val aaguid = ByteArray(16) { 0x00 }
+        val aaguid = Uuid.random().toByteArray() //TODO Might need to do this only once to have something unique for the App
         val credentialIdLength = byteArrayOf((credentialId.size shr 8).toByte(), (credentialId.size and 0xFF).toByte())
 
-        return rpIdHash + flags + signCount + aaguid + credentialIdLength + credentialId + publicKeyCose
-    }
-
-    private fun generateAttestationObject(rpId: String, credentialId: ByteArray, publicKeyCose: ByteArray): ByteArray {
-        val authData = generateAuthData(rpId, credentialId, publicKeyCose)
-
-        val attestationObject = WebAuthnAttestationObject(
-            fmt = "none",
-            authData = authData
-        )
-
-        return Cbor.encodeToByteArray(attestationObject)
+        val buffer = Buffer()
+        buffer.write(rpIdHash)
+        buffer.writeByte(flags)
+        buffer.write(signCount)
+        buffer.write(aaguid)
+        buffer.write(credentialIdLength)
+        buffer.write(credentialId)
+        buffer.write(publicKeyCose)
+        return buffer.readByteArray()
     }
 }

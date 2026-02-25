@@ -17,9 +17,7 @@
  */
 package com.infomaniak.auth.lib
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.cbor.Cbor
-import kotlinx.serialization.encodeToByteArray
+import okio.Buffer
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.interfaces.ECPublicKey
@@ -27,20 +25,44 @@ import java.security.spec.X509EncodedKeySpec
 
 actual object PublicKeyUtils {
 
-    @OptIn(ExperimentalSerializationApi::class)
     actual fun getPublicKeyCose(publicKeyByteArray: ByteArray): ByteArray {
         val publicKey = getPublicKeyFromByteArray(publicKeyByteArray) as ECPublicKey
         val w = publicKey.w
         val x = w.affineX.toByteArray().padTo32Bytes()
         val y = w.affineY.toByteArray().padTo32Bytes()
-        val coseKey = CoseKey(
-            kty = 2, // kty: EC2
-            alg = -7,// alg: ES256
-            crv = -1,// crv: P-2
-            x = x,   // x coord
-            y = y    // y coord
-        )
-        return Cbor.encodeToByteArray(coseKey)
+        val buffer = Buffer()
+
+        // Map with 5 elements
+        buffer.writeByte(0xA5)
+
+        // 1 (kty) -> 2 (EC2)
+        buffer.writeByte(0x01)  // unsigned int 1
+        buffer.writeByte(0x02)  // unsigned int 2
+
+        // 3 (alg) -> -7 (ES256)
+        buffer.writeByte(0x03)  // unsigned int 3
+        buffer.writeByte(0x26)  // negative int -7 (0x26 = -1 - 6)
+
+        // -1 (crv) -> 1 (P-256)
+        buffer.writeByte(0x20)  // negative int -1 (0x20 = -1 - 0)
+        buffer.writeByte(0x01)  // unsigned int 1
+
+        // -2 (x) -> ByteString(32)
+        buffer.writeByte(0x21)  // negative int -2 (0x21 = -1 - 1)
+        writeByteString(buffer, x)
+
+        // -3 (y) -> ByteString(32)
+        buffer.writeByte(0x22)  // negative int -3 (0x22 = -1 - 2)
+        writeByteString(buffer, y)
+
+        return buffer.readByteArray()
+    }
+
+    private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
+        // Byte string de 32 bytes (0x58 0x20)
+        buffer.writeByte(0x58)  // byte string, 1-byte length
+        buffer.writeByte(bytes.size)
+        buffer.write(bytes)
     }
 
     private fun getPublicKeyFromByteArray(bytes: ByteArray): PublicKey {

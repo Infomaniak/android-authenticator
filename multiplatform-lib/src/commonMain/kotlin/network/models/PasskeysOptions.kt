@@ -22,6 +22,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PasskeysOptions(
+    val session: String,
     val challenge: String,
     @SerialName("rp")
     val relyingParty: RelyingParty,
