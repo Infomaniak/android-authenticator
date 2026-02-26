@@ -19,17 +19,19 @@ package com.infomaniak.auth.lib.network.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import network.models.ClientExtensionResults
-import network.models.RegisterPasskeyResponse
 
 @Serializable
-data class RegisterPasskey(
-    val device: String,
-    val id: String,
-    val rawId: String,
-    @SerialName("response")
-    val registerPasskeyResponse: RegisterPasskeyResponse,
-    val type: String,
-    val clientExtensionResults: ClientExtensionResults,
-    val authenticatorAttachment: String,
-)
+enum class ApiResponseStatus {
+
+    @SerialName("error")
+    ERROR,
+
+    @SerialName("success")
+    SUCCESS,
+
+    @SerialName("asynchronous")
+    ASYNCHRONOUS,
+
+    @SerialName("unknown")
+    UNKNOWN;
+}

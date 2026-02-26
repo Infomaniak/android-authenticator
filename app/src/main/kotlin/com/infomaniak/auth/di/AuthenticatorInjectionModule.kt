@@ -36,7 +36,7 @@ object AuthenticatorInjectionModule {
     @Singleton
     fun provideAuthenticatorInjection(@UserAgent userAgent: String): AuthenticatorInjection {
         return AuthenticatorInjection(
-            environment = ApiEnvironment.Staging,
+            environment = ApiEnvironment.Prod,
             userAgent = userAgent,
             crashReport = object : CrashReportInterface {
                 override fun addBreadcrumb(

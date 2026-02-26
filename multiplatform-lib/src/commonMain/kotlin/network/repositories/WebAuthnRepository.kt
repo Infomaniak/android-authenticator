@@ -18,13 +18,14 @@
 package network.repositories
 
 import com.infomaniak.auth.lib.network.ApiClientProvider
+import com.infomaniak.auth.lib.network.models.ApiResponse
+import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import network.models.AuthResult
 import network.models.AuthenticationOptions
 import network.models.ClientExtensionResults
 import network.models.PasskeysOptions
-import network.models.RegisterPasskey
 import network.models.VerifyAuthenticationData
 import network.models.VerifyResponse
 import network.requests.AuthenticatorRequest
@@ -71,13 +72,13 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
     }
 
     // Generate WebAuthn registration options (authentified)
-    suspend fun getRegistrationOptions(): PasskeysOptions {
+    suspend fun getPasskeysOptions(): ApiResponse<PasskeysOptions> {
         //TODO where to get the bearer ?
         return authenticatorRequest.getPasskeysOptions()
     }
 
     // Validate WebAuthn registration and save public key (authentified)
-    suspend fun registerCredential(registerPasskey: RegisterPasskey): Result<Unit> {
+    suspend fun registerPasskey(registerPasskey: RegisterPasskey): Result<Unit> {
         //TODO where to get the bearer ?
         return authenticatorRequest.registerPasskey(registerPasskey)
     }

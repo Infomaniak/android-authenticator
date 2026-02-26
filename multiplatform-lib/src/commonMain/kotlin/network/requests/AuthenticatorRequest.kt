@@ -17,12 +17,13 @@
  */
 package network.requests
 
+import com.infomaniak.auth.lib.network.models.ApiResponse
+import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import network.models.AuthResult
 import network.models.AuthenticationOptions
 import network.models.PasskeysOptions
-import network.models.RegisterPasskey
 import network.models.VerifyAuthenticationData
 import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
@@ -33,7 +34,7 @@ internal class AuthenticatorRequest(
     httpClient: HttpClient,
 ) : BaseRequest(environment, json, httpClient) {
 
-    suspend fun getPasskeysOptions(): PasskeysOptions {
+    suspend fun getPasskeysOptions(): ApiResponse<PasskeysOptions> {
         return get(createUrl(ApiRoutes.getPasskeysOptions))
     }
 
