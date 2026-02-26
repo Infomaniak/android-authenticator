@@ -72,7 +72,6 @@ fun OnboardingStartScreen(
     val scope = rememberCoroutineScope()
     val hostActivity = LocalActivity.current as ComponentActivity
 
-
     val loginFlowController = LoginUtils.rememberLoginFlowController(
         infomaniakLogin = onboardingStartViewModel.infomaniakLogin,
         userExistenceChecker = onboardingStartViewModel.accountUtils,
