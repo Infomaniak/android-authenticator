@@ -18,7 +18,7 @@
 package com.infomaniak.auth.lib.managers
 
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
-import network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
 
 class WebAuthnManager(private val webAuthnRepository: WebAuthnRepository) {
 

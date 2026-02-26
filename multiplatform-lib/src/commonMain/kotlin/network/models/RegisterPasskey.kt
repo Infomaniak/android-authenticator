@@ -19,8 +19,6 @@ package com.infomaniak.auth.lib.network.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import network.models.ClientExtensionResults
-import network.models.RegisterPasskeyResponse
 
 @Serializable
 data class RegisterPasskey(

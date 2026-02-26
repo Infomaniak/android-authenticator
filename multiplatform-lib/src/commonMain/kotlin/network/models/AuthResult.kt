@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.models
+package com.infomaniak.auth.lib.network.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

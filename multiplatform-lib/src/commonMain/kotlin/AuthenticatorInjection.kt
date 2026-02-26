@@ -20,7 +20,7 @@ package com.infomaniak.auth.lib
 import com.infomaniak.auth.lib.managers.WebAuthnManager
 import com.infomaniak.auth.lib.network.ApiClientProvider
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
-import network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
 import network.utils.ApiEnvironment
 
 class AuthenticatorInjection(
