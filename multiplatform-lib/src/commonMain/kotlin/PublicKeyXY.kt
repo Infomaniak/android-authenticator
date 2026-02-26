@@ -17,7 +17,25 @@
  */
 package com.infomaniak.auth.lib
 
-expect object PublicKeyUtils : CommonPublicKeyUtils {
+data class PublicKeyXY(
+    val x: ByteArray,
+    val y: ByteArray,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
 
-    override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY
+        other as PublicKeyXY
+
+        if (!x.contentEquals(other.x)) return false
+        if (!y.contentEquals(other.y)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x.contentHashCode()
+        result = 31 * result + y.contentHashCode()
+        return result
+    }
 }

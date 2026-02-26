@@ -17,11 +17,9 @@
  */
 package com.infomaniak.auth.lib
 
-import okio.Buffer
+actual object PublicKeyUtils : CommonPublicKeyUtils {
 
-actual object PublicKeyUtils {
-
-    actual fun getPublicKeyCose(publicKeyByteArray: ByteArray): ByteArray {
+    actual override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY {
         val uncompressedKey = parseX509SubjectPublicKeyInfo(publicKeyByteArray)
         require(uncompressedKey[0] == 0x04.toByte()) { "Expected uncompressed format" }
         require(uncompressedKey.size == 65) { "Invalid key length: ${uncompressedKey.size}" }
@@ -29,31 +27,7 @@ actual object PublicKeyUtils {
         val x = uncompressedKey.copyOfRange(1, 33).padTo32Bytes()
         val y = uncompressedKey.copyOfRange(33, 65).padTo32Bytes()
 
-        val buffer = Buffer()
-
-        buffer.writeByte(0xA5)
-
-        // 1 (kty) -> 2 (EC2)
-        buffer.writeByte(0x01)  // unsigned int 1
-        buffer.writeByte(0x02)  // unsigned int 2
-
-        // 3 (alg) -> -7 (ES256)
-        buffer.writeByte(0x03)  // unsigned int 3
-        buffer.writeByte(0x26)  // negative int -7 (0x26 = -1 - 6)
-
-        // -1 (crv) -> 1 (P-256)
-        buffer.writeByte(0x20)  // negative int -1 (0x20 = -1 - 0)
-        buffer.writeByte(0x01)  // unsigned int 1
-
-        // -2 (x) -> ByteString(32)
-        buffer.writeByte(0x21)  // negative int -2 (0x21 = -1 - 1)
-        writeByteString(buffer, x)
-
-        // -3 (y) -> ByteString(32)
-        buffer.writeByte(0x22)  // negative int -3 (0x22 = -1 - 2)
-        writeByteString(buffer, y)
-
-        return buffer.readByteArray()
+        return PublicKeyXY(x, y)
     }
 
     private fun parseX509SubjectPublicKeyInfo(bytes: ByteArray): ByteArray {
@@ -84,13 +58,6 @@ actual object PublicKeyUtils {
         return bytes.copyOfRange(offset, offset + octetLength)
     }
 
-    private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
-        // Byte string of 32 bytes
-        buffer.writeByte(0x58)
-        buffer.writeByte(bytes.size)
-        buffer.write(bytes)
-    }
-
     private fun readAsn1Length(bytes: ByteArray, offset: Int): Int {
         val firstByte = bytes[offset].toInt() and 0xFF
         return if (firstByte and 0x80 == 0) {
@@ -111,16 +78,6 @@ actual object PublicKeyUtils {
             length < 0x100 -> 2
             length < 0x10000 -> 3
             else -> 4
-        }
-    }
-
-    private fun ByteArray.padTo32Bytes(): ByteArray {
-        return if (this.size == 32) {
-            this
-        } else if (this.size > 32) {
-            this.copyOfRange(this.size - 32, this.size)
-        } else {
-            ByteArray(32 - this.size) { 0x00 } + this
         }
     }
 }
