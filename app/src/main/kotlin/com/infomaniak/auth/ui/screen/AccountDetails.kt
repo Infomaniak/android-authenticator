@@ -59,6 +59,7 @@ import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AccountDetails(account: FakeAccount, onBackPressed: () -> Unit) {
@@ -232,16 +233,16 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 @Composable
 private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: AccountSecurityLevel) {
     val firstSectionItem = if (securityLevel == AccountSecurityLevel.Secured) {
-        listOf(
+        persistentListOf(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
                 rightIconResId = R.drawable.right_indicator,
                 onClick = {},
             ),
         )
-    } else listOf()
+    } else persistentListOf()
 
-    val secondSectionItems = listOf(
+    val secondSectionItems = persistentListOf(
         OptionItemType.WithRightIcon(
             stringResId = R.string.activityHistoryButton,
             rightIconResId = R.drawable.square_arrow_up,
@@ -258,7 +259,7 @@ private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: Accou
         ),
     )
 
-    OptionsSection(firstSectionItem, secondSectionItems)
+    OptionsSection(sections = persistentListOf(firstSectionItem, secondSectionItems))
 }
 
 private enum class AccountStatus(
