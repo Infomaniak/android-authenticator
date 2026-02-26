@@ -24,6 +24,7 @@ import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfoUpdateManager
+import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.sentry.SentryConfig.configureSentry
 import dagger.hilt.android.HiltAndroidApp
@@ -52,6 +53,7 @@ class MainApplication : Application(), Configuration.Provider {
             appId = BuildConfig.APPLICATION_ID,
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
+            apiEnvironment = ApiEnvironment.Staging,
         )
     }
 
