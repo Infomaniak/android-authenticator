@@ -28,9 +28,6 @@ import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.network.models.VerifyResponse
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
-import network.requests.ApiResponse
-import io.ktor.client.HttpClient
-import kotlinx.serialization.json.Json
 import network.requests.AuthenticatorRequest
 import network.utils.ApiEnvironment
 
