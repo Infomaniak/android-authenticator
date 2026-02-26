@@ -19,6 +19,7 @@ package com.infomaniak.auth.di
 
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
+import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
@@ -31,6 +32,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
+    
     @Provides
     @Singleton
     fun providesInfomaniakLogin(@ApplicationContext appContext: Context): InfomaniakLogin {
@@ -40,6 +42,17 @@ object ApplicationModule {
             appUID = BuildConfig.APPLICATION_ID,
             clientID = BuildConfig.CLIENT_ID,
             accessType = null,
+        )
+    }
+
+    @UserAgent
+    @Provides
+    @Singleton
+    fun providesUserAgent(): String {
+        return buildUserAgent(
+            appId = BuildConfig.APPLICATION_ID,
+            appVersionCode = BuildConfig.VERSION_CODE,
+            appVersionName = BuildConfig.VERSION_NAME,
         )
     }
 }

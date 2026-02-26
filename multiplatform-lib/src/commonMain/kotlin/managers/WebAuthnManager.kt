@@ -15,23 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.managers
 
-import com.infomaniak.auth.lib.managers.WebAuthnManager
-import com.infomaniak.auth.lib.network.ApiClientProvider
-import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
+import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import network.repositories.WebAuthnRepository
-import network.utils.ApiEnvironment
 
-class AuthenticatorInjection(
-    private val environment: ApiEnvironment,
-    private val userAgent: String,
-    private val databaseRootDirectory: String? = null,
-    private val crashReport: CrashReportInterface,
-) {
-    private val apiClientProvider by lazy { ApiClientProvider(userAgent, crashReport) }
-    
-    private val webAuthnRepository by lazy { WebAuthnRepository(apiClientProvider, environment) }
+class WebAuthnManager(private val webAuthnRepository: WebAuthnRepository) {
 
-    val webAuthnManager by lazy { WebAuthnManager(webAuthnRepository) }
+    suspend fun getPasskeysOptions() = webAuthnRepository.getPasskeysOptions().data
+
+    suspend fun registerPasskey(registerPasskey: RegisterPasskey) = webAuthnRepository.registerPasskey(registerPasskey)
 }
