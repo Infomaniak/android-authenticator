@@ -21,25 +21,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val accountUtils: AccountUtils
 ) : ViewModel() {
-    private val _isAppLoading = MutableStateFlow(true)
-    val isAppLoading = _isAppLoading.asStateFlow()
+    val uiState = flow {
+        emit(UiState.Ready(accountUtils.isUserConnected()))
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, UiState.Loading)
 
-    private val _isUserConnected = MutableStateFlow(false)
-    val isUserConnected = _isUserConnected.asStateFlow()
-
-    fun checkUserConnected() {
-        viewModelScope.launch {
-            _isUserConnected.value = accountUtils.isUserConnected()
-            _isAppLoading.value = false
-        }
+    sealed interface UiState {
+        data object Loading : UiState
+        data class Ready(val isUserConnected: Boolean) : UiState
     }
 }
