@@ -21,7 +21,7 @@ import android.content.Context
 import com.infomaniak.auth.MainApplication
 import com.infomaniak.core.auth.UserAccountUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,5 +29,5 @@ import javax.inject.Singleton
 class AccountUtils @Inject constructor(
     @ApplicationContext context: Context,
 ) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
-    suspend fun isUserConnected(): Boolean = users.firstOrNull()?.isNotEmpty() ?: false
+    suspend fun isUserConnected(): Boolean = users.first().isNotEmpty() ?: false
 }
