@@ -32,7 +32,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
-    
+
     @Provides
     @Singleton
     fun providesInfomaniakLogin(@ApplicationContext appContext: Context): InfomaniakLogin {
