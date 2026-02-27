@@ -69,6 +69,6 @@ class MainApplication : Application(), Configuration.Provider {
     companion object {
         @JvmStatic
         var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
-            protected set
+            private set
     }
 }

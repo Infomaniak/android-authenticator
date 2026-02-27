@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -95,6 +96,7 @@ fun MainScreen(
                 onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { _ ->
         val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
                 slideOutHorizontally(targetOffsetX = { -it })

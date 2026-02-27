@@ -36,8 +36,11 @@ object MatomoAuthenticator : Matomo {
     ) {
         trackEvent(category.value, name.value, action, value)
     }
+    //endregion
 
+    //region Track specific events
     fun trackAccountEvent(name: MatomoName) {
         trackEvent(MatomoCategory.Account, name)
     }
+    //endregion
 }

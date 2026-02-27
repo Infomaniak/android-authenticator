@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CrossAppLoginService @Inject constructor() : BaseCrossAppLoginService() {
+class CrossAppLoginService : BaseCrossAppLoginService() {
     @Inject
     lateinit var accountUtils: AccountUtils
 
