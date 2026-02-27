@@ -29,5 +29,5 @@ import javax.inject.Singleton
 class AccountUtils @Inject constructor(
     @ApplicationContext context: Context,
 ) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
-    suspend fun isUserConnected(): Boolean = users.first().isNotEmpty() ?: false
+    suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
 }

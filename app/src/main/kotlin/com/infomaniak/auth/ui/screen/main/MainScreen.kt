@@ -94,7 +94,7 @@ fun MainScreen(
                 },
                 onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
             )
-        }
+        },
     ) { _ ->
         val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
                 slideOutHorizontally(targetOffsetX = { -it })

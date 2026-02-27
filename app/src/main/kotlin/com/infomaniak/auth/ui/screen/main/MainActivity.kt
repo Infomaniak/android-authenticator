@@ -17,20 +17,20 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.navigation.NavDestination
+import com.infomaniak.auth.ui.screen.main.MainViewModel.UiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -44,32 +44,31 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val splashscreen = installSplashScreen()
-        splashscreen.setKeepOnScreenCondition { viewModel.isAppLoading.value }
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { viewModel.uiState.value == UiState.Loading }
 
         enableEdgeToEdge()
-        if (Build.VERSION.SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+        if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 
         setContent {
-            val isSystemInDarkTheme = isSystemInDarkTheme()
             val appSettings by appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
-
-            val isLoading by viewModel.isAppLoading.collectAsStateWithLifecycle()
-            val isUserConnected by viewModel.isUserConnected.collectAsStateWithLifecycle()
+            val uiState = viewModel.uiState.collectAsStateWithLifecycle(null).value
 
             val isDarkTheme = when (appSettings?.theme) {
                 Theme.Light -> false
                 Theme.Dark -> true
-                else -> isSystemInDarkTheme
+                else -> isSystemInDarkTheme()
             }
 
-            LaunchedEffect(viewModel) {
-                viewModel.checkUserConnected()
-            }
-
-            if (!isLoading) {
+            if (uiState is UiState.Ready) {
                 AuthenticatorTheme(isDarkTheme = isDarkTheme) {
-                    MainScreen(startDestination = if (isUserConnected) NavDestination.Root.Home else NavDestination.Onboarding.Start)
+                    MainScreen(
+                        startDestination = if (uiState.isUserConnected) {
+                            NavDestination.Root.Home
+                        } else {
+                            NavDestination.Onboarding.Start
+                        }
+                    )
                 }
             }
         }
