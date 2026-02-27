@@ -22,21 +22,26 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
+import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.auth.models.UserLoginResult
+import com.infomaniak.core.auth.utils.LoginUtils
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
@@ -47,39 +52,70 @@ import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import com.infomaniak.core.ui.compose.basics.ButtonStyle
-import com.infomaniak.core.ui.compose.basics.rememberCallableState
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingStartScreen(
-    crossAppLoginViewModel: CrossAppLoginViewModel = viewModel(),
-    onLogin: () -> Unit,
-    onCreateAccount: () -> Unit
+    snackbarHostState: SnackbarHostState,
+    onLoginFinished: () -> Unit,
+    onCreateAccount: () -> Unit,
+    onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
-    val accountsCheckingState by crossAppLoginViewModel.accountsCheckingState.collectAsStateWithLifecycle()
-    val skippedIds by crossAppLoginViewModel.skippedAccountIds.collectAsStateWithLifecycle()
+    val accountsCheckingState by onboardingStartViewModel.accountsCheckingState.collectAsStateWithLifecycle()
+    val skippedIds by onboardingStartViewModel.skippedAccountIds.collectAsStateWithLifecycle()
+    val isButtonLoading by onboardingStartViewModel.isButtonLoading.collectAsStateWithLifecycle()
 
-    // TODO[ik-auth]: Will move when auth logic will be ready
-    val loginRequest = rememberCallableState<List<ExternalAccount>>()
+    // TODO[ik-auth]: Remove SignUp
+    val isSignUpButtonLoading by remember { mutableStateOf(false) }
 
-    // TODO[ik-auth]: Update state with login logic
-    val isButtonLoading by remember { mutableStateOf(false) }
-
+    val scope = rememberCoroutineScope()
     val hostActivity = LocalActivity.current as ComponentActivity
-    LaunchedEffect(crossAppLoginViewModel) {
-        crossAppLoginViewModel.activateUpdates(hostActivity)
+
+    val loginFlowController = LoginUtils.rememberLoginFlowController(
+        infomaniakLogin = onboardingStartViewModel.infomaniakLogin,
+        userExistenceChecker = onboardingStartViewModel.accountUtils,
+    ) { userLoginResult ->
+        when (userLoginResult) {
+            is UserLoginResult.Success -> scope.launch {
+                onboardingStartViewModel.loginUsersIntoTheApp(listOf(userLoginResult.user))
+            }
+            is UserLoginResult.Failure -> scope.launch {
+                snackbarHostState.showSnackbar(userLoginResult.errorMessage)
+            }
+            null -> Unit
+        }
+
+        if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
+    }
+
+    LaunchedEffect(onboardingStartViewModel) {
+        onboardingStartViewModel.activateUpdates(hostActivity)
+    }
+
+    LaunchedEffect(onboardingStartViewModel.onLoginFinishedEvent) {
+        onboardingStartViewModel.onLoginFinishedEvent.collect {
+            onLoginFinished()
+        }
     }
 
     OnboardingStartScreen(
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
-        // TODO : Use loginRequest When login logic ready
-        isLoginButtonLoading = { /* loginRequest.isAwaitingCall.not() || */ isButtonLoading },
-        isSignUpButtonLoading = { isButtonLoading },
-        onLoginRequest = { accounts -> loginRequest(accounts) },
-        onSaveSkippedAccounts = { crossAppLoginViewModel.skippedAccountIds.value = it },
-        // TODO[ik-auth]: Use true login or create account
-        onLogin = onLogin,
+        isLoginButtonLoading = { isButtonLoading },
+        // TODO: Remove SignUpButton
+        isSignUpButtonLoading = { isSignUpButtonLoading },
+        onLoginRequest = { accounts ->
+            if (accounts.isEmpty()) {
+                trackAccountEvent(MatomoName.OpenLoginWebview)
+                onboardingStartViewModel.startLoadingLoginButtons()
+                loginFlowController.login()
+            } else {
+                scope.launch { onboardingStartViewModel.connectSelectedAccounts(accounts, snackbarHostState) }
+            }
+        },
+        onSaveSkippedAccounts = { onboardingStartViewModel.skippedAccountIds.value = it },
+        // TODO[ik-auth]: Remove create account
         onCreateAccount = onCreateAccount
     )
 }
@@ -93,7 +129,6 @@ private fun OnboardingStartScreen(
     onLoginRequest: (accounts: List<ExternalAccount>) -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     onCreateAccount: () -> Unit,
-    onLogin: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
 
@@ -112,24 +147,16 @@ private fun OnboardingStartScreen(
                 skippedIds = skippedIds,
                 isLoginButtonLoading = isLoginButtonLoading,
                 customization = CrossLoginDefaults.customize(
-                    colors = CrossLoginDefaults.colors(
-                        titleColor = MaterialTheme.colorScheme.primary,
-                        descriptionColor = MaterialTheme.colorScheme.secondary
-                    ),
                     buttonStyle = CrossLoginDefaults.buttonType(object : ButtonStyle {
                         override val height: Dp = AppDimens.LargeButtonHeight
                         override val shape: Shape = AppShapes.LargeButtonShape
                     })
                 ),
-                onContinueWithSelectedAccounts = { selectedAccounts ->
-                    onLoginRequest(selectedAccounts)
-                    // TODO[ik-auth]: Remove later when login logic will be ready, it just to navigate to home
-                    onLogin()
-                },
+                onContinueWithSelectedAccounts = onLoginRequest,
                 onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },
                 onSaveSkippedAccounts = onSaveSkippedAccounts,
                 noCrossAppLoginAccountsContent = NoCrossAppLoginAccountsContent.accountRequired(
-                    onLogin = onLogin,
+                    onLogin = { onLoginRequest(emptyList()) },
                     onCreateAccount = onCreateAccount,
                     isLoginButtonLoading = isLoginButtonLoading,
                     isSignUpButtonLoading = isSignUpButtonLoading,
@@ -154,8 +181,8 @@ private fun OnboardingStartScreenPreview(
             isSignUpButtonLoading = { false },
             onLoginRequest = {},
             onSaveSkippedAccounts = {},
-            onLogin = {},
             onCreateAccount = {},
         )
     }
 }
+

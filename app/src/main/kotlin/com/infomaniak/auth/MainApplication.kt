@@ -18,6 +18,9 @@
 package com.infomaniak.auth
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfoUpdateManager
@@ -28,19 +31,32 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltAndroidApp
-class MainApplication : Application() {
+class MainApplication : Application(), Configuration.Provider {
+    @Inject
+    lateinit var accountUtils: AccountUtils
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
     private val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
-    override fun onCreate() {
-        super.onCreate()
-
+    init {
         NetworkConfiguration.init(
             appId = BuildConfig.APPLICATION_ID,
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
         )
+    }
+
+    override fun onCreate() {
+        super.onCreate()
 
         configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = true)
 
@@ -53,6 +69,6 @@ class MainApplication : Application() {
     companion object {
         @JvmStatic
         var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
-            protected set
+            private set
     }
 }

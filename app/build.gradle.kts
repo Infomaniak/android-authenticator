@@ -33,7 +33,7 @@ android {
 
         setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
 
-        buildConfigField("String", "CLIENT_ID", "\"TODO: SET PROPERTIY WHEN READY\"")
+        buildConfigField("String", "CLIENT_ID", "\"A7B265CD-C9DB-4E6B-8236-2DFF60F146FC\"")
     }
 
     buildTypes {
@@ -126,8 +126,9 @@ dependencies {
     implementation(core.infomaniak.core.auth)
     implementation(core.infomaniak.core.common)
     implementation(core.infomaniak.core.crossapplogin.front)
-    implementation(core.infomaniak.core.onboarding)
+    implementation(core.infomaniak.core.matomo)
     implementation(core.infomaniak.core.network)
+    implementation(core.infomaniak.core.onboarding)
     implementation(core.infomaniak.core.sentry)
     implementation(core.infomaniak.core.ui.compose.basics)
     implementation(core.infomaniak.core.ui.compose.basicbutton)
@@ -135,10 +136,13 @@ dependencies {
     implementation(core.infomaniak.core.ui.compose.margin)
     implementation(core.infomaniak.core.ui.compose.preview)
     implementation(core.infomaniak.core.ui.compose.theme)
+    implementation(core.infomaniak.core.ui.view)
 
+    implementation(core.androidx.core.splashscreen)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(core.androidx.work.runtime.ktx)
     implementation(libs.kotlinx.collections.immutable)
 
     implementation(core.kotlinx.serialization.json)

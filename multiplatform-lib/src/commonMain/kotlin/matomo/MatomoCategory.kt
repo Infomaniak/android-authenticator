@@ -21,6 +21,7 @@ package com.infomaniak.auth.lib.matomo
 enum class MatomoCategory(val value: String) {
 
     //region Common
+    Account("account")
     //endregion
 
     //region iOS

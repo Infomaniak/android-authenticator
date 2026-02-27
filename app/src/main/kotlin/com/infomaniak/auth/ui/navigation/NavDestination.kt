@@ -17,10 +17,12 @@
  */
 package com.infomaniak.auth.ui.navigation
 
+import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
 import com.infomaniak.auth.ui.screen.home.FakeAccount
 import kotlinx.serialization.Serializable
 
+@Immutable
 @Serializable
 sealed interface NavDestination : NavKey {
 

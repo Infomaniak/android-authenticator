@@ -17,13 +17,17 @@
  */
 package com.infomaniak.auth.service
 
-import com.infomaniak.auth.manager.AccountsManager
+import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginService
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class CrossAppLoginService @Inject constructor(
-    accountsManager: AccountsManager
-) : BaseCrossAppLoginService(
-    selectedUserIdFlow = accountsManager.getCurrentUserFlow().map { it?.id }
-)
+@AndroidEntryPoint
+class CrossAppLoginService : BaseCrossAppLoginService() {
+    @Inject
+    lateinit var accountUtils: AccountUtils
+
+    override val selectedUserIdFlow: Flow<Int?> get() = accountUtils.users.map { it.firstOrNull()?.id }
+}

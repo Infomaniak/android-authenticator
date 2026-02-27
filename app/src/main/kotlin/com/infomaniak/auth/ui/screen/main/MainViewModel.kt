@@ -15,12 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.onboarding.start
+package com.infomaniak.auth.ui.screen.main
 
-import com.infomaniak.auth.BuildConfig
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class CrossAppLoginViewModel @Inject constructor() : BaseCrossAppLoginViewModel(BuildConfig.APPLICATION_ID, BuildConfig.CLIENT_ID)
+class MainViewModel @Inject constructor(
+    private val accountUtils: AccountUtils
+) : ViewModel() {
+    val uiState = flow {
+        emit(UiState.Ready(accountUtils.isUserConnected()))
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, UiState.Loading)
+
+    sealed interface UiState {
+        data object Loading : UiState
+        data class Ready(val isUserConnected: Boolean) : UiState
+    }
+}

@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -61,9 +63,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun MainScreen() {
-    // TODO: will change when back give the result of account status
-    val startDestination = if (true) NavDestination.Onboarding.Start else NavDestination.Root.Home
+fun MainScreen(startDestination: NavDestination) {
     val backStack = rememberNavBackStack(startDestination)
     val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
     val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
@@ -80,6 +80,8 @@ fun MainScreen(
     currentDestination: NavKey,
     entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     SinglePaneScaffold(
         floatingActionButton = {
             if (currentDestination == NavDestination.Root.Home) AuthenticatorFAB(onClick = {})
@@ -93,7 +95,8 @@ fun MainScreen(
                 },
                 onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { _ ->
         val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
                 slideOutHorizontally(targetOffsetX = { -it })
@@ -102,7 +105,7 @@ fun MainScreen(
         NavDisplay(
             backStack = backStack,
             entryDecorators = entryDecorators,
-            entryProvider = baseEntryProvider(backStack),
+            entryProvider = baseEntryProvider(backStack, snackbarHostState),
             transitionSpec = { enterAnimation },
             popTransitionSpec = { exitAnimation },
             predictivePopTransitionSpec = { exitAnimation },
