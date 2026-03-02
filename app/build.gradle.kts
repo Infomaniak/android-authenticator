@@ -35,7 +35,10 @@ android {
 
         buildConfigField("String", "CLIENT_ID", "\"A7B265CD-C9DB-4E6B-8236-2DFF60F146FC\"")
 
-        androidResources.localeFilters += listOf("en", "de", "es", "fr", "it")
+        androidResources {
+            localeFilters += listOf("en", "de", "es", "fr", "it")
+            generateLocaleConfig = true
+        }
     }
 
     buildTypes {
