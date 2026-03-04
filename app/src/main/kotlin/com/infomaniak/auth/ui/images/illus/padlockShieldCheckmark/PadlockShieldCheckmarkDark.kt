@@ -1,4 +1,4 @@
-package com.infomaniak.auth.ui.images.illus.padlockValidated
+package com.infomaniak.auth.ui.images.illus.padlockShieldCheckmark
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -19,21 +19,21 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 
-val AppIllus.PadlockShieldCheckmarkLight: ImageVector
+val AppIllus.PadlockShieldCheckmarkDark: ImageVector
     get() {
-        if (_padlockShieldCheckmarkLight != null) {
-            return _padlockShieldCheckmarkLight!!
+        if (_padlockShieldCheckmarkDark != null) {
+            return _padlockShieldCheckmarkDark!!
         }
-        _padlockShieldCheckmarkLight = Builder(
-            name = "PadlockShieldCheckmarkLight",
+        _padlockShieldCheckmarkDark = Builder(
+            name = "PadlockShieldCheckmarkDark",
             defaultWidth = 302.0.dp,
             defaultHeight = 302.0.dp,
             viewportWidth = 302.0f,
             viewportHeight = 302.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFFffffff)),
-                stroke = SolidColor(Color(0xFFffffff)),
+                fill = SolidColor(Color(0xFF5869D9)),
+                stroke = SolidColor(Color(0xFF5869D9)),
                 fillAlpha = 0.3f,
                 strokeLineWidth = 2.0f,
                 strokeLineCap = Butt,
@@ -73,7 +73,7 @@ val AppIllus.PadlockShieldCheckmarkLight: ImageVector
                 close()
             }
             path(
-                fill = SolidColor(Color(0xFF3243AE)),
+                fill = SolidColor(Color(0xFF5869D9)),
                 stroke = null,
                 strokeLineWidth = 0.0f,
                 strokeLineCap = Butt,
@@ -86,21 +86,6 @@ val AppIllus.PadlockShieldCheckmarkLight: ImageVector
                 curveTo(198.81f, 262.48f, 185.65f, 249.32f, 185.65f, 233.1f)
                 curveTo(185.65f, 216.88f, 198.81f, 203.73f, 215.03f, 203.73f)
                 curveTo(231.25f, 203.73f, 244.4f, 216.88f, 244.4f, 233.1f)
-                close()
-            }
-            path(
-                fill = SolidColor(Color(0xFF3243AE)),
-                stroke = null,
-                strokeLineWidth = 0.0f,
-                strokeLineCap = Butt,
-                strokeLineJoin = Miter,
-                strokeLineMiter = 4.0f,
-                pathFillType = NonZero,
-            ) {
-                moveTo(197.4f, 215.48f)
-                horizontalLineToRelative(35.25f)
-                verticalLineToRelative(35.25f)
-                horizontalLineToRelative(-35.25f)
                 close()
             }
             path(
@@ -161,11 +146,11 @@ val AppIllus.PadlockShieldCheckmarkLight: ImageVector
                 curveTo(210.04f, 240.65f, 209.76f, 240.38f, 209.55f, 240.05f)
                 lineTo(206.4f, 235.37f)
                 curveTo(206.07f, 234.86f, 206.2f, 234.18f, 206.71f, 233.84f)
-                curveTo(207.21f, 233.5f, 207.89f, 233.64f, 208.23f, 234.14f)
+                curveTo(207.21f, 233.5f, 207.89f, 233.63f, 208.23f, 234.14f)
                 lineTo(211.38f, 238.83f)
                 lineTo(211.4f, 238.85f)
                 curveTo(211.42f, 238.9f, 211.46f, 238.93f, 211.49f, 238.95f)
-                curveTo(211.52f, 238.96f, 211.55f, 238.97f, 211.58f, 238.98f)
+                curveTo(211.52f, 238.96f, 211.55f, 238.97f, 211.58f, 238.97f)
                 curveTo(211.61f, 238.98f, 211.64f, 238.97f, 211.68f, 238.95f)
                 curveTo(211.71f, 238.94f, 211.74f, 238.91f, 211.77f, 238.87f)
                 lineTo(211.78f, 238.85f)
@@ -173,8 +158,8 @@ val AppIllus.PadlockShieldCheckmarkLight: ImageVector
                 close()
             }
             path(
-                fill = SolidColor(Color(0xFFffffff)),
-                stroke = SolidColor(Color(0xFFffffff)),
+                fill = SolidColor(Color(0xFF5869D9)),
+                stroke = SolidColor(Color(0xFF5869D9)),
                 fillAlpha = 0.5f,
                 strokeLineWidth = 2.0f,
                 strokeLineCap = Butt,
@@ -196,17 +181,17 @@ val AppIllus.PadlockShieldCheckmarkLight: ImageVector
                 close()
             }
         }.build()
-        return _padlockShieldCheckmarkLight!!
+        return _padlockShieldCheckmarkDark!!
     }
 
-private var _padlockShieldCheckmarkLight: ImageVector? = null
+private var _padlockShieldCheckmarkDark: ImageVector? = null
 
 @Preview
 @Composable
 private fun Preview() {
     Box {
         Image(
-            imageVector = AppIllus.PadlockShieldCheckmarkLight,
+            imageVector = AppIllus.PadlockShieldCheckmarkDark,
             contentDescription = null,
             modifier = Modifier.size(AppImages.previewSize),
         )
