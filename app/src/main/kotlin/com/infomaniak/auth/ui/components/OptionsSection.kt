@@ -187,8 +187,8 @@ sealed interface OptionItemType {
     class WithSelection(
         override val stringResId: Int,
         override val onClick: () -> Unit,
-        val leftIconResId: Int? = null,
         val isSelected: Boolean,
+        val leftIconResId: Int? = null,
     ) : OptionItemType
 }
 

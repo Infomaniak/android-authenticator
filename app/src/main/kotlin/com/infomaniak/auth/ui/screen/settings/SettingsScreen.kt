@@ -17,14 +17,18 @@
  */
 package com.infomaniak.auth.ui.screen.settings
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.MatomoAuthenticator.trackSettingsEvent
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
@@ -32,9 +36,12 @@ import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
 import com.infomaniak.auth.ui.screen.settings.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
+import com.infomaniak.core.applock.AppLockHelper.requestCredentials
+import com.infomaniak.core.applock.AppLockManager
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun SettingsScreen(onThemeClicked: () -> Unit) {
@@ -58,23 +65,39 @@ private fun SettingsScreen(
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
 ) {
-    val firstSectionItems = persistentListOf(
-        OptionItemType.WithCheckBox(
-            stringResId = R.string.notificationsTitle,
-            isChecked = notificationEnabled.get(),
-            onCheckedChange = { notificationEnabled.set(it) }
-        ),
-        OptionItemType.WithCheckBox(
-            stringResId = R.string.unlockWithBiometrics,
-            isChecked = appLocked.get(),
-            onCheckedChange = { appLocked.set(it) }
-        ),
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.themeTitle,
-            rightIconResId = R.drawable.right_indicator,
-            onClick = { onThemeClicked() },
-        ),
-    )
+    val fragmentActivity = LocalActivity.current as? FragmentActivity
+
+    val firstSectionItems = buildList {
+        add(
+            OptionItemType.WithCheckBox(
+                stringResId = R.string.notificationsTitle,
+                isChecked = notificationEnabled.get(),
+                onCheckedChange = { notificationEnabled.set(it) }
+            )
+        )
+        if (AppLockManager.hasBiometrics()) {
+            add(
+                OptionItemType.WithCheckBox(
+                    stringResId = R.string.unlockWithBiometrics,
+                    isChecked = appLocked.get(),
+                    onCheckedChange = {
+                        trackSettingsEvent(MatomoName.Lock)
+                        fragmentActivity?.requestCredentials {
+                            appLocked.set(it)
+                            if (it) AppLockManager.unlock()
+                        }
+                    }
+                )
+            )
+        }
+        add(
+            OptionItemType.WithRightIcon(
+                stringResId = R.string.themeTitle,
+                rightIconResId = R.drawable.right_indicator,
+                onClick = { onThemeClicked() },
+            )
+        )
+    }.toPersistentList()
 
     val secondSectionItems = persistentListOf(
         OptionItemType.WithRightIcon(

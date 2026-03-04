@@ -39,14 +39,15 @@ fun IllustrationWithHalo(
     themedImage: ThemedImage,
     modifier: Modifier = Modifier
 ) {
-    Box(contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
         Image(
-            modifier = modifier,
             imageVector = ImageVector.vectorResource(R.drawable.gradient),
             contentDescription = null,
         )
         Image(
-            modifier = modifier,
             imageVector = themedImage.image(),
             contentDescription = null,
         )
