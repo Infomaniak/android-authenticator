@@ -23,15 +23,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class ApiResponseStatus {
 
-    @SerialName("error")
-    ERROR,
-
     @SerialName("success")
     SUCCESS,
 
     @SerialName("asynchronous")
     ASYNCHRONOUS,
-
-    @SerialName("unknown")
-    UNKNOWN;
 }

@@ -20,7 +20,7 @@ package com.infomaniak.auth.lib.network.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiResponse<T>(
-    val result: ApiResponseStatus = ApiResponseStatus.UNKNOWN,
-    val data: T? = null,
+data class SuccessfulApiResponse<T>(
+    val result: ApiResponseStatus = ApiResponseStatus.SUCCESS,
+    val data: T,
 )

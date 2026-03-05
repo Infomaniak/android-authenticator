@@ -46,6 +46,7 @@ object AuthenticatorInjectionModule {
                     type: BreadcrumbType,
                     data: Map<String, String>?
                 ) {
+                    //TODO[Authenticator] forward to sentry
                 }
 
                 override fun capture(
@@ -53,6 +54,7 @@ object AuthenticatorInjectionModule {
                     error: Throwable,
                     data: Map<String, String>?
                 ) {
+                    //TODO[Authenticator] forward to sentry
                 }
 
                 override fun capture(
@@ -60,6 +62,7 @@ object AuthenticatorInjectionModule {
                     data: Map<String, String>?,
                     level: CrashReportLevel?
                 ) {
+                    //TODO[Authenticator] forward to sentry
                 }
             }
         )
