@@ -45,9 +45,8 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
             this(AuthenticatorRequest(environment, json, httpClient))
 
     // Generate WebAuthn registration options (authentified)
-    suspend fun getPasskeysOptions(): SuccessfulApiResponse<PasskeysOptions> {
-        //TODO where to get the bearer from?
-        return authenticatorRequest.getPasskeysOptions()
+    suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
+        return authenticatorRequest.getPasskeysOptions(token)
     }
 
     // Validate WebAuthn registration and save public key (authentified)

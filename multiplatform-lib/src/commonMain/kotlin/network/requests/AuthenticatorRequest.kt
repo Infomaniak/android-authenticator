@@ -46,11 +46,11 @@ internal class AuthenticatorRequest(
         })
     }
 
-    suspend fun challenge(clientId: String): ApiResponse<AuthenticationOptions> {
+    suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
         return post(createUrl(ApiRoutes.challenge), mapOf("client_id" to clientId))
     }
 
-    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): ApiResponse<AuthResult> {
+    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
         return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
     }
 }

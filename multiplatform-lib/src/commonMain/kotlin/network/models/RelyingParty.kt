@@ -27,6 +27,5 @@ data class RelyingParty(
     @SerialName("icon")
     val iconUrl: String?,
 ) {
-
-}
     override fun toString() = "$id:$name"
+}
