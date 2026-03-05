@@ -80,11 +80,11 @@ private fun SettingsScreen(
                 OptionItemType.WithCheckBox(
                     stringResId = R.string.unlockWithBiometrics,
                     isChecked = appLocked.get(),
-                    onCheckedChange = {
+                    onCheckedChange = { newValue ->
                         trackSettingsEvent(MatomoName.Lock)
                         fragmentActivity?.requestCredentials {
-                            appLocked.set(it)
-                            if (it) AppLockManager.unlock()
+                            appLocked.set(newValue)
+                            if (newValue) AppLockManager.unlock()
                         }
                     }
                 )

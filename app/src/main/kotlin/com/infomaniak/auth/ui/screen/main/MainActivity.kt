@@ -19,13 +19,13 @@ package com.infomaniak.auth.ui.screen.main
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
