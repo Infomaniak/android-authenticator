@@ -17,11 +17,13 @@
  */
 package com.infomaniak.auth.lib.network.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class RelyingParty(
     val id: String,
     val name: String,
-    val icon: String?,
+    @SerialName("icon")
+    val iconUrl: String?,
 )
