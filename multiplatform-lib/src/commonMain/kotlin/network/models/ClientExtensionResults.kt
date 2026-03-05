@@ -20,4 +20,4 @@ package com.infomaniak.auth.lib.network.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ClientExtensionResults // TODO Don't know what's inside this
+data object ClientExtensionResults // No particular extensions for now
