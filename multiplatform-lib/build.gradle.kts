@@ -52,18 +52,30 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(core.kotlinx.coroutines.core)
+                implementation(core.kotlinx.serialization.cbor)
+                implementation(core.ktor.client.core)
+                implementation(core.ktor.client.content.negociation)
+                implementation(core.ktor.client.json)
+                implementation(core.ktor.client.encoding)
             }
         }
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(core.kotlinx.coroutines.test)
+                implementation(core.ktor.client.mock)
             }
         }
         androidMain {
             dependencies {
+                implementation(core.ktor.client.okhttp)
                 implementation(core.splitties.appctx)
                 implementation(core.splitties.bitflags)
+            }
+        }
+        iosMain {
+            dependencies {
+                implementation(core.ktor.client.darwin)
             }
         }
         val androidDeviceTest by getting {
