@@ -53,9 +53,9 @@ import platform.Security.kSecClass
 import platform.Security.kSecClassKey
 import platform.Security.kSecReturnRef
 
-internal class KeyPairManagerImpl : KeyPairManager {
+internal actual class KeyPairManagerImpl : KeyPairManager {
 
-    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
+    actual override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
         val result = generateEcPrivateKeyInTheKeychain(
             tag = ALIAS,
             privateKeyPurposes = KeyPairManager.privateKeyPurposes,
@@ -70,7 +70,7 @@ internal class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+    actual override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
             // Get private key to retrieve public key
             getPrivateKeyRef().use { privateKeyRef ->
@@ -85,6 +85,21 @@ internal class KeyPairManagerImpl : KeyPairManager {
                 }
 
                 Xor.First(publicKeyData.toByteArray())
+            }
+        }
+    }
+
+    actual override suspend fun retrievePrivateKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
+        memScoped {
+            getPrivateKeyRef().use { privateKeyRef ->
+                val result = tryIt { errorPointer ->
+                    SecKeyCopyExternalRepresentation(privateKeyRef, errorPointer)
+                }
+
+                return when (result) {
+                    is Xor.First -> Xor.First(result.value.toNSData().toByteArray())
+                    is Xor.Second -> Xor.Second(Failure.KeyManagement.KeyExtractionFailed(result.value.toString()))
+                }
             }
         }
     }

@@ -29,6 +29,8 @@ internal interface KeyPairManager {
 
     suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 
+    suspend fun retrievePrivateKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+
     companion object {
         protected const val ALIAS = "default"
 

@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.utils
+package com.infomaniak.auth.lib.internal
 
-internal object ApiRoutes {
+import com.infomaniak.auth.lib.Failure
 
-    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
-
-    const val getPasskeysOptions = "users/me/passkeys/options"
-    const val registerPasskey = "users/me/passkeys"
-    const val challenge = "authenticator/challenge"
-    const val verify = "authenticator/verify"
+internal expect class KeyPairManagerImpl() : KeyPairManager {
+    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed?
+    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    override suspend fun retrievePrivateKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 }

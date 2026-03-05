@@ -23,10 +23,10 @@ import kotlinx.coroutines.invoke
 import splitties.init.appCtx
 import java.io.File
 
-internal class KeyPairManagerImpl : KeyPairManager {
+internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)
-    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? {
+    actual override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
@@ -36,8 +36,15 @@ internal class KeyPairManagerImpl : KeyPairManager {
         return null
     }
 
-    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+    actual override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         val file = File(appCtx.filesDir, PUBLIC_KEY_NAME)
+        runCatching {
+            Xor.First(file.readBytes())
+        }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
+    }
+
+    actual override suspend fun retrievePrivateKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+        val file = File(appCtx.filesDir, PRIVATE_KEY_NAME)
         runCatching {
             Xor.First(file.readBytes())
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }

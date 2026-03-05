@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth
 
-import com.infomaniak.auth.lib.RegisterPasskeyBuilder
+import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.PubKeyCredParam
@@ -60,6 +60,6 @@ class WebAuthnTest {
         val publicKeyAsByteArray = keyPairManager.retrievePublicKey().firstOrNull()!!
 
         // Nothing to test on the generated object for now
-        RegisterPasskeyBuilder(passkeysOptions, publicKeyAsByteArray).build()
+        CryptoObjectsBuilder(passkeysOptions, publicKeyAsByteArray).buildRegisterPasskey()
     }
 }

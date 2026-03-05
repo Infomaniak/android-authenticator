@@ -34,28 +34,19 @@ import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+// This class should be internal
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
-class RegisterPasskeyBuilder(
-    private val passkeysOptions: PasskeysOptions,
-    private val publicKey: ByteArray,
-) {
+class CryptoObjectsBuilder(private val publicKey: ByteArray) {
 
-    fun build(): RegisterPasskey {
-        val publicKeyCose = getPublicKeyCose(publicKey)
+    fun buildRegisterPasskey(passkeysOptions: PasskeysOptions): RegisterPasskey {
         val rawId = Random.nextBytes(16)
         val id = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId)
 
         val authenticatorData = generateAuthenticatorData(
             rpId = passkeysOptions.relyingParty.id,
             credentialId = rawId,
-            publicKeyCose = publicKeyCose,
         )
-        val clientData = WebAuthnClientData(
-            type = "webauthn.create",
-            challenge = passkeysOptions.challenge,
-            origin = "https://infomaniak.ch",
-            crossOrigin = false,
-        )
+        val clientDataJSON = buildClientDataJSON(passkeysOptions.challenge)
 
         // AttestationObject
         val attestationObject = WebAuthnAttestationObject.toCborByteArray(
@@ -64,8 +55,7 @@ class RegisterPasskeyBuilder(
         )
         val response = RegisterPasskeyResponse(
             attestationObject = attestationObject.base64Url().trimEnd('='),
-            clientDataJSON = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
-                .encode(Json.encodeToString(clientData).encodeToByteArray()),
+            clientDataJSON = clientDataJSON,
             transports = listOf("internal"),
             publicKeyAlgorithm = -7,
             publicKey = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(publicKey),
@@ -87,7 +77,28 @@ class RegisterPasskeyBuilder(
         )
     }
 
-    private fun generateAuthenticatorData(rpId: String, credentialId: ByteArray, publicKeyCose: ByteArray): ByteArray {
+    fun buildClientDataJSON(challenge: String): String {
+        val clientData = WebAuthnClientData(
+            type = "webauthn.create",
+            challenge = challenge,
+            // challenge = "NkpLeTN1Y3VWRFlJN1QyZ2VBdDYxcWVlbFFaYWtpakk",
+            origin = "https://infomaniak.ch",
+            crossOrigin = false,
+        )
+
+        return Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+            .encode(Json.encodeToString(clientData).encodeToByteArray())
+    }
+
+    fun encodeToSha256(value: String): ByteArray {
+        return value
+            .encodeUtf8()
+            .sha256()
+            .toByteArray()
+    }
+
+    fun generateAuthenticatorData(rpId: String, credentialId: ByteArray): ByteArray {
+        val publicKeyCose = getPublicKeyCose(publicKey)
         val rpIdHash = rpId.encodeUtf8().sha256().toByteArray()
         val flags: Byte = 0x41
         val signCount = byteArrayOf(0x00, 0x00, 0x00, 0x00)

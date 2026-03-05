@@ -30,16 +30,9 @@ import io.ktor.http.HeadersBuilder
 import io.ktor.http.URLBuilder
 import io.ktor.http.Url
 import io.ktor.http.contentType
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
-
-@Serializable
-data class ApiResponse<T>(
-    val result: String,
-    val data: T
-)
 
 internal open class BaseRequest(
     protected val environment: ApiEnvironment,

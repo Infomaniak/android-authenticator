@@ -22,6 +22,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthenticationOptions(
+    val session: String,
     val challenge: String,
     @SerialName("rpId")
     val relyingPartyId: String,

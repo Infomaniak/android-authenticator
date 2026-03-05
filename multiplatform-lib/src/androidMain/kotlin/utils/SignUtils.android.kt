@@ -15,14 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.managers
+package com.infomaniak.auth.lib.utils
 
-import com.infomaniak.auth.lib.network.models.RegisterPasskey
-import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
+import java.security.KeyFactory
+import java.security.Signature
+import java.security.spec.PKCS8EncodedKeySpec
 
-class WebAuthnManager(private val webAuthnRepository: WebAuthnRepository) {
+actual object SignUtils {
 
-    suspend fun getPasskeysOptions() = webAuthnRepository.getPasskeysOptions().data
+    actual fun signWithPrivateKey(privateKey: ByteArray, data: ByteArray): ByteArray {
+        val keyFactory = KeyFactory.getInstance("EC")
+        val keySpec = PKCS8EncodedKeySpec(privateKey)
+        val key = keyFactory.generatePrivate(keySpec)
 
-    suspend fun registerPasskey(registerPasskey: RegisterPasskey) = webAuthnRepository.registerPasskey(registerPasskey)
+        val signature = Signature.getInstance("SHA256withECDSA")
+        signature.initSign(key)
+        signature.update(data)
+
+        return signature.sign()
+    }
 }

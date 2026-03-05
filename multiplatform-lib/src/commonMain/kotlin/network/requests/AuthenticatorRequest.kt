@@ -34,19 +34,23 @@ internal class AuthenticatorRequest(
     httpClient: HttpClient,
 ) : BaseRequest(environment, json, httpClient) {
 
-    suspend fun getPasskeysOptions(): SuccessfulApiResponse<PasskeysOptions> {
-        return get(createUrl(ApiRoutes.getPasskeysOptions))
+    suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
+        return get(createUrl(ApiRoutes.getPasskeysOptions), appendHeaders = {
+            append("Authorization", "Bearer $token")
+        })
     }
 
-    suspend fun registerPasskey(registerPasskey: RegisterPasskey) {
-        post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey)
+    suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
+        post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey, appendHeaders = {
+            append("Authorization", "Bearer $token")
+        })
     }
 
-    suspend fun challenge(identity: Long): AuthenticationOptions {
-        return post(createUrl(ApiRoutes.challenge), mapOf("identity" to identity))
+    suspend fun challenge(clientId: String): ApiResponse<AuthenticationOptions> {
+        return post(createUrl(ApiRoutes.challenge), mapOf("client_id" to clientId))
     }
 
-    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
+    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): ApiResponse<AuthResult> {
         return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
     }
 }

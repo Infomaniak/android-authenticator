@@ -20,12 +20,10 @@ package com.infomaniak.auth.lib.network.repositories
 import com.infomaniak.auth.lib.network.ApiClientProvider
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
-import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
-import com.infomaniak.auth.lib.network.models.VerifyResponse
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import network.requests.AuthenticatorRequest
@@ -34,7 +32,10 @@ import network.utils.ApiEnvironment
 class WebAuthnRepository internal constructor(private val authenticatorRequest: AuthenticatorRequest) {
 
     constructor(environment: ApiEnvironment) : this(ApiClientProvider(), environment)
-    constructor(apiClientProvider: ApiClientProvider = ApiClientProvider(), environment: ApiEnvironment) : this(
+    constructor(
+        apiClientProvider: ApiClientProvider = ApiClientProvider(),
+        environment: ApiEnvironment,
+    ) : this(
         environment = environment,
         json = apiClientProvider.json,
         httpClient = apiClientProvider.httpClient,
@@ -50,48 +51,17 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
     }
 
     // Validate WebAuthn registration and save public key (authentified)
-    suspend fun registerPasskey(registerPasskey: RegisterPasskey) {
-        //TODO where to get the bearer from?
-        authenticatorRequest.registerPasskey(registerPasskey)
+    suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
+        authenticatorRequest.registerPasskey(token, registerPasskey)
     }
 
     // Authentification challenge (not authentified)
-    suspend fun challenge(identity: Long): AuthenticationOptions {
-        return authenticatorRequest.challenge(identity)
+    suspend fun challenge(clientId: String): AuthenticationOptions {
+        return authenticatorRequest.challenge(clientId).data
     }
 
     // Authentification verification (not authentified)
-    suspend fun verify(
-        identity: Long,
-        id: String,
-        rawId: String,
-        verifyResponse: VerifyResponse,
-        type: String,
-        clientExtensionResult: ClientExtensionResults,
-        authenticatorAttachment: String,
-    ): AuthResult {
-        return authenticatorRequest.verify(
-            VerifyAuthenticationData(
-                identity,
-                id,
-                rawId,
-                verifyResponse,
-                type,
-                clientExtensionResult,
-                authenticatorAttachment,
-            )
-        )
-    }
-
-    // Generate WebAuthn registration options (authentified)
-    suspend fun getRegistrationOptions(): PasskeysOptions {
-        //TODO where to get the bearer ?
-        return authenticatorRequest.getPasskeysOptions()
-    }
-
-    // Validate WebAuthn registration and save public key (authentified)
-    suspend fun registerCredential(registerPasskey: RegisterPasskey): Result<Unit> {
-        //TODO where to get the bearer ?
-        return authenticatorRequest.registerPasskey(registerPasskey)
+    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
+        return authenticatorRequest.verify(verifyAuthenticationData).data
     }
 }

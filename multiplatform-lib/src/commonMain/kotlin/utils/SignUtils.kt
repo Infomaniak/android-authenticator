@@ -15,14 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.utils
+package com.infomaniak.auth.lib.utils
 
-internal object ApiRoutes {
+expect object SignUtils {
 
-    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
-
-    const val getPasskeysOptions = "users/me/passkeys/options"
-    const val registerPasskey = "users/me/passkeys"
-    const val challenge = "authenticator/challenge"
-    const val verify = "authenticator/verify"
+    fun signWithPrivateKey(privateKey: ByteArray, data: ByteArray): ByteArray
 }

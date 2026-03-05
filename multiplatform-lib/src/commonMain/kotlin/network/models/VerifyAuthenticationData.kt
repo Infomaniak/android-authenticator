@@ -17,11 +17,14 @@
  */
 package com.infomaniak.auth.lib.network.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class VerifyAuthenticationData(
-    val identity: Long,
+    @SerialName("client_id")
+    val clientId: String,
+    val session: String,
     val id: String,
     val rawId: String,
     val response: VerifyResponse,
