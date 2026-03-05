@@ -2,7 +2,6 @@
 kotlin = "2.3.0"
 kotlinxCollectionsImmutable = "0.4.0"
 ksp = "2.3.4"
-ktor = "3.3.0"
 lifecycleViewmodelNav3 = "2.10.0"
 nav3Core = "1.0.0"
 room = "2.8.4"
