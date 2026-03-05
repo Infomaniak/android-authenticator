@@ -18,6 +18,9 @@
 package network.utils
 
 sealed class ApiEnvironment(val baseUrl: String) {
+    data object Staging :
+        ApiEnvironment("https://login.staging-authenticator.dev.infomaniak.ch")
+
     // Those urls are duplicated with the ones we have in Android so don't forget to change them also in Android
     data object Preprod :
         ApiEnvironment("https://authenticator.preprod.dev.infomaniak.ch") //TODO Change this to the final baseUrl
