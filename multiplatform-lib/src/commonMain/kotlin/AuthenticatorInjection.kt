@@ -32,11 +32,12 @@ class AuthenticatorInjection(
     private val apiClientProvider by lazy {
         ApiClientProvider(
             userAgent = userAgent,
+            environment = environment,
             crashReport = crashReport,
         )
     }
 
-    private val webAuthnRepository by lazy { WebAuthnRepository(apiClientProvider, environment) }
+    private val webAuthnRepository by lazy { WebAuthnRepository(apiClientProvider) }
 
     val authenticatorManager by lazy { AuthenticatorManager(webAuthnRepository) }
 }

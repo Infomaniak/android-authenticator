@@ -23,25 +23,26 @@ import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
+import com.infomaniak.auth.lib.network.utils.decode
 import io.ktor.client.HttpClient
 import io.ktor.http.HeadersBuilder
 import kotlinx.serialization.json.Json
 import network.utils.ApiEnvironment
+import io.ktor.client.request.get
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import network.utils.ApiRoutes
 
-internal class AuthenticatorRequest(
-    environment: ApiEnvironment,
-    json: Json,
-    httpClient: HttpClient,
-) : BaseRequest(environment, json, httpClient) {
+internal class AuthenticatorRequest(private val httpClient: HttpClient) {
 
     /**
      * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
      */
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
-        return get(createUrl(ApiRoutes.getPasskeysOptions), appendHeaders = {
+        return httpClient.get(ApiRoutes.getPasskeysOptions) {
+        }.decode()
             addAuthenticationHeader(token)
-        })
     }
 
     /**
@@ -49,16 +50,19 @@ internal class AuthenticatorRequest(
      * after [getPasskeysOptions] is done.
      */
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
-        post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey, appendHeaders = {
             addAuthenticationHeader(token)
-        })
+        httpClient.post(ApiRoutes.registerPasskey) {
+            setBody(registerPasskey)
+        }
     }
 
     /**
      * Retrieves the backend-generated challenge, prior to authenticating with [verify].
      */
     suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
-        return post(createUrl(ApiRoutes.challenge), mapOf("client_id" to clientId))
+        return httpClient.post(ApiRoutes.challenge) {
+            setBody(mapOf("client_id" to clientId))
+        }.decode()
     }
 
     /**
@@ -69,7 +73,9 @@ internal class AuthenticatorRequest(
      * @return An [AuthResult] that includes an access token.
      */
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
-        return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
+        return httpClient.post(ApiRoutes.verify) {
+            setBody(verifyAuthenticationData)
+        }.decode()
     }
 
     suspend fun deletePasskey(token: String, passkeyId: String) {
