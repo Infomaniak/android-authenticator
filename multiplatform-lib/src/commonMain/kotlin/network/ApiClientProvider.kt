@@ -45,20 +45,11 @@ import network.exceptions.ApiException.UnexpectedApiErrorFormatException
 import network.exceptions.NetworkException
 import kotlin.time.Duration.Companion.seconds
 
-class ApiClientProvider internal constructor(
-    engine: HttpClientEngine? = null,
-    // When you don't use AuthenticatorInjection, you don't have an userAgent, so we're currently setting a default value.
-    // See later how to improve it.
-    private val userAgent: String = "Ktor client",
+class ApiClientProvider constructor(
+    private val userAgent: String,
+    private val environment: ApiEnvironment,
     private val crashReport: CrashReportInterface? = null,
 ) {
-
-    constructor() : this(null)
-    constructor(userAgent: String, crashReport: CrashReportInterface) : this(
-        engine = null,
-        userAgent = userAgent,
-        crashReport = crashReport,
-    )
 
     val json = Json {
         ignoreUnknownKeys = true
