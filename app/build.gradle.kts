@@ -82,6 +82,12 @@ android {
     }
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion.toString())
+    }
+}
+
 val isRelease = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
 
 val envProperties = rootProject.file("env.properties")
@@ -135,6 +141,7 @@ dependencies {
     implementation(core.infomaniak.core.matomo)
     implementation(core.infomaniak.core.network)
     implementation(core.infomaniak.core.onboarding)
+    implementation(core.infomaniak.core.privacymanagement)
     implementation(core.infomaniak.core.sentry)
     implementation(core.infomaniak.core.ui.compose.basics)
     implementation(core.infomaniak.core.ui.compose.basicbutton)
@@ -149,7 +156,7 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(core.androidx.work.runtime.ktx)
-    implementation(libs.kotlinx.collections.immutable)
+    implementation(core.kotlinx.collections.immutable)
 
     implementation(core.kotlinx.serialization.json)
 

@@ -21,4 +21,5 @@ import androidx.compose.ui.unit.dp
 
 object AppDimens {
     val LargeButtonHeight = 48.dp
+    val CardCornerRadius = 24.dp
 }

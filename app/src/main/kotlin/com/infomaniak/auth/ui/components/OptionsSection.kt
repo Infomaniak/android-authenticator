@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -91,7 +92,7 @@ private fun OptionsSectionContainer(
                         .fillMaxWidth()
                         .padding(horizontal = Margin.Medium),
                     colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(AppDimens.CardCornerRadius),
                 ) {
                     Column {
                         content(optionsSection)
