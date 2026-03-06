@@ -25,24 +25,13 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import io.ktor.client.HttpClient
-import kotlinx.serialization.json.Json
 import network.requests.AuthenticatorRequest
-import network.utils.ApiEnvironment
 
 class WebAuthnRepository internal constructor(private val authenticatorRequest: AuthenticatorRequest) {
 
-    constructor(environment: ApiEnvironment) : this(ApiClientProvider(), environment)
-    constructor(
-        apiClientProvider: ApiClientProvider = ApiClientProvider(),
-        environment: ApiEnvironment,
-    ) : this(
-        environment = environment,
-        json = apiClientProvider.json,
-        httpClient = apiClientProvider.httpClient,
-    )
+    constructor(apiClientProvider: ApiClientProvider) : this(httpClient = apiClientProvider.httpClient)
 
-    internal constructor(environment: ApiEnvironment, json: Json, httpClient: HttpClient) :
-            this(AuthenticatorRequest(environment, json, httpClient))
+    internal constructor(httpClient: HttpClient) : this(AuthenticatorRequest(httpClient))
 
     // Generate WebAuthn registration options (authentified)
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
