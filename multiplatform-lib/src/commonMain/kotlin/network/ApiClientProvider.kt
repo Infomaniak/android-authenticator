@@ -24,25 +24,30 @@ import com.infomaniak.auth.lib.network.models.ApiError
 import com.infomaniak.auth.lib.network.utils.getRequestContextId
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
+import io.ktor.http.ContentType
 import io.ktor.http.contentLength
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.CancellationException
 import kotlinx.io.IOException
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import network.exceptions.ApiException
 import network.exceptions.ApiException.ApiErrorException
 import network.exceptions.ApiException.UnexpectedApiErrorFormatException
 import network.exceptions.NetworkException
+import network.utils.ApiEnvironment
+import network.utils.ApiRoutes
 import kotlin.time.Duration.Companion.seconds
 
 class ApiClientProvider constructor(
@@ -58,15 +63,30 @@ class ApiClientProvider constructor(
         useAlternativeNames = false
     }
 
-    val httpClient = createHttpClient(engine)
+    val httpClient = createHttpClient()
 
-    fun createHttpClient(engine: HttpClientEngine?): HttpClient {
+    fun createHttpClient(): HttpClient {
         val block: HttpClientConfig<*>.() -> Unit = {
             install(UserAgent) {
                 agent = userAgent
             }
             install(ContentNegotiation) {
-                json(this@ApiClientProvider.json)
+                val jsonConfig = Json {
+                    /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
+                    encodeDefaults = true
+                    isLenient = true
+                    allowSpecialFloatingPointValues = true
+                    allowStructuredMapKeys = true
+                    prettyPrint = false
+                    useArrayPolymorphism = false
+
+                    // Use-case specific config:
+                    coerceInputValues = true // Use default values if not recognized (used for enums).
+                    ignoreUnknownKeys = true // Don't break if keys are added.
+                    @OptIn(ExperimentalSerializationApi::class)
+                    decodeEnumsCaseInsensitive = true
+                }
+                json(jsonConfig)
             }
             install(ContentEncoding) {
                 gzip()
@@ -85,6 +105,12 @@ class ApiClientProvider constructor(
                     retry * 500L
                 }
             }
+
+            defaultRequest {
+                url(ApiRoutes.apiBaseUrl(environment))
+                contentType(ContentType.Application.Json)
+            }
+
             HttpResponseValidator {
                 validateResponse { response: HttpResponse ->
                     val requestContextId = response.getRequestContextId()
@@ -123,7 +149,7 @@ class ApiClientProvider constructor(
             }
         }
 
-        return if (engine != null) HttpClient(engine, block) else HttpClient(block)
+        return HttpClient(block)
     }
 
     private fun addSentryUrlBreadcrumb(response: HttpResponse, statusCode: Int, requestContextId: String) {
