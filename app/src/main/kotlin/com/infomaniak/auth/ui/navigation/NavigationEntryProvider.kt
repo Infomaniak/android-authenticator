@@ -28,6 +28,7 @@ import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScree
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
 import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
+import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementScreen
 import com.infomaniak.auth.ui.screen.settings.theme.ThemeSettingsScreen
 
 fun baseEntryProvider(
@@ -45,6 +46,9 @@ fun baseEntryProvider(
         SettingsScreen(
             onThemeClicked = {
                 backStack.add(NavDestination.Theme)
+            },
+            onPrivacyManagementClicked = {
+                backStack.add(NavDestination.PrivacyManagement)
             }
         )
     }
@@ -54,6 +58,9 @@ fun baseEntryProvider(
                 backStack.removeAt(backStack.lastIndex)
             }
         )
+    }
+    entry<NavDestination.PrivacyManagement> {
+        PrivacyManagementScreen()
     }
     entry<NavDestination.AccountDetails> {
         AccountDetails(

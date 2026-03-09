@@ -82,12 +82,6 @@ android {
     }
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(javaVersion.toString())
-    }
-}
-
 val isRelease = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
 
 val envProperties = rootProject.file("env.properties")

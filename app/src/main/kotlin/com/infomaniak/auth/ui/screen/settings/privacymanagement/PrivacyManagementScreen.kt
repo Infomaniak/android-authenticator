@@ -18,18 +18,28 @@
 package com.infomaniak.auth.ui.screen.settings.privacymanagement
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 import com.infomaniak.auth.ui.images.illus.dataProtection.DataProtection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.privacymanagement.BrandReceiver
 import com.infomaniak.core.privacymanagement.PrivacyManagementHomeContent
+import com.infomaniak.core.privacymanagement.Tracker
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -48,7 +58,29 @@ fun PrivacyManagementScreen() {
                     modifier = Modifier.padding(Margin.Medium),
                 )
             },
-            brandReceiver = BrandReceiver.entries.toPersistentList()
+            trackerListSurface = { content ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Margin.Medium),
+                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
+                    shape = RoundedCornerShape(24.dp),
+                ) {
+                    content()
+                }
+            },
+            trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo).toPersistentList(),
+            divider = {
+                HorizontalDivider(
+                    color = AuthenticatorTheme.materialColors.outlineVariant,
+                )
+            },
+            rightIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.right_indicator),
+                    contentDescription = null,
+                )
+            }
         )
     }
 }
