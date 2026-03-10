@@ -1,5 +1,3 @@
-package com.infomaniak.auth.lib
-
 /*
  * Infomaniak Authenticator - Android
  * Copyright (C) 2026 Infomaniak Network SA
@@ -17,6 +15,9 @@ package com.infomaniak.auth.lib
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.infomaniak.auth.lib
+
 import com.infomaniak.auth.lib.internal.webauthn.keyCoseOf
 import okio.Buffer
 import kotlin.test.Test
