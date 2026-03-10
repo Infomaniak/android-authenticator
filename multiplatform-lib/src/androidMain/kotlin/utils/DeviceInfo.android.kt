@@ -15,21 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.models
+package com.infomaniak.auth.lib.utils
 
+import android.os.Build
 import com.infomaniak.auth.lib.internal.DeviceInfo
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class RegisterPasskey(
-    val session: String,
-    val device: DeviceInfo,
-    val id: String,
-    val rawId: String,
-    @SerialName("response")
-    val registerPasskeyResponse: RegisterPasskeyResponse,
-    val type: String,
-    val clientExtensionResults: ClientExtensionResults,
-    val authenticatorAttachment: String,
-)
+actual fun getDeviceInfo(): DeviceInfo {
+    return DeviceInfo(
+        brand = Build.BRAND,
+        model = Build.MODEL,
+        platform = "android",
+    )
+}

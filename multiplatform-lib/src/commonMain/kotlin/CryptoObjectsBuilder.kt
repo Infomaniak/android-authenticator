@@ -24,6 +24,7 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.RegisterPasskeyResponse
 import com.infomaniak.auth.lib.network.models.WebAuthnAttestationObject
 import com.infomaniak.auth.lib.network.models.WebAuthnClientData
+import com.infomaniak.auth.lib.utils.getDeviceInfo
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -67,7 +68,7 @@ class CryptoObjectsBuilder(private val publicKey: ByteArray) {
 
         return RegisterPasskey(
             session = passkeysOptions.session,
-            device = "c812eb96-4757-4565-8b2d-850604458607", //TODO get this device UUID from /devices (DeviceInfoUpdateWorker)
+            device = getDeviceInfo(),
             id = id,
             rawId = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId),
             registerPasskeyResponse = response,
