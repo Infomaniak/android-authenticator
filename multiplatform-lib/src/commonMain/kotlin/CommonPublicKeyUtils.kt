@@ -61,8 +61,7 @@ abstract class CommonPublicKeyUtils {
     }
 
     private fun Buffer.writeByteString(bytes: ByteArray) {
-        // Byte string of 32 bytes (0x58 0x20)
-        writeByte(0x58)  // byte string, 1-byte length
+        writeByte(0x58)  // byte string (CBOR type), 1-byte length
         writeByte(bytes.size)
         write(bytes)
     }
