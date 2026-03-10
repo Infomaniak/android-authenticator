@@ -19,9 +19,9 @@ package com.infomaniak.auth.lib
 
 import okio.Buffer
 
-interface CommonPublicKeyUtils {
+abstract class CommonPublicKeyUtils {
 
-    fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY
+    abstract fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY
 
     fun getPublicKeyCose(publicKeyByteArray: ByteArray): ByteArray {
         val publicKeyXY = getPublicKeyXY(publicKeyByteArray)
@@ -54,12 +54,10 @@ interface CommonPublicKeyUtils {
     }
 
     fun ByteArray.padTo32Bytes(): ByteArray {
-        return if (this.size == 32) {
-            this
-        } else if (this.size > 32) {
-            this.copyOfRange(this.size - 32, this.size)
-        } else {
-            ByteArray(32 - this.size) { 0x00 } + this
+        return when {
+            this.size == 32 -> this
+            this.size > 32 -> this.copyOfRange(this.size - 32, this.size)
+            else -> ByteArray(32 - this.size) { 0x00 } + this
         }
     }
 

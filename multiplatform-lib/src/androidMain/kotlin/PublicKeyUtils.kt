@@ -22,7 +22,7 @@ import java.security.PublicKey
 import java.security.interfaces.ECPublicKey
 import java.security.spec.X509EncodedKeySpec
 
-actual object PublicKeyUtils : CommonPublicKeyUtils {
+actual object PublicKeyUtils : CommonPublicKeyUtils() {
 
     actual override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY {
         val publicKey = getPublicKeyFromByteArray(publicKeyByteArray) as ECPublicKey

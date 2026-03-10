@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib
 
-actual object PublicKeyUtils : CommonPublicKeyUtils {
+actual object PublicKeyUtils : CommonPublicKeyUtils() {
 
     actual override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY {
         val uncompressedKey = parseX509SubjectPublicKeyInfo(publicKeyByteArray)
