@@ -15,9 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.internal.utils
 
-expect object PublicKeyUtils : CommonPublicKeyUtils {
+import com.infomaniak.auth.lib.PublicKeyXY
+import java.security.KeyFactory
+import java.security.PublicKey
+import java.security.interfaces.ECPublicKey
+import java.security.spec.X509EncodedKeySpec
 
-    override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY
+internal actual fun getKeyCoordinates(key: ByteArray): PublicKeyXY {
+    val publicKey = getPublicKeyFromByteArray(key) as ECPublicKey
+    val w = publicKey.w
+    val x = w.affineX.toByteArray().padEnd(32)
+    val y = w.affineY.toByteArray().padEnd(32)
+    return PublicKeyXY(x, y)
+}
+
+private fun getPublicKeyFromByteArray(bytes: ByteArray): PublicKey {
+    val keySpec = X509EncodedKeySpec(bytes)
+    val keyFactory = KeyFactory.getInstance("EC")
+    return keyFactory.generatePublic(keySpec)
 }

@@ -25,6 +25,7 @@ kotlin {
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }
+        withHostTest {}
     }
 
     val xcframeworkName = "CoreAuthenticator"
@@ -32,6 +33,7 @@ kotlin {
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
+        macosArm64(),
     ).forEach {
         it.binaries.framework {
             baseName = xcframeworkName

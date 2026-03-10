@@ -1,3 +1,5 @@
+package com.infomaniak.auth.lib
+
 /*
  * Infomaniak Authenticator - Android
  * Copyright (C) 2026 Infomaniak Network SA
@@ -15,15 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
-
+import com.infomaniak.auth.lib.internal.webauthn.keyCoseOf
 import okio.Buffer
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-abstract class CommonPublicKeyUtils {
+class KeyCoseTest {
 
-    abstract fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY
+    @Test
+    fun testKeyCoseOfResult() {
+        // Arbitrary binary data for testing
+        val x = ByteArray(32) { it.toByte() }
+        val y = ByteArray(32) { (it + 32).toByte() }
 
-    fun getPublicKeyCose(publicKeyByteArray: ByteArray): ByteArray {
+        // Check that the keyCoseOf function, using kotlinx.serialization yields the same result as our former manual approach.
+
+        val publicKeyCose = keyCoseOf(x = x, y = y)
+        val manualResult = encodeKeyCoseManually(PublicKeyXY(x, y))
+
+        assertEquals(
+            expected = publicKeyCose.map { it.toHexString() },
+            actual = manualResult.map { it.toHexString() }
+        )
+    }
+
+    private fun encodeKeyCoseManually(publicKeyXY: PublicKeyXY): ByteArray {
         return Buffer().apply {
             // Map with 5 elements
             writeByte(0xA5)
@@ -40,7 +58,6 @@ abstract class CommonPublicKeyUtils {
             writeByte(0x20)  // negative int -1 (0x20 = -1 - 0)
             writeByte(0x01)  // unsigned int 1
 
-            val publicKeyXY = getPublicKeyXY(publicKeyByteArray)
 
             // -2 (x) -> ByteString(32)
             writeByte(0x21)  // negative int -2 (0x21 = -1 - 1)
@@ -53,7 +70,8 @@ abstract class CommonPublicKeyUtils {
     }
 
     private fun Buffer.writeByteString(bytes: ByteArray) {
-        writeByte(0x58)  // byte string (CBOR type), 1-byte length
+        // Byte string of 32 bytes (0x58 0x20)
+        writeByte(0x58)  // byte string, 1-byte length
         writeByte(bytes.size)
         write(bytes)
     }

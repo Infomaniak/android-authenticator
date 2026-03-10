@@ -17,8 +17,9 @@
  */
 package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.PublicKeyUtils.getPublicKeyCose
+import com.infomaniak.auth.lib.internal.utils.getKeyCoordinates
 import com.infomaniak.auth.lib.internal.webauthn.createWebAuthnAttestationObject
+import com.infomaniak.auth.lib.internal.webauthn.keyCoseOf
 import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
@@ -98,7 +99,11 @@ class CryptoObjectsBuilder(private val publicKey: ByteArray) {
     }
 
     fun generateAuthenticatorData(rpId: String, credentialId: ByteArray): ByteArray {
-        val publicKeyCose = getPublicKeyCose(publicKey)
+        val keyCoordinates = getKeyCoordinates(publicKey)
+        val publicKeyCose = keyCoseOf(
+            x = keyCoordinates.x,
+            y = keyCoordinates.y
+        )
         val rpIdHash = rpId.encodeUtf8().sha256().toByteArray()
         val flags: Byte = 0x41
         val signCount = byteArrayOf(0x00, 0x00, 0x00, 0x00)

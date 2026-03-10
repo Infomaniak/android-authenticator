@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.internal.utils
 
-internal class PublicKeyXY(
-    val x: ByteArray,
-    val y: ByteArray,
-)
+import com.infomaniak.auth.lib.PublicKeyXY
+
+internal expect fun getKeyCoordinates(key: ByteArray): PublicKeyXY
