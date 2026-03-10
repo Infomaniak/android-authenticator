@@ -82,7 +82,6 @@ class CryptoObjectsBuilder(private val publicKey: ByteArray) {
         val clientData = WebAuthnClientData(
             type = "webauthn.create",
             challenge = challenge,
-            // challenge = "NkpLeTN1Y3VWRFlJN1QyZ2VBdDYxcWVlbFFaYWtpakk",
             origin = "https://infomaniak.ch",
             crossOrigin = false,
         )
