@@ -24,7 +24,4 @@ data class User(
     val id: String,
     val name: String,
     val displayName: String?,
-) {
-
-    override fun toString() = "$id:$name:$displayName"
-}
+)
