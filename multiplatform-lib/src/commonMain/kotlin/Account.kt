@@ -18,8 +18,7 @@
 
 package com.infomaniak.auth.lib
 
-@ConsistentCopyVisibility
-data class Account internal constructor(
+data class Account(
     val id: Long,
     val fullName: String,
     val initials: String,
