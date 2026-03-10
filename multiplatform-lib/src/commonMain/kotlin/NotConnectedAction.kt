@@ -29,11 +29,14 @@ sealed interface NotConnectedAction {
         val sendCredentials: (CredentialsForMigration) -> Unit,
     ) : NotConnectedAction
 
-    /**
-     * @property proceed Typically called when the user presses a button labeled "Skip" or "Retry".
-     */
-    data class Issue(
-        val proceed: (shouldRetry: Boolean) -> Unit,
+    sealed interface Issue : NotConnectedAction {
         //TODO[ik-auth]: Add details on the issue kind or cause.
-    ) : NotConnectedAction
+        /**
+         * @property proceed Typically called when the user presses a button labeled "Skip" or "Retry".
+         */
+        data class Retriable(val proceed: (shouldRetry: Boolean) -> Unit) : Issue
+
+        data class NonRetriable(val message: String) : Issue
+
+    }
 }
