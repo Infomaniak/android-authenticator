@@ -72,11 +72,7 @@ class OnboardingStartViewModel @Inject constructor(
         val loginResult = attemptLogin(selectedAccounts = accounts)
         loginUsers(loginResult, snackbarHostState)
         loginResult.errorMessageIds.forEach { messageResId ->
-            snackbarHostState.showSnackbar(
-                context.resources.getString(
-                    messageResId
-                )
-            )
+            snackbarHostState.showSnackbar(context.resources.getString(messageResId))
         }
     }
 
