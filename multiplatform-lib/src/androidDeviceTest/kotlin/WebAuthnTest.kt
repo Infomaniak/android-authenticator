@@ -34,11 +34,12 @@ class WebAuthnTest {
     fun registerPasskeyGeneration() = runTest {
         // This is sent from [GET] /api/authenticator/passkeys/options
         val passkeysOptions = PasskeysOptions(
+            session = "a-beautiful-session",
             challenge = "U3NkRnF6RlVwUnpKRGhVMw",
             relyingParty = RelyingParty(
                 id = "infomaniak.com",
                 name = "Infomaniak",
-                icon = null,
+                iconUrl = null,
             ),
             user = User(
                 id = "MQ",
@@ -60,6 +61,6 @@ class WebAuthnTest {
         val publicKeyAsByteArray = keyPairManager.retrievePublicKey().firstOrNull()!!
 
         // Nothing to test on the generated object for now
-        CryptoObjectsBuilder(passkeysOptions, publicKeyAsByteArray).buildRegisterPasskey()
+        CryptoObjectsBuilder(publicKeyAsByteArray).buildRegisterPasskey(passkeysOptions)
     }
 }
