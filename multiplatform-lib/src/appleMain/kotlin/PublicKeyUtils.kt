@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.utils.padEnd
+
 actual object PublicKeyUtils : CommonPublicKeyUtils() {
 
     actual override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY {
@@ -24,8 +26,8 @@ actual object PublicKeyUtils : CommonPublicKeyUtils() {
         require(uncompressedKey[0] == 0x04.toByte()) { "Expected uncompressed format" }
         require(uncompressedKey.size == 65) { "Invalid key length: ${uncompressedKey.size}" }
 
-        val x = uncompressedKey.copyOfRange(1, 33).padTo32Bytes()
-        val y = uncompressedKey.copyOfRange(33, 65).padTo32Bytes()
+        val x = uncompressedKey.copyOfRange(1, 33).padEnd(32)
+        val y = uncompressedKey.copyOfRange(33, 65).padEnd(32)
 
         return PublicKeyXY(x, y)
     }

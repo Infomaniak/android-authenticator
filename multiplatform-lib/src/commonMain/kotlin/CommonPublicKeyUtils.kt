@@ -52,14 +52,6 @@ abstract class CommonPublicKeyUtils {
         }.readByteArray()
     }
 
-    protected fun ByteArray.padTo32Bytes(): ByteArray {
-        return when {
-            size == 32 -> this
-            size > 32 -> this.copyOfRange(fromIndex = size - 32, toIndex = size)
-            else -> ByteArray(32 - size) + this
-        }
-    }
-
     private fun Buffer.writeByteString(bytes: ByteArray) {
         writeByte(0x58)  // byte string (CBOR type), 1-byte length
         writeByte(bytes.size)

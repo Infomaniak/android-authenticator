@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.utils.padEnd
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.interfaces.ECPublicKey
@@ -27,8 +28,8 @@ actual object PublicKeyUtils : CommonPublicKeyUtils() {
     actual override fun getPublicKeyXY(publicKeyByteArray: ByteArray): PublicKeyXY {
         val publicKey = getPublicKeyFromByteArray(publicKeyByteArray) as ECPublicKey
         val w = publicKey.w
-        val x = w.affineX.toByteArray().padTo32Bytes()
-        val y = w.affineY.toByteArray().padTo32Bytes()
+        val x = w.affineX.toByteArray().padEnd(32)
+        val y = w.affineY.toByteArray().padEnd(32)
 
         return PublicKeyXY(x, y)
     }
