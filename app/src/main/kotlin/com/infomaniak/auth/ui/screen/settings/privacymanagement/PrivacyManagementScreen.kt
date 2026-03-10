@@ -18,17 +18,12 @@
 package com.infomaniak.auth.ui.screen.settings.privacymanagement
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
@@ -57,17 +52,6 @@ fun PrivacyManagementScreen() {
                     contentDescription = null,
                     modifier = Modifier.padding(Margin.Medium),
                 )
-            },
-            trackerListSurface = { content ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = Margin.Medium),
-                    colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
-                    shape = RoundedCornerShape(24.dp),
-                ) {
-                    content()
-                }
             },
             trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo).toPersistentList(),
             divider = {
