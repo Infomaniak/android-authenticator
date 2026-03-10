@@ -22,8 +22,8 @@ import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.RegisterPasskeyResponse
-import com.infomaniak.auth.lib.network.models.WebAuthnAttestationObject
 import com.infomaniak.auth.lib.network.models.WebAuthnClientData
+import com.infomaniak.auth.lib.network.models.createWebAuthnAttestationObject
 import com.infomaniak.auth.lib.utils.getDeviceInfo
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
@@ -50,7 +50,7 @@ class CryptoObjectsBuilder(private val publicKey: ByteArray) {
         val clientDataJSON = buildClientDataJSON(passkeysOptions.challenge)
 
         // AttestationObject
-        val attestationObject = WebAuthnAttestationObject.toCborByteArray(
+        val attestationObject = createWebAuthnAttestationObject(
             fmt = "none",
             authData = authenticatorData
         )

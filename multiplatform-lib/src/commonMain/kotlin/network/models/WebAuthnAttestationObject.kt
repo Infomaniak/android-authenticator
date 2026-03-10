@@ -17,61 +17,50 @@
  */
 package com.infomaniak.auth.lib.network.models
 
-import kotlinx.serialization.Serializable
 import okio.Buffer
 import okio.ByteString
 
-@Serializable
-data class WebAuthnAttestationObject(
-    val fmt: String,
-    val attStmt: Unit,
-    val authData: ByteArray,
-) {
-    companion object {
+fun createWebAuthnAttestationObject(fmt: String, authData: ByteArray): ByteString {
+    val buffer = Buffer()
 
-        fun toCborByteArray(fmt: String, authData: ByteArray): ByteString {
-            val buffer = Buffer()
+    // Map start
+    buffer.writeByte(0xA2) // 2 items
 
-            // Map start
-            buffer.writeByte(0xA2) // 2 items
+    // "fmt": "none"
+    writeText(buffer, "fmt")
+    writeText(buffer, fmt)
 
-            // "fmt": "none"
-            writeText(buffer, "fmt")
-            writeText(buffer, fmt)
+    // "authData": <bytes>
+    writeText(buffer, "authData")
+    writeByteString(buffer, authData)
 
-            // "authData": <bytes>
-            writeText(buffer, "authData")
-            writeByteString(buffer, authData)
+    return buffer.readByteString()
+}
 
-            return buffer.readByteString()
+private fun writeText(buffer: Buffer, text: String) {
+    val bytes = text.encodeToByteArray()
+    buffer.writeByte(0x60 + bytes.size) // 0x60 = text string base
+    buffer.write(bytes)
+}
+
+private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
+    when {
+        bytes.size <= 23 -> {
+            buffer.writeByte(0x40 + bytes.size) // 0x40 = byte string base
         }
-
-        private fun writeText(buffer: Buffer, text: String) {
-            val bytes = text.encodeToByteArray()
-            buffer.writeByte(0x60 + bytes.size) // 0x60 = text string base
-            buffer.write(bytes)
+        bytes.size <= 255 -> {
+            buffer.writeByte(0x58) // byte string, 1-byte length follows
+            buffer.writeByte(bytes.size)
         }
-
-        private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
-            when {
-                bytes.size <= 23 -> {
-                    buffer.writeByte(0x40 + bytes.size) // 0x40 = byte string base
-                }
-                bytes.size <= 255 -> {
-                    buffer.writeByte(0x58) // byte string, 1-byte length follows
-                    buffer.writeByte(bytes.size)
-                }
-                bytes.size <= 65535 -> {
-                    buffer.writeByte(0x59) // byte string, 2-byte length follows
-                    buffer.writeByte(bytes.size shr 8)
-                    buffer.writeByte(bytes.size and 0xFF)
-                }
-                else -> {
-                    buffer.writeByte(0x5A) // byte string, 4-byte length follows
-                    buffer.writeInt(bytes.size)
-                }
-            }
-            buffer.write(bytes)
+        bytes.size <= 65535 -> {
+            buffer.writeByte(0x59) // byte string, 2-byte length follows
+            buffer.writeByte(bytes.size shr 8)
+            buffer.writeByte(bytes.size and 0xFF)
+        }
+        else -> {
+            buffer.writeByte(0x5A) // byte string, 4-byte length follows
+            buffer.writeInt(bytes.size)
         }
     }
+    buffer.write(bytes)
 }
