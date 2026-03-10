@@ -62,7 +62,7 @@ abstract class CommonPublicKeyUtils {
     }
 
     private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
-        // Byte string de 32 bytes (0x58 0x20)
+        // Byte string of 32 bytes (0x58 0x20)
         buffer.writeByte(0x58)  // byte string, 1-byte length
         buffer.writeByte(bytes.size)
         buffer.write(bytes)
