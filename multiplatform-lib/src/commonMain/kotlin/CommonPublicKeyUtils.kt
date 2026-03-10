@@ -53,7 +53,7 @@ abstract class CommonPublicKeyUtils {
         return buffer.readByteArray()
     }
 
-    fun ByteArray.padTo32Bytes(): ByteArray {
+    protected fun ByteArray.padTo32Bytes(): ByteArray {
         return when {
             size == 32 -> this
             size > 32 -> this.copyOfRange(fromIndex = size - 32, toIndex = size)
