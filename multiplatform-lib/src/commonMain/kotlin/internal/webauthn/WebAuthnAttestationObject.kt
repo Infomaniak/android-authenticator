@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.models
+package com.infomaniak.auth.lib.internal.webauthn
 
 import okio.Buffer
 import okio.ByteString
 
-fun createWebAuthnAttestationObject(fmt: String, authData: ByteArray): ByteString {
+internal fun createWebAuthnAttestationObject(fmt: String, authData: ByteArray): ByteString {
     val buffer = Buffer()
 
     // Map start

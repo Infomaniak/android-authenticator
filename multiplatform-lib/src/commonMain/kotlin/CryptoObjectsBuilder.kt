@@ -18,12 +18,12 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.PublicKeyUtils.getPublicKeyCose
+import com.infomaniak.auth.lib.internal.webauthn.createWebAuthnAttestationObject
 import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.RegisterPasskeyResponse
 import com.infomaniak.auth.lib.network.models.WebAuthnClientData
-import com.infomaniak.auth.lib.network.models.createWebAuthnAttestationObject
 import com.infomaniak.auth.lib.utils.getDeviceInfo
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
