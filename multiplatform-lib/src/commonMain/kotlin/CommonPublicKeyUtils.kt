@@ -55,9 +55,9 @@ abstract class CommonPublicKeyUtils {
 
     fun ByteArray.padTo32Bytes(): ByteArray {
         return when {
-            this.size == 32 -> this
-            this.size > 32 -> this.copyOfRange(this.size - 32, this.size)
-            else -> ByteArray(32 - this.size) { 0x00 } + this
+            size == 32 -> this
+            size > 32 -> this.copyOfRange(fromIndex = size - 32, toIndex = size)
+            else -> ByteArray(32 - size) + this
         }
     }
 
