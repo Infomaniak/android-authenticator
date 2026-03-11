@@ -41,39 +41,39 @@ class KeyCoseTest {
             actual = manualResult.map { it.toHexString() }
         )
     }
+}
 
-    private fun encodeKeyCoseManually(publicKeyXY: PublicKeyXY): ByteArray {
-        return Buffer().apply {
-            // Map with 5 elements
-            writeByte(0xA5)
+private fun encodeKeyCoseManually(publicKeyXY: PublicKeyXY): ByteArray {
+    return Buffer().apply {
+        // Map with 5 elements
+        writeByte(0xA5)
 
-            // 1 (kty) -> 2 (EC2)
-            writeByte(0x01)  // unsigned int 1
-            writeByte(0x02)  // unsigned int 2
+        // 1 (kty) -> 2 (EC2)
+        writeByte(0x01)  // unsigned int 1
+        writeByte(0x02)  // unsigned int 2
 
-            // 3 (alg) -> -7 (ES256)
-            writeByte(0x03)  // unsigned int 3
-            writeByte(0x26)  // negative int -7 (0x26 = -1 - 6)
+        // 3 (alg) -> -7 (ES256)
+        writeByte(0x03)  // unsigned int 3
+        writeByte(0x26)  // negative int -7 (0x26 = -1 - 6)
 
-            // -1 (crv) -> 1 (P-256)
-            writeByte(0x20)  // negative int -1 (0x20 = -1 - 0)
-            writeByte(0x01)  // unsigned int 1
+        // -1 (crv) -> 1 (P-256)
+        writeByte(0x20)  // negative int -1 (0x20 = -1 - 0)
+        writeByte(0x01)  // unsigned int 1
 
 
-            // -2 (x) -> ByteString(32)
-            writeByte(0x21)  // negative int -2 (0x21 = -1 - 1)
-            writeByteString(publicKeyXY.x)
+        // -2 (x) -> ByteString(32)
+        writeByte(0x21)  // negative int -2 (0x21 = -1 - 1)
+        writeByteString(publicKeyXY.x)
 
-            // -3 (y) -> ByteString(32)
-            writeByte(0x22)  // negative int -3 (0x22 = -1 - 2)
-            writeByteString(publicKeyXY.y)
-        }.readByteArray()
-    }
+        // -3 (y) -> ByteString(32)
+        writeByte(0x22)  // negative int -3 (0x22 = -1 - 2)
+        writeByteString(publicKeyXY.y)
+    }.readByteArray()
+}
 
-    private fun Buffer.writeByteString(bytes: ByteArray) {
-        // Byte string of 32 bytes (0x58 0x20)
-        writeByte(0x58)  // byte string, 1-byte length
-        writeByte(bytes.size)
-        write(bytes)
-    }
+private fun Buffer.writeByteString(bytes: ByteArray) {
+    // Byte string of 32 bytes (0x58 0x20)
+    writeByte(0x58)  // byte string, 1-byte length
+    writeByte(bytes.size)
+    write(bytes)
 }
