@@ -45,7 +45,7 @@ class CryptoObjectsBuilder() {
 
     fun getKeyIds(): Pair<ByteArray, String> {
         val rawId = Random.nextBytes(16)
-        val id = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId)
+        val id = base64NoPadding.encode(rawId)
 
         return rawId to id
     }
@@ -72,8 +72,8 @@ class CryptoObjectsBuilder() {
             attestationObject = base64NoPadding.encode(attestationObject),
             clientDataJSON = clientDataJSON,
             transports = listOf("internal"),
-            publicKey = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(publicKey),
-            authenticatorData = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(authenticatorData),
+            publicKey = base64NoPadding.encode(publicKey),
+            authenticatorData = base64NoPadding.encode(authenticatorData),
             publicKeyAlgorithm = KeyAlgorithm.ES256,
         )
         val type = "public-key"
@@ -84,7 +84,7 @@ class CryptoObjectsBuilder() {
             session = passkeysOptions.session,
             device = getDeviceInfo(),
             id = id,
-            rawId = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId),
+            rawId = base64NoPadding.encode(rawId),
             registerPasskeyResponse = response,
             type = type,
             clientExtensionResults = clientExtensionResult,
@@ -100,8 +100,7 @@ class CryptoObjectsBuilder() {
             crossOrigin = false,
         )
 
-        return Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
-            .encode(Json.encodeToString(clientData).encodeToByteArray())
+        return base64NoPadding.encode(Json.encodeToString(clientData).encodeToByteArray())
     }
 
     fun generateAuthenticatorData(publicKey: ByteArray, rpId: String, credentialId: ByteArray): ByteArray {
