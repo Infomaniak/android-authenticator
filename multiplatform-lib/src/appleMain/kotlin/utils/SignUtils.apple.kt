@@ -19,6 +19,7 @@
 
 package com.infomaniak.auth.lib.utils
 
+import com.infomaniak.auth.lib.extensions.asCFDataRef
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.toByteArray
@@ -29,14 +30,11 @@ import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCObjectVar
 import kotlinx.cinterop.alloc
-import kotlinx.cinterop.allocArrayOf
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.value
 import platform.CoreFoundation.CFDataRef
 import platform.CoreFoundation.CFRelease
-import platform.Foundation.NSData
 import platform.Foundation.NSError
-import platform.Foundation.create
 import platform.Security.SecKeyCreateSignature
 import platform.Security.SecKeyCreateWithData
 import platform.Security.SecKeyRef
@@ -54,11 +52,7 @@ actual object SignUtils {
         val privateKeyRef = importPrivateKeyFromBytes(privateKey)
             ?: throw IllegalArgumentException("Failed to import private key")
 
-        val dataToSign = memScoped {
-            val nsData = NSData.create(bytes = allocArrayOf(data), length = data.size.toULong())
-            nsData as CFDataRef
-        }
-
+        val dataToSign = data.toNSData().asCFDataRef()
         val errorPtr = alloc<ObjCObjectVar<NSError?>>()
 
         val signature = tryIt { errorPtr ->
@@ -130,7 +124,7 @@ actual object SignUtils {
     }
 
     private fun importPrivateKeyFromBytes(keyBytes: ByteArray): SecKeyRef? = memScoped {
-        val keyData = keyBytes.toNSData()
+        val keyData = keyBytes.toNSData().asCFDataRef()
 
         val attributes = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
@@ -140,7 +134,7 @@ actual object SignUtils {
 
         val privateKey = tryIt { errorPtr ->
             SecKeyCreateWithData(
-                keyData = keyData as CFDataRef,
+                keyData = keyData,
                 attributes = attributes,
                 error = errorPtr
             )
