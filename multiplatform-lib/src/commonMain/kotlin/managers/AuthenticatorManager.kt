@@ -19,21 +19,74 @@ package com.infomaniak.auth.lib.managers
 
 import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.network.models.ClientExtensionResults
+import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
+import com.infomaniak.auth.lib.network.models.VerifyResponse
 import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.utils.SignUtils.signWithPrivateKey
+import io.ktor.utils.io.core.toByteArray
+import okio.ByteString.Companion.toByteString
+import kotlin.io.encoding.Base64
 
 class AuthenticatorManager(private val webAuthnRepository: WebAuthnRepository) {
 
+    private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
+    private val keyPairManager by lazy { KeyPairManagerImpl() }
+
     suspend fun registerPasskey(token: String, userId: Int) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
-        val keyPairManager = KeyPairManagerImpl()
-        // TODO generate ID of key here to use it in the key file name
-        keyPairManager.generateNewKey() // TODO Pass UserId to generate the key with the right name
-        val publicKeyAsByteArray = keyPairManager.retrievePublicKey().firstOrNull()!!
+        val keyIds = cryptoObjectsBuilder.getKeyIds()
+        val keyIdAsByteArray = keyIds.first
+        val keyIdAsString = keyIds.second
+        keyPairManager.generateNewKey(userId, keyIdAsString)
+        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
-        // Nothing to test on the generated object for now
-        val cryptoObjectsBuilder = CryptoObjectsBuilder(publicKeyAsByteArray)
-        val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(passkeysOptions)
+        val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(
+            publicKey = publicKeyAsByteArray,
+            passkeysOptions = passkeysOptions,
+            rawId = keyIdAsByteArray,
+            id = keyIdAsString,
+        )
 
         webAuthnRepository.registerPasskey(token, registerPasskey)
+    }
+
+    suspend fun getToken(clientId: String, userId: Int, keyId: String): String {
+        val authenticationOptions = webAuthnRepository.challenge(clientId)
+        val rawAuthenticatorData = cryptoObjectsBuilder.generateAuthenticatorData(
+            keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()!!,
+            "infomaniak.ch",
+            keyId.toByteArray(),
+        )
+        val authenticatorData = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(
+            rawAuthenticatorData
+        )
+        val clientDataJSON =
+            cryptoObjectsBuilder.buildClientDataJSON(authenticationOptions.challenge)
+        val clientDataJSONBytes = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).decode(clientDataJSON)
+        val clientDataJSONHash = clientDataJSONBytes.toByteString().sha256().toByteArray()
+        val verifyAuthenticationData = VerifyAuthenticationData(
+            clientId = clientId,
+            session = authenticationOptions.session,
+            id = keyId,
+            rawId = keyId,
+            response = VerifyResponse(
+                authenticatorData = authenticatorData,
+                clientDataJSON = clientDataJSON,
+                signature = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+                    .encode(
+                        signWithPrivateKey(
+                            keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()!!,
+                            rawAuthenticatorData + clientDataJSONHash,
+                        )
+                    ),
+                userHandle = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+                    .encode(userId.toString().toByteArray())
+            ),
+            type = "public-key",
+            clientExtensionResults = ClientExtensionResults,
+            authenticatorAttachment = "platform",
+        )
+        return webAuthnRepository.verify(verifyAuthenticationData).accessToken
     }
 }

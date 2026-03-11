@@ -56,11 +56,20 @@ class WebAuthnTest {
         )
 
         // Just getting the public key to generate RegisterPasskey object
+        val cryptoObjectsBuilder = CryptoObjectsBuilder()
         val keyPairManager = KeyPairManagerImpl()
-        keyPairManager.generateNewKey()
-        val publicKeyAsByteArray = keyPairManager.retrievePublicKey().firstOrNull()!!
+        val userId = 12345
+        val keyIdAsByteArray = cryptoObjectsBuilder.getKeyIds().first
+        val keyIdAsString = cryptoObjectsBuilder.getKeyIds().second
+        keyPairManager.generateNewKey(userId, keyIdAsString)
+        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
         // Nothing to test on the generated object for now
-        CryptoObjectsBuilder(publicKeyAsByteArray).buildRegisterPasskey(passkeysOptions)
+        cryptoObjectsBuilder.buildRegisterPasskey(
+            publicKey = publicKeyAsByteArray,
+            passkeysOptions = passkeysOptions,
+            rawId = keyIdAsByteArray,
+            id = keyIdAsString,
+        )
     }
 }

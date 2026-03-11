@@ -31,7 +31,7 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
-            val error = keyPairManager.generateNewKey()
+            val error = keyPairManager.generateNewKey(userId, keyId)
             assertNull(error)
 
             val publicKey = keyPairManager.retrievePublicKey()

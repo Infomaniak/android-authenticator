@@ -55,22 +55,26 @@ import platform.Security.kSecReturnRef
 
 internal actual class KeyPairManagerImpl : KeyPairManager {
 
-    actual override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
-        val result = generateEcPrivateKeyInTheKeychain(
-            tag = ALIAS,
-            privateKeyPurposes = KeyPairManager.privateKeyPurposes,
-            publicKeyPurposes = KeyPairManager.publicKeyPurposes,
-            keyAccessGuard = KeyAccessGuard.Unguarded,
-            accessibility = KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly,
-        )
-        when (result) {
-            is Xor.First -> result.value.use { null }
-            is Xor.Second -> Failure.KeyManagement.GenerationFailed(result.value.toString())
+    actual override suspend fun generateNewKey(userId: Int, keyId: String): Failure.KeyManagement.GenerationFailed? =
+        Dispatchers.IO {
+            val result = generateEcPrivateKeyInTheKeychain(
+                tag = "$keyId-$userId",
+                privateKeyPurposes = KeyPairManager.privateKeyPurposes,
+                publicKeyPurposes = KeyPairManager.publicKeyPurposes,
+                keyAccessGuard = KeyAccessGuard.Unguarded,
+                accessibility = KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly,
+            )
+            when (result) {
+                is Xor.First -> result.value.use { null }
+                is Xor.Second -> Failure.KeyManagement.GenerationFailed(result.value.toString())
+            }
         }
-    }
 
     @OptIn(ExperimentalForeignApi::class)
-    actual override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+    actual override suspend fun retrievePublicKey(
+        userId: Int,
+        keyId: String
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
             // Get private key to retrieve public key
             getPrivateKeyRef().use { privateKeyRef ->
@@ -89,7 +93,10 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }
     }
 
-    actual override suspend fun retrievePrivateKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
+    actual override suspend fun retrievePrivateKey(
+        userId: Int,
+        keyId: String
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
         memScoped {
             getPrivateKeyRef().use { privateKeyRef ->
                 val result = tryIt { errorPointer ->

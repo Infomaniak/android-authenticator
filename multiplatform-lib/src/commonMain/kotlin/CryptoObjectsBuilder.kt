@@ -38,13 +38,23 @@ import kotlin.uuid.Uuid
 
 // This class should be internal
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
-class CryptoObjectsBuilder(private val publicKey: ByteArray) {
+class CryptoObjectsBuilder() {
 
-    fun buildRegisterPasskey(passkeysOptions: PasskeysOptions): RegisterPasskey {
+    fun getKeyIds(): Pair<ByteArray, String> {
         val rawId = Random.nextBytes(16)
         val id = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(rawId)
 
+        return rawId to id
+    }
+
+    fun buildRegisterPasskey(
+        publicKey: ByteArray,
+        passkeysOptions: PasskeysOptions,
+        rawId: ByteArray,
+        id: String,
+    ): RegisterPasskey {
         val authenticatorData = generateAuthenticatorData(
+            publicKey = publicKey,
             rpId = passkeysOptions.relyingParty.id,
             credentialId = rawId,
         )
@@ -91,14 +101,7 @@ class CryptoObjectsBuilder(private val publicKey: ByteArray) {
             .encode(Json.encodeToString(clientData).encodeToByteArray())
     }
 
-    fun encodeToSha256(value: String): ByteArray {
-        return value
-            .encodeUtf8()
-            .sha256()
-            .toByteArray()
-    }
-
-    fun generateAuthenticatorData(rpId: String, credentialId: ByteArray): ByteArray {
+    fun generateAuthenticatorData(publicKey: ByteArray, rpId: String, credentialId: ByteArray): ByteArray {
         val keyCoordinates = getKeyCoordinates(publicKey)
         val publicKeyCose = keyCoseOf(
             x = keyCoordinates.x,
