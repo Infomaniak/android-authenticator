@@ -66,4 +66,5 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
 
     suspend fun deletePasskey(token: String, passkeyId: String) {
         authenticatorRequest.deletePasskey(token, passkeyId)
+    }
 }
