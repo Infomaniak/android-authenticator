@@ -18,7 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.utils.getKeyCoordinates
-import com.infomaniak.auth.lib.internal.webauthn.createWebAuthnAttestationObject
+import com.infomaniak.auth.lib.internal.webauthn.createEncodedWebAuthnAttestationObject
 import com.infomaniak.auth.lib.internal.webauthn.keyCoseOf
 import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
@@ -39,6 +39,8 @@ import kotlin.uuid.Uuid
 // This class should be internal
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 class CryptoObjectsBuilder() {
+
+    private val base64NoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
 
     fun getKeyIds(): Pair<ByteArray, String> {
         val rawId = Random.nextBytes(16)
@@ -61,12 +63,12 @@ class CryptoObjectsBuilder() {
         val clientDataJSON = buildClientDataJSON(passkeysOptions.challenge)
 
         // AttestationObject
-        val attestationObject = createWebAuthnAttestationObject(
+        val attestationObject = createEncodedWebAuthnAttestationObject(
             fmt = "none",
             authData = authenticatorData
         )
         val response = RegisterPasskeyResponse(
-            attestationObject = attestationObject.base64Url().trimEnd('='),
+            attestationObject = base64NoPadding.encode(attestationObject),
             clientDataJSON = clientDataJSON,
             transports = listOf("internal"),
             publicKeyAlgorithm = -7,

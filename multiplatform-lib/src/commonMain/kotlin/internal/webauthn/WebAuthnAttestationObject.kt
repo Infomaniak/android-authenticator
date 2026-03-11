@@ -15,52 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.infomaniak.auth.lib.internal.webauthn
 
-import okio.Buffer
-import okio.ByteString
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.cbor.ByteString
+import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.encodeToByteArray
 
-internal fun createWebAuthnAttestationObject(fmt: String, authData: ByteArray): ByteString {
-    val buffer = Buffer()
+@Suppress("unused") // The properties are used by CBOR serialization, to be sent to the backend.
+@Serializable
+class WebAuthnAttestationObject(
+    val fmt: String,
+    @ByteString
+    val authData: ByteArray,
+)
 
-    // Map start
-    buffer.writeByte(0xA2) // 2 items
-
-    // "fmt": "none"
-    writeText(buffer, "fmt")
-    writeText(buffer, fmt)
-
-    // "authData": <bytes>
-    writeText(buffer, "authData")
-    writeByteString(buffer, authData)
-
-    return buffer.readByteString()
-}
-
-private fun writeText(buffer: Buffer, text: String) {
-    val bytes = text.encodeToByteArray()
-    buffer.writeByte(0x60 + bytes.size) // 0x60 = text string base
-    buffer.write(bytes)
-}
-
-private fun writeByteString(buffer: Buffer, bytes: ByteArray) {
-    when {
-        bytes.size <= 23 -> {
-            buffer.writeByte(0x40 + bytes.size) // 0x40 = byte string base
-        }
-        bytes.size <= 255 -> {
-            buffer.writeByte(0x58) // byte string, 1-byte length follows
-            buffer.writeByte(bytes.size)
-        }
-        bytes.size <= 65535 -> {
-            buffer.writeByte(0x59) // byte string, 2-byte length follows
-            buffer.writeByte(bytes.size shr 8)
-            buffer.writeByte(bytes.size and 0xFF)
-        }
-        else -> {
-            buffer.writeByte(0x5A) // byte string, 4-byte length follows
-            buffer.writeInt(bytes.size)
-        }
-    }
-    buffer.write(bytes)
+internal fun createEncodedWebAuthnAttestationObject(fmt: String, authData: ByteArray): ByteArray {
+    val attestationObject = WebAuthnAttestationObject(
+        fmt = fmt,
+        authData = authData,
+    )
+    return Cbor.CoseCompliant.encodeToByteArray(attestationObject)
 }
