@@ -19,8 +19,8 @@ package com.infomaniak.auth.lib.room.accounts
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -29,8 +29,8 @@ interface AccountsDao {
     @Query("SELECT * FROM AccountEntity")
     fun getAsFlow(): Flow<List<AccountEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(account: AccountEntity)
+    @Upsert
+    suspend fun upsert(account: AccountEntity)
 
     @Insert
     suspend fun insert(account: AccountEntity)

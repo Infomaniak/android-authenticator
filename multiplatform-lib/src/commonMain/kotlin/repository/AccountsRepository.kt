@@ -27,8 +27,8 @@ class AccountsRepository(
 
     fun getAccounts() = dao.getAsFlow()
 
-    suspend fun updateAccount(account: AccountEntity) {
-        dao.update(account)
+    suspend fun upsertAccount(account: AccountEntity) {
+        dao.upsert(account)
     }
 
     suspend fun insertAccount(account: AccountEntity) {
