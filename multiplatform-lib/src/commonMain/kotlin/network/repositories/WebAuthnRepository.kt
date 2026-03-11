@@ -63,4 +63,7 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
         return authenticatorRequest.verify(verifyAuthenticationData).data
     }
+
+    suspend fun deletePasskey(token: String, passkeyId: String) {
+        authenticatorRequest.deletePasskey(token, passkeyId)
 }

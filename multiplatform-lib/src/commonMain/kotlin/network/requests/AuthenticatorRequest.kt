@@ -24,6 +24,8 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import io.ktor.client.HttpClient
+import io.ktor.http.HeadersBuilder
+import io.ktor.http.Url
 import kotlinx.serialization.json.Json
 import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
@@ -36,13 +38,13 @@ internal class AuthenticatorRequest(
 
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
         return get(createUrl(ApiRoutes.getPasskeysOptions), appendHeaders = {
-            append("Authorization", "Bearer $token")
+            addAuthenticationHeader(token)
         })
     }
 
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
         post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey, appendHeaders = {
-            append("Authorization", "Bearer $token")
+            addAuthenticationHeader(token)
         })
     }
 
@@ -52,5 +54,15 @@ internal class AuthenticatorRequest(
 
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
         return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
+    }
+
+    suspend fun deletePasskey(token: String, passkeyId: String) {
+        return delete(Url("users/me/passkeys/$passkeyId"), appendHeaders = {
+            addAuthenticationHeader(token)
+        })
+    }
+
+    private fun HeadersBuilder.addAuthenticationHeader(token: String) {
+        append("Authorization", "Bearer $token")
     }
 }

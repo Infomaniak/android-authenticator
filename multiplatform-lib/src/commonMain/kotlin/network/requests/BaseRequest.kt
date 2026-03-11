@@ -76,7 +76,13 @@ internal open class BaseRequest(
         }.decode<R>()
     }
 
-    protected suspend inline fun <reified R> delete(url: Url, httpClient: HttpClient = this.httpClient): R {
-        return httpClient.delete(url) {}.decode<R>()
+    protected suspend inline fun <reified R> delete(
+        url: Url,
+        crossinline appendHeaders: HeadersBuilder.() -> Unit = {},
+        httpClient: HttpClient = this.httpClient
+    ): R {
+        return httpClient.delete(url) {
+            headers { appendHeaders() }
+        }.decode<R>()
     }
 }
