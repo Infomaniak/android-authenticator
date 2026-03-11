@@ -15,6 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// The casts below are fine because they are "toll-free bridged" types.
+// See Apple doc archive on it:
+// https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html
+@file:Suppress("CAST_NEVER_SUCCEEDS")
+
 package com.infomaniak.auth.lib.extensions
 
 import kotlinx.cinterop.ExperimentalForeignApi
