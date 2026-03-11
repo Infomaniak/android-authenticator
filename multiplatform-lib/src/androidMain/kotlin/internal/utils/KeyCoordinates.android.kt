@@ -26,8 +26,8 @@ import java.security.spec.X509EncodedKeySpec
 internal actual fun getKeyCoordinates(key: ByteArray): PublicKeyXY {
     val publicKey = getPublicKeyFromByteArray(key) as ECPublicKey
     val w = publicKey.w
-    val x = w.affineX.toByteArray().padEnd(32)
-    val y = w.affineY.toByteArray().padEnd(32)
+    val x = w.affineX.toByteArray()
+    val y = w.affineY.toByteArray()
     return PublicKeyXY(x, y)
 }
 

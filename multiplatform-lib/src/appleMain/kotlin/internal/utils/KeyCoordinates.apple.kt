@@ -24,8 +24,8 @@ internal actual fun getKeyCoordinates(key: ByteArray): PublicKeyXY {
     require(uncompressedKey[0] == 0x04.toByte()) { "Expected uncompressed format" }
     require(uncompressedKey.size == 65) { "Invalid key length: ${uncompressedKey.size}" }
 
-    val x = uncompressedKey.copyOfRange(1, 33).padEnd(32)
-    val y = uncompressedKey.copyOfRange(33, 65).padEnd(32)
+    val x = uncompressedKey.copyOfRange(1, 33)
+    val y = uncompressedKey.copyOfRange(33, 65)
 
     return PublicKeyXY(x, y)
 }
