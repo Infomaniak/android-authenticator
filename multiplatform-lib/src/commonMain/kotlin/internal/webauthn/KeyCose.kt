@@ -38,7 +38,7 @@ import kotlinx.serialization.encodeToByteArray
 internal fun keyCoseOf(x: ByteArray, y: ByteArray): ByteArray {
     val cose = KeyCose(
         kty = 2, // EC2
-        alg = -7, // ES256
+        alg = KeyAlgorithm.ES256,
         crv = 1, // P-256
         x = x.padEnd(32),
         y = y.padEnd(32),
@@ -46,6 +46,7 @@ internal fun keyCoseOf(x: ByteArray, y: ByteArray): ByteArray {
     return Cbor.CoseCompliant.encodeToByteArray(cose)
 }
 
+@Suppress("unused") // The properties are used by CBOR serialization, to be sent to the backend.
 @Serializable
 private class KeyCose(
 
@@ -53,7 +54,7 @@ private class KeyCose(
     val kty: Byte,
 
     @CborLabel(3)
-    val alg: Byte,
+    val alg: KeyAlgorithm,
 
     @CborLabel(-1)
     val crv: Byte,

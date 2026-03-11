@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.utils.getKeyCoordinates
+import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
 import com.infomaniak.auth.lib.internal.webauthn.createEncodedWebAuthnAttestationObject
 import com.infomaniak.auth.lib.internal.webauthn.keyCoseOf
 import com.infomaniak.auth.lib.network.models.ClientExtensionResults
@@ -71,9 +72,9 @@ class CryptoObjectsBuilder() {
             attestationObject = base64NoPadding.encode(attestationObject),
             clientDataJSON = clientDataJSON,
             transports = listOf("internal"),
-            publicKeyAlgorithm = -7,
             publicKey = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(publicKey),
             authenticatorData = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(authenticatorData),
+            publicKeyAlgorithm = KeyAlgorithm.ES256,
         )
         val type = "public-key"
         val clientExtensionResult = ClientExtensionResults

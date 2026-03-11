@@ -15,17 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.models
+package com.infomaniak.auth.lib.internal.webauthn
 
-import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 @Serializable
-data class RegisterPasskeyResponse(
-    val attestationObject: String,
-    val clientDataJSON: String,
-    val transports: List<String>,
-    val publicKeyAlgorithm: KeyAlgorithm,
-    val publicKey: String,
-    val authenticatorData: String,
-)
+@JvmInline
+value class KeyAlgorithm(val constant: Byte) {
+    companion object {
+        val ES256 = KeyAlgorithm(-7)
+    }
+}
