@@ -36,22 +36,39 @@ internal class AuthenticatorRequest(
     httpClient: HttpClient,
 ) : BaseRequest(environment, json, httpClient) {
 
+    /**
+     * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
+     */
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
         return get(createUrl(ApiRoutes.getPasskeysOptions), appendHeaders = {
             addAuthenticationHeader(token)
         })
     }
 
+    /**
+     * Registers a public key credential (from the on-device generated private/public key pair),
+     * after [getPasskeysOptions] is done.
+     */
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
         post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey, appendHeaders = {
             addAuthenticationHeader(token)
         })
     }
 
+    /**
+     * Retrieves the backend-generated challenge, prior to authenticating with [verify].
+     */
     suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
         return post(createUrl(ApiRoutes.challenge), mapOf("client_id" to clientId))
     }
 
+    /**
+     * Authenticates with [VerifyAuthenticationData], which contains private-key signed data.
+     *
+     * That data includes the challenge retrieved in [challenge].
+     *
+     * @return An [AuthResult] that includes an access token.
+     */
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
         return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
     }
