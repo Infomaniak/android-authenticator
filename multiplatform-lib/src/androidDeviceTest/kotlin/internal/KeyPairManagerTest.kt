@@ -31,10 +31,12 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
+            val userId = 12345
+            val keyId = "keyId"
             val error = keyPairManager.generateNewKey(userId, keyId)
             assertNull(error)
 
-            val publicKey = keyPairManager.retrievePublicKey()
+            val publicKey = keyPairManager.retrievePublicKey(userId, keyId)
             when (publicKey) {
                 is Xor.First -> Unit // OK
                 is Xor.Second -> fail("Couldn't generate the key")
