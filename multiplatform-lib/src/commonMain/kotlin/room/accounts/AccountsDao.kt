@@ -30,11 +30,11 @@ interface AccountsDao {
     fun getAsFlow(): Flow<List<AccountEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun update(account: AccountEntity)
+    suspend fun update(account: AccountEntity)
 
     @Insert
-    fun insert(account: AccountEntity)
+    suspend fun insert(account: AccountEntity)
 
     @Query("DELETE FROM AccountEntity WHERE id = :id")
-    fun delete(id: Long)
+    suspend fun delete(id: Long)
 }
