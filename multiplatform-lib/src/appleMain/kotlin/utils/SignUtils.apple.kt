@@ -19,25 +19,21 @@
 
 package com.infomaniak.auth.lib.utils
 
+import com.infomaniak.auth.lib.extensions.buildCFDictionary
+import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.toByteArray
 import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.Xor
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.ObjCObjectVar
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.allocArrayOf
 import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import platform.CoreFoundation.CFDataRef
-import platform.CoreFoundation.CFDictionaryAddValue
-import platform.CoreFoundation.CFDictionaryCreateMutable
-import platform.CoreFoundation.CFNumberCreate
 import platform.CoreFoundation.CFRelease
-import platform.CoreFoundation.kCFAllocatorDefault
-import platform.CoreFoundation.kCFNumberIntType
 import platform.Foundation.NSData
 import platform.Foundation.NSError
 import platform.Foundation.create
@@ -136,33 +132,11 @@ actual object SignUtils {
     private fun importPrivateKeyFromBytes(keyBytes: ByteArray): SecKeyRef? = memScoped {
         val keyData = keyBytes.toNSData()
 
-        val attributes = CFDictionaryCreateMutable(
-            kCFAllocatorDefault,
-            0,
-            null,
-            null
-        )
-
-        CFDictionaryAddValue(
-            attributes,
-            kSecAttrKeyType,
-            kSecAttrKeyTypeECSECPrimeRandom
-        )
-
-        CFDictionaryAddValue(
-            attributes,
-            kSecAttrKeyClass,
-            kSecAttrKeyClassPrivate
-        )
-
-        val keySize = alloc<IntVar>().apply { value = 256 }
-        CFDictionaryAddValue(
-            attributes,
-            kSecAttrKeySizeInBits,
-            CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, keySize.ptr)
-        )
-
-        val errorPtr = alloc<ObjCObjectVar<NSError?>>()
+        val attributes = buildCFDictionary {
+            this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
+            this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
+            this[kSecAttrKeySizeInBits] = 256
+        }
 
         val privateKey = tryIt { errorPtr ->
             SecKeyCreateWithData(
@@ -174,11 +148,13 @@ actual object SignUtils {
 
         CFRelease(attributes)
 
-        if (privateKey.firstOrNull() == null) {
-            println("Error importing key: ${errorPtr.value?.localizedDescription}")
+        return when (privateKey) {
+            is Xor.First -> privateKey.firstOrNull()
+            is Xor.Second -> {
+                println("Error importing key: ${privateKey.value.localizedDescription}")
+                null
+            }
         }
-
-        privateKey.firstOrNull()
     }
 
     private fun CFDataRef.toByteArray(): ByteArray = this.toNSData().toByteArray()
