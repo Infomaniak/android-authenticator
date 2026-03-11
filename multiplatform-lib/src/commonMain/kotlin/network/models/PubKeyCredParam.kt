@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.network.models
 
+import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -24,5 +25,5 @@ import kotlinx.serialization.Serializable
 data class PubKeyCredParam(
     val type: String,
     @SerialName("alg")
-    val algorithm: Int,
+    val algorithm: KeyAlgorithm,
 )

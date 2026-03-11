@@ -19,6 +19,7 @@ package com.infomaniak.auth
 
 import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.PubKeyCredParam
 import com.infomaniak.auth.lib.network.models.RelyingParty
@@ -49,7 +50,7 @@ class WebAuthnTest {
             pubKeyCredParams = listOf(
                 PubKeyCredParam(
                     type = "public-key",
-                    algorithm = -7 // ES256
+                    algorithm = KeyAlgorithm.ES256
                 )
             ),
             excludeCredentials = emptyList(),
