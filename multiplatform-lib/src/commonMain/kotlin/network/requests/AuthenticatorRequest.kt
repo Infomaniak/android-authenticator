@@ -25,7 +25,6 @@ import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import io.ktor.client.HttpClient
 import io.ktor.http.HeadersBuilder
-import io.ktor.http.Url
 import kotlinx.serialization.json.Json
 import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
@@ -74,7 +73,7 @@ internal class AuthenticatorRequest(
     }
 
     suspend fun deletePasskey(token: String, passkeyId: String) {
-        return delete(Url("users/me/passkeys/$passkeyId"), appendHeaders = {
+        return delete(createUrl("users/me/passkeys/$passkeyId"), appendHeaders = {
             addAuthenticationHeader(token)
         })
     }
