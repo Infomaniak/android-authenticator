@@ -61,6 +61,8 @@ actual object SignUtils {
 
         CFRelease(privateKeyRef)
 
+        //TODO[Authenticator]: Check the code below works properly, with SignUtilsTest.
+
         when (signatureResult) {
             is Xor.First -> convertX962ToDer(signatureResult.value.toByteArray())
             is Xor.Second -> throw IllegalStateException("Signing failed: ${signatureResult.value.localizedDescription}")
