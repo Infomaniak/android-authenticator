@@ -19,7 +19,6 @@
 
 package com.infomaniak.auth.lib.internal.webauthn
 
-import com.infomaniak.auth.lib.internal.utils.padEnd
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.ByteString
@@ -36,12 +35,14 @@ import kotlinx.serialization.encodeToByteArray
  * **CBOR** stands for **Concise Binary Object Representation**.
  */
 internal fun keyCoseOf(x: ByteArray, y: ByteArray): ByteArray {
+    require(x.size == 32) { "Invalid x coordinate length: ${x.size}" }
+    require(y.size == 32) { "Invalid y coordinate length: ${y.size}" }
     val cose = KeyCose(
         kty = 2, // EC2
         alg = KeyAlgorithm.ES256,
         crv = 1, // P-256
-        x = x.padEnd(32),
-        y = y.padEnd(32),
+        x = x,
+        y = y,
     )
     return Cbor.CoseCompliant.encodeToByteArray(cose)
 }

@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-internal fun ByteArray.padEnd(length: Int): ByteArray {
+internal fun ByteArray.trimOrPadStart(length: Int): ByteArray {
     return when {
         size == length -> this
         size > length -> this.copyOfRange(fromIndex = size - length, toIndex = size)

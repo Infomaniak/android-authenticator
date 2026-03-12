@@ -20,3 +20,17 @@ package com.infomaniak.auth.lib.internal.utils
 import com.infomaniak.auth.lib.PublicKeyXY
 
 internal expect fun getKeyCoordinates(key: ByteArray): PublicKeyXY
+
+internal fun keyCoordinatesOf(uncompressedP256Key: ByteArray): PublicKeyXY {
+
+    require(uncompressedP256Key[0] == 0x04.toByte()) {
+        "Invalid key type. Expected 0x04, but found ${uncompressedP256Key[0]}."
+    }
+    require(uncompressedP256Key.size == 65) {
+        "Invalid key length. Expected 65 bytes, but found ${uncompressedP256Key.size} bytes."
+    }
+
+    val x = uncompressedP256Key.copyOfRange(1, 33)
+    val y = uncompressedP256Key.copyOfRange(fromIndex = 33, toIndex = 65)
+    return PublicKeyXY(x, y)
+}

@@ -20,4 +20,7 @@ package com.infomaniak.auth.lib
 internal class PublicKeyXY(
     val x: ByteArray,
     val y: ByteArray,
-)
+) {
+    operator fun component1(): ByteArray = x
+    operator fun component2(): ByteArray = y
+}
