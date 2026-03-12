@@ -20,7 +20,8 @@ package com.infomaniak.auth.lib.internal
 
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.fail
 
 class KeyPairManagerTest {
 
@@ -29,10 +30,16 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
-            val keyPair = keyPairManager.generateNewKey(userId, keyId)
-            assertNotNull(keyPair)
-            val publicKey = keyPairManager.retrievePublicKey()
-            assertNotNull(publicKey)
+            val userId = 12345
+            val keyId = "keyId"
+            val error = keyPairManager.generateNewKey(userId, keyId)
+            assertNull(error)
+
+            val publicKey = keyPairManager.retrievePublicKey(userId, keyId)
+            when (publicKey) {
+                is Xor.First -> Unit // OK
+                is Xor.Second -> fail("Couldn't generate the key")
+            }
         }
     }
 }
