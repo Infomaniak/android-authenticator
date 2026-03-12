@@ -80,7 +80,7 @@ internal fun generatePrivateKeyInTheSecureEnclave(
     privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
     publicKeyPurposes: KeyPurposes? = null,
     keyAccessGuard: KeyAccessGuard,
-    accessibility: KeyAccessibility.SecureEnclaveCompatible
+    accessibility: KeyAccessibility.SecureEnclaveCompatible // Don't allow wrong accessibility flags.
 ): Xor<SecKeyRef, NSError> = generatePrivateKey(
     tag = tag,
     privateKeyPurposes = privateKeyPurposes,
