@@ -30,20 +30,28 @@ internal actual fun getKeyCoordinates(key: ByteArray): PublicKeyXY {
     return PublicKeyXY(x, y)
 }
 
+// See https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference.html#Types
+private object AsnOneTypes {
+    const val SEQUENCE: Byte = 0x30
+    const val BIT_STRING: Byte = 0x03
+    const val OCTET_STRING: Byte = 0x04
+}
+
 private fun parseX509SubjectPublicKeyInfo(bytes: ByteArray): ByteArray {
     var offset = 0
 
-    require(bytes[offset++] == 0x30.toByte()) { "Expected SEQUENCE" }
+    // SubjectPublicKeyInfo SEQUENCE
+    require(bytes[offset++] == AsnOneTypes.SEQUENCE)
     val seqLength = readAsn1Length(bytes, offset)
     offset += getLengthBytes(seqLength)
 
     // AlgorithmIdentifier SEQUENCE
-    require(bytes[offset++] == 0x30.toByte()) { "Expected AlgorithmIdentifier" }
+    require(bytes[offset++] == AsnOneTypes.SEQUENCE)
     val algoIdLength = readAsn1Length(bytes, offset)
     offset += getLengthBytes(algoIdLength) + algoIdLength
 
     // BIT STRING
-    require(bytes[offset++] == 0x03.toByte()) { "Expected BIT STRING" }
+    require(bytes[offset++] == AsnOneTypes.BIT_STRING)
     val bitStringLength = readAsn1Length(bytes, offset)
     offset += getLengthBytes(bitStringLength)
 
@@ -51,13 +59,16 @@ private fun parseX509SubjectPublicKeyInfo(bytes: ByteArray): ByteArray {
     offset++
 
     // Public Key
-    require(bytes[offset++] == 0x04.toByte()) { "Expected OCTET STRING" }
+    require(bytes[offset++] == AsnOneTypes.OCTET_STRING)
     val octetLength = readAsn1Length(bytes, offset)
     offset += getLengthBytes(octetLength)
 
     return bytes.copyOfRange(offset, offset + octetLength)
 }
 
+/**
+ * ASN.1 (Abstract Syntax Notation One)
+ */
 private fun readAsn1Length(bytes: ByteArray, offset: Int): Int {
     val firstByte = bytes[offset].toInt() and 0xFF
     return if (firstByte and 0x80 == 0) {
