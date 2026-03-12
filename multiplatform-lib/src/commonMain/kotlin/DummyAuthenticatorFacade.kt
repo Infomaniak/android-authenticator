@@ -17,7 +17,10 @@
  */
 package com.infomaniak.auth.lib
 
-import kotlinx.coroutines.CoroutineScope
+import com.infomaniak.auth.lib.repository.AccountsRepository
+import com.infomaniak.auth.lib.room.accounts.Account
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +33,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration
 
 class DummyAuthenticatorFacade(
+	accountsRepository: AccountsRepository,
     scope: CoroutineScope,
     loadingDuration: Duration,
     resetAfter: Duration,
@@ -37,7 +41,7 @@ class DummyAuthenticatorFacade(
     override val accounts: Flow<List<Account>>
 
     private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
-        accounts = it.asStateFlow()
+        accounts = accountsRepository.getAccounts()
     }::value
 
     private val next = Channel<Unit>()

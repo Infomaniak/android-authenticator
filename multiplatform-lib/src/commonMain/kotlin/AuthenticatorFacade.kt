@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.repository.AccountsRepository
+import com.infomaniak.auth.lib.room.accounts.Account
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +30,7 @@ abstract class AuthenticatorFacade internal constructor() {
 
         fun dummyInstance(
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+			accountsRepository: AccountsRepository,
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
         ): AuthenticatorFacade {

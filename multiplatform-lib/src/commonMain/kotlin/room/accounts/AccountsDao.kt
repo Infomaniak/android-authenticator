@@ -26,15 +26,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AccountsDao {
 
-    @Query("SELECT * FROM AccountEntity")
-    fun getAsFlow(): Flow<List<AccountEntity>>
+    @Query("SELECT * FROM Account")
+    fun getAsFlow(): Flow<List<Account>>
 
     @Upsert
-    suspend fun upsert(account: AccountEntity)
+    suspend fun upsert(account: Account)
 
     @Insert
-    suspend fun insert(account: AccountEntity)
+    suspend fun insert(account: Account)
 
-    @Query("DELETE FROM AccountEntity WHERE id = :id")
+    @Query("DELETE FROM Account WHERE id = :id")
     suspend fun delete(id: Long)
 }

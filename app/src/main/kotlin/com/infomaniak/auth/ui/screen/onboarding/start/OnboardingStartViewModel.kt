@@ -24,6 +24,9 @@ import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.repository.AccountsRepository
+import com.infomaniak.auth.lib.room.accounts.Account
+import com.infomaniak.auth.lib.room.accounts.StatusEntity
 import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.models.user.User
@@ -46,6 +49,7 @@ class OnboardingStartViewModel @Inject constructor(
     val infomaniakLogin: InfomaniakLogin,
     val accountUtils: AccountUtils,
     val authenticatorManager: AuthenticatorManager,
+    val accountsRepository: AccountsRepository,
 ) : BaseCrossAppLoginViewModel(BuildConfig.APPLICATION_ID, BuildConfig.CLIENT_ID) {
     private val _isButtonLoading = MutableStateFlow(false)
     val isButtonLoading = _isButtonLoading.asStateFlow()
@@ -58,10 +62,24 @@ class OnboardingStartViewModel @Inject constructor(
         viewModelScope.launch {
             users.forEach { user ->
                 authenticatorManager.registerPasskey(user.apiToken.accessToken, user.id)
+                addUserToAuthenticatorDB(user, StatusEntity.LoggedIn)
                 accountUtils.addUser(user)
             }
             _onLoginFinishedEvent.emit(Unit)
         }
+    }
+
+    private suspend fun addUserToAuthenticatorDB(user: User, statusEntity: StatusEntity) {
+        accountsRepository.upsertAccount(
+            Account(
+                id = user.id.toLong(),
+                fullName = "${user.firstname} ${user.lastname}",
+                initials = user.getInitials(),
+                email = user.email,
+                avatarUrl = user.avatar,
+                status = statusEntity, // TODO How to add users here when login has failed ?
+            )
+        )
     }
 
     suspend fun connectSelectedAccounts(

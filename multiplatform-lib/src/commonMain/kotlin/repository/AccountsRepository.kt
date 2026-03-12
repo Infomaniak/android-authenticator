@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.repository
 
-import com.infomaniak.auth.lib.room.accounts.AccountEntity
+import com.infomaniak.auth.lib.room.accounts.Account
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
 
 class AccountsRepository(
@@ -27,11 +27,11 @@ class AccountsRepository(
 
     fun getAccounts() = dao.getAsFlow()
 
-    suspend fun upsertAccount(account: AccountEntity) {
+    suspend fun upsertAccount(account: Account) {
         dao.upsert(account)
     }
 
-    suspend fun insertAccount(account: AccountEntity) {
+    suspend fun insertAccount(account: Account) {
         dao.insert(account)
     }
 
