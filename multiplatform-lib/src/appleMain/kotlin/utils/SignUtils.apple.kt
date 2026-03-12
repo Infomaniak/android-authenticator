@@ -19,10 +19,10 @@
 
 package com.infomaniak.auth.lib.utils
 
-import com.infomaniak.auth.lib.extensions.asCFDataRef
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.toByteArray
+import com.infomaniak.auth.lib.extensions.toCFDataRef
 import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.Xor
@@ -48,7 +48,7 @@ actual object SignUtils {
         val privateKeyRef = importPrivateKeyFromBytes(privateKey)
             ?: throw IllegalArgumentException("Failed to import private key")
 
-        val dataToSign = data.toNSData().asCFDataRef()
+        val dataToSign = data.toNSData().toCFDataRef()
 
         val signatureResult = tryIt { errorPtr ->
             SecKeyCreateSignature(
@@ -117,7 +117,7 @@ actual object SignUtils {
     }
 
     private fun importPrivateKeyFromBytes(keyBytes: ByteArray): SecKeyRef? = memScoped {
-        val keyData = keyBytes.toNSData().asCFDataRef()
+        val keyData = keyBytes.toNSData().toCFDataRef()
 
         val attributes = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
