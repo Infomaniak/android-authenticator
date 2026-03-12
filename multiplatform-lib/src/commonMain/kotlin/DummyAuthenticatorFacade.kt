@@ -19,8 +19,7 @@ package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.repository.AccountsRepository
 import com.infomaniak.auth.lib.room.accounts.Account
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.infomaniak.auth.lib.room.accounts.StatusEntity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -67,7 +66,7 @@ class DummyAuthenticatorFacade(
                         initials = "Smith",
                         email = "john.smith@example.com",
                         avatarUrl = "https://picsum.photos/id/3/200/200",
-                        status = Account.Status.NotConnected(null)
+                        status = StatusEntity.NotConnectedEmpty
                     ),
                     sendCredentials = { next.trySend(Unit) })
                 else -> NotConnectedAction.Issue.Retriable(proceed = { next.trySend(Unit) })

@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.room.accounts.Account
+
 sealed interface NotConnectedAction {
     /**
      * The actual email of the account might have changed since then, and we can't know about it.

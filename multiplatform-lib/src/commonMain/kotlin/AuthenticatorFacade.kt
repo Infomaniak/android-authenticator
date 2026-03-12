@@ -35,6 +35,7 @@ abstract class AuthenticatorFacade internal constructor() {
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
         ): AuthenticatorFacade {
             return DummyAuthenticatorFacade(
+                accountsRepository = accountsRepository,
                 scope = scope,
                 loadingDuration = loadingDurationMillis.milliseconds,
                 resetAfter = resetAfterMillis.milliseconds,
