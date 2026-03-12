@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.network.models.User
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.test.Test
+import kotlin.test.fail
 
 class WebAuthnTest {
 
@@ -62,7 +63,7 @@ class WebAuthnTest {
         val userId = 12345
         val keyIdAsByteArray = cryptoObjectsBuilder.getKeyIds().first
         val keyIdAsString = cryptoObjectsBuilder.getKeyIds().second
-        keyPairManager.generateNewKey(userId, keyIdAsString)
+        keyPairManager.generateNewKey(userId, keyIdAsString)?.let { fail("Key generation failed: ${it.details}") }
         val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
         // Nothing to test on the generated object for now
