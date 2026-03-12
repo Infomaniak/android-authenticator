@@ -25,13 +25,13 @@ import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.network.utils.decode
 import io.ktor.client.HttpClient
-import io.ktor.http.HeadersBuilder
-import kotlinx.serialization.json.Json
-import network.utils.ApiEnvironment
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.Url
 import network.utils.ApiRoutes
 
 internal class AuthenticatorRequest(private val httpClient: HttpClient) {
@@ -41,8 +41,8 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      */
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
         return httpClient.get(ApiRoutes.getPasskeysOptions) {
-        }.decode()
             addAuthenticationHeader(token)
+        }.decode()
     }
 
     /**
@@ -50,8 +50,8 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * after [getPasskeysOptions] is done.
      */
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
-            addAuthenticationHeader(token)
         httpClient.post(ApiRoutes.registerPasskey) {
+            addAuthenticationHeader(token)
             setBody(registerPasskey)
         }
     }
@@ -79,12 +79,14 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     }
 
     suspend fun deletePasskey(token: String, passkeyId: String) {
-        return delete(createUrl("users/me/passkeys/$passkeyId"), appendHeaders = {
+        httpClient.delete(Url("users/me/passkeys/$passkeyId")) {
             addAuthenticationHeader(token)
-        })
+        }
     }
 
-    private fun HeadersBuilder.addAuthenticationHeader(token: String) {
-        append("Authorization", "Bearer $token")
+    private fun HttpRequestBuilder.addAuthenticationHeader(token: String) {
+        headers {
+            append("Authorization", "Bearer $token")
+        }
     }
 }
