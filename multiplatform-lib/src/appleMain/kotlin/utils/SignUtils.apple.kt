@@ -68,7 +68,7 @@ actual object SignUtils {
     }
 
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {
-        require(x962Signature.size == 64) { "X.962 signature must be exactly 64 bytes" }
+        require(x962Signature.size == 64) { "X.962 signature must be exactly 64 bytes. Actual size: ${x962Signature.size}" }
 
         val r = x962Signature.copyOfRange(0, 32)
         val s = x962Signature.copyOfRange(32, 64)
