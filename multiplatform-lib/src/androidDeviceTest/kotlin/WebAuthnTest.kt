@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth
 
+import android.R.attr.publicKey
 import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
@@ -67,7 +68,7 @@ class WebAuthnTest {
         val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
         // Nothing to test on the generated object for now
-        cryptoObjectsBuilder.buildRegisterPasskey(
+        val _ = cryptoObjectsBuilder.buildRegisterPasskey(
             publicKey = publicKeyAsByteArray,
             passkeysOptions = passkeysOptions,
             rawId = keyIdAsByteArray,
