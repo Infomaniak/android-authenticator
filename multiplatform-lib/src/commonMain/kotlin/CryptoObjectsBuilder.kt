@@ -108,7 +108,7 @@ class CryptoObjectsBuilder() {
         val flags: Byte = 0x41
         val signCount = ByteArray(4)
 
-        val aaguid = Uuid.random().toByteArray() //TODO Might need to do this only once to have something unique for the App
+        val aaguid = Uuid.NIL.toByteArray() //TODO Might need to do this only once to have something unique for the App
         val credentialIdLength = byteArrayOf((credentialId.size shr 8).toByte(), (credentialId.size and 0xFF).toByte())
 
         val buffer = Buffer()
