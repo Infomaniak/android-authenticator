@@ -32,6 +32,9 @@ class KeyPairManagerTest {
         runTest {
             val userId = 12345
             val keyId = "keyId"
+            //NOTE: The default KeyChain is not available on headless simulators,
+            // so we need to remove this test, or update it to use in-memory keys instead.
+            // Right now, it just fails.
             val error = keyPairManager.generateNewKey(userId, keyId)
             assertNull(error)
 
