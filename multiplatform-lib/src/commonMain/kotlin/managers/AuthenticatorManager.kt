@@ -25,20 +25,24 @@ import com.infomaniak.auth.lib.network.models.VerifyResponse
 import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.utils.SignUtils.signWithPrivateKey
 import io.ktor.utils.io.core.toByteArray
+import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
-import kotlin.io.encoding.Base64
 
 class AuthenticatorManager(private val webAuthnRepository: WebAuthnRepository) {
 
     private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
     private val keyPairManager by lazy { KeyPairManagerImpl() }
 
+    private val base64NoPadding get() = cryptoObjectsBuilder.base64NoPadding
+
     suspend fun registerPasskey(token: String, userId: Int) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
         val keyIdAsString = keyIds.second
-        keyPairManager.generateNewKey(userId, keyIdAsString)
+        keyPairManager.generateNewKey(userId, keyIdAsString)?.let {
+            throw Exception("Couldn't generate new key: ${it.details}")
+        }
         val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
         val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(
@@ -54,17 +58,16 @@ class AuthenticatorManager(private val webAuthnRepository: WebAuthnRepository) {
     suspend fun getToken(clientId: String, userId: Int, keyId: String): String {
         val authenticationOptions = webAuthnRepository.challenge(clientId)
         val rawAuthenticatorData = cryptoObjectsBuilder.generateAuthenticatorData(
-            keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()!!,
-            "infomaniak.ch",
-            keyId.toByteArray(),
+            publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()!!,
+            rpId = "infomaniak.ch",
+            credentialId = keyId.toByteArray(),
         )
-        val authenticatorData = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(
-            rawAuthenticatorData
-        )
-        val clientDataJSON =
-            cryptoObjectsBuilder.buildClientDataJSON(authenticationOptions.challenge)
-        val clientDataJSONBytes = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).decode(clientDataJSON)
-        val clientDataJSONHash = clientDataJSONBytes.toByteString().sha256().toByteArray()
+        val authenticatorData = base64NoPadding.encode(rawAuthenticatorData)
+
+        val clientData = cryptoObjectsBuilder.buildClientData(authenticationOptions.challenge)
+        val clientDataJsonBytes = Json.encodeToString(clientData).encodeToByteArray()
+        val clientDataJsonHash = clientDataJsonBytes.toByteString().sha256().toByteArray()
+
         val verifyAuthenticationData = VerifyAuthenticationData(
             clientId = clientId,
             session = authenticationOptions.session,
@@ -72,16 +75,14 @@ class AuthenticatorManager(private val webAuthnRepository: WebAuthnRepository) {
             rawId = keyId,
             response = VerifyResponse(
                 authenticatorData = authenticatorData,
-                clientDataJSON = clientDataJSON,
-                signature = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
-                    .encode(
-                        signWithPrivateKey(
-                            keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()!!,
-                            rawAuthenticatorData + clientDataJSONHash,
-                        )
-                    ),
-                userHandle = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
-                    .encode(userId.toString().toByteArray())
+                clientDataJSON = base64NoPadding.encode(clientDataJsonBytes),
+                signature = base64NoPadding.encode(
+                    signWithPrivateKey(
+                        privateKey = keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()!!,
+                        data = rawAuthenticatorData + clientDataJsonHash,
+                    )
+                ),
+                userHandle = base64NoPadding.encode(userId.toString().toByteArray())
             ),
             type = "public-key",
             clientExtensionResults = ClientExtensionResults,

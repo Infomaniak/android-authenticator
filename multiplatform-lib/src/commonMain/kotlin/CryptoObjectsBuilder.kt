@@ -41,7 +41,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 class CryptoObjectsBuilder() {
 
-    private val base64NoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+    internal val base64NoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
 
     fun getKeyIds(): Pair<ByteArray, String> {
         val rawId = Random.nextBytes(16)
@@ -61,16 +61,15 @@ class CryptoObjectsBuilder() {
             rpId = passkeysOptions.relyingParty.id,
             credentialId = rawId,
         )
-        val clientDataJSON = buildClientDataJSON(passkeysOptions.challenge)
+        val clientData = buildClientData(passkeysOptions.challenge)
 
-        // AttestationObject
         val attestationObject = createEncodedWebAuthnAttestationObject(
             fmt = "none",
             authData = authenticatorData
         )
         val response = RegisterPasskeyResponse(
             attestationObject = base64NoPadding.encode(attestationObject),
-            clientDataJSON = clientDataJSON,
+            clientDataJSON = base64NoPadding.encode(Json.encodeToString(clientData).encodeToByteArray()),
             transports = listOf("internal"),
             publicKey = base64NoPadding.encode(publicKey),
             authenticatorData = base64NoPadding.encode(authenticatorData),
@@ -92,16 +91,12 @@ class CryptoObjectsBuilder() {
         )
     }
 
-    fun buildClientDataJSON(challenge: String): String {
-        val clientData = WebAuthnClientData(
-            type = "webauthn.create",
-            challenge = challenge,
-            origin = "https://infomaniak.ch",
-            crossOrigin = false,
-        )
-
-        return base64NoPadding.encode(Json.encodeToString(clientData).encodeToByteArray())
-    }
+    fun buildClientData(challenge: String): WebAuthnClientData = WebAuthnClientData(
+        type = "webauthn.create",
+        challenge = challenge,
+        origin = "https://infomaniak.ch",
+        crossOrigin = false,
+    )
 
     fun generateAuthenticatorData(publicKey: ByteArray, rpId: String, credentialId: ByteArray): ByteArray {
         val keyCoordinates = getKeyCoordinates(publicKey)
