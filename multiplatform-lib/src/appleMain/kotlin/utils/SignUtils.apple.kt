@@ -28,13 +28,9 @@ import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.Xor
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.ObjCObjectVar
-import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.value
 import platform.CoreFoundation.CFDataRef
 import platform.CoreFoundation.CFRelease
-import platform.Foundation.NSError
 import platform.Security.SecKeyCreateSignature
 import platform.Security.SecKeyCreateWithData
 import platform.Security.SecKeyRef
@@ -53,9 +49,8 @@ actual object SignUtils {
             ?: throw IllegalArgumentException("Failed to import private key")
 
         val dataToSign = data.toNSData().asCFDataRef()
-        val errorPtr = alloc<ObjCObjectVar<NSError?>>()
 
-        val signature = tryIt { errorPtr ->
+        val signatureResult = tryIt { errorPtr ->
             SecKeyCreateSignature(
                 key = privateKeyRef,
                 algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256,
@@ -66,12 +61,10 @@ actual object SignUtils {
 
         CFRelease(privateKeyRef)
 
-        if (signature.firstOrNull() == null) {
-            val error = errorPtr.value
-            throw IllegalStateException("Signing failed: ${error?.localizedDescription}")
+        when (signatureResult) {
+            is Xor.First -> convertX962ToDer(signatureResult.value.toByteArray())
+            is Xor.Second -> throw IllegalStateException("Signing failed: ${signatureResult.value.localizedDescription}")
         }
-
-        convertX962ToDer(signature.firstOrNull()!!.toByteArray())
     }
 
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {
