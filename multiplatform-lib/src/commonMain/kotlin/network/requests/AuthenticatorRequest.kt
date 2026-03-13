@@ -77,6 +77,12 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
         }.decode()
     }
 
+    /**
+     * Delete an existing passkey.
+     *
+     * @param token The access token of the user.
+     * @param passkeyId The id of the passkey to delete.
+     */
     suspend fun deletePasskey(token: String, passkeyId: String) {
         httpClient.delete(ApiRoutes.delete(passkeyId)) {
             addAuthenticationHeader(token)
