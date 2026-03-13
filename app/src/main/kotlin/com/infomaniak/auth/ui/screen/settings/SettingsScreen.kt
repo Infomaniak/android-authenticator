@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -50,6 +51,7 @@ fun SettingsScreen(
 ) {
     val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
+    val hasBiometrics = remember { AppLockManager.hasBiometrics() }
     val notificationEnabled = GetSetCallbacks(
         get = { uiState.isNotificationEnabled },
         set = { appSettingsViewModel.setIsNotificationEnabled(it) }
@@ -59,7 +61,7 @@ fun SettingsScreen(
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
 
-    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked, AppLockManager.hasBiometrics())
+    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked, hasBiometrics)
 }
 
 @Composable
@@ -68,7 +70,7 @@ private fun SettingsScreen(
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
     onPrivacyManagementClicked: () -> Unit,
-    hasBiometric: Boolean,
+    hasBiometrics: Boolean,
 ) {
     val fragmentActivity = LocalActivity.current as? FragmentActivity
 
@@ -80,7 +82,7 @@ private fun SettingsScreen(
                 onCheckedChange = { notificationEnabled.set(it) }
             )
         )
-        if (hasBiometric) {
+        if (hasBiometrics) {
             add(
                 OptionItemType.WithCheckBox(
                     stringResId = R.string.unlockWithBiometrics,
@@ -143,7 +145,7 @@ fun SettingsScreenPreview() {
             appLocked = GetSetCallbacks(get = { true }, set = {}),
             onThemeClicked = {},
             onPrivacyManagementClicked = {},
-            hasBiometric = true,
+            hasBiometrics = true,
         )
     }
 }
