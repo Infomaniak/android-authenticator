@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
+import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.auth.models.UserLoginResult
@@ -43,7 +44,8 @@ import javax.inject.Inject
 class OnboardingStartViewModel @Inject constructor(
     @ApplicationContext val context: Context,
     val infomaniakLogin: InfomaniakLogin,
-    val accountUtils: AccountUtils
+    val accountUtils: AccountUtils,
+    val authenticatorManager: AuthenticatorManager,
 ) : BaseCrossAppLoginViewModel(BuildConfig.APPLICATION_ID, BuildConfig.CLIENT_ID) {
     private val _isButtonLoading = MutableStateFlow(false)
     val isButtonLoading = _isButtonLoading.asStateFlow()
@@ -54,7 +56,10 @@ class OnboardingStartViewModel @Inject constructor(
     fun loginUsersIntoTheApp(users: List<User>) {
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
-            users.forEach { user -> accountUtils.addUser(user) }
+            users.forEach { user ->
+                authenticatorManager.registerPasskey(user.apiToken.accessToken, user.id)
+                accountUtils.addUser(user)
+            }
             _onLoginFinishedEvent.emit(Unit)
         }
     }
@@ -66,7 +71,9 @@ class OnboardingStartViewModel @Inject constructor(
         startLoadingLoginButtons()
         val loginResult = attemptLogin(selectedAccounts = accounts)
         loginUsers(loginResult, snackbarHostState)
-        loginResult.errorMessageIds.forEach { messageResId -> snackbarHostState.showSnackbar(context.resources.getString(messageResId)) }
+        loginResult.errorMessageIds.forEach { messageResId ->
+            snackbarHostState.showSnackbar(context.resources.getString(messageResId))
+        }
     }
 
     private suspend fun loginUsers(loginResult: LoginResult, snackbarHostState: SnackbarHostState) {

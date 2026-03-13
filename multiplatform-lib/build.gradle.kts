@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(core.plugins.android.kmp.library)
+    alias(core.plugins.kotlin.serialization)
     alias(libs.plugins.skie)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.ksp)
@@ -24,6 +25,7 @@ kotlin {
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }
+        withHostTest {}
     }
 
     val xcframeworkName = "CoreAuthenticator"
@@ -31,6 +33,7 @@ kotlin {
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
+        macosArm64(),
     ).forEach {
         it.binaries.framework {
             baseName = xcframeworkName
@@ -52,18 +55,32 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(core.kotlinx.coroutines.core)
+                implementation(core.kotlinx.serialization.json)
+                implementation(core.kotlinx.serialization.cbor)
+                implementation(core.ktor.client.core)
+                implementation(core.ktor.client.content.negociation)
+                implementation(core.ktor.client.json)
+                implementation(core.ktor.client.encoding)
+                implementation(core.okio)
             }
         }
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(core.kotlinx.coroutines.test)
+                implementation(core.ktor.client.mock)
             }
         }
         androidMain {
             dependencies {
+                implementation(core.ktor.client.okhttp)
                 implementation(core.splitties.appctx)
                 implementation(core.splitties.bitflags)
+            }
+        }
+        iosMain {
+            dependencies {
+                implementation(core.ktor.client.darwin)
             }
         }
         val androidDeviceTest by getting {

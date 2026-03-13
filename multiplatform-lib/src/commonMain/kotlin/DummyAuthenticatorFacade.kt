@@ -17,12 +17,19 @@
  */
 package com.infomaniak.auth.lib
 
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlin.time.Duration
 
-internal class DummyAuthenticatorFacade : AuthenticatorFacade() {
+class DummyAuthenticatorFacade(
+    loadingDuration: Duration,
+    resetAfter: Duration,
+) : AuthenticatorFacade() {
     override val accounts: Flow<List<Account>>
 
     private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
@@ -30,9 +37,40 @@ internal class DummyAuthenticatorFacade : AuthenticatorFacade() {
     }::value
 
     override val appStatus: Flow<AppStatus> = flow {
-        emit(AppStatus.SetupComplete)
-        //TODO[ik-auth]: Add an in-memory demo version that goes through all the possible states
-    }
+        val next = Channel<Unit>()
+        var i = 0
+        var isMigratingFromLegacyKAuth = true
+        while (true) {
+            emit(
+                AppStatus.LoginRequired(
+                    isMigratingFromLegacyKAuth = isMigratingFromLegacyKAuth,
+                    proceed = { next.trySend(Unit) }
+                )
+            )
+            next.receive()
+            emit(AppStatus.LoggingIn(null))
+            delay(loadingDuration)
+            val pendingAction: NotConnectedAction? = when (i % 3) {
+                0 -> null
+                1 -> NotConnectedAction.ReLogin(
+                    legacyAccount = Account(
+                        id = 0,
+                        fullName = "John",
+                        initials = "Smith",
+                        email = "john.smith@example.com",
+                        avatarUrl = "https://picsum.photos/id/3/200/200",
+                        status = Account.Status.NotConnected(null)
+                    ),
+                    sendCredentials = { next.trySend(Unit) })
+                else -> NotConnectedAction.Issue.Retriable(proceed = { next.trySend(Unit) })
+            }
+            emit(AppStatus.LoggingIn(pendingAction))
+            if (pendingAction != null) next.receive()
+            emit(AppStatus.SetupComplete)
+            delay(resetAfter)
+            i++
+        }
+    }.distinctUntilChanged()
 
     override suspend fun addAccounts(connectedAccounts: Map<Account, String>) {
         _accounts += connectedAccounts.keys

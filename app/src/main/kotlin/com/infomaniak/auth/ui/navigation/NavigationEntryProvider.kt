@@ -30,7 +30,10 @@ import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
 import com.infomaniak.auth.ui.screen.settings.theme.ThemeSettingsScreen
 
-fun baseEntryProvider(backStack: NavBackStack<NavKey>, snackbarHostState: SnackbarHostState): (NavKey) -> NavEntry<NavKey> = entryProvider {
+fun baseEntryProvider(
+    backStack: NavBackStack<NavKey>,
+    snackbarHostState: SnackbarHostState,
+): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Root.Home> {
         HomeScreen(
             onAccountClicked = {

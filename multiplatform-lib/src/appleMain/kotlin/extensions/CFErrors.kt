@@ -35,6 +35,15 @@ import platform.Foundation.NSError
  * Example usage:
  * ```
  * val result = tryIt { errorPointer -> SecKeyCopyExternalRepresentation(publicKeyRef, errorPointer) }
+ *
+ * when (result) {
+ *      is Xor.First -> return result.value // Successful
+ *      is Xor.Second -> {
+ *          println("Error: ${result.value.localizedDescription}")
+ *          handleNSError(result.value)
+ *          return null
+ *      }
+ * }
  * ```
  */
 internal inline fun <R : Any> tryIt(block: (errorPointer: CPointer<CFErrorRefVar>) -> R?): Xor<R, NSError> = memScoped {

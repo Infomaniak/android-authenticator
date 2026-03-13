@@ -80,7 +80,7 @@ internal fun generatePrivateKeyInTheSecureEnclave(
     privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
     publicKeyPurposes: KeyPurposes? = null,
     keyAccessGuard: KeyAccessGuard,
-    accessibility: KeyAccessibility.SecureEnclaveCompatible
+    accessibility: KeyAccessibility.SecureEnclaveCompatible // Don't allow wrong accessibility flags.
 ): Xor<SecKeyRef, NSError> = generatePrivateKey(
     tag = tag,
     privateKeyPurposes = privateKeyPurposes,
@@ -90,13 +90,33 @@ internal fun generatePrivateKeyInTheSecureEnclave(
     storageLocation = KeyStorageLocation.SecureEnclave
 )
 
+/**
+ * Generates an EC private key.
+ *
+ * A public key can be generated from it.
+ */
+internal fun generateEcPrivateKeyInMemory(
+    tag: String,
+    privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
+    publicKeyPurposes: KeyPurposes? = null,
+    keyAccessGuard: KeyAccessGuard,
+    accessibility: KeyAccessibility
+): Xor<SecKeyRef, NSError> = generatePrivateKey(
+    tag = tag,
+    privateKeyPurposes = privateKeyPurposes,
+    publicKeyPurposes = publicKeyPurposes,
+    keyAccessGuard = keyAccessGuard,
+    accessibility = accessibility,
+    storageLocation = null
+)
+
 private fun generatePrivateKey(
     tag: String,
     privateKeyPurposes: KeyPurposes = KeyPurposes.privateKeyDefaults,
     publicKeyPurposes: KeyPurposes? = null,
     keyAccessGuard: KeyAccessGuard,
     accessibility: KeyAccessibility,
-    storageLocation: KeyStorageLocation,
+    storageLocation: KeyStorageLocation?,
 ): Xor<SecKeyRef, NSError> {
     val attributes = createKeyAttributes(
         tag = tag,
@@ -116,7 +136,7 @@ private fun createKeyAttributes(
     publicKeyPurposes: KeyPurposes?,
     accessControl: KeyAccessGuard,
     accessibility: KeyAccessibility,
-    storageLocation: KeyStorageLocation,
+    storageLocation: KeyStorageLocation?,
 ) = buildCFDictionary {
     // See https://developer.apple.com/documentation/security/generating-new-cryptographic-keys#Creating-an-Asymmetric-Key-Pair
     // See all key gen attributes here: https://developer.apple.com/documentation/security/key-generation-attributes
@@ -126,11 +146,11 @@ private fun createKeyAttributes(
         KeyStorageLocation.SecureEnclave -> {
             this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave
         }
-        KeyStorageLocation.KeyChain -> {}
+        KeyStorageLocation.KeyChain, null -> {}
     }
     this[kSecPrivateKeyAttrs] = buildCFDictionary {
         privateKeyPurposes?.applyTo(this)
-        this[kSecAttrIsPermanent] = true
+        this[kSecAttrIsPermanent] = storageLocation != null
         this[kSecAttrAccessControl] = createAccessControl(
             accessControl = accessControl,
             accessibility = accessibility,
@@ -145,7 +165,7 @@ private fun createKeyAttributes(
         this[kSecAttrApplicationTag] = tag.toNsData()
     }
     if (publicKeyPurposes != null) this[kSecPublicKeyAttrs] = buildCFDictionary {
-        this[kSecAttrIsPermanent] = true
+        this[kSecAttrIsPermanent] = storageLocation != null
         publicKeyPurposes.applyTo(this)
         this[kSecAttrApplicationTag] = "$tag.pub".toNsData()
     }

@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.infomaniak.auth.lib
 
-@ConsistentCopyVisibility
-data class Account internal constructor(
+data class Account(
     val id: Long,
     val fullName: String,
     val initials: String,

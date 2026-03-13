@@ -15,14 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.infomaniak.auth.lib
 
 import kotlinx.coroutines.flow.Flow
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 abstract class AuthenticatorFacade internal constructor() {
     companion object {
-        val dummyInstance: AuthenticatorFacade = DummyAuthenticatorFacade()
+
+        fun dummyInstance(
+            loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
+            resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
+        ): AuthenticatorFacade {
+            return DummyAuthenticatorFacade(
+                loadingDuration = loadingDurationMillis.milliseconds,
+                resetAfter = resetAfterMillis.milliseconds
+            )
+        }
     }
 
     abstract val accounts: Flow<List<Account>>
