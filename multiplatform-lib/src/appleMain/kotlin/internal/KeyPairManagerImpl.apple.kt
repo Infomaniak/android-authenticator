@@ -27,7 +27,6 @@ import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.toNsData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.extensions.use
-import com.infomaniak.auth.lib.internal.KeyPairManager.Companion.ALIAS
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
@@ -80,7 +79,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
             // Get private key to retrieve public key
-            getPrivateKeyRef().use { privateKeyRef ->
+            getPrivateKeyRef("$userId-$keyId").use { privateKeyRef ->
                 SecKeyCopyPublicKey(privateKeyRef) ?: throw Exception("Failed to extract public key from private key")
             }.use { publicKeyRef ->
 
@@ -101,7 +100,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         keyId: String
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
         memScoped {
-            getPrivateKeyRef().use { privateKeyRef ->
+            getPrivateKeyRef("$userId-$keyId").use { privateKeyRef ->
                 val result = tryIt { errorPointer ->
                     SecKeyCopyExternalRepresentation(privateKeyRef, errorPointer)
                 }
@@ -115,12 +114,12 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun MemScope.getPrivateKeyRef(): SecKeyRef {
+    private fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
         val query = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
             this[kSecClass] = kSecClassKey
-            this[kSecAttrApplicationTag] = ALIAS.toNsData()
+            this[kSecAttrApplicationTag] = keyAlias.toNsData()
             this[kSecReturnRef] = true
         }
 

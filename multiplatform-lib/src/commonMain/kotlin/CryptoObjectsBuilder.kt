@@ -39,7 +39,7 @@ import kotlin.uuid.Uuid
 
 // This class should be internal
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
-class CryptoObjectsBuilder() {
+internal class CryptoObjectsBuilder {
 
     internal val base64NoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
 
