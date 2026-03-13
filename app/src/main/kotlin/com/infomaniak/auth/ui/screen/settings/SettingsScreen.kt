@@ -59,7 +59,7 @@ fun SettingsScreen(
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
 
-    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked)
+    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked, AppLockManager.hasBiometrics())
 }
 
 @Composable
@@ -68,6 +68,7 @@ private fun SettingsScreen(
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
     onPrivacyManagementClicked: () -> Unit,
+    hasBiometric: Boolean,
 ) {
     val fragmentActivity = LocalActivity.current as? FragmentActivity
 
@@ -79,7 +80,7 @@ private fun SettingsScreen(
                 onCheckedChange = { notificationEnabled.set(it) }
             )
         )
-        if (AppLockManager.hasBiometrics()) {
+        if (hasBiometric) {
             add(
                 OptionItemType.WithCheckBox(
                     stringResId = R.string.unlockWithBiometrics,
@@ -142,6 +143,7 @@ fun SettingsScreenPreview() {
             appLocked = GetSetCallbacks(get = { true }, set = {}),
             onThemeClicked = {},
             onPrivacyManagementClicked = {},
+            hasBiometric = true,
         )
     }
 }
