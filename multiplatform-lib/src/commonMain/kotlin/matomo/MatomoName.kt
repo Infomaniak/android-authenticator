@@ -21,7 +21,7 @@ package com.infomaniak.auth.lib.matomo
 enum class MatomoName(val value: String) {
 
     //region Common
-    Lock("lock"),
+    ToggleBiometry("toggleBiometry"),
     LoggedIn("loggedIn"),
     OpenLoginWebview("openLoginWebview"),
     //endregion
