@@ -15,20 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.utils
+package com.infomaniak.auth.lib.network.models
 
-import io.ktor.http.Url
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-internal object ApiRoutes {
-
-    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
-
-    fun passkeysOptions() = Url("users/me/passkeys/options")
-    fun registerPasskey() = Url("users/me/passkeys")
-    fun delete(passkeyId: String) = Url("users/me/passkeys/$passkeyId")
-    fun migrationsOptions() = Url("authenticator/migrations")
-    fun verifyMigration(sessionId: String) = Url("authenticator/migrations/$sessionId/verify")
-    fun finishMigration(deviceId: String) = Url("users/me/authenticator/migrations/$deviceId")
-    fun challenge() = Url("authenticator/challenge")
-    fun verify() = Url("authenticator/verify")
-}
+@Serializable
+data class MigrationVerification(
+    @SerialName("token_type")
+    val tokenType: String,
+    val scope: String,
+    @SerialName("user_id")
+    val userId: Int,
+    @SerialName("access_token")
+    val accessToken: String
+)

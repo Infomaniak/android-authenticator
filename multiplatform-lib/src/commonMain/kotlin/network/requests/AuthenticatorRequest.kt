@@ -19,6 +19,8 @@ package network.requests
 
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
+import com.infomaniak.auth.lib.network.models.MigrationOptions
+import com.infomaniak.auth.lib.network.models.MigrationVerification
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
@@ -87,6 +89,48 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
         httpClient.delete(ApiRoutes.delete(passkeyId)) {
             addAuthenticationHeader(token)
         }
+    }
+
+    /**
+     * Get migration options (see [MigrationOptions])
+     *
+     * @param deviceId The id of the device.
+     * @param userId The id of the user.
+     */
+    suspend fun getMigrationOptions(deviceId: String, userId: String): SuccessfulApiResponse<MigrationOptions> {
+        return httpClient.post(ApiRoutes.migrationsOptions()) {
+            setBody(mapOf("device" to deviceId, "id" to userId))
+        }.decode()
+    }
+
+    /**
+     * Start the passkey migration process
+     *
+     * @param sessionId ID of the session you get from [getMigrationOptions].
+     * @param deviceId ID of the device.
+     * @param userId ID of the user.
+     * @param otp The one-time password.
+     */
+    suspend fun verifyMigration(
+        sessionId: String,
+        deviceId: String,
+        userId: String,
+        otp: String
+    ): SuccessfulApiResponse<MigrationVerification> {
+        return httpClient.post(ApiRoutes.verifyMigration(sessionId)) {
+            setBody(mapOf("device" to deviceId, "id" to userId, "otp" to otp))
+        }.decode()
+    }
+
+    /**
+     * Finish the passkey migration process
+     *
+     * @param deviceId ID of the device.
+     */
+    suspend fun finishMigration(deviceId: String) {
+        return httpClient.post(ApiRoutes.finishMigration(deviceId)) {
+            setBody(mapOf("device" to deviceId))
+        }.decode()
     }
 
     private fun HttpRequestBuilder.addAuthenticationHeader(token: String) {

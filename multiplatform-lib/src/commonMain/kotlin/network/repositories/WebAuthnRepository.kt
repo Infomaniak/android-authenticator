@@ -19,6 +19,8 @@ package com.infomaniak.auth.lib.network.repositories
 
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
+import com.infomaniak.auth.lib.network.models.MigrationOptions
+import com.infomaniak.auth.lib.network.models.MigrationVerification
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
@@ -28,6 +30,8 @@ import network.requests.AuthenticatorRequest
 class WebAuthnRepository internal constructor(
     private val authenticatorRequest: AuthenticatorRequest,
 ) {
+
+    //region Passkey
 
     // Generate WebAuthn registration options (authentified)
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
@@ -53,4 +57,22 @@ class WebAuthnRepository internal constructor(
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
         return authenticatorRequest.verify(verifyAuthenticationData).data
     }
+
+    //endregion
+
+    //region Migration
+
+    suspend fun getMigrationOptions(deviceId: String, userId: String): MigrationOptions {
+        return authenticatorRequest.getMigrationOptions(deviceId, userId).data
+    }
+
+    suspend fun verifyMigration(sessionId: String, deviceId: String, userId: String, otp: String): MigrationVerification {
+        return authenticatorRequest.verifyMigration(sessionId, deviceId, userId, otp).data
+    }
+
+    suspend fun finishMigration(deviceId: String) {
+        return authenticatorRequest.finishMigration(deviceId)
+    }
+
+    //endregion
 }
