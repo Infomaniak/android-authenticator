@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.network.models
 
+import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,7 +25,7 @@ data class RegisterPasskeyResponse(
     val attestationObject: String,
     val clientDataJSON: String,
     val transports: List<String>,
-    val publicKeyAlgorithm: Int,
+    val publicKeyAlgorithm: KeyAlgorithm,
     val publicKey: String,
     val authenticatorData: String,
 )

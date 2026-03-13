@@ -17,12 +17,14 @@
  */
 package com.infomaniak.auth.lib.network.models
 
+import com.infomaniak.auth.lib.internal.DeviceInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class RegisterPasskey(
-    val device: String,
+    val session: String,
+    val device: DeviceInfo,
     val id: String,
     val rawId: String,
     @SerialName("response")

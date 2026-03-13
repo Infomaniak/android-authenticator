@@ -27,7 +27,6 @@ import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.toNsData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.extensions.use
-import com.infomaniak.auth.lib.internal.KeyPairManager.Companion.ALIAS
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
@@ -53,11 +52,15 @@ import platform.Security.kSecClass
 import platform.Security.kSecClassKey
 import platform.Security.kSecReturnRef
 
-internal class KeyPairManagerImpl : KeyPairManager {
+internal actual class KeyPairManagerImpl : KeyPairManager {
 
-    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
+    actual override suspend fun generateNewKey(
+        userId: Int,
+        keyId: String,
+    ): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
+
         val result = generateEcPrivateKeyInTheKeychain(
-            tag = ALIAS,
+            tag = "$keyId-$userId",
             privateKeyPurposes = KeyPairManager.privateKeyPurposes,
             publicKeyPurposes = KeyPairManager.publicKeyPurposes,
             keyAccessGuard = KeyAccessGuard.Unguarded,
@@ -70,10 +73,13 @@ internal class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+    actual override suspend fun retrievePublicKey(
+        userId: Int,
+        keyId: String,
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
             // Get private key to retrieve public key
-            getPrivateKeyRef().use { privateKeyRef ->
+            getPrivateKeyRef("$userId-$keyId").use { privateKeyRef ->
                 SecKeyCopyPublicKey(privateKeyRef) ?: throw Exception("Failed to extract public key from private key")
             }.use { publicKeyRef ->
 
@@ -89,13 +95,31 @@ internal class KeyPairManagerImpl : KeyPairManager {
         }
     }
 
+    actual override suspend fun retrievePrivateKey(
+        userId: Int,
+        keyId: String
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
+        memScoped {
+            getPrivateKeyRef("$userId-$keyId").use { privateKeyRef ->
+                val result = tryIt { errorPointer ->
+                    SecKeyCopyExternalRepresentation(privateKeyRef, errorPointer)
+                }
+
+                return when (result) {
+                    is Xor.First -> Xor.First(result.value.toNSData().toByteArray())
+                    is Xor.Second -> Xor.Second(Failure.KeyManagement.KeyExtractionFailed(result.value.toString()))
+                }
+            }
+        }
+    }
+
     @OptIn(ExperimentalForeignApi::class)
-    private fun MemScope.getPrivateKeyRef(): SecKeyRef {
+    private fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
         val query = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
             this[kSecClass] = kSecClassKey
-            this[kSecAttrApplicationTag] = ALIAS.toNsData()
+            this[kSecAttrApplicationTag] = keyAlias.toNsData()
             this[kSecReturnRef] = true
         }
 

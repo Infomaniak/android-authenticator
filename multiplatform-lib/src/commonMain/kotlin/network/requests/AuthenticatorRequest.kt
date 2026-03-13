@@ -24,6 +24,7 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import io.ktor.client.HttpClient
+import io.ktor.http.HeadersBuilder
 import kotlinx.serialization.json.Json
 import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
@@ -34,19 +35,50 @@ internal class AuthenticatorRequest(
     httpClient: HttpClient,
 ) : BaseRequest(environment, json, httpClient) {
 
-    suspend fun getPasskeysOptions(): SuccessfulApiResponse<PasskeysOptions> {
-        return get(createUrl(ApiRoutes.getPasskeysOptions))
+    /**
+     * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
+     */
+    suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
+        return get(createUrl(ApiRoutes.getPasskeysOptions), appendHeaders = {
+            addAuthenticationHeader(token)
+        })
     }
 
-    suspend fun registerPasskey(registerPasskey: RegisterPasskey) {
-        post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey)
+    /**
+     * Registers a public key credential (from the on-device generated private/public key pair),
+     * after [getPasskeysOptions] is done.
+     */
+    suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
+        post<Unit>(createUrl(ApiRoutes.registerPasskey), registerPasskey, appendHeaders = {
+            addAuthenticationHeader(token)
+        })
     }
 
-    suspend fun challenge(identity: Long): AuthenticationOptions {
-        return post(createUrl(ApiRoutes.challenge), mapOf("identity" to identity))
+    /**
+     * Retrieves the backend-generated challenge, prior to authenticating with [verify].
+     */
+    suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
+        return post(createUrl(ApiRoutes.challenge), mapOf("client_id" to clientId))
     }
 
-    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
+    /**
+     * Authenticates with [VerifyAuthenticationData], which contains private-key signed data.
+     *
+     * That data includes the challenge retrieved in [challenge].
+     *
+     * @return An [AuthResult] that includes an access token.
+     */
+    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
         return post(createUrl(ApiRoutes.verify), verifyAuthenticationData)
+    }
+
+    suspend fun deletePasskey(token: String, passkeyId: String) {
+        return delete(createUrl("users/me/passkeys/$passkeyId"), appendHeaders = {
+            addAuthenticationHeader(token)
+        })
+    }
+
+    private fun HeadersBuilder.addAuthenticationHeader(token: String) {
+        append("Authorization", "Bearer $token")
     }
 }

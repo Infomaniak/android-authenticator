@@ -21,6 +21,7 @@ import com.infomaniak.auth.lib.AuthenticatorInjection
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
+import com.infomaniak.auth.manager.AccountUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,9 +35,9 @@ object AuthenticatorInjectionModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticatorInjection(@UserAgent userAgent: String): AuthenticatorInjection {
+    fun provideAuthenticatorInjection(@UserAgent userAgent: String, accountUtils: AccountUtils): AuthenticatorInjection {
         return AuthenticatorInjection(
-            environment = ApiEnvironment.Prod,
+            environment = ApiEnvironment.Staging,
             userAgent = userAgent,
             crashReport = object : CrashReportInterface {
                 override fun addBreadcrumb(
@@ -64,7 +65,10 @@ object AuthenticatorInjectionModule {
                 ) {
                     //TODO[Authenticator] forward to sentry
                 }
-            }
+            },
         )
     }
+
+    @Provides
+    fun provideAuthenticatorManager(authenticatorInjection: AuthenticatorInjection) = authenticatorInjection.authenticatorManager
 }

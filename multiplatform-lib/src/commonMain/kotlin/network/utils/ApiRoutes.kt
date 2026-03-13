@@ -19,10 +19,10 @@ package network.utils
 
 internal object ApiRoutes {
 
-    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/authenticator/"
+    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
 
-    const val getPasskeysOptions = "passkeys/options"
-    const val registerPasskey = "passkey"
-    const val challenge = "challenge"
-    const val verify = "verify"
+    const val getPasskeysOptions = "users/me/passkeys/options"
+    const val registerPasskey = "users/me/passkeys"
+    const val challenge = "authenticator/challenge"
+    const val verify = "authenticator/verify"
 }

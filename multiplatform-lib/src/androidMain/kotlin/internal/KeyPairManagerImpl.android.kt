@@ -23,21 +23,34 @@ import kotlinx.coroutines.invoke
 import splitties.init.appCtx
 import java.io.File
 
-internal class KeyPairManagerImpl : KeyPairManager {
+internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)
-    override suspend fun generateNewKey(): Failure.KeyManagement.GenerationFailed? {
+    actual override suspend fun generateNewKey(userId: Int, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
 
-        saveKeyToFilesDir(PRIVATE_KEY_NAME, keyPair.private.encoded)
-        saveKeyToFilesDir(PUBLIC_KEY_NAME, keyPair.public.encoded)
+        saveKeyToFilesDir("$userId-$keyId-private.key", keyPair.private.encoded)
+        saveKeyToFilesDir("$userId-$keyId-public.key", keyPair.public.encoded)
         return null
     }
 
-    override suspend fun retrievePublicKey(): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
-        val file = File(appCtx.filesDir, PUBLIC_KEY_NAME)
+    actual override suspend fun retrievePublicKey(
+        userId: Int,
+        keyId: String,
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+        val file = File(appCtx.filesDir, "$userId-$keyId-public.key")
+        runCatching {
+            Xor.First(file.readBytes())
+        }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
+    }
+
+    actual override suspend fun retrievePrivateKey(
+        userId: Int,
+        keyId: String,
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
+        val file = File(appCtx.filesDir, "$userId-$keyId-private.key")
         runCatching {
             Xor.First(file.readBytes())
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
@@ -46,10 +59,5 @@ internal class KeyPairManagerImpl : KeyPairManager {
     private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
         val file = File(appCtx.filesDir, fileName)
         file.writeBytes(key)
-    }
-
-    companion object {
-        private const val PUBLIC_KEY_NAME = "public.key"
-        private const val PRIVATE_KEY_NAME = "private.key"
     }
 }

@@ -20,7 +20,6 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.core.common.utils.buildUserAgent
-import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
 import dagger.Provides
@@ -38,7 +37,7 @@ object ApplicationModule {
     fun providesInfomaniakLogin(@ApplicationContext appContext: Context): InfomaniakLogin {
         return InfomaniakLogin(
             context = appContext,
-            loginUrl = "${LOGIN_ENDPOINT_URL}/",
+            loginUrl = "https://login.staging-authenticator.dev.infomaniak.ch/",
             appUID = BuildConfig.APPLICATION_ID,
             clientID = BuildConfig.CLIENT_ID,
             accessType = null,

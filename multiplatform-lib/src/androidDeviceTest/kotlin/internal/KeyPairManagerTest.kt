@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package internal
+package com.infomaniak.auth.internal
 
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.Xor
@@ -31,10 +31,12 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
-            val error = keyPairManager.generateNewKey()
+            val userId = 12345
+            val keyId = "keyId"
+            val error = keyPairManager.generateNewKey(userId, keyId)
             assertNull(error)
 
-            val publicKey = keyPairManager.retrievePublicKey()
+            val publicKey = keyPairManager.retrievePublicKey(userId, keyId)
             when (publicKey) {
                 is Xor.First -> Unit // OK
                 is Xor.Second -> fail("Couldn't generate the key")
