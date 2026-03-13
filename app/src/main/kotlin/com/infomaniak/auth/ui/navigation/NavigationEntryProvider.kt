@@ -28,8 +28,11 @@ import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScree
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
 import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
+import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementMatomoScreen
 import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementScreen
+import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementSentryScreen
 import com.infomaniak.auth.ui.screen.settings.theme.ThemeSettingsScreen
+import com.infomaniak.core.privacymanagement.tracker.Tracker
 
 fun baseEntryProvider(
     backStack: NavBackStack<NavKey>,
@@ -60,7 +63,24 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.PrivacyManagement> {
-        PrivacyManagementScreen()
+        PrivacyManagementScreen(
+            navigateToTrackerPage = { tracker ->
+                when (tracker) {
+                    Tracker.Matomo -> {
+                        backStack.add(NavDestination.PrivacyManagementMatomo)
+                    }
+                    Tracker.Sentry -> {
+                        backStack.add(NavDestination.PrivacyManagementSentry)
+                    }
+                }
+            }
+        )
+    }
+    entry<NavDestination.PrivacyManagementMatomo> {
+        PrivacyManagementMatomoScreen()
+    }
+    entry<NavDestination.PrivacyManagementSentry> {
+        PrivacyManagementSentryScreen()
     }
     entry<NavDestination.AccountDetails> {
         AccountDetails(

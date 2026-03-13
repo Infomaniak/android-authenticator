@@ -20,6 +20,7 @@ package com.infomaniak.auth
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.infomaniak.auth.data.preferences.SentryPreferences
 import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.core.common.AssociatedUserDataCleanable
@@ -60,10 +61,9 @@ class MainApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
-        configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = true)
-
         userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
         applicationScope.launch {
+            configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = SentryPreferences().isSentryAuthorized)
             DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
         }
     }

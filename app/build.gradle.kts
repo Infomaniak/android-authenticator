@@ -151,6 +151,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(core.androidx.work.runtime.ktx)
     implementation(core.kotlinx.collections.immutable)
+    implementation(core.splitties.preferences)
 
     implementation(core.kotlinx.serialization.json)
 

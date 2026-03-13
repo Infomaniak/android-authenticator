@@ -29,8 +29,8 @@ import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
 import com.infomaniak.auth.ui.images.illus.dataProtection.DataProtection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.privacymanagement.PrivacyManagementHomeContent
-import com.infomaniak.core.privacymanagement.Tracker
+import com.infomaniak.core.privacymanagement.screencontent.PrivacyManagementHomeContent
+import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -38,10 +38,10 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun PrivacyManagementScreen() {
+fun PrivacyManagementScreen(navigateToTrackerPage: (Tracker) -> Unit) {
     SinglePaneScaffold(
         topBar = {
-            InfomaniakAuthenticatorTopAppBar()
+            InfomaniakAuthenticatorTopAppBar(isCentered = false)
         }
     ) { paddingValues ->
         PrivacyManagementHomeContent(
@@ -64,7 +64,8 @@ fun PrivacyManagementScreen() {
                     painter = painterResource(R.drawable.right_indicator),
                     contentDescription = null,
                 )
-            }
+            },
+            onTrackerClick = navigateToTrackerPage
         )
     }
 }
@@ -73,6 +74,8 @@ fun PrivacyManagementScreen() {
 @Composable
 fun PrivacyManagementScreenPreview() {
     AuthenticatorTheme {
-        PrivacyManagementScreen()
+        PrivacyManagementScreen(
+            navigateToTrackerPage = {},
+        )
     }
 }
