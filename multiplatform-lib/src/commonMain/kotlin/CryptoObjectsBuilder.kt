@@ -37,7 +37,6 @@ import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-// This class should be internal
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 internal class CryptoObjectsBuilder {
 
