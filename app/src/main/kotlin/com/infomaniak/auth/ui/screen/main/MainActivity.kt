@@ -19,24 +19,27 @@ package com.infomaniak.auth.ui.screen.main
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
+import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.screen.main.MainViewModel.UiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.applock.AppLockManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
@@ -49,6 +52,12 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+
+        AppLockManager.scheduleLockIfNeeded(
+            targetActivity = this,
+            lockActivityCls = AppLockActivity::class,
+            isAppLockEnabled = { viewModel.isAppLocked.first() }
+        )
 
         setContent {
             val appSettings by appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)

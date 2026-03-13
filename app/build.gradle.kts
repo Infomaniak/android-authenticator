@@ -129,6 +129,7 @@ dependencies {
     implementation(project(":multiplatform-lib"))
 
     implementation(core.infomaniak.core.auth)
+    implementation(core.infomaniak.core.applock)
     implementation(core.infomaniak.core.common)
     implementation(core.infomaniak.core.crossapplogin.front)
     implementation(core.infomaniak.core.matomo)

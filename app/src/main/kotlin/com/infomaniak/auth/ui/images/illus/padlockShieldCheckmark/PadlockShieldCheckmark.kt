@@ -15,54 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.components
+package com.infomaniak.auth.ui.images.illus.padlockShieldCheckmark
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.images.AppImages
-import com.infomaniak.auth.ui.images.illus.shieldPerson.ShieldPerson
+import com.infomaniak.auth.ui.images.AppImages.AppIllus
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 import com.infomaniak.core.ui.compose.theme.ThemedImage
 
-@Composable
-fun IllustrationWithHalo(
-    themedImage: ThemedImage,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            imageVector = ImageVector.vectorResource(R.drawable.gradient),
-            contentDescription = null,
-        )
-        Image(
-            imageVector = themedImage.image(),
-            contentDescription = null,
-        )
-    }
+@Suppress("UnusedReceiverParameter")
+val AppIllus.PadlockShieldCheckmark: ThemedImage
+    get() = _padlockShieldCheckmark ?: object : ThemedImage {
+        override val light = AppIllus.PadlockShieldCheckmarkLight
+        override val dark = AppIllus.PadlockShieldCheckmarkDark
+    }.also { _padlockShieldCheckmark = it }
 
-}
+private var _padlockShieldCheckmark: ThemedImage? = null
 
 @PreviewLightAndDark
 @Composable
-fun IllustrationWithHaloPreview() {
+private fun Preview() {
     AuthenticatorTheme {
-        Surface {
-            IllustrationWithHalo(
-                themedImage = AppImages.AppIllus.ShieldPerson,
-                modifier = Modifier.padding(Margin.Large)
+        Box {
+            Image(
+                imageVector = AppIllus.PadlockShieldCheckmark.image(),
+                contentDescription = null,
+                modifier = Modifier.size(AppImages.previewSize),
             )
         }
     }

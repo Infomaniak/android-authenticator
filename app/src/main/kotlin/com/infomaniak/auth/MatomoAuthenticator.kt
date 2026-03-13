@@ -42,5 +42,9 @@ object MatomoAuthenticator : Matomo {
     fun trackAccountEvent(name: MatomoName) {
         trackEvent(MatomoCategory.Account, name)
     }
+
+    fun trackSettingsEvent(name: MatomoName) {
+        trackEvent(MatomoCategory.SettingsGeneral, name)
+    }
     //endregion
 }

@@ -18,6 +18,8 @@
 <resources>
     <style name="Theme.AndroidAuthenticator" parent="android:Theme.Material.Light.NoActionBar" />
 
+    <!-- Login -->
+
     <style name="LoginWebViewTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarOverlay</item>
         <item name="themeLoginToolbar">@style/LoginToolbarTheme</item>

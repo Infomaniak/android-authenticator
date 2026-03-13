@@ -15,17 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.ui.theme
 
-package com.infomaniak.auth.lib.matomo
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
+import com.infomaniak.core.ui.compose.basics.ButtonStyle
 
-enum class MatomoName(val value: String) {
-
-    //region Common
-    ToggleBiometry("toggleBiometry"),
-    LoggedIn("loggedIn"),
-    OpenLoginWebview("openLoginWebview"),
-    //endregion
-
-    //region iOS
-    //endregion
+object AppValues {
+    val ButtonStyle = object : ButtonStyle {
+        override val height: Dp = AppDimens.LargeButtonHeight
+        override val shape: Shape = AppShapes.LargeButtonShape
+    }
 }
