@@ -31,4 +31,6 @@ sealed interface AppStatus {
     data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
 
     data object SetupComplete : AppStatus
+
+    data class LoggedIn(val accounts: List<Account>) : AppStatus
 }

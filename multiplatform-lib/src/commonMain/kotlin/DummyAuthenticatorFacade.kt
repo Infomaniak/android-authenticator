@@ -68,6 +68,20 @@ class DummyAuthenticatorFacade(
             if (pendingAction != null) next.receive()
             emit(AppStatus.SetupComplete)
             delay(resetAfter)
+            emit(
+                AppStatus.LoggedIn(
+                    listOf(
+                        Account(
+                            id = 0,
+                            fullName = "John Smith",
+                            initials = "JS",
+                            email = "john.smith@ik.me",
+                            avatarUrl = null,
+                            status = Account.Status.LoggedIn,
+                        )
+                    )
+                )
+            )
             i++
         }
     }.distinctUntilChanged()
