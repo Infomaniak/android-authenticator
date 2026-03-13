@@ -43,6 +43,11 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
         authenticatorRequest.registerPasskey(token, registerPasskey)
     }
 
+    // Deletion of existing passkey (authentified)
+    suspend fun deletePasskey(token: String, passkeyId: String) {
+        authenticatorRequest.deletePasskey(token, passkeyId)
+    }
+
     // Authentification challenge (not authentified)
     suspend fun challenge(clientId: String): AuthenticationOptions {
         return authenticatorRequest.challenge(clientId).data
@@ -51,9 +56,5 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
     // Authentification verification (not authentified)
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
         return authenticatorRequest.verify(verifyAuthenticationData).data
-    }
-
-    suspend fun deletePasskey(token: String, passkeyId: String) {
-        authenticatorRequest.deletePasskey(token, passkeyId)
     }
 }

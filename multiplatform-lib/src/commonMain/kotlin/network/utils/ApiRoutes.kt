@@ -17,12 +17,15 @@
  */
 package network.utils
 
+import io.ktor.http.Url
+
 internal object ApiRoutes {
 
     fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
 
-    const val getPasskeysOptions = "users/me/passkeys/options"
-    const val registerPasskey = "users/me/passkeys"
-    const val challenge = "authenticator/challenge"
-    const val verify = "authenticator/verify"
+    fun passkeysOptions() = Url("users/me/passkeys/options")
+    fun registerPasskey() = Url("users/me/passkeys")
+    fun delete(passkeyId: String) = Url("users/me/passkeys/$passkeyId")
+    fun challenge() = Url("authenticator/challenge")
+    fun verify() = Url("authenticator/verify")
 }
