@@ -83,6 +83,13 @@ kotlin {
                 implementation(core.ktor.client.darwin)
             }
         }
+
+        listOf("iosArm64", "iosSimulatorArm64", "macosArm64").forEach { target ->
+            getByName("${target}Main") {
+                kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/$target/${target}Main/kotlin"))
+            }
+        }
+
         val androidDeviceTest by getting {
             dependencies {
                 implementation(core.androidx.junit)
@@ -118,4 +125,11 @@ dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspMacosArm64", libs.androidx.room.compiler)
+}
+
+listOf("IosArm64", "IosSimulatorArm64", "MacosArm64").forEach { target ->
+    tasks.named("compileKotlin$target") {
+        dependsOn("kspKotlin$target")
+    }
 }
