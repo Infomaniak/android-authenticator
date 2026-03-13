@@ -17,21 +17,17 @@
  */
 package com.infomaniak.auth.lib.network.repositories
 
-import com.infomaniak.auth.lib.network.ApiClientProvider
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
-import io.ktor.client.HttpClient
 import network.requests.AuthenticatorRequest
 
-class WebAuthnRepository internal constructor(private val authenticatorRequest: AuthenticatorRequest) {
-
-    constructor(apiClientProvider: ApiClientProvider) : this(httpClient = apiClientProvider.httpClient)
-
-    internal constructor(httpClient: HttpClient) : this(AuthenticatorRequest(httpClient))
+class WebAuthnRepository internal constructor(
+    private val authenticatorRequest: AuthenticatorRequest,
+) {
 
     // Generate WebAuthn registration options (authentified)
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
