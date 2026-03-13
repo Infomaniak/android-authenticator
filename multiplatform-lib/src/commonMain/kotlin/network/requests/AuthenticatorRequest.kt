@@ -31,7 +31,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.http.Url
 import network.utils.ApiRoutes
 
 internal class AuthenticatorRequest(private val httpClient: HttpClient) {
@@ -40,7 +39,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
      */
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
-        return httpClient.get(ApiRoutes.getPasskeysOptions) {
+        return httpClient.get(ApiRoutes.passkeysOptions()) {
             addAuthenticationHeader(token)
         }.decode()
     }
@@ -50,7 +49,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * after [getPasskeysOptions] is done.
      */
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
-        httpClient.post(ApiRoutes.registerPasskey) {
+        httpClient.post(ApiRoutes.registerPasskey()) {
             addAuthenticationHeader(token)
             setBody(registerPasskey)
         }
@@ -60,7 +59,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * Retrieves the backend-generated challenge, prior to authenticating with [verify].
      */
     suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
-        return httpClient.post(ApiRoutes.challenge) {
+        return httpClient.post(ApiRoutes.challenge()) {
             setBody(mapOf("client_id" to clientId))
         }.decode()
     }
@@ -73,13 +72,13 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @return An [AuthResult] that includes an access token.
      */
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
-        return httpClient.post(ApiRoutes.verify) {
+        return httpClient.post(ApiRoutes.verify()) {
             setBody(verifyAuthenticationData)
         }.decode()
     }
 
     suspend fun deletePasskey(token: String, passkeyId: String) {
-        httpClient.delete(Url("users/me/passkeys/$passkeyId")) {
+        httpClient.delete(ApiRoutes.delete(passkeyId)) {
             addAuthenticationHeader(token)
         }
     }
