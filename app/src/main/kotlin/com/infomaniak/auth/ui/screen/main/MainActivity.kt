@@ -55,7 +55,7 @@ class MainActivity : FragmentActivity() {
 
         AppLockManager.scheduleLockIfNeeded(
             targetActivity = this,
-            lockActivityCls = AppLockActivity::class.java,
+            lockActivityCls = AppLockActivity::class,
             isAppLockEnabled = { viewModel.isAppLocked.first() }
         )
 
