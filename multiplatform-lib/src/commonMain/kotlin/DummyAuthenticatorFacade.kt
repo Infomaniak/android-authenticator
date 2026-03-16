@@ -66,7 +66,7 @@ class DummyAuthenticatorFacade(
                         initials = "Smith",
                         email = "john.smith@example.com",
                         avatarUrl = "https://picsum.photos/id/3/200/200",
-                        status = StatusEntity.NotConnected(action = null)
+                        status = StatusEntity.NotConnectedEmpty
                     ),
                     sendCredentials = { next.trySend(Unit) })
                 else -> NotConnectedAction.Issue.Retriable(proceed = { next.trySend(Unit) })
