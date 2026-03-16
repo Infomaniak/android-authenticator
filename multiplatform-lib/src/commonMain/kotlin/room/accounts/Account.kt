@@ -19,6 +19,7 @@ package com.infomaniak.auth.lib.room.accounts
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.infomaniak.auth.lib.NotConnectedAction
 
 @Entity
 data class AccountEntity(
