@@ -21,9 +21,11 @@ import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import com.infomaniak.auth.lib.network.models.ApiError
+import com.infomaniak.auth.lib.network.utils.getHttpClientEngine
 import com.infomaniak.auth.lib.network.utils.getRequestContextId
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
@@ -63,9 +65,9 @@ internal class ApiClientProvider(
         useAlternativeNames = false
     }
 
-    val httpClient = createHttpClient()
+    val httpClient = createHttpClient(getHttpClientEngine())
 
-    fun createHttpClient(): HttpClient {
+    fun createHttpClient(engine: HttpClientEngine): HttpClient {
         val block: HttpClientConfig<*>.() -> Unit = {
             install(UserAgent) {
                 agent = userAgent
@@ -149,7 +151,7 @@ internal class ApiClientProvider(
             }
         }
 
-        return HttpClient(block)
+        return HttpClient(engine, block)
     }
 
     private fun addSentryUrlBreadcrumb(response: HttpResponse, statusCode: Int, requestContextId: String) {

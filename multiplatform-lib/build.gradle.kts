@@ -78,7 +78,7 @@ kotlin {
                 implementation(core.splitties.bitflags)
             }
         }
-        iosMain {
+        appleMain {
             dependencies {
                 implementation(core.ktor.client.darwin)
             }
