@@ -22,8 +22,8 @@ import io.ktor.client.engine.darwin.Darwin
 
 actual fun getHttpClientEngine(): HttpClientEngine {
     return Darwin.create {
-        configureRequest {
-            setAllowsCellularAccess(true)
+        configureSession {
+            timeoutIntervalForRequest = 10.0
         }
     }
 }
