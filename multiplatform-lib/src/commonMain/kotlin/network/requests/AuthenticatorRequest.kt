@@ -20,7 +20,6 @@ package com.infomaniak.auth.lib.network.requests
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
 import com.infomaniak.auth.lib.network.models.MigrationOptions
-import com.infomaniak.auth.lib.network.models.MigrationVerification
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
@@ -116,7 +115,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
         deviceId: String,
         userId: String,
         otp: String
-    ): SuccessfulApiResponse<MigrationVerification> {
+    ): SuccessfulApiResponse<AuthResult> {
         return httpClient.post(ApiRoutes.verifyMigration(sessionId)) {
             setBody(mapOf("device" to deviceId, "id" to userId, "otp" to otp))
         }.decode()

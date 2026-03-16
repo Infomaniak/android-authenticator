@@ -20,7 +20,6 @@ package com.infomaniak.auth.lib.network.repositories
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
 import com.infomaniak.auth.lib.network.models.MigrationOptions
-import com.infomaniak.auth.lib.network.models.MigrationVerification
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
