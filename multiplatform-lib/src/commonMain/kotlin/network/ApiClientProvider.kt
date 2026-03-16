@@ -24,7 +24,6 @@ import com.infomaniak.auth.lib.network.models.ApiError
 import com.infomaniak.auth.lib.network.utils.getHttpClientEngine
 import com.infomaniak.auth.lib.network.utils.getRequestContextId
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
@@ -32,6 +31,7 @@ import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.HttpRequest
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
@@ -57,102 +57,93 @@ internal class ApiClientProvider(
     private val crashReport: CrashReportInterface? = null,
 ) {
 
-    val json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
+    private val jsonConfig = Json {
+        /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
+        encodeDefaults = true
         isLenient = true
+        allowSpecialFloatingPointValues = true
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+
+        // Use-case specific config:
+        coerceInputValues = true // Use default values if not recognized (used for enums).
+        ignoreUnknownKeys = true // Don't break if keys are added.
+        @OptIn(ExperimentalSerializationApi::class)
+        decodeEnumsCaseInsensitive = true
         useAlternativeNames = false
     }
 
-    val httpClient = createHttpClient(getHttpClientEngine())
-
-    fun createHttpClient(engine: HttpClientEngine): HttpClient {
-        return HttpClient(
-            engine,
-            block = {
-
-                install(UserAgent) {
-                    agent = userAgent
-                }
-                install(ContentNegotiation) {
-                    val jsonConfig = Json {
-                        /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
-                        encodeDefaults = true
-                        isLenient = true
-                        allowSpecialFloatingPointValues = true
-                        allowStructuredMapKeys = true
-                        prettyPrint = false
-                        useArrayPolymorphism = false
-
-                        // Use-case specific config:
-                        coerceInputValues = true // Use default values if not recognized (used for enums).
-                        ignoreUnknownKeys = true // Don't break if keys are added.
-                        @OptIn(ExperimentalSerializationApi::class)
-                        decodeEnumsCaseInsensitive = true
-                    }
-                    json(jsonConfig)
-                }
-                install(ContentEncoding) {
-                    gzip()
-                }
-                install(HttpTimeout) {
-                    // Each value can be fine-tuned independently, hence the value not being shared.
-                    requestTimeoutMillis = 10.seconds.inWholeMilliseconds
-                    connectTimeoutMillis = 10.seconds.inWholeMilliseconds
-                    socketTimeoutMillis = 10.seconds.inWholeMilliseconds
-                }
-                install(HttpRequestRetry) {
-                    retryOnExceptionIf(maxRetries = MAX_RETRY) { _, cause ->
-                        cause.isNetworkException()
-                    }
-                    delayMillis { retry ->
-                        retry * 500L
-                    }
-                }
-
-                defaultRequest {
-                    url(ApiRoutes.apiBaseUrl(environment))
-                    contentType(ContentType.Application.Json)
-                }
-
-                HttpResponseValidator {
-                    validateResponse { response: HttpResponse ->
-                        val requestContextId = response.getRequestContextId()
-                        val statusCode = response.status.value
-
-                        addSentryUrlBreadcrumb(response, statusCode, requestContextId)
-
-                        if (statusCode >= 300) {
-                            val bodyResponse = response.bodyAsText()
-                            val apiError = runCatching {
-                                json.decodeFromString<ApiError>(bodyResponse)
-                            }.getOrElse {
-                                throw UnexpectedApiErrorFormatException(statusCode, bodyResponse, null, requestContextId)
-                            }
-                            throw ApiErrorException(apiError.errorCode, apiError.message, requestContextId)
-                        }
-                    }
-                    handleResponseExceptionWithRequest { cause, request ->
-                        when (cause) {
-                            is IOException -> throw NetworkException("Network error: ${cause.message}")
-                            is ApiException, is CancellationException -> throw cause
-                            else -> {
-                                val response = runCatching { request.call.response }.getOrNull()
-                                val requestContextId = response?.getRequestContextId() ?: ""
-                                val bodyResponse = response?.bodyAsText() ?: cause.message ?: ""
-                                val statusCode = response?.status?.value ?: -1
-                                throw UnexpectedApiErrorFormatException(
-                                    statusCode,
-                                    bodyResponse,
-                                    cause,
-                                    requestContextId
-                                )
-                            }
-                        }
-                    }
-                }
+    val httpClient = HttpClient(getHttpClientEngine()) {
+        install(UserAgent) {
+            agent = userAgent
+        }
+        install(ContentNegotiation) {
+            json(jsonConfig)
+        }
+        install(ContentEncoding) {
+            gzip()
+        }
+        install(HttpTimeout) {
+            // Each value can be fine-tuned independently, hence the value not being shared.
+            requestTimeoutMillis = 10.seconds.inWholeMilliseconds
+            connectTimeoutMillis = 10.seconds.inWholeMilliseconds
+            socketTimeoutMillis = 10.seconds.inWholeMilliseconds
+        }
+        install(HttpRequestRetry) {
+            retryOnExceptionIf(maxRetries = MAX_RETRY) { _, cause ->
+                cause.isNetworkException()
             }
-        )
+            delayMillis { retry ->
+                retry * 500L
+            }
+        }
+
+        defaultRequest {
+            url(ApiRoutes.apiBaseUrl(environment))
+            contentType(ContentType.Application.Json)
+        }
+
+        HttpResponseValidator {
+            validateResponse(::validateResponse)
+            handleResponseExceptionWithRequest(::handleResponseExceptionWithRequest)
+        }
+    }
+
+    private suspend fun validateResponse(response: HttpResponse) {
+        val requestContextId = response.getRequestContextId()
+        val statusCode = response.status.value
+
+        addSentryUrlBreadcrumb(response, statusCode, requestContextId)
+
+        if (statusCode >= 300) {
+            val bodyResponse = response.bodyAsText()
+            val apiError = runCatching {
+                jsonConfig.decodeFromString<ApiError>(bodyResponse)
+            }.getOrElse {
+                throw UnexpectedApiErrorFormatException(statusCode, bodyResponse, null, requestContextId)
+            }
+            throw ApiErrorException(apiError.errorCode, apiError.message, requestContextId)
+        }
+    }
+
+    private suspend fun handleResponseExceptionWithRequest(cause: Throwable, request: HttpRequest) {
+        when (cause) {
+            is IOException -> throw NetworkException("Network error: ${cause.message}")
+            is ApiException, is CancellationException -> throw cause
+            else -> {
+                val response = runCatching { request.call.response }.getOrNull()
+                val requestContextId = response?.getRequestContextId() ?: ""
+                val bodyResponse = response?.bodyAsText() ?: cause.message ?: ""
+                val statusCode = response?.status?.value ?: -1
+                throw UnexpectedApiErrorFormatException(
+                    statusCode,
+                    bodyResponse,
+                    cause,
+                    requestContextId
+                )
+            }
+        }
     }
 
     private fun addSentryUrlBreadcrumb(response: HttpResponse, statusCode: Int, requestContextId: String) {
