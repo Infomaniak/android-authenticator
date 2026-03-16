@@ -110,7 +110,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param userId ID of the user.
      * @param otp The one-time password.
      */
-    suspend fun verifyMigration(
+    suspend fun getTokenForMigration(
         sessionId: String,
         deviceId: String,
         userId: String,

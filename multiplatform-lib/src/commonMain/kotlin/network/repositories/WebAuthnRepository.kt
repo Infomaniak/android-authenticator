@@ -65,8 +65,8 @@ class WebAuthnRepository internal constructor(
         return authenticatorRequest.getMigrationOptions(deviceId, userId).data
     }
 
-    suspend fun verifyMigration(sessionId: String, deviceId: String, userId: String, otp: String): MigrationVerification {
-        return authenticatorRequest.verifyMigration(sessionId, deviceId, userId, otp).data
+    suspend fun getTokenForMigration(sessionId: String, deviceId: String, userId: String, otp: String): AuthResult {
+        return authenticatorRequest.getTokenForMigration(sessionId, deviceId, userId, otp).data
     }
 
     suspend fun completeMigration(token: String, deviceId: String) {
