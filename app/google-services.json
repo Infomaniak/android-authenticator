@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "19830079450",
+    "project_id": "infomaniak-authenticator",
+    "storage_bucket": "infomaniak-authenticator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19830079450:android:2c670d6eab5806c46f8ae3",
+        "android_client_info": {
+          "package_name": "com.infomaniak.auth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB30B3-Zl5Wkhv9qR0EWIk2KeHggcz5Q1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
