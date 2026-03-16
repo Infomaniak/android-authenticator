@@ -36,8 +36,8 @@ fun baseEntryProvider(
 ): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Root.Home> {
         HomeScreen(
-            onAccountClicked = {
-                backStack.add(NavDestination.AccountDetails(it))
+            onAccountClicked = { account ->
+                backStack.add(NavDestination.AccountDetails(account.id))
             }
         )
     }

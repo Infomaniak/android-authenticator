@@ -52,10 +52,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.room.accounts.Account
+import com.infomaniak.auth.lib.room.accounts.StatusEntity
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
+import com.infomaniak.auth.ui.previewparameter.fakeAccounts
+import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel.Companion.toAccountSecurityLevel
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -65,9 +71,22 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 
 @Composable
-fun HomeScreen(onAccountClicked: (FakeAccount) -> Unit) {
+fun HomeScreen(
+    viewModel: HomeScreenViewModel = hiltViewModel(),
+    onAccountClicked: (Account) -> Unit
+) {
+    val accounts by viewModel.authenticator.accounts.collectAsStateWithLifecycle(emptyList())
+
+    HomeScreen(accounts, onAccountClicked)
+}
+
+@Composable
+fun HomeScreen(
+    accounts: List<Account>,
+    onAccountClicked: (Account) -> Unit
+) {
     //TODO get accounts from DB
-    val accounts = listOf(
+    val accountss = listOf(
         FakeAccount(
             name = "Laura Snow",
             email = "laura.snow@ik.me",
@@ -86,7 +105,7 @@ fun HomeScreen(onAccountClicked: (FakeAccount) -> Unit) {
     )
 
     val hasUnsecuredAccounts: Boolean by remember(accounts) {
-        derivedStateOf { accounts.any { it.securityLevel != AccountSecurityLevel.Secured } }
+        derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
     }
 
     SinglePaneScaffold(
@@ -156,7 +175,7 @@ private fun ActionRequired() {
 }
 
 @Composable
-private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
+private fun AccountItem(account: Account, onClick: (Account) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,16 +198,16 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
                     .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
             )
             Column(modifier = Modifier.padding(start = Margin.Medium)) {
-                Text(text = account.name)
+                Text(text = account.fullName)
                 Text(text = account.email)
             }
             Spacer(modifier = Modifier.weight(1f))
             //TODO Add a different content description when we're sure what represent each state
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
-                painter = painterResource(id = account.securityLevel.iconResId),
+                painter = painterResource(id = account.status.toAccountSecurityLevel().iconResId),
                 contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
-                tint = account.securityLevel.iconTint(),
+                tint = account.status.toAccountSecurityLevel().iconTint(),
             )
             Icon(painterResource(R.drawable.right_arrow), null)
         }
@@ -198,7 +217,15 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
 enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
     Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }),
     Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
-    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
+    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
+
+    companion object {
+        fun StatusEntity.toAccountSecurityLevel() = when (this) {
+            StatusEntity.LoggedIn -> Secured
+            StatusEntity.NotConnectedReLogin, StatusEntity.NotConnectedEmpty -> Warning
+            StatusEntity.NotConnectedIssue -> Danger
+        }
+    }
 }
 
 @Serializable
@@ -206,8 +233,8 @@ data class FakeAccount(val name: String, val email: String, val securityLevel: A
 
 @PreviewSmallWindow
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
     AuthenticatorTheme {
-        HomeScreen {}
+        HomeScreen(fakeAccounts) {}
     }
 }
