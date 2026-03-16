@@ -86,7 +86,6 @@ internal class ApiClientProvider(
         }
         install(HttpTimeout) {
             // Each value can be fine-tuned independently, hence the value not being shared.
-            requestTimeoutMillis = 10.seconds.inWholeMilliseconds
             connectTimeoutMillis = 10.seconds.inWholeMilliseconds
             socketTimeoutMillis = 10.seconds.inWholeMilliseconds
         }
