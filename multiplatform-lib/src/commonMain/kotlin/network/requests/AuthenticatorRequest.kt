@@ -91,7 +91,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     }
 
     /**
-     * Get migration options (see [MigrationOptions])
+     * Get migration options (see [MigrationOptions]), prior to migration from kAuth.
      *
      * @param deviceId The id of the device.
      * @param userId The id of the user.
@@ -103,7 +103,12 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     }
 
     /**
-     * Start the passkey migration process
+     * Starts the passkey migration process from kAuth.
+     *
+     * Requires a call to [getMigrationOptions] to get the time data that will be used to generate the [otp],
+     * and the [sessionId].
+     *
+     * The returned [AuthResult] contains an access token, to be used to register a passkey with [registerPasskey].
      *
      * @param sessionId ID of the session you get from [getMigrationOptions].
      * @param deviceId ID of the device.
@@ -122,7 +127,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     }
 
     /**
-     * Finish the passkey migration process
+     * Completes the passkey migration process from kAuth, after [getTokenForMigration] has succeeded.
      *
      * @param token The access token of the user.
      * @param deviceId ID of the device.
