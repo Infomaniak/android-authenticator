@@ -17,32 +17,20 @@
  */
 package com.infomaniak.auth.lib.network.repositories
 
-import com.infomaniak.auth.lib.network.ApiClientProvider
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions
+import com.infomaniak.auth.lib.network.models.MigrationOptions
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
-import io.ktor.client.HttpClient
-import kotlinx.serialization.json.Json
-import network.requests.AuthenticatorRequest
-import network.utils.ApiEnvironment
+import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
 
-class WebAuthnRepository internal constructor(private val authenticatorRequest: AuthenticatorRequest) {
+class WebAuthnRepository internal constructor(
+    private val authenticatorRequest: AuthenticatorRequest,
+) {
 
-    constructor(environment: ApiEnvironment) : this(ApiClientProvider(), environment)
-    constructor(
-        apiClientProvider: ApiClientProvider = ApiClientProvider(),
-        environment: ApiEnvironment,
-    ) : this(
-        environment = environment,
-        json = apiClientProvider.json,
-        httpClient = apiClientProvider.httpClient,
-    )
-
-    internal constructor(environment: ApiEnvironment, json: Json, httpClient: HttpClient) :
-            this(AuthenticatorRequest(environment, json, httpClient))
+    //region Passkey
 
     // Generate WebAuthn registration options (authentified)
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
@@ -52,6 +40,11 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
     // Validate WebAuthn registration and save public key (authentified)
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
         authenticatorRequest.registerPasskey(token, registerPasskey)
+    }
+
+    // Deletion of existing passkey (authentified)
+    suspend fun deletePasskey(token: String, passkeyId: String) {
+        authenticatorRequest.deletePasskey(token, passkeyId)
     }
 
     // Authentification challenge (not authentified)
@@ -64,7 +57,21 @@ class WebAuthnRepository internal constructor(private val authenticatorRequest: 
         return authenticatorRequest.verify(verifyAuthenticationData).data
     }
 
-    suspend fun deletePasskey(token: String, passkeyId: String) {
-        authenticatorRequest.deletePasskey(token, passkeyId)
+    //endregion
+
+    //region Migration
+
+    suspend fun getMigrationOptions(deviceId: String, userId: String): MigrationOptions {
+        return authenticatorRequest.getMigrationOptions(deviceId, userId).data
     }
+
+    suspend fun getTokenForMigration(sessionId: String, deviceId: String, userId: String, otp: String): AuthResult {
+        return authenticatorRequest.getTokenForMigration(sessionId, deviceId, userId, otp).data
+    }
+
+    suspend fun completeMigration(token: String, deviceId: String) {
+        return authenticatorRequest.completeMigration(token, deviceId)
+    }
+
+    //endregion
 }

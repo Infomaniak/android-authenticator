@@ -19,25 +19,12 @@ package com.infomaniak.auth.lib.network.utils
 
 import com.infomaniak.auth.lib.network.exceptions.UnknownException
 import io.ktor.client.call.body
-import io.ktor.client.plugins.timeout
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.statement.HttpResponse
 import io.ktor.utils.io.CancellationException
 import network.exceptions.ApiException
 import network.exceptions.NetworkException
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 const val CONTENT_REQUEST_ID_HEADER = "x-request-id"
-
-internal fun HttpRequestBuilder.longTimeout() {
-    timeout {
-        requestTimeoutMillis = 1.hours.inWholeMilliseconds // Be permissive for DSL or slow mobile connections.
-        connectTimeoutMillis = 10.seconds.inWholeMilliseconds // Don't let the user wait too long for connection.
-        socketTimeoutMillis = 1.minutes.inWholeMilliseconds // Be permissive if packets are slow to be delivered.
-    }
-}
 
 internal fun HttpResponse.getRequestContextId() = headers[CONTENT_REQUEST_ID_HEADER] ?: ""
 

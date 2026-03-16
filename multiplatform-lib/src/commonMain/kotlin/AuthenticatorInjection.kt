@@ -21,6 +21,7 @@ import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.network.ApiClientProvider
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
 import network.utils.ApiEnvironment
 
 class AuthenticatorInjection(
@@ -32,11 +33,12 @@ class AuthenticatorInjection(
     private val apiClientProvider by lazy {
         ApiClientProvider(
             userAgent = userAgent,
+            environment = environment,
             crashReport = crashReport,
         )
     }
 
-    private val webAuthnRepository by lazy { WebAuthnRepository(apiClientProvider, environment) }
+    private val webAuthnRepository by lazy { WebAuthnRepository(AuthenticatorRequest(apiClientProvider.httpClient)) }
 
     val authenticatorManager by lazy { AuthenticatorManager(webAuthnRepository) }
 }

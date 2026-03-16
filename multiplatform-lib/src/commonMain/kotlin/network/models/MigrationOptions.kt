@@ -15,18 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.utils
+package com.infomaniak.auth.lib.network.models
 
-internal object ApiRoutes {
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
-
-    fun passkeysOptions() = "users/me/passkeys/options"
-    fun registerPasskey() = "users/me/passkeys"
-    fun delete(passkeyId: String) = "users/me/passkeys/$passkeyId"
-    fun migrationsOptions() = "authenticator/migrations"
-    fun verifyMigration(sessionId: String) = "authenticator/migrations/$sessionId/verify"
-    fun finishMigration(deviceId: String) = "users/me/authenticator/migrations/$deviceId"
-    fun challenge() = "authenticator/challenge"
-    fun verify() = "authenticator/verify"
-}
+@Serializable
+data class MigrationOptions(
+    val session: String,
+    @SerialName("datetime")
+    val dateTime: String,
+    @SerialName("timezone")
+    val timeZone: String
+)
