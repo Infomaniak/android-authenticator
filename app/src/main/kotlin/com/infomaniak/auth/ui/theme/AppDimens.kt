@@ -21,5 +21,4 @@ import androidx.compose.ui.unit.dp
 
 object AppDimens {
     val LargeButtonHeight = 48.dp
-    val LargeButtonRadius = 16.dp
 }
