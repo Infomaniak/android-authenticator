@@ -25,7 +25,7 @@ import com.infomaniak.auth.lib.network.models.PasskeysOptions
 import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
-import network.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
 
 class WebAuthnRepository internal constructor(
     private val authenticatorRequest: AuthenticatorRequest,

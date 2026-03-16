@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.requests
+package com.infomaniak.auth.lib.network.requests
 
 import com.infomaniak.auth.lib.network.models.AuthResult
 import com.infomaniak.auth.lib.network.models.AuthenticationOptions

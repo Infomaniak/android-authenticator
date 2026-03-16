@@ -50,7 +50,7 @@ import network.utils.ApiEnvironment
 import network.utils.ApiRoutes
 import kotlin.time.Duration.Companion.seconds
 
-class ApiClientProvider constructor(
+internal class ApiClientProvider(
     private val userAgent: String,
     private val environment: ApiEnvironment,
     private val crashReport: CrashReportInterface? = null,
