@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.room.accounts.Account
+
 sealed interface AppStatus {
 
     sealed interface LoginRequired : AppStatus {
