@@ -66,7 +66,22 @@ class DummyAuthenticatorFacade(
             }
             emit(AppStatus.LoggingIn(pendingAction))
             if (pendingAction != null) next.receive()
-            emit(AppStatus.SetupComplete)
+            emit(AppStatus.OnboardingDone(proceed = { next.trySend(Unit) }))
+            next.receive()
+            emit(
+                AppStatus.SetupComplete(
+                    listOf(
+                        Account(
+                            id = 0,
+                            fullName = "John Smith",
+                            initials = "JS",
+                            email = "john.smith@ik.me",
+                            avatarUrl = null,
+                            status = Account.Status.LoggedIn,
+                        )
+                    )
+                )
+            )
             delay(resetAfter)
             i++
         }

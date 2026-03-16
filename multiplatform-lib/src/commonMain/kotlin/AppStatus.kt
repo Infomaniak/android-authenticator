@@ -30,5 +30,7 @@ sealed interface AppStatus {
 
     data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
 
-    data object SetupComplete : AppStatus
+    data class OnboardingDone(val proceed: () -> Unit) : AppStatus
+
+    data class SetupComplete(val accounts: List<Account>) : AppStatus
 }
