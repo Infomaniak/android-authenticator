@@ -70,8 +70,8 @@ class WebAuthnRepository internal constructor(
         return authenticatorRequest.verifyMigration(sessionId, deviceId, userId, otp).data
     }
 
-    suspend fun finishMigration(deviceId: String) {
-        return authenticatorRequest.finishMigration(deviceId)
+    suspend fun completeMigration(token: String, deviceId: String) {
+        return authenticatorRequest.completeMigration(token, deviceId)
     }
 
     //endregion

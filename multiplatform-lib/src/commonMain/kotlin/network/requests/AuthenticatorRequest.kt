@@ -125,10 +125,12 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     /**
      * Finish the passkey migration process
      *
+     * @param token The access token of the user.
      * @param deviceId ID of the device.
      */
-    suspend fun finishMigration(deviceId: String) {
+    suspend fun completeMigration(token: String, deviceId: String) {
         httpClient.post(ApiRoutes.finishMigration(deviceId)) {
+            addAuthenticationHeader(token)
             setBody(mapOf("device" to deviceId))
         }
     }
