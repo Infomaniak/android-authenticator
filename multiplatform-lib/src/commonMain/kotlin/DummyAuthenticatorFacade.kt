@@ -66,10 +66,10 @@ class DummyAuthenticatorFacade(
             }
             emit(AppStatus.LoggingIn(pendingAction))
             if (pendingAction != null) next.receive()
-            emit(AppStatus.SetupComplete)
-            delay(resetAfter)
+            emit(AppStatus.OnboardingDone(proceed = { next.trySend(Unit) }))
+            next.receive()
             emit(
-                AppStatus.LoggedIn(
+                AppStatus.SetupComplete(
                     listOf(
                         Account(
                             id = 0,
@@ -82,6 +82,7 @@ class DummyAuthenticatorFacade(
                     )
                 )
             )
+            delay(resetAfter)
             i++
         }
     }.distinctUntilChanged()
