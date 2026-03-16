@@ -138,7 +138,7 @@ private fun SettingsScreen(
 
 @PreviewSmallWindow
 @Composable
-fun SettingsScreenPreview() {
+private fun SettingsScreenPreview() {
     AuthenticatorTheme {
         SettingsScreen(
             notificationEnabled = GetSetCallbacks(get = { true }, set = {}),
