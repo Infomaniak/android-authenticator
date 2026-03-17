@@ -17,22 +17,22 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.toAccount
 import com.infomaniak.auth.lib.repository.AccountsRepository
-import com.infomaniak.auth.lib.room.accounts.Account
-import com.infomaniak.auth.lib.room.accounts.StatusEntity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration
 
 class DummyAuthenticatorFacade(
-	accountsRepository: AccountsRepository,
+    accountsRepository: AccountsRepository,
     scope: CoroutineScope,
     loadingDuration: Duration,
     resetAfter: Duration,
@@ -40,7 +40,9 @@ class DummyAuthenticatorFacade(
     override val accounts: Flow<List<Account>>
 
     private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
-        accounts = accountsRepository.getAccounts()
+        accounts = accountsRepository.getAccounts().map {
+            it.map { it.toAccount(action = null) }
+        }
     }::value
 
     private val next = Channel<Unit>()
@@ -66,7 +68,7 @@ class DummyAuthenticatorFacade(
                         initials = "Smith",
                         email = "john.smith@example.com",
                         avatarUrl = "https://picsum.photos/id/3/200/200",
-                        status = StatusEntity.NotConnectedEmpty
+                        status = Account.Status.LoggedIn
                     ),
                     sendCredentials = { next.trySend(Unit) })
                 else -> NotConnectedAction.Issue.Retriable(proceed = { next.trySend(Unit) })

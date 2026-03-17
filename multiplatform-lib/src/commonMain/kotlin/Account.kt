@@ -15,24 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.db
+package com.infomaniak.auth.lib
 
-import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
-import com.infomaniak.auth.lib.room.accounts.getAccountsRoomDatabase
-import splitties.init.appCtx
+data class Account(
+    val id: Long,
+    val fullName: String,
+    val initials: String,
+    val email: String,
+    val avatarUrl: String? = null,
+    val status: Status,
+) {
 
-fun getAccountsDatabaseBuilder(context: Context): RoomDatabase.Builder<AccountsDatabase> {
-    val appContext = context.applicationContext
-    val dbFile = appContext.getDatabasePath("accounts.db")
-    return Room.databaseBuilder<AccountsDatabase>(
-        context = appContext,
-        name = dbFile.absolutePath
-    )
-}
-
-actual fun getAccountsRoomDatabase(): AccountsDatabase {
-    return getAccountsRoomDatabase(getAccountsDatabaseBuilder(appCtx))
+    sealed interface Status {
+        data class NotConnected(val action: NotConnectedAction?) : Status
+        data object LoggedIn : Status
+    }
 }
