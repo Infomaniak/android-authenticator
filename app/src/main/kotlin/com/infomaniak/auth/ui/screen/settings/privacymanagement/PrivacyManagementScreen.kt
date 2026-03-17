@@ -53,7 +53,7 @@ fun PrivacyManagementScreen(navigateToTrackerPage: (Tracker) -> Unit) {
                     modifier = Modifier.padding(Margin.Medium),
                 )
             },
-            trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo).toPersistentList(),
+            trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
             divider = {
                 HorizontalDivider(
                     color = AuthenticatorTheme.materialColors.outlineVariant,

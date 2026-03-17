@@ -48,9 +48,7 @@ fun PrivacyManagementSentryScreen(viewModel: PrivacyManagementSentryViewModel = 
 }
 
 @HiltViewModel
-class PrivacyManagementSentryViewModel @Inject constructor(
-    @ApplicationContext private val appContext: Context,
-) : ViewModel() {
+class PrivacyManagementSentryViewModel @Inject constructor() : ViewModel() {
     val isTrackerEnabled: StateFlow<Boolean> = flow {
         emitAll(SentryPreferences().isSentryAuthorizedFlow)
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
