@@ -46,7 +46,11 @@ class DummyAuthenticatorFacade(
         var i = 0
         var isMigratingFromLegacyKAuth = true
         while (true) {
-            emit(AppStatus.LoginRequired(isMigratingFromLegacyKAuth = isMigratingFromLegacyKAuth))
+            val loginRequiredStatus: AppStatus.LoginRequired = when {
+                isMigratingFromLegacyKAuth -> AppStatus.LoginRequired.MigratingFromLegacyKAuth(proceed = { next.trySend(Unit) })
+                else -> AppStatus.LoginRequired.NotMigrating
+            }
+            emit(loginRequiredStatus)
             next.receive() // Waits for addAccounts to be called.
             emit(AppStatus.LoggingIn(null))
             delay(loadingDuration)
