@@ -32,7 +32,5 @@ data class AccountEntity(
 
 enum class StatusEntity {
     LoggedIn,
-    NotConnectedEmpty,
-    NotConnectedReLogin,
-    NotConnectedIssue,
+    NotConnected,
 }
