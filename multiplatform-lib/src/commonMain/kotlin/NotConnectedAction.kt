@@ -36,7 +36,7 @@ sealed interface NotConnectedAction {
          */
         data class Retriable(val proceed: (shouldRetry: Boolean) -> Unit) : Issue
 
-        data class NonRetriable(val message: String) : Issue
+        data class NonRetriable(val message: String) : Issue //TODO[ik-auth]: Are there real cases like this?
 
     }
 }
