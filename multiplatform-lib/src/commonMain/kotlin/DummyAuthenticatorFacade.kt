@@ -21,6 +21,7 @@ import com.infomaniak.auth.lib.internal.toAccount
 import com.infomaniak.auth.lib.internal.toEntity
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.repository.AccountsRepository
+import com.infomaniak.auth.lib.room.accounts.AccountEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -60,24 +61,29 @@ class DummyAuthenticatorFacade internal constructor(
             }
             emit(loginRequiredStatus)
             next.receive() // Waits for the addAccounts function or the proceed lambda to be called.
-            emit(AppStatus.LoggingIn(null))
+            emit(AppStatus.LoggingIn(needsResolution = false))
             delay(loadingDuration)
-            val pendingAction: NotConnectedAction? = when (i % 3) {
-                0 -> null
-                1 -> NotConnectedAction.ReLogin(
-                    legacyAccount = Account(
-                        id = 0,
-                        fullName = "John",
-                        initials = "Smith",
-                        email = "john.smith@example.com",
-                        avatarUrl = "https://picsum.photos/id/3/200/200",
-                        status = Account.Status.LoggedIn
-                    ),
-                    sendCredentials = { next.trySend(Unit) })
-                else -> NotConnectedAction.Issue.Retriable(proceed = { next.trySend(Unit) })
+            if (isMigratingFromLegacyKAuth) {
+                isMigratingFromLegacyKAuth = false
+                val legacyAccount = Account(
+                    id = 0,
+                    fullName = "John",
+                    initials = "Smith",
+                    email = "john.smith@example.com",
+                    avatarUrl = "https://picsum.photos/id/3/200/200",
+                    status = Account.Status.NotConnected(null)
+                )
+                _accounts += legacyAccount.copy(
+                    status = Account.Status.NotConnected(
+                        action = NotConnectedAction.ReLogin(
+                            legacyAccount = legacyAccount,
+                            sendCredentials = { next.trySend(Unit) }
+                        )
+                    )
+                )
+                emit(AppStatus.LoggingIn(needsResolution = true))
+                next.receive()
             }
-            emit(AppStatus.LoggingIn(pendingAction))
-            if (pendingAction != null) next.receive()
             emit(AppStatus.OnboardingDone(proceed = { next.trySend(Unit) }))
             next.receive()
             emit(AppStatus.SetupComplete)
@@ -89,7 +95,7 @@ class DummyAuthenticatorFacade internal constructor(
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         _accounts += connectedAccounts
         if (connectedAccounts.isNotEmpty()) next.trySend(Unit)
-        accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity() })
+        accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) })
     }
 
     override suspend fun removeAccount(token: String, id: Long) {

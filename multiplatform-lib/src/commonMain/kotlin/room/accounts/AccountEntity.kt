@@ -19,6 +19,7 @@ package com.infomaniak.auth.lib.room.accounts
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.infomaniak.auth.lib.AuthenticatorFacade
 
 @Entity
 data class AccountEntity(
@@ -28,4 +29,30 @@ data class AccountEntity(
     val email: String,
     val avatarUrl: String? = null,
     val isLoggedIn: Boolean,
-)
+    val status: Status,
+) {
+
+    enum class Status {
+
+        /*
+        WARNING to editors:
+        Since the enum ordinal (index) is used in the DB, what it represents must never change.
+        In particular:
+        1. NEVER CHANGE THE ORDER of the enum entries
+        2. NEVER REMOVE AN ENTRY (deprecation and renaming are okay)
+        3. As a result, NEW ENTRIES must always be added AT THE END.
+         */
+
+        /** Account from kAuth that has not yet been migrated. */
+        ToBeMigrated,
+
+        /** Account added via [AuthenticatorFacade.addAccounts], with passkey registration not complete yet. */
+        PasskeyRegistrationPending,
+
+        /** Transition status, right after [PasskeyRegistrationPending], before the 1st a passkey-bound token is obtained. */
+        FirstPasskeyAuthenticationPending,
+
+        /** Account successfully connected, with registered passkey. */
+        LoggedIn,
+    }
+}

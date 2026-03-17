@@ -37,8 +37,11 @@ sealed interface AppStatus {
      * This status is emitted by [AuthenticatorFacade.appStatus] once [AuthenticatorFacade.addAccounts] is called.
      *
      * After the login completes successfully, [AuthenticatorFacade.appStatus] will switch to [OnboardingDone].
+     *
+     * If [needsResolution] is true, the [Account.status] property from the accounts in [AuthenticatorFacade.accounts]
+     * need to be checked, and addressed.
      */
-    data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
+    data class LoggingIn(val needsResolution: Boolean) : AppStatus
 
     /**
      * Calling [proceed] will lead [AuthenticatorFacade.appStatus] to switch to [SetupComplete].
