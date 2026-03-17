@@ -22,11 +22,10 @@ sealed interface AppStatus {
     /**
      * When [isMigratingFromLegacyKAuth] is true, look for [AuthenticatorFacade.accounts] to get the list
      * of accounts that are pending migration.
+     *
+     * [AuthenticatorFacade.appStatus] will automatically change to [LoggingIn] after [AuthenticatorFacade.addAccounts] is called.
      */
-    data class LoginRequired(
-        val isMigratingFromLegacyKAuth: Boolean,
-        val proceed: (() -> Unit)?,
-    ) : AppStatus
+    data class LoginRequired(val isMigratingFromLegacyKAuth: Boolean) : AppStatus
 
     data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
 
