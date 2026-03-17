@@ -27,14 +27,14 @@ abstract class AuthenticatorFacade internal constructor() {
     companion object {
 
         fun dummyInstance(
+            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
-            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
             return DummyAuthenticatorFacade(
+                scope = scope,
                 loadingDuration = loadingDurationMillis.milliseconds,
                 resetAfter = resetAfterMillis.milliseconds,
-                scope = scope,
             )
         }
     }

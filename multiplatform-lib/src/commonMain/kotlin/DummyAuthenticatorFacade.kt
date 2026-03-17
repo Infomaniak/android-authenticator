@@ -30,9 +30,9 @@ import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration
 
 class DummyAuthenticatorFacade(
+    scope: CoroutineScope,
     loadingDuration: Duration,
     resetAfter: Duration,
-    scope: CoroutineScope,
 ) : AuthenticatorFacade() {
     override val accounts: Flow<List<Account>>
 
