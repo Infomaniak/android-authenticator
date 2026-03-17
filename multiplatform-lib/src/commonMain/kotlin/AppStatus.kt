@@ -27,6 +27,11 @@ sealed interface AppStatus {
      */
     data class LoginRequired(val isMigratingFromLegacyKAuth: Boolean) : AppStatus
 
+    /**
+     * This status is emitted by [AuthenticatorFacade.appStatus] once [AuthenticatorFacade.addAccounts] is called.
+     *
+     * After the login completes successfully, [AuthenticatorFacade.appStatus] will switch to [OnboardingDone].
+     */
     data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
 
     /**
