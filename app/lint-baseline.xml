@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ComposeViewModelInjection"
+        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
+        errorLine1="    val appSettingsViewModel: AppSettingsViewModel = hiltViewModel&lt;AppSettingsViewModel>()"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/auth/ui/screen/settings/SettingsScreen.kt"
+            line="48"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeViewModelInjection"
+        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
+        errorLine1="    val themeViewModel: AppSettingsViewModel = hiltViewModel&lt;AppSettingsViewModel>()"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/auth/ui/screen/settings/theme/ThemeSettingsScreen.kt"
+            line="40"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeMultipleContentEmitters"
+        message="Composable functions should only be emitting content into the composition from one source at their top level.&#xA;&#xA;See https://slackhq.github.io/compose-lints/rules/#do-not-emit-multiple-pieces-of-content for more information."
+        errorLine1="@Composable"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/com/infomaniak/auth/ui/components/StatusCard.kt"
+            line="120"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, securityLevel: AccountSecurityLevel] but should be [securityLevel: AccountSecurityLevel, modifier: Modifier = Modifier].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: AccountSecurityLevel) {"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/infomaniak/auth/ui/screen/AccountDetails.kt"
+            line="234"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [title: String, modifier: Modifier = Modifier, style: ButtonStyle = ButtonStyle.Primary, enabled: () -> Boolean = { true }, showIndeterminateProgress: () -> Boolean = { false }, progress: (() -> Float)? = null, onClick: () -> Unit, imageVector: ImageVector? = null] but should be [title: String, onClick: () -> Unit, modifier: Modifier = Modifier, style: ButtonStyle = ButtonStyle.Primary, enabled: () -> Boolean = { true }, showIndeterminateProgress: () -> Boolean = { false }, progress: (() -> Float)? = null, imageVector: ImageVector? = null].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="fun LargeButton("
+        errorLine2="               ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/auth/ui/components/Button.kt"
+            line="49"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ComposeParameterOrder"
+        message="Parameters in a composable function should be ordered following this pattern: params without defaults, modifiers, params with defaults and optionally, a trailing function that might not have a default param.&#xA;Current params are: [modifier: Modifier = Modifier, sections: ImmutableList&lt;ImmutableList&lt;OptionItemType>>, content: @Composable (optionItem: List&lt;OptionItemType>) -> Unit] but should be [sections: ImmutableList&lt;ImmutableList&lt;OptionItemType>>, modifier: Modifier = Modifier, content: @Composable (optionItem: List&lt;OptionItemType>) -> Unit].&#xA;See https://slackhq.github.io/compose-lints/rules/#ordering-composable-parameters-properly for more information."
+        errorLine1="private fun OptionsSectionContainer("
+        errorLine2="                                   ^">
+        <location
+            file="src/main/kotlin/com/infomaniak/auth/ui/components/OptionsSection.kt"
+            line="76"
+            column="36"/>
+    </issue>
+
+</issues>
