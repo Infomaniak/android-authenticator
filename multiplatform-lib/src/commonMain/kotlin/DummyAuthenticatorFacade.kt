@@ -51,7 +51,7 @@ class DummyAuthenticatorFacade(
                 else -> AppStatus.LoginRequired.NotMigrating
             }
             emit(loginRequiredStatus)
-            next.receive() // Waits for addAccounts to be called.
+            next.receive() // Waits for the addAccounts function or the proceed lambda to be called.
             emit(AppStatus.LoggingIn(null))
             delay(loadingDuration)
             val pendingAction: NotConnectedAction? = when (i % 3) {
