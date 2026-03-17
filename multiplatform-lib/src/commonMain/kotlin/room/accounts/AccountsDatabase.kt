@@ -28,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 @Database(entities = [AccountEntity::class], version = 1)
-@TypeConverters(StatusEntityConverter::class)
 @ConstructedBy(AccountsDatabaseConstructor::class)
 abstract class AccountsDatabase : RoomDatabase() {
     abstract fun getDao(): AccountsDao
@@ -44,13 +43,4 @@ fun getAccountsRoomDatabase(builder: RoomDatabase.Builder<AccountsDatabase>): Ac
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
-}
-
-class StatusEntityConverter {
-
-    @TypeConverter
-    fun fromStatus(status: StatusEntity) = status.name
-
-    @TypeConverter
-    fun toStatus(value: String) = StatusEntity.valueOf(value)
 }

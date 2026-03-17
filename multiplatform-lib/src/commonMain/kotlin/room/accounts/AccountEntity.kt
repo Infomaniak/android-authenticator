@@ -27,10 +27,5 @@ data class AccountEntity(
     val initials: String,
     val email: String,
     val avatarUrl: String? = null,
-    val status: StatusEntity,
+    val isLoggedIn: Boolean,
 )
-
-enum class StatusEntity {
-    LoggedIn,
-    NotConnected,
-}
