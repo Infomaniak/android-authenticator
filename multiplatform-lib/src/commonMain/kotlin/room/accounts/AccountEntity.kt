@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class AccountEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey val id: Long = 0,
     val fullName: String,
     val initials: String,
     val email: String,
@@ -32,7 +32,5 @@ data class AccountEntity(
 
 enum class StatusEntity {
     LoggedIn,
-    NotConnectedEmpty,
-    NotConnectedReLogin,
-    NotConnectedIssue,
+    NotConnected,
 }

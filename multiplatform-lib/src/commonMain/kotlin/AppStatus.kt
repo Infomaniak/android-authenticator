@@ -19,18 +19,31 @@ package com.infomaniak.auth.lib
 
 sealed interface AppStatus {
 
-    /**
-     * When [isMigratingFromLegacyKAuth] is true, look for [AuthenticatorFacade.accounts] to get the list
-     * of accounts that are pending migration.
-     */
-    data class LoginRequired(
-        val isMigratingFromLegacyKAuth: Boolean,
-        val proceed: (() -> Unit)?,
-    ) : AppStatus
+    sealed interface LoginRequired : AppStatus {
 
+        /**
+         * The list of accounts that are pending migration can be found in [AuthenticatorFacade.accounts].
+         */
+        data class MigratingFromLegacyKAuth(val proceed: () -> Unit) : LoginRequired
+
+        /**
+         * [AuthenticatorFacade.appStatus] will automatically change to
+         * [LoggingIn] after [AuthenticatorFacade.addAccounts] is called.
+         */
+        data object NotMigrating : LoginRequired
+    }
+
+    /**
+     * This status is emitted by [AuthenticatorFacade.appStatus] once [AuthenticatorFacade.addAccounts] is called.
+     *
+     * After the login completes successfully, [AuthenticatorFacade.appStatus] will switch to [OnboardingDone].
+     */
     data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
 
+    /**
+     * Calling [proceed] will lead [AuthenticatorFacade.appStatus] to switch to [SetupComplete].
+     */
     data class OnboardingDone(val proceed: () -> Unit) : AppStatus
 
-    data class SetupComplete(val accounts: List<Account>) : AppStatus
+    data object SetupComplete : AppStatus
 }

@@ -17,16 +17,20 @@
  */
 package com.infomaniak.auth.lib
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration
 
 class DummyAuthenticatorFacade(
+    scope: CoroutineScope,
     loadingDuration: Duration,
     resetAfter: Duration,
 ) : AuthenticatorFacade() {
@@ -36,18 +40,18 @@ class DummyAuthenticatorFacade(
         accounts = it.asStateFlow()
     }::value
 
+    private val next = Channel<Unit>()
+
     override val appStatus: Flow<AppStatus> = flow {
-        val next = Channel<Unit>()
         var i = 0
         var isMigratingFromLegacyKAuth = true
         while (true) {
-            emit(
-                AppStatus.LoginRequired(
-                    isMigratingFromLegacyKAuth = isMigratingFromLegacyKAuth,
-                    proceed = { next.trySend(Unit) }
-                )
-            )
-            next.receive()
+            val loginRequiredStatus: AppStatus.LoginRequired = when {
+                isMigratingFromLegacyKAuth -> AppStatus.LoginRequired.MigratingFromLegacyKAuth(proceed = { next.trySend(Unit) })
+                else -> AppStatus.LoginRequired.NotMigrating
+            }
+            emit(loginRequiredStatus)
+            next.receive() // Waits for the addAccounts function or the proceed lambda to be called.
             emit(AppStatus.LoggingIn(null))
             delay(loadingDuration)
             val pendingAction: NotConnectedAction? = when (i % 3) {
@@ -68,26 +72,14 @@ class DummyAuthenticatorFacade(
             if (pendingAction != null) next.receive()
             emit(AppStatus.OnboardingDone(proceed = { next.trySend(Unit) }))
             next.receive()
-            emit(
-                AppStatus.SetupComplete(
-                    listOf(
-                        Account(
-                            id = 0,
-                            fullName = "John Smith",
-                            initials = "JS",
-                            email = "john.smith@ik.me",
-                            avatarUrl = null,
-                            status = Account.Status.LoggedIn,
-                        )
-                    )
-                )
-            )
+            emit(AppStatus.SetupComplete)
             delay(resetAfter)
             i++
         }
-    }.distinctUntilChanged()
+    }.distinctUntilChanged().shareIn(scope, SharingStarted.Lazily, replay = 1)
 
-    override suspend fun addAccounts(connectedAccounts: Map<Account, String>) {
-        _accounts += connectedAccounts.keys
+    override suspend fun addAccounts(connectedAccounts: List<Account>) {
+        _accounts += connectedAccounts
+        if (connectedAccounts.isNotEmpty()) next.trySend(Unit)
     }
 }

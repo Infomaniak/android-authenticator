@@ -31,11 +31,12 @@ sealed interface NotConnectedAction {
     sealed interface Issue : NotConnectedAction {
         //TODO[ik-auth]: Add details on the issue kind or cause.
         /**
+         * When coming from kAuth, if at least one account was successfully migrated, we don't have this at all.
          * @property proceed Typically called when the user presses a button labeled "Skip" or "Retry".
          */
         data class Retriable(val proceed: (shouldRetry: Boolean) -> Unit) : Issue
 
-        data class NonRetriable(val message: String) : Issue
+        data class NonRetriable(val message: String) : Issue //TODO[ik-auth]: Are there real cases like this?
 
     }
 }

@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.lib
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -25,12 +27,14 @@ abstract class AuthenticatorFacade internal constructor() {
     companion object {
 
         fun dummyInstance(
+            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
         ): AuthenticatorFacade {
             return DummyAuthenticatorFacade(
+                scope = scope,
                 loadingDuration = loadingDurationMillis.milliseconds,
-                resetAfter = resetAfterMillis.milliseconds
+                resetAfter = resetAfterMillis.milliseconds,
             )
         }
     }
@@ -39,5 +43,10 @@ abstract class AuthenticatorFacade internal constructor() {
 
     abstract val appStatus: Flow<AppStatus>
 
-    abstract suspend fun addAccounts(connectedAccounts: Map<Account, String>)
+    /**
+     * Add successfully connected accounts.
+     *
+     * Will lead to [appStatus] to switch to the [AppStatus.LoggingIn] case.
+     */
+    abstract suspend fun addAccounts(connectedAccounts: List<Account>)
 }
