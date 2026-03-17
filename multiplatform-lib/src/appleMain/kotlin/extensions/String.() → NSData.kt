@@ -26,6 +26,7 @@ import platform.Foundation.dataUsingEncoding
 
 internal fun String.toNsData(): NSData? {
     @OptIn(BetaInteropApi::class)
-    val nsString = NSString.create(this)
-    return nsString.dataUsingEncoding(NSUTF8StringEncoding)
+    @Suppress("RedundantNullableReturnType", "RedundantSuppression") // Nullability seems to differ from machine to machine.
+    val nsString: NSString? = NSString.create(this)
+    return nsString?.dataUsingEncoding(NSUTF8StringEncoding)
 }
