@@ -32,5 +32,5 @@ sealed interface AppStatus {
 
     data class OnboardingDone(val proceed: () -> Unit) : AppStatus
 
-    data class SetupComplete(val accounts: List<Account>) : AppStatus
+    data object SetupComplete : AppStatus
 }
