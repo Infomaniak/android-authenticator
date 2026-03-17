@@ -30,6 +30,9 @@ sealed interface AppStatus {
 
     data class LoggingIn(val pendingAction: NotConnectedAction?) : AppStatus
 
+    /**
+     * Calling [proceed] will lead [AuthenticatorFacade.appStatus] to switch to [SetupComplete].
+     */
     data class OnboardingDone(val proceed: () -> Unit) : AppStatus
 
     data object SetupComplete : AppStatus
