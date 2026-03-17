@@ -46,6 +46,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.room.accounts.Account
+import com.infomaniak.auth.lib.room.accounts.StatusEntity
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -53,6 +55,7 @@ import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
+import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
 import com.infomaniak.auth.ui.screen.home.FakeAccount
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -63,27 +66,13 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun AccountDetails(
-    accountDetailsViewModel: AccountDetailsViewModel = hiltViewModel(),
-    account: FakeAccount,
-    onBackPressed: () -> Unit
-) {
-    AccountDetails(
-        account = account,
-        onBackPressed = onBackPressed,
-        onRemoveAccountClicked = {
-            accountDetailsViewModel.removeAccount()
-            onBackPressed()
-        }
-    )
+fun AccountDetailsScreen(accountId: Long, onBackPressed: () -> Unit) {
+    val viewModel = hiltViewModel<AccountDetailsViewModel>()
+
 }
 
 @Composable
-private fun AccountDetails(
-    account: FakeAccount,
-    onBackPressed: () -> Unit,
-    onRemoveAccountClicked: () -> Unit,
-) {
+fun AccountDetails(account: Account, onBackPressed: () -> Unit) {
     SinglePaneScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
@@ -97,7 +86,7 @@ private fun AccountDetails(
             modifier = Modifier.padding(paddingValues)
         ) {
             Header(account)
-            SecurityCheck(AccountStatus.from(account.securityLevel))
+            SecurityCheck(account.status.toAccountStatus())
             if (account.securityLevel != AccountSecurityLevel.Secured) {
                 var hasLogin by remember { mutableStateOf(false) }
                 ActionRequired(
@@ -116,7 +105,7 @@ private fun AccountDetails(
 }
 
 @Composable
-private fun Header(account: FakeAccount) {
+private fun Header(account: Account) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -132,7 +121,7 @@ private fun Header(account: FakeAccount) {
                 .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
         )
         Column {
-            Text(text = account.name, style = Typography.h1)
+            Text(text = account.fullName, style = Typography.h1)
             Text(text = account.email)
         }
     }
@@ -316,6 +305,12 @@ private enum class AccountStatus(
     );
 
     companion object {
+
+        fun StatusEntity.toAccountStatus() = when (this) {
+            StatusEntity.LoggedIn -> Secured
+            StatusEntity.NotConnectedReLogin, StatusEntity.NotConnectedEmpty -> PartiallyProtected
+            StatusEntity.NotConnectedIssue -> Disconnected
+        }
 
         fun from(level: AccountSecurityLevel): AccountStatus {
             //TODO check how a disconnected account is displayed on the accounts list

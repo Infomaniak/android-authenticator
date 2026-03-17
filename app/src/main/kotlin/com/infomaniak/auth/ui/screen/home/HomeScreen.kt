@@ -68,13 +68,10 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.coroutines.delay
-import kotlinx.serialization.Serializable
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeScreenViewModel = hiltViewModel(),
-    onAccountClicked: (Account) -> Unit
-) {
+fun HomeScreen(onAccountClicked: (Account) -> Unit) {
+    val viewModel = hiltViewModel<HomeScreenViewModel>()
     val accounts by viewModel.authenticator.accounts.collectAsStateWithLifecycle(emptyList())
 
     HomeScreen(accounts, onAccountClicked)
@@ -85,25 +82,6 @@ fun HomeScreen(
     accounts: List<Account>,
     onAccountClicked: (Account) -> Unit
 ) {
-    //TODO get accounts from DB
-    val accountss = listOf(
-        FakeAccount(
-            name = "Laura Snow",
-            email = "laura.snow@ik.me",
-            securityLevel = AccountSecurityLevel.Secured,
-        ),
-        FakeAccount(
-            name = "Laura Snow",
-            email = "laura.snow@domain.com",
-            securityLevel = AccountSecurityLevel.Warning,
-        ),
-        FakeAccount(
-            name = "Laura Snow",
-            email = "laura.snow@subdomain.com",
-            securityLevel = AccountSecurityLevel.Danger,
-        ),
-    )
-
     val hasUnsecuredAccounts: Boolean by remember(accounts) {
         derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
     }
@@ -214,7 +192,7 @@ private fun AccountItem(account: Account, onClick: (Account) -> Unit) {
     }
 }
 
-enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
+private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
     Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }),
     Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
@@ -227,9 +205,6 @@ enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable ()
         }
     }
 }
-
-@Serializable
-data class FakeAccount(val name: String, val email: String, val securityLevel: AccountSecurityLevel)
 
 @PreviewSmallWindow
 @Composable
