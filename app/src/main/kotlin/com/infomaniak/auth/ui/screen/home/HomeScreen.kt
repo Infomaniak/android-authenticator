@@ -55,8 +55,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.room.accounts.Account
-import com.infomaniak.auth.lib.room.accounts.StatusEntity
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
@@ -67,26 +67,32 @@ import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 
 @Composable
-fun HomeScreen(onAccountClicked: (Account) -> Unit) {
-    val viewModel = hiltViewModel<HomeScreenViewModel>()
+fun HomeScreen(
+    onAccountClicked: (Account) -> Unit,
+    viewModel: HomeScreenViewModel = hiltViewModel(),
+) {
     val accounts by viewModel.authenticator.accounts.collectAsStateWithLifecycle(emptyList())
 
-    HomeScreen(accounts, onAccountClicked)
+    HomeScreen(accounts.toPersistentList(), onAccountClicked)
 }
 
 @Composable
 fun HomeScreen(
-    accounts: List<Account>,
-    onAccountClicked: (Account) -> Unit
+    accounts: ImmutableList<Account>,
+    onAccountClicked: (Account) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val hasUnsecuredAccounts: Boolean by remember(accounts) {
         derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
     }
 
     SinglePaneScaffold(
+        modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
@@ -198,10 +204,10 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
 
     companion object {
-        fun StatusEntity.toAccountSecurityLevel() = when (this) {
-            StatusEntity.LoggedIn -> Secured
-            StatusEntity.NotConnectedReLogin, StatusEntity.NotConnectedEmpty -> Warning
-            StatusEntity.NotConnectedIssue -> Danger
+        fun Account.Status.toAccountSecurityLevel() = when (this) {
+            Account.Status.LoggedIn -> Secured
+            is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> Warning
+            else -> Danger
         }
     }
 }
@@ -210,6 +216,9 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
 @Composable
 private fun HomeScreenPreview() {
     AuthenticatorTheme {
-        HomeScreen(fakeAccounts) {}
+        HomeScreen(
+            accounts = fakeAccounts,
+            onAccountClicked = {},
+        )
     }
 }

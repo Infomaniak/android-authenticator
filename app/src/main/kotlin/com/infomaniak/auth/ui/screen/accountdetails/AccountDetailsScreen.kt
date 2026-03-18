@@ -22,8 +22,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,6 +35,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +46,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.room.accounts.Account
-import com.infomaniak.auth.lib.room.accounts.StatusEntity
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -55,9 +60,8 @@ import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
+import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
 import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
-import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
-import com.infomaniak.auth.ui.screen.home.FakeAccount
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -66,14 +70,31 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun AccountDetailsScreen(accountId: Long, onBackPressed: () -> Unit) {
-    val viewModel = hiltViewModel<AccountDetailsViewModel>()
+fun AccountDetailsScreen(
+    accountId: Long,
+    onBackPressed: () -> Unit,
+    viewModel: AccountDetailsViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(accountId) {
+        viewModel.fetchAccountDetails(accountId)
+    }
+
+    AccountDetailsScreen(
+        uiState = { uiState },
+        onBackPressed = onBackPressed,
+    )
 }
 
 @Composable
-fun AccountDetails(account: Account, onBackPressed: () -> Unit) {
+fun AccountDetailsScreen(
+    uiState: () -> AccountDetailsUiState,
+    onBackPressed: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     SinglePaneScaffold(
+        modifier = modifier.fillMaxSize(),
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
@@ -82,25 +103,32 @@ fun AccountDetails(account: Account, onBackPressed: () -> Unit) {
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            Header(account)
-            SecurityCheck(account.status.toAccountStatus())
-            if (account.securityLevel != AccountSecurityLevel.Secured) {
-                var hasLogin by remember { mutableStateOf(false) }
-                ActionRequired(
-                    hasLogin,
-                    logIn = {
-                        hasLogin = true
-                    }
-                )
+        when (val state = uiState()) {
+            is AccountDetailsUiState.Success -> {
+                AccountDetailsContent(paddingValues, state.account)
             }
-            SettingsSections(
-                account.securityLevel,
-                onRemoveAccountClicked = { onRemoveAccountClicked() }
+            is AccountDetailsUiState.Loading -> Unit
+        }
+    }
+}
+
+@Composable
+private fun AccountDetailsContent(paddingValues: PaddingValues, account: Account) {
+    Column(
+        modifier = Modifier.padding(paddingValues)
+    ) {
+        Header(account)
+        SecurityCheck(account.status.toAccountStatus())
+        if (account.status != Account.Status.LoggedIn) {
+            var hasLogin by remember { mutableStateOf(false) }
+            ActionRequired(
+                hasLogin,
+                logIn = {
+                    hasLogin = true
+                }
             )
         }
+        SettingsSections(accountStatus = account.status)
     }
 }
 
@@ -245,10 +273,11 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 
 @Composable
 private fun SettingsSections(
-    securityLevel: AccountSecurityLevel,
+    accountStatus: Account.Status,
     onRemoveAccountClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val firstSectionItem = if (securityLevel == AccountSecurityLevel.Secured) {
+    val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
         persistentListOf(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
@@ -278,7 +307,10 @@ private fun SettingsSections(
         ),
     )
 
-    OptionsSection(sections = persistentListOf(firstSectionItem, secondSectionItems))
+    OptionsSection(
+        modifier = modifier,
+        sections = persistentListOf(firstSectionItem, secondSectionItems)
+    )
 }
 
 private enum class AccountStatus(
@@ -305,34 +337,31 @@ private enum class AccountStatus(
     );
 
     companion object {
-
-        fun StatusEntity.toAccountStatus() = when (this) {
-            StatusEntity.LoggedIn -> Secured
-            StatusEntity.NotConnectedReLogin, StatusEntity.NotConnectedEmpty -> PartiallyProtected
-            StatusEntity.NotConnectedIssue -> Disconnected
+        fun Account.Status.toAccountStatus() = when (this) {
+            Account.Status.LoggedIn -> Secured
+            is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> PartiallyProtected
+            else -> Disconnected
         }
 
-        fun from(level: AccountSecurityLevel): AccountStatus {
-            //TODO check how a disconnected account is displayed on the accounts list
-            return when (level) {
-                AccountSecurityLevel.Secured -> Secured
-                AccountSecurityLevel.Warning -> PartiallyProtected
-                else -> Disconnected
-            }
-        }
+        // fun from(level: AccountSecurityLevel): AccountStatus {
+        //     //TODO check how a disconnected account is displayed on the accounts list
+        //     return when (level) {
+        //         AccountSecurityLevel.Secured -> Secured
+        //         AccountSecurityLevel.Warning -> PartiallyProtected
+        //         else -> Disconnected
+        //     }
+        // }
     }
 }
 
 @PreviewSmallWindow
 @Composable
-fun AccountDetailsPreview() {
+private fun AccountDetailsScreenPreview(
+    @PreviewParameter(AccountPreviewParameter::class) account: Account
+) {
     AuthenticatorTheme {
-        AccountDetails(
-            FakeAccount(
-                name = "Laura Snow",
-                email = "laura.snow.ik.me",
-                securityLevel = AccountSecurityLevel.Warning,
-            ),
+        AccountDetailsScreen(
+            uiState = { AccountDetailsUiState.Success(account) },
             onBackPressed = {},
             onRemoveAccountClicked = {},
         )

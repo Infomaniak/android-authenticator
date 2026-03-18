@@ -18,21 +18,22 @@
 package com.infomaniak.auth.ui.previewparameter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.infomaniak.auth.lib.room.accounts.Account
-import com.infomaniak.auth.lib.room.accounts.StatusEntity
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.NotConnectedAction
+import kotlinx.collections.immutable.persistentListOf
 
-class AccountPreviewParameter : PreviewParameterProvider<List<Account>> {
-    override val values: Sequence<List<Account>> = sequenceOf(fakeAccounts)
+class AccountPreviewParameter : PreviewParameterProvider<Account> {
+    override val values: Sequence<Account> = fakeAccounts.asSequence()
 }
 
-val fakeAccounts = listOf(
+val fakeAccounts = persistentListOf(
     Account(
         id = 0,
         fullName = "John Smith",
         initials = "JS",
         email = "john.smith@ik.me",
         avatarUrl = null,
-        status = StatusEntity.LoggedIn,
+        status = Account.Status.LoggedIn,
     ),
     Account(
         id = 1,
@@ -40,7 +41,7 @@ val fakeAccounts = listOf(
         initials = "JS",
         email = "john.smith@ik.me",
         avatarUrl = null,
-        status = StatusEntity.NotConnectedIssue,
+        status = Account.Status.NotConnected(action = null),
     ),
     Account(
         id = 3,
@@ -48,6 +49,6 @@ val fakeAccounts = listOf(
         initials = "JS",
         email = "john.smith@ik.me",
         avatarUrl = null,
-        status = StatusEntity.NotConnectedReLogin,
+        status = Account.Status.NotConnected(action = NotConnectedAction.Issue.NonRetriable("Preview error")),
     )
 )

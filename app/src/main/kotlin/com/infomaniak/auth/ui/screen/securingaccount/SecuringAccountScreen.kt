@@ -76,7 +76,7 @@ fun SecuringAccountScreen(
 
 @PreviewSmallWindow
 @Composable
-fun SecuringAccountScreenPreview() {
+private fun SecuringAccountScreenPreview() {
     AuthenticatorTheme {
         SecuringAccountScreen(onFinish = { })
     }

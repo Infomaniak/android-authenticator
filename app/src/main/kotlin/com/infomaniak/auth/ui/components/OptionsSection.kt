@@ -59,7 +59,10 @@ fun OptionsSection(
     sections: ImmutableList<ImmutableList<OptionItemType>>,
     modifier: Modifier = Modifier,
 ) {
-    OptionsSectionContainer(modifier, sections) { optionItems ->
+    OptionsSectionContainer(
+        modifier = modifier,
+        sections = sections
+    ) { optionItems ->
         optionItems.forEachIndexed { index, optionItemType ->
             OptionItem(optionItemType = optionItemType)
 
@@ -74,8 +77,8 @@ fun OptionsSection(
 
 @Composable
 private fun OptionsSectionContainer(
-    modifier: Modifier = Modifier,
     sections: ImmutableList<ImmutableList<OptionItemType>>,
+    modifier: Modifier = Modifier,
     content: @Composable (optionItem: List<OptionItemType>) -> Unit,
 ) {
     Column(
@@ -198,7 +201,7 @@ sealed interface OptionItemType {
 
 @PreviewSmallWindow
 @Composable
-fun OptionsSectionPreview() {
+private fun OptionsSectionPreview() {
     val firstSectionItems = persistentListOf(
         OptionItemType.WithCheckBox(
             stringResId = R.string.appCompleteName,

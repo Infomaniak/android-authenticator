@@ -17,22 +17,46 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class AccountDetailsViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
+    private val accountIdFlow = MutableStateFlow<Long?>(null)
 
+    val uiState: StateFlow<AccountDetailsUiState> = accountIdFlow
+        .filterNotNull()
+        .flatMapLatest { id ->
+            authenticatorFacade.accounts.mapNotNull { accounts ->
+                accounts.find { it.id == id }?.let { AccountDetailsUiState.Success(it) }
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = AccountDetailsUiState.Loading
+        )
+
+    fun fetchAccountDetails(accountId: Long) {
+        accountIdFlow.value = accountId
     fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             // TODO delete the user
@@ -41,4 +65,11 @@ class AccountDetailsViewModel @Inject constructor(
             }
         }
     }
+
+}
+
+@Immutable
+sealed interface AccountDetailsUiState {
+    data object Loading : AccountDetailsUiState
+    data class Success(val account: Account) : AccountDetailsUiState
 }
