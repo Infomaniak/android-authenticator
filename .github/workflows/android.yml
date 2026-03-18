@@ -31,7 +31,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       # Runs the lint while waiting for the `build` task to run them automatically
-      - name: Build app
+      - name: Run lint
         run: ./gradlew lint
 
       - name: Run unit tests
