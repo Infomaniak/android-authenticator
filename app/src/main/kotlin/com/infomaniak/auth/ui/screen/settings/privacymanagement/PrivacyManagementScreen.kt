@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages.AppIllus
@@ -35,7 +36,6 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun PrivacyManagementScreen(
@@ -50,6 +50,8 @@ fun PrivacyManagementScreen(
     ) { paddingValues ->
         PrivacyManagementHomeContent(
             modifier = Modifier.padding(paddingValues),
+            sourceUrl = BuildConfig.GITHUB_REPO_URL,
+            trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
             header = {
                 Image(
                     imageVector = AppIllus.DataProtection.image(),
@@ -57,7 +59,6 @@ fun PrivacyManagementScreen(
                     modifier = Modifier.padding(Margin.Medium),
                 )
             },
-            trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
             divider = {
                 HorizontalDivider(
                     color = AuthenticatorTheme.materialColors.outlineVariant,

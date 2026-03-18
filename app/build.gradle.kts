@@ -33,6 +33,7 @@ android {
 
         setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
 
+        buildConfigField("String", "GITHUB_REPO_URL", "\"https://github.com/Infomaniak/android-authenticator\"")
         buildConfigField("String", "CLIENT_ID", "\"A7B265CD-C9DB-4E6B-8236-2DFF60F146FC\"")
 
         androidResources {
