@@ -170,7 +170,11 @@ sealed interface OptionItemType {
     val textColor: Color get() = Color.Unspecified
     val onClick: (() -> Unit)? get() = null
 
-    class Default(override val stringResId: Int, override val textColor: Color) : OptionItemType
+    class Default(
+        override val stringResId: Int,
+        override val textColor: Color,
+        override val onClick: (() -> Unit)? = null,
+    ) : OptionItemType
 
     class WithCheckBox(
         override val stringResId: Int,

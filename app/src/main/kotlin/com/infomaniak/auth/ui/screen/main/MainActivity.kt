@@ -50,6 +50,15 @@ class MainActivity : FragmentActivity() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { viewModel.uiState.value == UiState.Loading }
 
+        /*lifecycleScope.launch(Dispatchers.IO) {
+            val database = OTPUserDatabase.getInstance(applicationContext)
+            val userId = database.otpUserDao().getAllUsers()[0].userID
+            val secret = database.otpUserDao().getAllUsers()[0].secret
+            val otp = GoogleAuthenticator(secret).generate(Date())
+            authenticatorManager.removeAccount()
+            Log.i("Vincent", "OTP = $otp")
+        }*/
+
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 

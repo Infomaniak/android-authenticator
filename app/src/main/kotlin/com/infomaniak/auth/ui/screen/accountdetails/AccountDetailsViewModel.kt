@@ -15,37 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.main
+package com.infomaniak.auth.ui.screen.accountdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
-import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    appSettingsRepository: AppSettingsRepository,
+class AccountDetailsViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
+    private val authenticatorManager: AuthenticatorManager,
 ) : ViewModel() {
 
-    val uiState = flow {
-        emit(UiState.Ready(accountUtils.isUserConnected()))
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, UiState.Loading)
-
-    val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
-
-    sealed interface UiState {
-        data object Loading : UiState
-        data class Ready(val isUserConnected: Boolean) : UiState
+    fun removeAccount() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = accountUtils.users.first().first()
+            authenticatorManager.removeAccount(user.apiToken.accessToken, user.id.toString())
+        }
     }
 }

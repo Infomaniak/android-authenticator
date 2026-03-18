@@ -23,17 +23,21 @@ import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.network.models.VerifyResponse
 import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.repository.AccountsRepository
 import com.infomaniak.auth.lib.utils.SignUtils.signWithPrivateKey
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
 
-class AuthenticatorManager(private val webAuthnRepository: WebAuthnRepository) {
+class AuthenticatorManager(
+    private val webAuthnRepository: WebAuthnRepository,
+    private val accountsRepository: AccountsRepository
+) {
 
     private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
     private val keyPairManager by lazy { KeyPairManagerImpl() }
 
-    private val base64NoPadding get() = cryptoObjectsBuilder.base64NoPadding
+    private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
     suspend fun registerPasskey(token: String, userId: Int) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
@@ -89,5 +93,16 @@ class AuthenticatorManager(private val webAuthnRepository: WebAuthnRepository) {
             authenticatorAttachment = "platform",
         )
         return webAuthnRepository.verify(verifyAuthenticationData).accessToken
+    }
+
+    suspend fun removeAccount(token: String, userId: String) {
+        val passkeyId = keyPairManager.findKeyIdFor(userId.toInt()).firstOrNull()
+
+        // This means this user is in error so in that case, we just need to remove the account id DB
+        accountsRepository.deleteAccount(userId.toLong())
+        if (passkeyId != null) {
+            webAuthnRepository.deletePasskey(token, passkeyId)
+            keyPairManager.deleteKey(passkeyId)
+        }
     }
 }
