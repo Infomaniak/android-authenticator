@@ -99,10 +99,11 @@ class AuthenticatorManager(
         val passkeyId = keyPairManager.findKeyIdFor(userId.toInt()).firstOrNull()
 
         // This means this user is in error so in that case, we just need to remove the account id DB
-        accountsRepository.deleteAccount(userId.toLong())
         if (passkeyId != null) {
             webAuthnRepository.deletePasskey(token, passkeyId)
             keyPairManager.deleteKey(passkeyId)
         }
+
+        accountsRepository.deleteAccount(userId.toLong())
     }
 }
