@@ -33,9 +33,11 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 fun PrivacyManagementTrackerScreen(
     tracker: Tracker,
     isTrackerEnabled: () -> Boolean,
-    onTrackerSwitchClick: (Boolean) -> Unit
+    onTrackerSwitchClick: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SinglePaneScaffold(
+        modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false)
         }

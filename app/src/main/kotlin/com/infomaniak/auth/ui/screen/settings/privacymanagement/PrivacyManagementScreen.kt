@@ -38,8 +38,12 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun PrivacyManagementScreen(navigateToTrackerPage: (Tracker) -> Unit) {
+fun PrivacyManagementScreen(
+    navigateToTrackerPage: (Tracker) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     SinglePaneScaffold(
+        modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false)
         }
@@ -72,7 +76,7 @@ fun PrivacyManagementScreen(navigateToTrackerPage: (Tracker) -> Unit) {
 
 @PreviewSmallWindow
 @Composable
-fun PrivacyManagementScreenPreview() {
+private fun PrivacyManagementScreenPreview() {
     AuthenticatorTheme {
         PrivacyManagementScreen(
             navigateToTrackerPage = {},

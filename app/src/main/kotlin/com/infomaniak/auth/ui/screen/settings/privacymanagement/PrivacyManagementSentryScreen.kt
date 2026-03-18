@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.settings.privacymanagement
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -27,7 +26,6 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.data.preferences.SentryPreferences
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
