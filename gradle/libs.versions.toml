@@ -1,6 +1,7 @@
 [versions]
 accompanistPermissions = "0.37.3"
 kotlin = "2.3.0"
+kotlinOnetimepassword = "1.0.0"
 ksp = "2.3.4"
 lifecycleViewmodelNav3 = "2.10.0"
 nav3Core = "1.0.0"
@@ -17,6 +18,7 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+kotlin-onetimepassword = { module = "com.marcelkliemannel:kotlin-onetimepassword", version.ref = "kotlinOnetimepassword" }
 
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
 infomaniak-core-common = { module = "com.infomaniak.core:Common" }

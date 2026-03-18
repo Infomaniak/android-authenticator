@@ -34,12 +34,15 @@ import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
+import com.infomaniak.auth.lib.managers.MigrationManager
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
@@ -60,15 +63,27 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
     private val db: AccountsDatabase,
     private val clientId: String,
     private val authenticatorManager: AuthenticatorManager,
+    private val migrationManager: MigrationManager,
     private val tokenBridge: TokenBridge,
     private val coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
+
+    init {
+        GlobalScope.launch(Dispatchers.IO) {
+            migrationManager.migrate(
+                onGetToken = { userId, token ->
+                    tokenBridge.persistTokenForAccount(userId.toLong(), token)
+                }
+            )
+        }
+    }
 
     private val dao = db.getDao()
 

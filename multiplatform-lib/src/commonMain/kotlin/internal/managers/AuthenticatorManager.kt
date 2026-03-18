@@ -33,7 +33,7 @@ import okio.ByteString.Companion.toByteString
 
 internal class AuthenticatorManager(
     private val webAuthnRepository: WebAuthnRepository,
-    private val accountsRepository: AccountsRepository
+    private val accountsRepository: AccountsRepository?
 ) {
 
     private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
@@ -113,6 +113,6 @@ internal class AuthenticatorManager(
             keyPairManager.deleteKey(passkeyId)
         }
 
-        accountsRepository.deleteAccount(userId)
+        accountsRepository?.deleteAccount(userId)
     }
 }

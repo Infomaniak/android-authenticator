@@ -24,6 +24,7 @@ import com.infomaniak.auth.lib.internal.network.ApiClientProvider
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.managers.MigrationManager
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +42,7 @@ abstract class AuthenticatorFacade internal constructor() {
             environment: ApiEnvironment,
             userAgent: String,
             clientId: String,
+            deviceId: String,
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
             tokenBridge: TokenBridge,
@@ -61,10 +63,17 @@ abstract class AuthenticatorFacade internal constructor() {
                 webAuthnRepository = webAuthnRepository,
                 accountsRepository = accountsRepository
             )
+            val migrationManager = MigrationManager(
+                authenticatorManager = authenticatorManager,
+                webAuthnRepository = webAuthnRepository,
+                clientId = clientId,
+                deviceId = deviceId,
+            )
             return AuthenticatorFacadeImpl(
                 db = db,
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
+                migrationManager = migrationManager,
                 tokenBridge = tokenBridge,
                 coroutineScope = scope,
             )
