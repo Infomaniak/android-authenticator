@@ -19,7 +19,7 @@ package com.infomaniak.auth.ui.screen.accountdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.auth.lib.managers.AuthenticatorManager
+import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -30,13 +30,13 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AccountDetailsViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
-    private val authenticatorManager: AuthenticatorManager,
+    private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
 
     fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             val user = accountUtils.users.first().first()
-            authenticatorManager.removeAccount(user.apiToken.accessToken, user.id.toString())
+            authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toString())
         }
     }
 }

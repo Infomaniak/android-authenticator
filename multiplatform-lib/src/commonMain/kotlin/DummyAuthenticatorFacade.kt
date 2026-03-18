@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.toAccount
+import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.repository.AccountsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +33,8 @@ import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration
 
 class DummyAuthenticatorFacade(
-    accountsRepository: AccountsRepository,
+    private val accountsRepository: AccountsRepository,
+    private val authenticatorManager: AuthenticatorManager,
     scope: CoroutineScope,
     loadingDuration: Duration,
     resetAfter: Duration,
@@ -86,5 +88,13 @@ class DummyAuthenticatorFacade(
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         _accounts += connectedAccounts
         if (connectedAccounts.isNotEmpty()) next.trySend(Unit)
+    }
+
+    override suspend fun removeAccount(token: String, id: String) {
+        authenticatorManager.removeAccount(token, id)
+    }
+
+    override suspend fun registerPasskey(token: String, userId: Int) {
+        authenticatorManager.registerPasskey(token, userId)
     }
 }
