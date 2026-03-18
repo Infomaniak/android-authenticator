@@ -27,23 +27,25 @@ import com.infomaniak.auth.lib.network.models.RegisterPasskey
 import com.infomaniak.auth.lib.network.models.RegisterPasskeyResponse
 import com.infomaniak.auth.lib.network.models.WebAuthnClientData
 import com.infomaniak.auth.lib.utils.getDeviceInfo
+import io.ktor.utils.io.core.toByteArray
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.encodeUtf8
 import kotlin.io.encoding.Base64
-import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 internal class CryptoObjectsBuilder {
 
-    internal val base64NoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+    internal val base64UrlSafeNoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+    internal val base64NoPadding = Base64.withPadding(Base64.PaddingOption.ABSENT)
 
     fun getKeyIds(): Pair<ByteArray, String> {
-        val rawId = Random.nextBytes(16)
+        val randomUuid = Uuid.random().toHexString()
+        val rawId = randomUuid.toByteArray()
         val id = base64NoPadding.encode(rawId)
 
         return rawId to id
@@ -67,11 +69,11 @@ internal class CryptoObjectsBuilder {
             authData = authenticatorData
         )
         val response = RegisterPasskeyResponse(
-            attestationObject = base64NoPadding.encode(attestationObject),
-            clientDataJSON = base64NoPadding.encode(Json.encodeToString(clientData).encodeToByteArray()),
+            attestationObject = base64UrlSafeNoPadding.encode(attestationObject),
+            clientDataJSON = base64UrlSafeNoPadding.encode(Json.encodeToString(clientData).encodeToByteArray()),
             transports = listOf("internal"),
-            publicKey = base64NoPadding.encode(publicKey),
-            authenticatorData = base64NoPadding.encode(authenticatorData),
+            publicKey = base64UrlSafeNoPadding.encode(publicKey),
+            authenticatorData = base64UrlSafeNoPadding.encode(authenticatorData),
             publicKeyAlgorithm = KeyAlgorithm.ES256,
         )
         val type = "public-key"
@@ -82,7 +84,7 @@ internal class CryptoObjectsBuilder {
             session = passkeysOptions.session,
             device = getDeviceInfo(),
             id = id,
-            rawId = base64NoPadding.encode(rawId),
+            rawId = base64UrlSafeNoPadding.encode(rawId),
             registerPasskeyResponse = response,
             type = type,
             clientExtensionResults = clientExtensionResult,
