@@ -30,5 +30,9 @@ jobs:
       - name: Build app
         run: ./gradlew assembleDebug
 
+      # Runs the lint while waiting for the `build` task to run them automatically
+      - name: Build app
+        run: ./gradlew lint
+
       - name: Run unit tests
         run: ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest --stacktrace
