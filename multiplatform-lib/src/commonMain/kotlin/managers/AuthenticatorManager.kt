@@ -18,7 +18,9 @@
 package com.infomaniak.auth.lib.managers
 
 import com.infomaniak.auth.lib.CryptoObjectsBuilder
+import com.infomaniak.auth.lib.Failure
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.Xor
 import com.infomaniak.auth.lib.network.models.ClientExtensionResults
 import com.infomaniak.auth.lib.network.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.network.models.VerifyResponse
@@ -29,7 +31,7 @@ import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
 
-class AuthenticatorManager(
+internal class AuthenticatorManager(
     private val webAuthnRepository: WebAuthnRepository,
     private val accountsRepository: AccountsRepository
 ) {
@@ -59,10 +61,15 @@ class AuthenticatorManager(
         webAuthnRepository.registerPasskey(token, registerPasskey)
     }
 
-    suspend fun getToken(clientId: String, userId: Int, keyId: String): String {
+    suspend fun getToken(clientId: String, userId: Int): Xor<String, Failure.KeyManagement.KeyNotFound> {
+        val keyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
+
         val authenticationOptions = webAuthnRepository.challenge(clientId)
+        val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No public key found forw $userId"))
         val rawAuthenticatorData = cryptoObjectsBuilder.generateAuthenticatorData(
-            publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()!!,
+            publicKey = publicKey,
             rpId = "infomaniak.ch",
             credentialId = keyId.toByteArray(),
         )
@@ -72,6 +79,8 @@ class AuthenticatorManager(
         val clientDataJsonBytes = Json.encodeToString(clientData).encodeToByteArray()
         val clientDataJsonHash = clientDataJsonBytes.toByteString().sha256().toByteArray()
 
+        val privateKey = keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No private key found forw $userId"))
         val verifyAuthenticationData = VerifyAuthenticationData(
             clientId = clientId,
             session = authenticationOptions.session,
@@ -82,7 +91,7 @@ class AuthenticatorManager(
                 clientDataJSON = base64NoPadding.encode(clientDataJsonBytes),
                 signature = base64NoPadding.encode(
                     signWithPrivateKey(
-                        privateKey = keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()!!,
+                        privateKey = privateKey,
                         data = rawAuthenticatorData + clientDataJsonHash,
                     )
                 ),
@@ -92,7 +101,7 @@ class AuthenticatorManager(
             clientExtensionResults = ClientExtensionResults,
             authenticatorAttachment = "platform",
         )
-        return webAuthnRepository.verify(verifyAuthenticationData).accessToken
+        return Xor.First(webAuthnRepository.verify(verifyAuthenticationData).accessToken)
     }
 
     suspend fun removeAccount(token: String, userId: String) {
