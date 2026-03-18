@@ -56,6 +56,26 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
+    actual override suspend fun findKeyIdFor(userId: Int): Xor<String, Failure.KeyManagement.KeyNotFound> {
+        val userPassKey = appCtx.filesDir.listFiles()?.find { it.name.contains(userId.toString()) }
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+        val regex = Regex("-(([^-]+))")
+        val match = regex.find(userPassKey.name)
+        val keyId = match?.groupValues?.get(1)
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No Key ID found"))
+
+        return Xor.First(keyId)
+    }
+
+    actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
+        val keys = appCtx.filesDir.listFiles()?.filter { it.name.contains(keyId) }
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+
+        keys.forEach { it.delete() }
+
+        return Xor.First(Unit)
+    }
+
     private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
         val file = File(appCtx.filesDir, fileName)
         file.writeBytes(key)
