@@ -64,9 +64,9 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AccountDetails(
-    accountDetailsViewModel: AccountDetailsViewModel = hiltViewModel(),
     account: FakeAccount,
-    onBackPressed: () -> Unit
+    accountDetailsViewModel: AccountDetailsViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
 ) {
     AccountDetails(
         account = account,
@@ -109,7 +109,7 @@ private fun AccountDetails(
             }
             SettingsSections(
                 account.securityLevel,
-                onRemoveAccountClicked = { onRemoveAccountClicked() }
+                onRemoveAccountClicked = onRemoveAccountClicked
             )
         }
     }
@@ -283,9 +283,7 @@ private fun SettingsSections(
         OptionItemType.Default(
             stringResId = R.string.disconnectButton,
             textColor = AuthenticatorTheme.materialColors.error,
-            onClick = {
-                onRemoveAccountClicked()
-            }
+            onClick = onRemoveAccountClicked,
         ),
     )
 
@@ -330,10 +328,10 @@ private enum class AccountStatus(
 
 @PreviewSmallWindow
 @Composable
-fun AccountDetailsPreview() {
+private fun AccountDetailsPreview() {
     AuthenticatorTheme {
         AccountDetails(
-            FakeAccount(
+            account = FakeAccount(
                 name = "Laura Snow",
                 email = "laura.snow.ik.me",
                 securityLevel = AccountSecurityLevel.Warning,

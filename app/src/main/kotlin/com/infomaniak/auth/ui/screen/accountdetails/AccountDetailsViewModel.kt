@@ -22,10 +22,10 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AccountDetailsViewModel @Inject constructor(
@@ -35,8 +35,10 @@ class AccountDetailsViewModel @Inject constructor(
 
     fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = accountUtils.users.first().first()
-            authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toString())
+            // TODO delete the user
+            accountUtils.users.first().firstOrNull()?.let {
+                authenticatorFacade.removeAccount(it.apiToken.accessToken, it.id.toString())
+            }
         }
     }
 }
