@@ -19,6 +19,7 @@ package com.infomaniak.auth.di
 
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
+import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
@@ -54,4 +55,8 @@ object ApplicationModule {
             appVersionName = BuildConfig.VERSION_NAME,
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticatorFacade(): AuthenticatorFacade = AuthenticatorFacade.dummyInstance()
 }
