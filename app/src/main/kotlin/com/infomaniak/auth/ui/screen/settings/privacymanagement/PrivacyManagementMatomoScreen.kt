@@ -31,13 +31,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @Composable
-fun PrivacyManagementMatomoScreen(viewModel: PrivacyManagementMatomoViewModel = hiltViewModel()) {
+fun PrivacyManagementMatomoScreen(
+    onBackPressed: () -> Unit,
+    viewModel: PrivacyManagementMatomoViewModel = hiltViewModel()
+) {
     val isTrackerEnabled by viewModel.isTrackerEnabled.collectAsStateWithLifecycle()
 
     PrivacyManagementTrackerScreen(
         tracker = Tracker.Matomo,
         isTrackerEnabled = { isTrackerEnabled },
-        onTrackerSwitchClick = viewModel::onTrackerSwitchClick
+        onTrackerSwitchClick = viewModel::onTrackerSwitchClick,
+        onBackPressed = onBackPressed
     )
 }
 

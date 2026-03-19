@@ -54,6 +54,7 @@ import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
 import com.infomaniak.auth.ui.screen.home.FakeAccount
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -123,7 +124,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
             .padding(horizontal = Margin.Medium)
             .clickable(onClick = {}),
         variant = StatusCardVariant.Neutral,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(DefaultCornerRadius),
     ) {
         Column(
             modifier = Modifier.padding(Margin.Medium),

@@ -49,7 +49,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AppDimens
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.basics.Dimens.largeCornerRadius
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
@@ -60,7 +62,7 @@ fun OptionsSection(
     sections: ImmutableList<ImmutableList<OptionItemType>>,
     modifier: Modifier = Modifier,
 ) {
-    OptionsSectionContainer(modifier, sections) { optionItems ->
+    OptionsSectionContainer(sections, modifier) { optionItems ->
         optionItems.forEachIndexed { index, optionItemType ->
             OptionItem(optionItemType = optionItemType)
 
@@ -75,8 +77,8 @@ fun OptionsSection(
 
 @Composable
 private fun OptionsSectionContainer(
-    modifier: Modifier = Modifier,
     sections: ImmutableList<ImmutableList<OptionItemType>>,
+    modifier: Modifier = Modifier,
     content: @Composable (optionItem: List<OptionItemType>) -> Unit,
 ) {
     Column(
@@ -92,7 +94,7 @@ private fun OptionsSectionContainer(
                         .fillMaxWidth()
                         .padding(horizontal = Margin.Medium),
                     colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
-                    shape = RoundedCornerShape(AppDimens.CardCornerRadius),
+                    shape = RoundedCornerShape(DefaultCornerRadius),
                 ) {
                     Column {
                         content(optionsSection)
@@ -195,7 +197,7 @@ sealed interface OptionItemType {
 
 @PreviewSmallWindow
 @Composable
-fun OptionsSectionPreview() {
+private fun OptionsSectionPreview() {
     val firstSectionItems = persistentListOf(
         OptionItemType.WithCheckBox(
             stringResId = R.string.appCompleteName,

@@ -18,8 +18,9 @@
 package com.infomaniak.auth.ui.theme
 
 import androidx.compose.ui.unit.dp
+import com.infomaniak.core.ui.compose.basics.Dimens.largeCornerRadius
 
 object AppDimens {
     val LargeButtonHeight = 48.dp
-    val CardCornerRadius = 24.dp
+    val DefaultCornerRadius = largeCornerRadius
 }

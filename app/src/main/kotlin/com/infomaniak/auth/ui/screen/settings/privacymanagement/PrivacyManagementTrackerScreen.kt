@@ -27,6 +27,7 @@ import com.infomaniak.core.privacymanagement.screencontent.PrivacyManagementTrac
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 import com.infomaniak.core.privacymanagement.tracker.TrackerPreviewParameterProvider
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
@@ -34,16 +35,22 @@ fun PrivacyManagementTrackerScreen(
     tracker: Tracker,
     isTrackerEnabled: () -> Boolean,
     onTrackerSwitchClick: (Boolean) -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {
-            InfomaniakAuthenticatorTopAppBar(isCentered = false)
+            InfomaniakAuthenticatorTopAppBar(
+                withTitle = true,
+                isCentered = false,
+                onBackPressed = { onBackPressed() }
+            )
         }
     ) { paddingValues ->
         PrivacyManagementTrackerContent(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues)
+                .padding(horizontal = Margin.Medium),
             tracker = tracker,
             isTrackerEnabled = isTrackerEnabled,
             onTrackerSwitchClick = onTrackerSwitchClick
@@ -61,6 +68,7 @@ private fun PrivacyManagementTrackerScreenPreview(
             tracker = tracker,
             isTrackerEnabled = { true },
             onTrackerSwitchClick = {},
+            onBackPressed = {},
         )
     }
 }

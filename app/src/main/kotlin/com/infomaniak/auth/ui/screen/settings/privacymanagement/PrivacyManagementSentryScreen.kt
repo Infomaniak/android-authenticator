@@ -35,13 +35,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @Composable
-fun PrivacyManagementSentryScreen(viewModel: PrivacyManagementSentryViewModel = hiltViewModel()) {
+fun PrivacyManagementSentryScreen(
+    onBackPressed: () -> Unit,
+    viewModel: PrivacyManagementSentryViewModel = hiltViewModel()
+) {
     val isTrackerEnabled by viewModel.isTrackerEnabled.collectAsStateWithLifecycle()
 
     PrivacyManagementTrackerScreen(
         tracker = Tracker.Sentry,
         isTrackerEnabled = { isTrackerEnabled },
-        onTrackerSwitchClick = viewModel::onTrackerSwitchClick
+        onTrackerSwitchClick = viewModel::onTrackerSwitchClick,
+        onBackPressed = onBackPressed
     )
 }
 

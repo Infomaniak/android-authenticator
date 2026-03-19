@@ -40,12 +40,17 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun PrivacyManagementScreen(
     navigateToTrackerPage: (Tracker) -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {
-            InfomaniakAuthenticatorTopAppBar(isCentered = false)
+            InfomaniakAuthenticatorTopAppBar(
+                withTitle = true,
+                isCentered = false,
+                onBackPressed = { onBackPressed() }
+            )
         }
     ) { paddingValues ->
         PrivacyManagementHomeContent(
@@ -81,6 +86,7 @@ private fun PrivacyManagementScreenPreview() {
     AuthenticatorTheme {
         PrivacyManagementScreen(
             navigateToTrackerPage = {},
+            onBackPressed = {},
         )
     }
 }

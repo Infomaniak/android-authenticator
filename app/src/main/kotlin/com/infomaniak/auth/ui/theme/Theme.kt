@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -19,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.StatusColorScheme
 import com.infomaniak.auth.ui.theme.color.brand10
@@ -206,7 +208,7 @@ fun AuthenticatorTheme(
     val privacyManagementTheme = PrivacyManagementTheme(
         trackerContainerColor = customColors.sectionBackground,
         trackerContainerContentColor = colorScheme.onSurface,
-        trackerContainerShape = MaterialTheme.shapes.medium,
+        trackerContainerShape = RoundedCornerShape(DefaultCornerRadius),
         trackerContainerPadding = PaddingValues(Margin.Medium, 0.dp)
     )
 

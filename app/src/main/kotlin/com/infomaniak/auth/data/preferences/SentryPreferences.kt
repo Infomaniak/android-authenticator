@@ -24,7 +24,6 @@ import splitties.experimental.ExperimentalSplittiesApi
 import splitties.preferences.Preferences
 import splitties.preferences.SuspendPrefsAccessor
 
-
 class SentryPreferences private constructor(): Preferences(name = "SentryPreferences") {
     companion object : SuspendPrefsAccessor<SentryPreferences>(::SentryPreferences)
 
