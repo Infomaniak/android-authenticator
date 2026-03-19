@@ -172,8 +172,8 @@ internal class AuthenticatorFacadeImpl(
 
     private suspend fun FlowCollector<NotConnectedAction?>.registrationAttempts(notRegisteredAccount: AccountEntity) {
         val passKeyAlreadyRegistered = when (val accountStatus = notRegisteredAccount.status) {
-            AccountEntity.Status.PasskeyRegistrationPending -> true
-            AccountEntity.Status.FirstPasskeyAuthenticationPending -> false
+            AccountEntity.Status.PasskeyRegistrationPending -> false
+            AccountEntity.Status.FirstPasskeyAuthenticationPending -> true
             else -> throw IllegalArgumentException("registrationAttempts doesn't support $accountStatus")
         }
         val userId = notRegisteredAccount.id
