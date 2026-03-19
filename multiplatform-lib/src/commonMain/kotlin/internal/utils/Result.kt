@@ -15,32 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.accounts
+package com.infomaniak.auth.lib.internal.utils
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CancellationException
 
-@Dao
-interface AccountsDao {
-
-    @Query("SELECT * FROM AccountEntity")
-    fun getAsFlow(): Flow<List<AccountEntity>>
-
-    @Query("SELECT * FROM AccountEntity WHERE id = :id")
-    fun get(id: Long): Flow<AccountEntity?>
-
-    @Upsert
-    suspend fun upsert(account: AccountEntity)
-
-    @Upsert
-    suspend fun upsert(accounts: List<AccountEntity>)
-
-    @Insert
-    suspend fun insert(account: AccountEntity)
-
-    @Query("DELETE FROM AccountEntity WHERE id = :id")
-    suspend fun delete(id: Long)
+@Suppress("RedundantSuspendModifier")
+internal suspend inline fun <T> Result<T>.cancellable(): Result<T> = onFailure {
+    if (it is CancellationException) throw it
 }

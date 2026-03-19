@@ -44,6 +44,7 @@ internal class CryptoObjectsBuilder {
     internal val base64NoPadding = Base64.withPadding(Base64.PaddingOption.ABSENT)
 
     fun getKeyIds(): Pair<ByteArray, String> {
+        //TODO[ik-auth]: Check if we can bypass the hexString, converting the Uuid directly to a ByteArray.
         val randomUuid = Uuid.random().toHexString()
         val rawId = randomUuid.toByteArray()
         val id = base64NoPadding.encode(rawId)

@@ -18,7 +18,6 @@
 package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.Account.Status
 import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.room.accounts.AccountEntity
 
@@ -29,20 +28,20 @@ internal fun AccountEntity.toAccount(action: NotConnectedAction?): Account {
         initials = initials,
         email = email,
         avatarUrl = avatarUrl,
-        status = when (isLoggedIn) {
-            true -> Status.LoggedIn
-            false -> Status.NotConnected(action)
+        status = when (status) {
+            AccountEntity.Status.LoggedIn -> Account.Status.LoggedIn
+            else -> Account.Status.NotConnected(action)
         }
     )
 }
 
-internal fun Account.toEntity(): AccountEntity {
+internal fun Account.toEntity(status: AccountEntity.Status): AccountEntity {
     return AccountEntity(
         id = id,
         fullName = fullName,
         initials = initials,
         email = email,
         avatarUrl = avatarUrl,
-        isLoggedIn = status is Status.LoggedIn
+        status = status
     )
 }

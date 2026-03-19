@@ -24,10 +24,12 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.infomaniak.auth.lib.Account
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 @Database(entities = [AccountEntity::class], version = 1)
+@TypeConverters(AccountStatusConverter::class)
 @ConstructedBy(AccountsDatabaseConstructor::class)
 abstract class AccountsDatabase : RoomDatabase() {
     abstract fun getDao(): AccountsDao
@@ -43,4 +45,13 @@ fun getAccountsRoomDatabase(builder: RoomDatabase.Builder<AccountsDatabase>): Ac
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
+}
+
+class AccountStatusConverter {
+
+    @TypeConverter
+    fun fromStatus(status: AccountEntity.Status) = status.ordinal
+
+    @TypeConverter
+    fun toStatus(ordinal: Int) = AccountEntity.Status.entries[ordinal]
 }
