@@ -64,10 +64,9 @@ class AccountDetailsViewModel @Inject constructor(
 
     fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
-            // TODO delete the user
-            accountUtils.users.first().firstOrNull()?.let {
-                authenticatorFacade.removeAccount(it.apiToken.accessToken, it.id.toString())
-            }
+            accountIdFlow.value
+                ?.let { accountId -> accountUtils.users.first().first { it.id.toLong() == accountId } }
+                ?.let { user -> authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toString()) }
         }
     }
 }
