@@ -83,5 +83,6 @@ abstract class AuthenticatorFacade internal constructor() {
     /**
      * Register passkey.
      */
+    // TODO Remove this method and its usages because it'll be called internally
     abstract suspend fun registerPasskey(token: String, userId: String)
 }
