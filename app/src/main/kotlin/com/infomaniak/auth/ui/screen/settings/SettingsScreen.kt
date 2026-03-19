@@ -44,7 +44,10 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun SettingsScreen(onThemeClicked: () -> Unit) {
+fun SettingsScreen(
+    onThemeClicked: () -> Unit,
+    onPrivacyManagementClicked: () -> Unit,
+) {
     val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
     val notificationEnabled = GetSetCallbacks(
@@ -56,7 +59,7 @@ fun SettingsScreen(onThemeClicked: () -> Unit) {
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
 
-    SettingsScreen(notificationEnabled, appLocked, onThemeClicked)
+    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked)
 }
 
 @Composable
@@ -64,6 +67,7 @@ private fun SettingsScreen(
     notificationEnabled: GetSetCallbacks<Boolean>,
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
+    onPrivacyManagementClicked: () -> Unit,
 ) {
     val fragmentActivity = LocalActivity.current as? FragmentActivity
 
@@ -103,7 +107,7 @@ private fun SettingsScreen(
         OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
             rightIconResId = R.drawable.right_indicator,
-            onClick = {},
+            onClick = onPrivacyManagementClicked,
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.feedbackTitle,
@@ -136,7 +140,8 @@ fun SettingsScreenPreview() {
         SettingsScreen(
             notificationEnabled = GetSetCallbacks(get = { true }, set = {}),
             appLocked = GetSetCallbacks(get = { true }, set = {}),
-            onThemeClicked = {}
+            onThemeClicked = {},
+            onPrivacyManagementClicked = {},
         )
     }
 }

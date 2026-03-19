@@ -1,6 +1,5 @@
 [versions]
 kotlin = "2.3.0"
-kotlinxCollectionsImmutable = "0.4.0"
 ksp = "2.3.4"
 lifecycleViewmodelNav3 = "2.10.0"
 nav3Core = "1.0.0"
@@ -15,7 +14,6 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
-kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 
 infomaniak-core-auth = { module = "com.infomaniak.core:Auth" }
 infomaniak-core-common = { module = "com.infomaniak.core:Common" }

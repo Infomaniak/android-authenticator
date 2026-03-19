@@ -33,6 +33,7 @@ android {
 
         setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
 
+        buildConfigField("String", "GITHUB_REPO_URL", "\"https://github.com/Infomaniak/android-authenticator\"")
         buildConfigField("String", "CLIENT_ID", "\"A7B265CD-C9DB-4E6B-8236-2DFF60F146FC\"")
 
         androidResources {
@@ -135,6 +136,7 @@ dependencies {
     implementation(core.infomaniak.core.matomo)
     implementation(core.infomaniak.core.network)
     implementation(core.infomaniak.core.onboarding)
+    implementation(core.infomaniak.core.privacymanagement)
     implementation(core.infomaniak.core.sentry)
     implementation(core.infomaniak.core.ui.compose.basics)
     implementation(core.infomaniak.core.ui.compose.basicbutton)
@@ -149,7 +151,8 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(core.androidx.work.runtime.ktx)
-    implementation(libs.kotlinx.collections.immutable)
+    implementation(core.kotlinx.collections.immutable)
+    implementation(core.splitties.preferences)
 
     implementation(core.kotlinx.serialization.json)
 
