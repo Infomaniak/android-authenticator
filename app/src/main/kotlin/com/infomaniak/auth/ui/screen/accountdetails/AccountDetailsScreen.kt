@@ -19,7 +19,6 @@ package com.infomaniak.auth.ui.screen.accountdetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -84,6 +83,10 @@ fun AccountDetailsScreen(
     AccountDetailsScreen(
         uiState = { uiState },
         onBackPressed = onBackPressed,
+        onRemoveAccountClicked = {
+            viewModel.removeAccount()
+            onBackPressed()
+        }
     )
 }
 
@@ -91,6 +94,7 @@ fun AccountDetailsScreen(
 fun AccountDetailsScreen(
     uiState: () -> AccountDetailsUiState,
     onBackPressed: () -> Unit,
+    onRemoveAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
@@ -105,7 +109,11 @@ fun AccountDetailsScreen(
     ) { paddingValues ->
         when (val state = uiState()) {
             is AccountDetailsUiState.Success -> {
-                AccountDetailsContent(paddingValues, state.account)
+                AccountDetailsContent(
+                    paddingValues = paddingValues,
+                    account = state.account,
+                    onRemoveAccountClicked = onRemoveAccountClicked
+                )
             }
             is AccountDetailsUiState.Loading -> Unit
         }
@@ -113,7 +121,11 @@ fun AccountDetailsScreen(
 }
 
 @Composable
-private fun AccountDetailsContent(paddingValues: PaddingValues, account: Account) {
+private fun AccountDetailsContent(
+    paddingValues: PaddingValues,
+    account: Account,
+    onRemoveAccountClicked: () -> Unit,
+) {
     Column(
         modifier = Modifier.padding(paddingValues)
     ) {
@@ -128,7 +140,10 @@ private fun AccountDetailsContent(paddingValues: PaddingValues, account: Account
                 }
             )
         }
-        SettingsSections(accountStatus = account.status)
+        SettingsSections(
+            accountStatus = account.status,
+            onRemoveAccountClicked = onRemoveAccountClicked
+        )
     }
 }
 
@@ -161,8 +176,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = Margin.Large)
-            .padding(horizontal = Margin.Medium)
-            .clickable(onClick = {}),
+            .padding(horizontal = Margin.Medium),
         variant = StatusCardVariant.Neutral,
         shape = RoundedCornerShape(16.dp),
     ) {
@@ -342,15 +356,6 @@ private enum class AccountStatus(
             is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> PartiallyProtected
             else -> Disconnected
         }
-
-        // fun from(level: AccountSecurityLevel): AccountStatus {
-        //     //TODO check how a disconnected account is displayed on the accounts list
-        //     return when (level) {
-        //         AccountSecurityLevel.Secured -> Secured
-        //         AccountSecurityLevel.Warning -> PartiallyProtected
-        //         else -> Disconnected
-        //     }
-        // }
     }
 }
 

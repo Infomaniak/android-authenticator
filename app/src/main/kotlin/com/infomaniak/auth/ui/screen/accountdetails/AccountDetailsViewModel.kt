@@ -24,14 +24,17 @@ import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -57,6 +60,8 @@ class AccountDetailsViewModel @Inject constructor(
 
     fun fetchAccountDetails(accountId: Long) {
         accountIdFlow.value = accountId
+    }
+
     fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             // TODO delete the user
@@ -65,7 +70,6 @@ class AccountDetailsViewModel @Inject constructor(
             }
         }
     }
-
 }
 
 @Immutable
