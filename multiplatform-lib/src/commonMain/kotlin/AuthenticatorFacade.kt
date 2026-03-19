@@ -79,10 +79,4 @@ abstract class AuthenticatorFacade internal constructor() {
      * Remove account from the authenticator.
      */
     abstract suspend fun removeAccount(token: String, id: Long)
-
-    /**
-     * Register passkey.
-     */
-    // TODO Remove this method and its usages because it'll be called internally
-    abstract suspend fun registerPasskey(token: String, userId: Long)
 }
