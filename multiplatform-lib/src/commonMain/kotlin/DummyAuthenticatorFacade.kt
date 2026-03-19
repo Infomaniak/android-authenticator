@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.toAccount
+import com.infomaniak.auth.lib.internal.toEntity
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.repository.AccountsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -88,6 +89,7 @@ class DummyAuthenticatorFacade internal constructor(
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         _accounts += connectedAccounts
         if (connectedAccounts.isNotEmpty()) next.trySend(Unit)
+        accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity() })
     }
 
     override suspend fun removeAccount(token: String, id: String) {
