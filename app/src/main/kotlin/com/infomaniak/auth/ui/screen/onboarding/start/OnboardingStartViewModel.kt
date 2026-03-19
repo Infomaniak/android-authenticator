@@ -58,7 +58,7 @@ class OnboardingStartViewModel @Inject constructor(
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
             users.forEach { user ->
-                authenticatorFacade.registerPasskey(user.apiToken.accessToken, user.id)
+                authenticatorFacade.registerPasskey(user.apiToken.accessToken, user.id.toString())
                 addUserToAuthenticatorDB(user)
                 accountUtils.addUser(user)
             }

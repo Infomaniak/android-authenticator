@@ -39,5 +39,5 @@ interface AccountsDao {
     suspend fun insert(account: AccountEntity)
 
     @Query("DELETE FROM AccountEntity WHERE id = :id")
-    suspend fun delete(id: Long)
+    suspend fun delete(id: String)
 }

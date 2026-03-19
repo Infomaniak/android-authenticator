@@ -72,7 +72,7 @@ import platform.Security.kSecReturnRef
 internal actual class KeyPairManagerImpl : KeyPairManager {
 
     actual override suspend fun generateNewKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
 
@@ -91,7 +91,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @OptIn(ExperimentalForeignApi::class)
     actual override suspend fun retrievePublicKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
@@ -113,7 +113,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun retrievePrivateKey(
-        userId: Int,
+        userId: Long,
         keyId: String
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
         memScoped {

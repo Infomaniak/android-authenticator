@@ -83,5 +83,5 @@ abstract class AuthenticatorFacade internal constructor() {
     /**
      * Register passkey.
      */
-    abstract suspend fun registerPasskey(token: String, userId: Int)
+    abstract suspend fun registerPasskey(token: String, userId: String)
 }

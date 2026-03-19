@@ -94,9 +94,10 @@ class DummyAuthenticatorFacade internal constructor(
 
     override suspend fun removeAccount(token: String, id: String) {
         authenticatorManager.removeAccount(token, id)
+        accountsRepository.deleteAccount(id)
     }
 
-    override suspend fun registerPasskey(token: String, userId: Int) {
+    override suspend fun registerPasskey(token: String, userId: String) {
         authenticatorManager.registerPasskey(token, userId)
     }
 }

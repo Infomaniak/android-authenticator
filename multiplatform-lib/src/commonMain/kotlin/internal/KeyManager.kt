@@ -25,11 +25,11 @@ internal interface KeyPairManager {
      * Generates key pair for a new registration
      * (migrating from kAuth v1 or a backup, or a fresh new login)
      */
-    suspend fun generateNewKey(userId: Int, keyId: String): Failure.KeyManagement.GenerationFailed?
+    suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed?
 
-    suspend fun retrievePublicKey(userId: Int, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    suspend fun retrievePublicKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 
-    suspend fun retrievePrivateKey(userId: Int, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    suspend fun retrievePrivateKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 
     suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound>
 

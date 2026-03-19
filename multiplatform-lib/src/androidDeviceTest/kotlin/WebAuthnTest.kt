@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth
 
-import android.R.attr.publicKey
 import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm

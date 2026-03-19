@@ -41,15 +41,15 @@ internal class AuthenticatorManager(
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
-    suspend fun registerPasskey(token: String, userId: Int) {
+    suspend fun registerPasskey(token: String, userId: String) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
         val keyIdAsString = keyIds.second
-        keyPairManager.generateNewKey(userId, keyIdAsString)?.let {
+        keyPairManager.generateNewKey(userId.toLong(), keyIdAsString)?.let {
             throw Exception("Couldn't generate new key: ${it.details}")
         }
-        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
+        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId.toLong(), keyIdAsString).firstOrNull()!!
 
         val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(
             publicKey = publicKeyAsByteArray,
@@ -61,7 +61,7 @@ internal class AuthenticatorManager(
         webAuthnRepository.registerPasskey(token, registerPasskey)
     }
 
-    suspend fun getToken(clientId: String, userId: Int): Xor<String, Failure.KeyManagement.KeyNotFound> {
+    suspend fun getToken(clientId: String, userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
         val keyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
             ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
@@ -105,7 +105,7 @@ internal class AuthenticatorManager(
     }
 
     suspend fun removeAccount(token: String, userId: String) {
-        val passkeyId = keyPairManager.findKeyIdFor(userId.toInt()).firstOrNull()
+        val passkeyId = keyPairManager.findKeyIdFor(userId.toLong()).firstOrNull()
 
         // This means this user is in error so in that case, we just need to remove the account id DB
         if (passkeyId != null) {
@@ -113,6 +113,6 @@ internal class AuthenticatorManager(
             keyPairManager.deleteKey(passkeyId)
         }
 
-        accountsRepository.deleteAccount(userId.toLong())
+        accountsRepository.deleteAccount(userId)
     }
 }

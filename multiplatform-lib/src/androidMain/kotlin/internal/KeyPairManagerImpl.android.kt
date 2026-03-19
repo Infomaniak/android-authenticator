@@ -26,7 +26,7 @@ import java.io.File
 internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)
-    actual override suspend fun generateNewKey(userId: Int, keyId: String): Failure.KeyManagement.GenerationFailed? {
+    actual override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
@@ -37,7 +37,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun retrievePublicKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         val file = File(appCtx.filesDir, "$userId-$keyId-public.key")
@@ -47,7 +47,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun retrievePrivateKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         val file = File(appCtx.filesDir, "$userId-$keyId-private.key")
