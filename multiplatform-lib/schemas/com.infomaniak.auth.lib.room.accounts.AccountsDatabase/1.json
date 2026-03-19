@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cbfc5e80883c7dc231f52f2e3fd56c1a",
+    "identityHash": "ab7e6c6aadc7811b61b0ffe94bc67ec1",
     "entities": [
       {
         "tableName": "AccountEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `fullName` TEXT NOT NULL, `initials` TEXT NOT NULL, `email` TEXT NOT NULL, `avatarUrl` TEXT, `isLoggedIn` INTEGER NOT NULL, `status` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `fullName` TEXT NOT NULL, `initials` TEXT NOT NULL, `email` TEXT NOT NULL, `avatarUrl` TEXT, `status` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -38,12 +38,6 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "isLoggedIn",
-            "columnName": "isLoggedIn",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "status",
             "columnName": "status",
             "affinity": "INTEGER",
@@ -60,7 +54,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cbfc5e80883c7dc231f52f2e3fd56c1a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab7e6c6aadc7811b61b0ffe94bc67ec1')"
     ]
   }
 }

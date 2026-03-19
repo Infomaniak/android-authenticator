@@ -42,7 +42,6 @@ internal fun Account.toEntity(status: AccountEntity.Status): AccountEntity {
         initials = initials,
         email = email,
         avatarUrl = avatarUrl,
-        isLoggedIn = status == AccountEntity.Status.LoggedIn,
         status = status
     )
 }

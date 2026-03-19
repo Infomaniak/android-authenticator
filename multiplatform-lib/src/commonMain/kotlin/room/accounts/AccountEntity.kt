@@ -28,9 +28,10 @@ data class AccountEntity(
     val initials: String,
     val email: String,
     val avatarUrl: String? = null,
-    val isLoggedIn: Boolean,
     val status: Status,
 ) {
+    val isLoggedIn: Boolean get() = status == Status.LoggedIn
+
 
     enum class Status {
 

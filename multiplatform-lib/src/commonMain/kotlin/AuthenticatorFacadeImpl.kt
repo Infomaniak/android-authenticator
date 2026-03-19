@@ -265,7 +265,7 @@ internal class AuthenticatorFacadeImpl(
             userId = userId,
         ).firstOrNull()!!
         persistTokenForAccount(userId, tokenFromPasskeyAuth)
-        dao.upsert(notConnectedAccount.copy(isLoggedIn = true))
+        dao.upsert(notConnectedAccount.copy(status = AccountEntity.Status.LoggedIn))
     }
 
     private suspend inline fun <R> FlowCollector<NotConnectedAction?>.withRetries(
