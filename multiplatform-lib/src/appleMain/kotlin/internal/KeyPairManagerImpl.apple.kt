@@ -132,6 +132,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @OptIn(BetaInteropApi::class)
     actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
         val userIdPrefix = "$userId-"
         val (resultsArray, count) = getAllPrivateKeysQuery()
 
@@ -152,6 +153,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
         val (resultsArray, count) = getAllPrivateKeysQuery()
 
         if (resultsArray == null || count == 0) {
