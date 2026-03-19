@@ -41,15 +41,15 @@ internal class AuthenticatorManager(
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
-    suspend fun registerPasskey(token: String, userId: String) {
+    suspend fun registerPasskey(token: String, userId: Long) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
         val keyIdAsString = keyIds.second
-        keyPairManager.generateNewKey(userId.toLong(), keyIdAsString)?.let {
+        keyPairManager.generateNewKey(userId, keyIdAsString)?.let {
             throw Exception("Couldn't generate new key: ${it.details}")
         }
-        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId.toLong(), keyIdAsString).firstOrNull()!!
+        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
         val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(
             publicKey = publicKeyAsByteArray,
@@ -67,7 +67,7 @@ internal class AuthenticatorManager(
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
         val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No public key found forw $userId"))
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No public key found for $userId"))
         val rawAuthenticatorData = cryptoObjectsBuilder.generateAuthenticatorData(
             publicKey = publicKey,
             rpId = "infomaniak.ch",
@@ -80,7 +80,7 @@ internal class AuthenticatorManager(
         val clientDataJsonHash = clientDataJsonBytes.toByteString().sha256().toByteArray()
 
         val privateKey = keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No private key found forw $userId"))
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No private key found for $userId"))
         val verifyAuthenticationData = VerifyAuthenticationData(
             clientId = clientId,
             session = authenticationOptions.session,
@@ -104,11 +104,11 @@ internal class AuthenticatorManager(
         return Xor.First(webAuthnRepository.verify(verifyAuthenticationData).accessToken)
     }
 
-    suspend fun removeAccount(token: String, userId: String) {
-        val passkeyId = keyPairManager.findKeyIdFor(userId.toLong()).firstOrNull()
+    suspend fun removeAccount(token: String, userId: Long) {
+        val passkeyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
 
-        // This means this user is in error so in that case, we just need to remove the account id DB
         if (passkeyId != null) {
+            // If we have a passkey for this account, revoke it against the backend and delete it
             webAuthnRepository.deletePasskey(token, passkeyId)
             keyPairManager.deleteKey(passkeyId)
         }

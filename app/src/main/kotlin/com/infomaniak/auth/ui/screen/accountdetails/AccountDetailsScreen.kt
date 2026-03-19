@@ -61,6 +61,7 @@ import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
 import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -103,7 +104,7 @@ fun AccountDetailsScreen(
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
                 isCentered = false,
-                onBackPressed = { onBackPressed() }
+                onBackPressed = onBackPressed
             )
         }
     ) { paddingValues ->
@@ -178,7 +179,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
             .padding(top = Margin.Large)
             .padding(horizontal = Margin.Medium),
         variant = StatusCardVariant.Neutral,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(DefaultCornerRadius),
     ) {
         Column(
             modifier = Modifier.padding(Margin.Medium),
@@ -236,7 +237,7 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(top = Margin.Large),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(DefaultCornerRadius),
         variant = configuration.statusCardVariant,
     ) {
         Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {

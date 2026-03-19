@@ -47,5 +47,14 @@ sealed interface NavDestination : NavKey {
     data object Theme : NavDestination
 
     @Serializable
+    data object PrivacyManagement : NavDestination
+
+    @Serializable
+    data object PrivacyManagementMatomo : NavDestination
+
+    @Serializable
+    data object PrivacyManagementSentry : NavDestination
+
+    @Serializable
     data class AccountDetails(val accountId: Long) : NavDestination
 }

@@ -3,6 +3,8 @@ package com.infomaniak.auth.ui.theme
 import android.app.Activity
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -16,7 +18,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.StatusColorScheme
 import com.infomaniak.auth.ui.theme.color.brand10
@@ -61,6 +65,9 @@ import com.infomaniak.auth.ui.theme.color.red40
 import com.infomaniak.auth.ui.theme.color.red80
 import com.infomaniak.auth.ui.theme.color.red95
 import com.infomaniak.auth.ui.theme.color.red99
+import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
+import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 
 // Never access it directly outside the theme setup
@@ -198,11 +205,18 @@ fun AuthenticatorTheme(
 
     val customColors = if (isDarkTheme) darkCustomScheme else lightCustomScheme
     val statusColors = if (isDarkTheme) darkStatusColorScheme else lightStatusColorScheme
+    val privacyManagementTheme = PrivacyManagementTheme(
+        trackerContainerColor = customColors.sectionBackground,
+        trackerContainerContentColor = colorScheme.onSurface,
+        trackerContainerShape = RoundedCornerShape(DefaultCornerRadius),
+        trackerContainerPadding = PaddingValues(Margin.Medium, 0.dp)
+    )
 
     CompositionLocalProvider(
         LocalStatusColorScheme provides statusColors,
         LocalCustomColorScheme provides customColors,
-        LocalIsThemeDarkMode provides isDarkTheme
+        LocalIsThemeDarkMode provides isDarkTheme,
+        LocalPrivacyManagementTheme provides privacyManagementTheme
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

@@ -39,7 +39,7 @@ class AccountsRepository(
         dao.insert(account)
     }
 
-    suspend fun deleteAccount(id: String) {
+    suspend fun deleteAccount(id: Long) {
         dao.delete(id)
     }
 }

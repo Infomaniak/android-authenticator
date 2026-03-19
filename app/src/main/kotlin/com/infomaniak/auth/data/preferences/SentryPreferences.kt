@@ -15,12 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.theme
+@file:OptIn(ExperimentalSplittiesApi::class)
 
-import androidx.compose.ui.unit.dp
-import com.infomaniak.core.ui.compose.basics.Dimens.largeCornerRadius
+package com.infomaniak.auth.data.preferences
 
-object AppDimens {
-    val LargeButtonHeight = 48.dp
-    val DefaultCornerRadius = largeCornerRadius
+import kotlinx.coroutines.flow.Flow
+import splitties.experimental.ExperimentalSplittiesApi
+import splitties.preferences.Preferences
+import splitties.preferences.SuspendPrefsAccessor
+
+class SentryPreferences private constructor(): Preferences(name = "SentryPreferences") {
+    companion object : SuspendPrefsAccessor<SentryPreferences>(::SentryPreferences)
+
+    val isSentryAuthorizedFlow : Flow<Boolean>
+    var isSentryAuthorized by boolPref(key = "IsSentryAuthorized", defaultValue = true).also {
+        isSentryAuthorizedFlow = it.valueFlow()
+    }
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -44,9 +45,13 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun SettingsScreen(onThemeClicked: () -> Unit) {
+fun SettingsScreen(
+    onThemeClicked: () -> Unit,
+    onPrivacyManagementClicked: () -> Unit,
+) {
     val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
+    val hasBiometrics = remember { AppLockManager.hasBiometrics() }
     val notificationEnabled = GetSetCallbacks(
         get = { uiState.isNotificationEnabled },
         set = { appSettingsViewModel.setIsNotificationEnabled(it) }
@@ -56,7 +61,7 @@ fun SettingsScreen(onThemeClicked: () -> Unit) {
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
 
-    SettingsScreen(notificationEnabled, appLocked, onThemeClicked)
+    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked, hasBiometrics)
 }
 
 @Composable
@@ -64,6 +69,8 @@ private fun SettingsScreen(
     notificationEnabled: GetSetCallbacks<Boolean>,
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
+    onPrivacyManagementClicked: () -> Unit,
+    hasBiometrics: Boolean,
 ) {
     val fragmentActivity = LocalActivity.current as? FragmentActivity
 
@@ -75,7 +82,7 @@ private fun SettingsScreen(
                 onCheckedChange = { notificationEnabled.set(it) }
             )
         )
-        if (AppLockManager.hasBiometrics()) {
+        if (hasBiometrics) {
             add(
                 OptionItemType.WithCheckBox(
                     stringResId = R.string.unlockWithBiometrics,
@@ -103,7 +110,7 @@ private fun SettingsScreen(
         OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
             rightIconResId = R.drawable.right_indicator,
-            onClick = {},
+            onClick = onPrivacyManagementClicked,
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.feedbackTitle,
@@ -131,12 +138,14 @@ private fun SettingsScreen(
 
 @PreviewSmallWindow
 @Composable
-fun SettingsScreenPreview() {
+private fun SettingsScreenPreview() {
     AuthenticatorTheme {
         SettingsScreen(
             notificationEnabled = GetSetCallbacks(get = { true }, set = {}),
             appLocked = GetSetCallbacks(get = { true }, set = {}),
-            onThemeClicked = {}
+            onThemeClicked = {},
+            onPrivacyManagementClicked = {},
+            hasBiometrics = true,
         )
     }
 }

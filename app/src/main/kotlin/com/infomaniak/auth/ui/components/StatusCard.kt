@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
@@ -80,7 +81,7 @@ sealed interface StatusCardVariant {
 fun StatusCard(
     modifier: Modifier = Modifier,
     variant: StatusCardVariant = StatusCardVariant.Neutral,
-    shape: RoundedCornerShape = RoundedCornerShape(16.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(DefaultCornerRadius),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     MaterialTheme(colorScheme = variant.getMaterialTheme()) {

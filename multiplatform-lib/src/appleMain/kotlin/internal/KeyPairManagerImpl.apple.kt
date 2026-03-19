@@ -132,6 +132,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @OptIn(BetaInteropApi::class)
     actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
         val userIdPrefix = "$userId-"
         val (resultsArray, count) = getAllPrivateKeysQuery()
 
@@ -152,6 +153,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
         val (resultsArray, count) = getAllPrivateKeysQuery()
 
         if (resultsArray == null || count == 0) {
@@ -214,7 +216,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
+    private suspend fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
         val query = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
@@ -224,7 +226,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }
 
         val privateKeyRefVar = alloc<CFTypeRefVar>()
-        val resultStatus = SecItemCopyMatching(query, privateKeyRefVar.ptr)
+        val resultStatus = Dispatchers.IO { SecItemCopyMatching(query, privateKeyRefVar.ptr) }
 
         if (resultStatus != errSecSuccess || privateKeyRefVar.value == null) {
             throw Exception("Failed to retrieve private key from KeyChain (error: $resultStatus)")

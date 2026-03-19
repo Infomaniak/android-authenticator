@@ -67,7 +67,7 @@ class AccountDetailsViewModel @Inject constructor(
             accountIdFlow.value
                 ?.let { accountId -> accountUtils.users.first().first { it.id.toLong() == accountId } }
                 ?.let { user ->
-                    authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toString())
+                    authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toLong())
                     accountUtils.removeUser(user.id)
                 }
         }
