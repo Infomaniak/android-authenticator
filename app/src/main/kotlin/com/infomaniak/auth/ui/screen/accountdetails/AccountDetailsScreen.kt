@@ -19,11 +19,12 @@ package com.infomaniak.auth.ui.screen.accountdetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,9 +45,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -53,8 +59,8 @@ import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
-import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel
-import com.infomaniak.auth.ui.screen.home.FakeAccount
+import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
+import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Typography
@@ -64,28 +70,40 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun AccountDetails(
-    account: FakeAccount,
-    accountDetailsViewModel: AccountDetailsViewModel = hiltViewModel(),
+fun AccountDetailsScreen(
+    accountId: Long,
     onBackPressed: () -> Unit,
+    viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
-    AccountDetails(
-        account = account,
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAccountDetails(accountId)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.accountRemovedChannel.receive()
+        onBackPressed()
+    }
+
+    AccountDetailsScreen(
+        uiState = { uiState },
         onBackPressed = onBackPressed,
         onRemoveAccountClicked = {
-            accountDetailsViewModel.removeAccount()
-            onBackPressed()
+            viewModel.removeAccount()
         }
     )
 }
 
 @Composable
-private fun AccountDetails(
-    account: FakeAccount,
+fun AccountDetailsScreen(
+    uiState: () -> AccountDetailsUiState,
     onBackPressed: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
+        modifier = modifier.fillMaxSize(),
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
@@ -94,30 +112,48 @@ private fun AccountDetails(
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            Header(account)
-            SecurityCheck(AccountStatus.from(account.securityLevel))
-            if (account.securityLevel != AccountSecurityLevel.Secured) {
-                var hasLogin by remember { mutableStateOf(false) }
-                ActionRequired(
-                    hasLogin,
-                    logIn = {
-                        hasLogin = true
-                    }
+        when (val state = uiState()) {
+            is AccountDetailsUiState.Success -> {
+                AccountDetailsContent(
+                    paddingValues = paddingValues,
+                    account = state.account,
+                    onRemoveAccountClicked = onRemoveAccountClicked
                 )
             }
-            SettingsSections(
-                account.securityLevel,
-                onRemoveAccountClicked = onRemoveAccountClicked
-            )
+            is AccountDetailsUiState.Loading -> Unit
         }
     }
 }
 
 @Composable
-private fun Header(account: FakeAccount) {
+private fun AccountDetailsContent(
+    paddingValues: PaddingValues,
+    account: Account,
+    onRemoveAccountClicked: () -> Unit,
+) {
+    Column(
+        modifier = Modifier.padding(paddingValues)
+    ) {
+        Header(account)
+        SecurityCheck(account.status.toAccountStatus())
+        if (account.status != Account.Status.LoggedIn) {
+            var hasLogin by remember { mutableStateOf(false) }
+            ActionRequired(
+                hasLogin,
+                logIn = {
+                    hasLogin = true
+                }
+            )
+        }
+        SettingsSections(
+            accountStatus = account.status,
+            onRemoveAccountClicked = onRemoveAccountClicked
+        )
+    }
+}
+
+@Composable
+private fun Header(account: Account) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -133,7 +169,7 @@ private fun Header(account: FakeAccount) {
                 .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
         )
         Column {
-            Text(text = account.name, style = Typography.h1)
+            Text(text = account.fullName, style = Typography.h1)
             Text(text = account.email)
         }
     }
@@ -145,8 +181,7 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = Margin.Large)
-            .padding(horizontal = Margin.Medium)
-            .clickable(onClick = {}),
+            .padding(horizontal = Margin.Medium),
         variant = StatusCardVariant.Neutral,
         shape = RoundedCornerShape(DefaultCornerRadius),
     ) {
@@ -257,10 +292,11 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 
 @Composable
 private fun SettingsSections(
-    securityLevel: AccountSecurityLevel,
+    accountStatus: Account.Status,
     onRemoveAccountClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val firstSectionItem = if (securityLevel == AccountSecurityLevel.Secured) {
+    val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
         persistentListOf(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
@@ -284,11 +320,16 @@ private fun SettingsSections(
         OptionItemType.Default(
             stringResId = R.string.disconnectButton,
             textColor = AuthenticatorTheme.materialColors.error,
-            onClick = onRemoveAccountClicked,
+            onClick = {
+                onRemoveAccountClicked()
+            }
         ),
     )
 
-    OptionsSection(sections = persistentListOf(firstSectionItem, secondSectionItems))
+    OptionsSection(
+        modifier = modifier,
+        sections = persistentListOf(firstSectionItem, secondSectionItems)
+    )
 }
 
 private enum class AccountStatus(
@@ -315,28 +356,22 @@ private enum class AccountStatus(
     );
 
     companion object {
-
-        fun from(level: AccountSecurityLevel): AccountStatus {
-            //TODO check how a disconnected account is displayed on the accounts list
-            return when (level) {
-                AccountSecurityLevel.Secured -> Secured
-                AccountSecurityLevel.Warning -> PartiallyProtected
-                else -> Disconnected
-            }
+        fun Account.Status.toAccountStatus() = when (this) {
+            Account.Status.LoggedIn -> Secured
+            is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> PartiallyProtected
+            else -> Disconnected
         }
     }
 }
 
 @PreviewSmallWindow
 @Composable
-private fun AccountDetailsPreview() {
+private fun AccountDetailsScreenPreview(
+    @PreviewParameter(AccountPreviewParameter::class) account: Account
+) {
     AuthenticatorTheme {
-        AccountDetails(
-            account = FakeAccount(
-                name = "Laura Snow",
-                email = "laura.snow.ik.me",
-                securityLevel = AccountSecurityLevel.Warning,
-            ),
+        AccountDetailsScreen(
+            uiState = { AccountDetailsUiState.Success(account) },
             onBackPressed = {},
             onRemoveAccountClicked = {},
         )

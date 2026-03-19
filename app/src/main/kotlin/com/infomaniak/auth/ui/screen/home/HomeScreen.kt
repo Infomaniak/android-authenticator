@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -52,80 +53,103 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
+import com.infomaniak.auth.ui.previewparameter.fakeAccounts
+import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel.Companion.toAccountSecurityLevel
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.serialization.Serializable
 
 @Composable
-fun HomeScreen(onAccountClicked: (FakeAccount) -> Unit) {
-    //TODO get accounts from DB
-    val accounts = listOf(
-        FakeAccount(
-            name = "Laura Snow",
-            email = "laura.snow@ik.me",
-            securityLevel = AccountSecurityLevel.Secured,
-        ),
-        FakeAccount(
-            name = "Laura Snow",
-            email = "laura.snow@domain.com",
-            securityLevel = AccountSecurityLevel.Warning,
-        ),
-        FakeAccount(
-            name = "Laura Snow",
-            email = "laura.snow@subdomain.com",
-            securityLevel = AccountSecurityLevel.Danger,
-        ),
+fun HomeScreen(
+    onAccountClicked: (Account) -> Unit,
+    viewModel: HomeScreenViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    HomeScreen(
+        uiState = { uiState },
+        onAccountClicked = onAccountClicked
     )
+}
 
-    val hasUnsecuredAccounts: Boolean by remember(accounts) {
-        derivedStateOf { accounts.any { it.securityLevel != AccountSecurityLevel.Secured } }
-    }
-
+@Composable
+fun HomeScreen(
+    uiState: () -> HomeScreenUiState,
+    onAccountClicked: (Account) -> Unit,
+    modifier: Modifier = Modifier
+) {
     SinglePaneScaffold(
+        modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            if (hasUnsecuredAccounts) ActionRequired()
-
-            val state = rememberPullToRefreshState()
-            var isRefreshing by remember { mutableStateOf(false) }
-            // TODO Handle the refresh correctly when we'll have real data to fetch
-            LaunchedEffect(isRefreshing) {
-                if (isRefreshing) {
-                    delay(2_000)
-                    isRefreshing = false
-                }
+        when (val state = uiState()) {
+            is HomeScreenUiState.Success -> {
+                HomeScreenContent(
+                    paddingValues = paddingValues,
+                    accounts = state.accounts,
+                    onAccountClicked = onAccountClicked
+                )
             }
+            is HomeScreenUiState.Loading -> Unit
+        }
+    }
+}
 
-            PullToRefreshBox(
-                isRefreshing = isRefreshing,
-                state = state,
-                onRefresh = { isRefreshing = true },
+@Composable
+private fun HomeScreenContent(
+    paddingValues: PaddingValues,
+    accounts: ImmutableList<Account>,
+    onAccountClicked: (Account) -> Unit
+) {
+    val hasUnsecuredAccounts: Boolean by remember(accounts) {
+        derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+    ) {
+        if (hasUnsecuredAccounts) ActionRequired()
+
+        val state = rememberPullToRefreshState()
+        var isRefreshing by remember { mutableStateOf(false) }
+        // TODO Handle the refresh correctly when we'll have real data to fetch
+        LaunchedEffect(isRefreshing) {
+            if (isRefreshing) {
+                delay(2_000)
+                isRefreshing = false
+            }
+        }
+
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            state = state,
+            onRefresh = { isRefreshing = true },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(Margin.Small)
-                ) {
-                    accounts.forEach { account ->
-                        key(account.email) {
-                            AccountItem(account, onClick = { account -> onAccountClicked(account) })
-                        }
+                accounts.forEach { account ->
+                    key(account.email) {
+                        AccountItem(account, onClick = { account -> onAccountClicked(account) })
                     }
                 }
             }
@@ -157,7 +181,7 @@ private fun ActionRequired() {
 }
 
 @Composable
-private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
+private fun AccountItem(account: Account, onClick: (Account) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,35 +204,43 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
                     .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
             )
             Column(modifier = Modifier.padding(start = Margin.Medium)) {
-                Text(text = account.name)
+                Text(text = account.fullName)
                 Text(text = account.email)
             }
             Spacer(modifier = Modifier.weight(1f))
             //TODO Add a different content description when we're sure what represent each state
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
-                painter = painterResource(id = account.securityLevel.iconResId),
+                painter = painterResource(id = account.status.toAccountSecurityLevel().iconResId),
                 contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
-                tint = account.securityLevel.iconTint(),
+                tint = account.status.toAccountSecurityLevel().iconTint(),
             )
             Icon(painterResource(R.drawable.right_arrow), null)
         }
     }
 }
 
-enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
+private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
     Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }),
     Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
-    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
-}
+    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
 
-@Serializable
-data class FakeAccount(val name: String, val email: String, val securityLevel: AccountSecurityLevel)
+    companion object {
+        fun Account.Status.toAccountSecurityLevel() = when (this) {
+            Account.Status.LoggedIn -> Secured
+            is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> Warning
+            else -> Danger
+        }
+    }
+}
 
 @PreviewSmallWindow
 @Composable
 private fun HomeScreenPreview() {
     AuthenticatorTheme {
-        HomeScreen {}
+        HomeScreen(
+            uiState = { HomeScreenUiState.Success(fakeAccounts) },
+            onAccountClicked = {},
+        )
     }
 }

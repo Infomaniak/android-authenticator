@@ -22,7 +22,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.infomaniak.auth.ui.screen.accountdetails.AccountDetails
+import com.infomaniak.auth.ui.screen.accountdetails.AccountDetailsScreen
 import com.infomaniak.auth.ui.screen.home.HomeScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
@@ -40,8 +40,8 @@ fun baseEntryProvider(
 ): (NavKey) -> NavEntry<NavKey> = entryProvider {
     entry<NavDestination.Root.Home> {
         HomeScreen(
-            onAccountClicked = {
-                backStack.add(NavDestination.AccountDetails(it))
+            onAccountClicked = { account ->
+                backStack.add(NavDestination.AccountDetails(account.id))
             }
         )
     }
@@ -80,8 +80,8 @@ fun baseEntryProvider(
         PrivacyManagementSentryScreen(onBackPressed = backStack::popLast)
     }
     entry<NavDestination.AccountDetails> {
-        AccountDetails(
-            it.account,
+        AccountDetailsScreen(
+            it.accountId,
             onBackPressed = backStack::popLast
         )
     }

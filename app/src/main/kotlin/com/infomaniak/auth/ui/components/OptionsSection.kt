@@ -62,7 +62,10 @@ fun OptionsSection(
     sections: ImmutableList<ImmutableList<OptionItemType>>,
     modifier: Modifier = Modifier,
 ) {
-    OptionsSectionContainer(sections, modifier) { optionItems ->
+    OptionsSectionContainer(
+        modifier = modifier,
+        sections = sections
+    ) { optionItems ->
         optionItems.forEachIndexed { index, optionItemType ->
             OptionItem(optionItemType = optionItemType)
 
