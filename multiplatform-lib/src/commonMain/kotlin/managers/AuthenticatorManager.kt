@@ -67,7 +67,7 @@ internal class AuthenticatorManager(
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
         val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No public key found forw $userId"))
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No public key found for $userId"))
         val rawAuthenticatorData = cryptoObjectsBuilder.generateAuthenticatorData(
             publicKey = publicKey,
             rpId = "infomaniak.ch",
@@ -80,7 +80,7 @@ internal class AuthenticatorManager(
         val clientDataJsonHash = clientDataJsonBytes.toByteString().sha256().toByteArray()
 
         val privateKey = keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No private key found forw $userId"))
+            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No private key found for $userId"))
         val verifyAuthenticationData = VerifyAuthenticationData(
             clientId = clientId,
             session = authenticationOptions.session,
