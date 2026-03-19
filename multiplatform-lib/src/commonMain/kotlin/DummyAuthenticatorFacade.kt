@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlin.time.Duration
 
-class DummyAuthenticatorFacade(
+class DummyAuthenticatorFacade internal constructor(
     private val accountsRepository: AccountsRepository,
     private val authenticatorManager: AuthenticatorManager,
     scope: CoroutineScope,
