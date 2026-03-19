@@ -17,14 +17,37 @@
  */
 package com.infomaniak.auth.ui.screen.home
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    val authenticator: AuthenticatorFacade
+    authenticatorFacade: AuthenticatorFacade
 ) : ViewModel() {
+    val uiState: StateFlow<HomeScreenUiState> = authenticatorFacade.accounts
+        .map { accounts ->
+            if (accounts.isEmpty()) HomeScreenUiState.Loading else HomeScreenUiState.Success(accounts.toPersistentList())
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            HomeScreenUiState.Loading
+        )
+}
 
+@Immutable
+sealed interface HomeScreenUiState {
+    data object Loading : HomeScreenUiState
+    data class Success(val accounts: ImmutableList<Account>) : HomeScreenUiState
 }

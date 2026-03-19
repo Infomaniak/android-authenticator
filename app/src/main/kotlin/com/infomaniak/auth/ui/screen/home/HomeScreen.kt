@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -68,7 +69,6 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaf
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 
 @Composable
@@ -76,58 +76,79 @@ fun HomeScreen(
     onAccountClicked: (Account) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
-    val accounts by viewModel.authenticator.accounts.collectAsStateWithLifecycle(emptyList())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    HomeScreen(accounts.toPersistentList(), onAccountClicked)
+    HomeScreen(
+        uiState = { uiState },
+        onAccountClicked = onAccountClicked
+    )
 }
 
 @Composable
 fun HomeScreen(
-    accounts: ImmutableList<Account>,
+    uiState: () -> HomeScreenUiState,
     onAccountClicked: (Account) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val hasUnsecuredAccounts: Boolean by remember(accounts) {
-        derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
-    }
-
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            if (hasUnsecuredAccounts) ActionRequired()
-
-            val state = rememberPullToRefreshState()
-            var isRefreshing by remember { mutableStateOf(false) }
-            // TODO Handle the refresh correctly when we'll have real data to fetch
-            LaunchedEffect(isRefreshing) {
-                if (isRefreshing) {
-                    delay(2_000)
-                    isRefreshing = false
-                }
+        when (val state = uiState()) {
+            is HomeScreenUiState.Success -> {
+                HomeScreenContent(
+                    paddingValues = paddingValues,
+                    accounts = state.accounts,
+                    onAccountClicked = onAccountClicked
+                )
             }
+            is HomeScreenUiState.Loading -> Unit
+        }
+    }
+}
 
-            PullToRefreshBox(
-                isRefreshing = isRefreshing,
-                state = state,
-                onRefresh = { isRefreshing = true },
+@Composable
+private fun HomeScreenContent(
+    paddingValues: PaddingValues,
+    accounts: ImmutableList<Account>,
+    onAccountClicked: (Account) -> Unit
+) {
+    val hasUnsecuredAccounts: Boolean by remember(accounts) {
+        derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+    ) {
+        if (hasUnsecuredAccounts) ActionRequired()
+
+        val state = rememberPullToRefreshState()
+        var isRefreshing by remember { mutableStateOf(false) }
+        // TODO Handle the refresh correctly when we'll have real data to fetch
+        LaunchedEffect(isRefreshing) {
+            if (isRefreshing) {
+                delay(2_000)
+                isRefreshing = false
+            }
+        }
+
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            state = state,
+            onRefresh = { isRefreshing = true },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(Margin.Small)
-                ) {
-                    accounts.forEach { account ->
-                        key(account.email) {
-                            AccountItem(account, onClick = { account -> onAccountClicked(account) })
-                        }
+                accounts.forEach { account ->
+                    key(account.email) {
+                        AccountItem(account, onClick = { account -> onAccountClicked(account) })
                     }
                 }
             }
@@ -217,7 +238,7 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
 private fun HomeScreenPreview() {
     AuthenticatorTheme {
         HomeScreen(
-            accounts = fakeAccounts,
+            uiState = { HomeScreenUiState.Success(fakeAccounts) },
             onAccountClicked = {},
         )
     }
