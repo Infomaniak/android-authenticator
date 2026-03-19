@@ -19,4 +19,4 @@ package com.infomaniak.auth.lib.db
 
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
 
-expect fun getAccountsRoomDatabase(): AccountsDatabase
+expect fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase
