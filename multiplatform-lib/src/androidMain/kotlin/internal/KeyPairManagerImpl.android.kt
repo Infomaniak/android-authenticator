@@ -20,6 +20,7 @@ package com.infomaniak.auth.lib.internal
 import com.infomaniak.auth.lib.Failure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
+import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 import java.io.File
 
@@ -57,19 +58,25 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
-        val userPassKey = appCtx.filesDir.listFiles()?.find { it.name.startsWith(userId.toString()) }
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
-        val regex = Regex("-(([^-]+))")
-        val match = regex.find(userPassKey.name)
-        val keyId = match?.groupValues?.get(1)
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No Key ID found"))
+        val userPassKey: File = withContext(Dispatchers.IO) {
+            appCtx.filesDir.listFiles()
+        }?.find {
+            it.name.startsWith(userId.toString())
+        } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+
+        val keyId = userPassKey.name.split('-').getOrElse(1) {
+            return Xor.Second(Failure.KeyManagement.KeyNotFound("No Key ID found"))
+        }
 
         return Xor.First(keyId)
     }
 
     actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
-        val keys = appCtx.filesDir.listFiles()?.filter { it.name.contains(keyId) }
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+        val keys = withContext(Dispatchers.IO) {
+            appCtx.filesDir.listFiles()
+        }?.filter {
+            it.name.contains(keyId)
+        } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
         keys.forEach { it.delete() }
 
