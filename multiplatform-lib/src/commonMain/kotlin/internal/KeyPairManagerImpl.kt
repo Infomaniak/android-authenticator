@@ -20,7 +20,13 @@ package com.infomaniak.auth.lib.internal
 import com.infomaniak.auth.lib.Failure
 
 internal expect class KeyPairManagerImpl() : KeyPairManager {
-    override suspend fun generateNewKey(userId: Int, keyId: String): Failure.KeyManagement.GenerationFailed?
-    override suspend fun retrievePublicKey(userId: Int, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
-    override suspend fun retrievePrivateKey(userId: Int, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed?
+    override suspend fun retrievePublicKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    override suspend fun retrievePrivateKey(
+        userId: Long,
+        keyId: String
+    ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+
+    override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound>
+    override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound>
 }

@@ -21,7 +21,6 @@ import com.infomaniak.auth.lib.AuthenticatorInjection
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
-import com.infomaniak.auth.manager.AccountUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +34,9 @@ object AuthenticatorInjectionModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticatorInjection(@UserAgent userAgent: String, accountUtils: AccountUtils): AuthenticatorInjection {
+    fun provideAuthenticatorInjection(
+        @UserAgent userAgent: String,
+    ): AuthenticatorInjection {
         return AuthenticatorInjection(
             environment = ApiEnvironment.Staging,
             userAgent = userAgent,
@@ -68,7 +69,4 @@ object AuthenticatorInjectionModule {
             },
         )
     }
-
-    @Provides
-    fun provideAuthenticatorManager(authenticatorInjection: AuthenticatorInjection) = authenticatorInjection.authenticatorManager
 }

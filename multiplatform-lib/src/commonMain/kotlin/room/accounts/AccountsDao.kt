@@ -32,6 +32,9 @@ interface AccountsDao {
     @Upsert
     suspend fun upsert(account: AccountEntity)
 
+    @Upsert
+    suspend fun upsert(accounts: List<AccountEntity>)
+
     @Insert
     suspend fun insert(account: AccountEntity)
 

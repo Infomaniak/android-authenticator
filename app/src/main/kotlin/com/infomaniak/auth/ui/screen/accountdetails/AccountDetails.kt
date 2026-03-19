@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen
+package com.infomaniak.auth.ui.screen.accountdetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -63,13 +64,33 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun AccountDetails(account: FakeAccount, onBackPressed: () -> Unit) {
+fun AccountDetails(
+    account: FakeAccount,
+    accountDetailsViewModel: AccountDetailsViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
+) {
+    AccountDetails(
+        account = account,
+        onBackPressed = onBackPressed,
+        onRemoveAccountClicked = {
+            accountDetailsViewModel.removeAccount()
+            onBackPressed()
+        }
+    )
+}
+
+@Composable
+private fun AccountDetails(
+    account: FakeAccount,
+    onBackPressed: () -> Unit,
+    onRemoveAccountClicked: () -> Unit,
+) {
     SinglePaneScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
                 isCentered = false,
-                onBackPressed = { onBackPressed() }
+                onBackPressed = onBackPressed
             )
         }
     ) { paddingValues ->
@@ -87,7 +108,10 @@ fun AccountDetails(account: FakeAccount, onBackPressed: () -> Unit) {
                     }
                 )
             }
-            SettingsSections(modifier = Modifier.padding(paddingValues), account.securityLevel)
+            SettingsSections(
+                account.securityLevel,
+                onRemoveAccountClicked = onRemoveAccountClicked
+            )
         }
     }
 }
@@ -232,7 +256,10 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 }
 
 @Composable
-private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: AccountSecurityLevel) {
+private fun SettingsSections(
+    securityLevel: AccountSecurityLevel,
+    onRemoveAccountClicked: () -> Unit,
+) {
     val firstSectionItem = if (securityLevel == AccountSecurityLevel.Secured) {
         persistentListOf(
             OptionItemType.WithRightIcon(
@@ -257,6 +284,7 @@ private fun SettingsSections(modifier: Modifier = Modifier, securityLevel: Accou
         OptionItemType.Default(
             stringResId = R.string.disconnectButton,
             textColor = AuthenticatorTheme.materialColors.error,
+            onClick = onRemoveAccountClicked,
         ),
     )
 
@@ -301,15 +329,16 @@ private enum class AccountStatus(
 
 @PreviewSmallWindow
 @Composable
-fun AccountDetailsPreview() {
+private fun AccountDetailsPreview() {
     AuthenticatorTheme {
         AccountDetails(
-            FakeAccount(
+            account = FakeAccount(
                 name = "Laura Snow",
                 email = "laura.snow.ik.me",
                 securityLevel = AccountSecurityLevel.Warning,
             ),
             onBackPressed = {},
+            onRemoveAccountClicked = {},
         )
     }
 }

@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.screen.settings.privacymanagement
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -49,12 +50,13 @@ fun PrivacyManagementScreen(
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = true,
                 isCentered = false,
-                onBackPressed = { onBackPressed() }
+                onBackPressed = onBackPressed
             )
         }
     ) { paddingValues ->
         PrivacyManagementHomeContent(
             modifier = Modifier.padding(paddingValues),
+            contentPadding = PaddingValues(horizontal = Margin.Medium),
             sourceUrl = BuildConfig.GITHUB_REPO_URL,
             trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
             header = {

@@ -33,7 +33,7 @@ fun getAccountsDatabaseBuilder(): RoomDatabase.Builder<AccountsDatabase> {
     )
 }
 
-fun getAccountsRoomDatabase(): AccountsDatabase {
+actual fun getAccountsRoomDatabase(): AccountsDatabase {
     return getAccountsRoomDatabase(getAccountsDatabaseBuilder())
 }
 
