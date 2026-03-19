@@ -31,7 +31,7 @@ internal interface KeyPairManager {
 
     suspend fun retrievePrivateKey(userId: Int, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 
-    suspend fun findKeyIdFor(userId: Int): Xor<String, Failure.KeyManagement.KeyNotFound>
+    suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound>
 
     suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound>
 

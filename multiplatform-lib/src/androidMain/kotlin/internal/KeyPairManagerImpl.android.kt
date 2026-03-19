@@ -56,8 +56,8 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
-    actual override suspend fun findKeyIdFor(userId: Int): Xor<String, Failure.KeyManagement.KeyNotFound> {
-        val userPassKey = appCtx.filesDir.listFiles()?.find { it.name.contains(userId.toString()) }
+    actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
+        val userPassKey = appCtx.filesDir.listFiles()?.find { it.name.startsWith(userId.toString()) }
             ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
         val regex = Regex("-(([^-]+))")
         val match = regex.find(userPassKey.name)
