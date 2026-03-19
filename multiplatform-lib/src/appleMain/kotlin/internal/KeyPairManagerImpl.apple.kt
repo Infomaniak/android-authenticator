@@ -214,7 +214,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
+    private suspend fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
         val query = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
@@ -224,7 +224,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }
 
         val privateKeyRefVar = alloc<CFTypeRefVar>()
-        val resultStatus = SecItemCopyMatching(query, privateKeyRefVar.ptr)
+        val resultStatus = Dispatchers.IO { SecItemCopyMatching(query, privateKeyRefVar.ptr) }
 
         if (resultStatus != errSecSuccess || privateKeyRefVar.value == null) {
             throw Exception("Failed to retrieve private key from KeyChain (error: $resultStatus)")
