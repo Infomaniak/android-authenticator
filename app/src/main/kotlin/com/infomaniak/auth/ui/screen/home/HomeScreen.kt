@@ -56,6 +56,7 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -138,7 +139,7 @@ private fun ActionRequired() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium, vertical = Margin.Large),
-        shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        shape = RoundedCornerShape(DefaultCornerRadius),
         variant = StatusCardVariant.Warning,
     ) {
         Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
@@ -161,7 +162,7 @@ private fun AccountItem(account: FakeAccount, onClick: (FakeAccount) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
-            .clip(RoundedCornerShape(Dimens.largeCornerRadius))
+            .clip(RoundedCornerShape(DefaultCornerRadius))
             .clickable(onClick = { onClick(account) }),
         colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
     ) {
@@ -206,7 +207,7 @@ data class FakeAccount(val name: String, val email: String, val securityLevel: A
 
 @PreviewSmallWindow
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
     AuthenticatorTheme {
         HomeScreen {}
     }

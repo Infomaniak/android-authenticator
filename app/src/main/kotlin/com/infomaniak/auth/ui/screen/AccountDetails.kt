@@ -182,7 +182,7 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = Margin.Medium)
             .padding(top = Margin.Large),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(DefaultCornerRadius),
         variant = configuration.statusCardVariant,
     ) {
         Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
