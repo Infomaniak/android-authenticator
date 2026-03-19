@@ -70,7 +70,7 @@ class DummyAuthenticatorFacade internal constructor(
                     fullName = "John",
                     initials = "Smith",
                     email = "john.smith@example.com",
-                    avatarUrl = "https://picsum.photos/id/3/200/200",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/1788629?v=4",
                     status = Account.Status.NotConnected(null)
                 )
                 _accounts += legacyAccount.copy(
