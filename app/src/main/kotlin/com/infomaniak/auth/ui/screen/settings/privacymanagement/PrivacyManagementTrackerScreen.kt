@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.settings.privacymanagement
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -44,13 +45,13 @@ fun PrivacyManagementTrackerScreen(
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = true,
                 isCentered = false,
-                onBackPressed = { onBackPressed() }
+                onBackPressed = onBackPressed
             )
         }
     ) { paddingValues ->
         PrivacyManagementTrackerContent(
-            modifier = Modifier.padding(paddingValues)
-                .padding(horizontal = Margin.Medium),
+            modifier = Modifier.padding(paddingValues),
+            contentPadding = PaddingValues(horizontal = Margin.Medium),
             tracker = tracker,
             isTrackerEnabled = isTrackerEnabled,
             onTrackerSwitchClick = onTrackerSwitchClick

@@ -69,7 +69,7 @@ fun AccountDetails(account: FakeAccount, onBackPressed: () -> Unit) {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
                 isCentered = false,
-                onBackPressed = { onBackPressed() }
+                onBackPressed = onBackPressed
             )
         }
     ) { paddingValues ->
