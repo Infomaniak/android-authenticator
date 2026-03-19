@@ -26,10 +26,11 @@ import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
@@ -43,10 +44,9 @@ class AccountDetailsViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
-    private val accountIdFlow = MutableStateFlow<Long?>(null)
+    private val accountIdFlow = MutableSharedFlow<Long>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     val uiState: StateFlow<AccountDetailsUiState> = accountIdFlow
-        .filterNotNull()
         .flatMapLatest { id ->
             authenticatorFacade.accounts.mapNotNull { accounts ->
                 accounts.find { it.id == id }?.let { AccountDetailsUiState.Success(it) }
@@ -58,17 +58,20 @@ class AccountDetailsViewModel @Inject constructor(
             initialValue = AccountDetailsUiState.Loading
         )
 
+    val accountRemovedChannel = Channel<Unit>(Channel.CONFLATED)
+
     fun fetchAccountDetails(accountId: Long) {
-        accountIdFlow.value = accountId
+        accountIdFlow.tryEmit(accountId)
     }
 
     fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
-            accountIdFlow.value
-                ?.let { accountId -> accountUtils.users.first().firstOrNull { it.id.toLong() == accountId } }
+            accountIdFlow.first()
+                .let { accountId -> accountUtils.users.first().firstOrNull { it.id.toLong() == accountId } }
                 ?.let { user ->
                     authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toLong())
                     accountUtils.removeUser(user.id)
+                    accountRemovedChannel.send(Unit)
                 }
         }
     }

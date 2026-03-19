@@ -77,8 +77,13 @@ fun AccountDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(accountId) {
+    LaunchedEffect(Unit) {
         viewModel.fetchAccountDetails(accountId)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.accountRemovedChannel.receive()
+        onBackPressed()
     }
 
     AccountDetailsScreen(
@@ -86,7 +91,6 @@ fun AccountDetailsScreen(
         onBackPressed = onBackPressed,
         onRemoveAccountClicked = {
             viewModel.removeAccount()
-            onBackPressed()
         }
     )
 }
