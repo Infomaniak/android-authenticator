@@ -77,6 +77,19 @@ internal class AuthenticatorFacadeImpl(
         entities.any { entity -> entity.isLoggedIn }
     }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.WhileSubscribed(), replay = 1)
 
+    private val accountsToLogin = DynamicLazyMap.sharedFlow(
+        coroutineScope = coroutineScope,
+        cacheManager = { _, _ ->
+            delay(5.seconds) // Should be more than enough to keep the state between re-uses.
+        }
+    ) { userId: Long ->
+        loginAttemptsFlow(userId)
+    }
+
+    private val proceedMigration: CompletableJob = Job()
+
+    private val flowOfNull = flowOf(null)
+
     override val accounts: Flow<List<Account>> = channelFlow {
         accountEntities.collectLatest { entities ->
             val idsOfAccountsToLogIn = entities.mapNotNull { entity -> entity.id.takeUnless { entity.isLoggedIn } }.toSet()
@@ -86,6 +99,22 @@ internal class AuthenticatorFacadeImpl(
             }
         }
     }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+
+    override val appStatus: Flow<AppStatus> = appStatusFlow().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+
+    override suspend fun addAccounts(connectedAccounts: List<Account>) {
+        val entities = connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) }
+        dao.upsert(entities)
+    }
+
+    override suspend fun removeAccount(token: String, id: Long) {
+        authenticatorManager.removeAccount(token, id)
+        dao.delete(id)
+    }
+
+    override suspend fun registerPasskey(token: String, userId: Long) {
+        authenticatorManager.registerPasskey(token, userId)
+    }
 
     private fun accountsFlow(
         entities: List<AccountEntity>,
@@ -97,10 +126,7 @@ internal class AuthenticatorFacadeImpl(
         }
     }
 
-    private val flowOfNull = flowOf(null)
-
-
-    override val appStatus: Flow<AppStatus> = flow {
+    private fun appStatusFlow(): Flow<AppStatus> = flow {
         var needsToShowOnboarding = false
 
         val appStatusFlow: Flow<AppStatus> = accountEntities.transformLatest { entities ->
@@ -110,7 +136,8 @@ internal class AuthenticatorFacadeImpl(
             if (noConnectedAccount) {
                 needsToShowOnboarding = true
                 if (entities.isEmpty()) {
-                    emit(AppStatus.LoginRequired.NotMigrating) /** Waiting for [addAccounts] to be called. */
+                    emit(AppStatus.LoginRequired.NotMigrating)
+                    /** Waiting for [addAccounts] to be called. */
                 } else {
                     val needsMigration = entities.any { it.status == AccountEntity.Status.ToBeMigrated }
                     if (needsMigration) {
@@ -135,22 +162,7 @@ internal class AuthenticatorFacadeImpl(
         }
 
         emitAll(appStatusFlow)
-        //TODO: Ensure the status changes match what the KDoc in AppStatus claims.
-    }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
-
-    override suspend fun addAccounts(connectedAccounts: List<Account>) {
-        val entities = connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) }
-        dao.upsert(entities)
-    }
-
-    private val accountsToLogin = DynamicLazyMap.sharedFlow(
-        coroutineScope = coroutineScope,
-        cacheManager = { _, _ ->
-            delay(5.seconds) // Should be more than enough to keep the state between re-uses.
-        }
-    ) { userId: Long ->
-        loginAttemptsFlow(userId)
-    }
+    }.distinctUntilChanged()
 
     private fun loginAttemptsFlow(userId: Long): Flow<NotConnectedAction?> = dao.get(userId).transformLatest { entity ->
         emit(null)
@@ -162,8 +174,6 @@ internal class AuthenticatorFacadeImpl(
             AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
         }
     }
-
-    private val proceedMigration: CompletableJob = Job()
 
     private suspend fun shouldTryImmediateLogin(): Boolean = raceOf(
         { proceedMigration.join(); true },
@@ -260,15 +270,6 @@ internal class AuthenticatorFacadeImpl(
         ).firstOrNull()!!
         persistTokenForAccount(userId, tokenFromPasskeyAuth)
         dao.upsert(notConnectedAccount.copy(isLoggedIn = true))
-    }
-
-    override suspend fun removeAccount(token: String, id: Long) {
-        authenticatorManager.removeAccount(token, id)
-        dao.delete(id)
-    }
-
-    override suspend fun registerPasskey(token: String, userId: Long) {
-        authenticatorManager.registerPasskey(token, userId)
     }
 
     private suspend inline fun <R> FlowCollector<NotConnectedAction?>.withRetries(
