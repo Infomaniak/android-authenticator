@@ -18,10 +18,16 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.db.getAccountsRoomDatabase
+import com.infomaniak.auth.lib.managers.AuthenticatorManager
+import com.infomaniak.auth.lib.network.ApiClientProvider
+import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
+import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
 import com.infomaniak.auth.lib.repository.AccountsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import network.utils.ApiEnvironment
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -29,14 +35,28 @@ abstract class AuthenticatorFacade internal constructor() {
     companion object {
 
         fun dummyInstance(
+            userAgent: String,
+            environment: ApiEnvironment,
+            crashReport: CrashReportInterface?,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
         ): AuthenticatorFacade {
+            val webAuthnRepository = WebAuthnRepository(
+                authenticatorRequest = AuthenticatorRequest(
+                    httpClient = ApiClientProvider(
+                        userAgent = userAgent,
+                        environment = environment,
+                        crashReport = crashReport,
+                    ).httpClient
+                )
+            )
             val accountsRepository = AccountsRepository(getAccountsRoomDatabase())
-
+            val authenticatorManager =
+                AuthenticatorManager(webAuthnRepository = webAuthnRepository, accountsRepository = accountsRepository)
             return DummyAuthenticatorFacade(
                 accountsRepository = accountsRepository,
+                authenticatorManager = authenticatorManager,
                 scope = scope,
                 loadingDuration = loadingDurationMillis.milliseconds,
                 resetAfter = resetAfterMillis.milliseconds,
@@ -54,4 +74,15 @@ abstract class AuthenticatorFacade internal constructor() {
      * Will lead to [appStatus] to switch to the [AppStatus.LoggingIn] case.
      */
     abstract suspend fun addAccounts(connectedAccounts: List<Account>)
+
+    /**
+     * Remove account from the authenticator.
+     */
+    abstract suspend fun removeAccount(token: String, id: Long)
+
+    /**
+     * Register passkey.
+     */
+    // TODO Remove this method and its usages because it'll be called internally
+    abstract suspend fun registerPasskey(token: String, userId: Long)
 }

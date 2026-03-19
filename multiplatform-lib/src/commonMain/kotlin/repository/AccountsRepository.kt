@@ -31,6 +31,10 @@ class AccountsRepository(
         dao.upsert(account)
     }
 
+    suspend fun upsertAccounts(accounts: List<AccountEntity>) {
+        dao.upsert(accounts)
+    }
+
     suspend fun insertAccount(account: AccountEntity) {
         dao.insert(account)
     }

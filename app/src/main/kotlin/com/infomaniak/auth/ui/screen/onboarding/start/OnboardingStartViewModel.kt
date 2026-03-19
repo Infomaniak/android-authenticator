@@ -24,7 +24,6 @@ import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.auth.models.UserLoginResult
@@ -47,7 +46,6 @@ class OnboardingStartViewModel @Inject constructor(
     @ApplicationContext val context: Context,
     val infomaniakLogin: InfomaniakLogin,
     val accountUtils: AccountUtils,
-    val authenticatorManager: AuthenticatorManager,
     val authenticatorFacade: AuthenticatorFacade,
 ) : BaseCrossAppLoginViewModel(BuildConfig.APPLICATION_ID, BuildConfig.CLIENT_ID) {
     private val _isButtonLoading = MutableStateFlow(false)
@@ -60,7 +58,7 @@ class OnboardingStartViewModel @Inject constructor(
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
             users.forEach { user ->
-                authenticatorManager.registerPasskey(user.apiToken.accessToken, user.id)
+                authenticatorFacade.registerPasskey(user.apiToken.accessToken, user.id.toLong())
                 addUserToAuthenticatorDB(user)
                 accountUtils.addUser(user)
             }

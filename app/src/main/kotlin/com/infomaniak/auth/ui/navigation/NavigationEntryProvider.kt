@@ -22,7 +22,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.infomaniak.auth.ui.screen.AccountDetails
+import com.infomaniak.auth.ui.screen.accountdetails.AccountDetails
 import com.infomaniak.auth.ui.screen.home.HomeScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
@@ -57,7 +57,7 @@ fun baseEntryProvider(
     }
     entry<NavDestination.AccountDetails> {
         AccountDetails(
-            it.account,
+            account = it.account,
             onBackPressed = {
                 backStack.removeAt(backStack.lastIndex)
             }
