@@ -22,6 +22,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.manager.AccountUtils
@@ -46,6 +48,7 @@ class OnboardingStartViewModel @Inject constructor(
     val infomaniakLogin: InfomaniakLogin,
     val accountUtils: AccountUtils,
     val authenticatorManager: AuthenticatorManager,
+    val authenticatorFacade: AuthenticatorFacade,
 ) : BaseCrossAppLoginViewModel(BuildConfig.APPLICATION_ID, BuildConfig.CLIENT_ID) {
     private val _isButtonLoading = MutableStateFlow(false)
     val isButtonLoading = _isButtonLoading.asStateFlow()
@@ -58,10 +61,23 @@ class OnboardingStartViewModel @Inject constructor(
         viewModelScope.launch {
             users.forEach { user ->
                 authenticatorManager.registerPasskey(user.apiToken.accessToken, user.id)
+                addUserToAuthenticatorDB(user)
                 accountUtils.addUser(user)
             }
             _onLoginFinishedEvent.emit(Unit)
         }
+    }
+
+    private suspend fun addUserToAuthenticatorDB(user: User) {
+        val connectedAccount = Account(
+            id = user.id.toLong(),
+            fullName = "${user.firstname} ${user.lastname}",
+            initials = user.getInitials(),
+            email = user.email,
+            avatarUrl = user.avatar,
+            status = Account.Status.LoggedIn,
+        )
+        authenticatorFacade.addAccounts(listOf(connectedAccount))
     }
 
     suspend fun connectSelectedAccounts(
