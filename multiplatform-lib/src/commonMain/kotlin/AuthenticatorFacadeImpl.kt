@@ -112,10 +112,6 @@ internal class AuthenticatorFacadeImpl(
         dao.delete(id)
     }
 
-    override suspend fun registerPasskey(token: String, userId: Long) {
-        authenticatorManager.registerPasskey(token, userId)
-    }
-
     private fun accountsFlow(
         entities: List<AccountEntity>,
         accountsToLogin: Map<Long, Flow<NotConnectedAction?>>
