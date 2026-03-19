@@ -41,15 +41,15 @@ internal class AuthenticatorManager(
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
-    suspend fun registerPasskey(token: String, userId: String) {
+    suspend fun registerPasskey(token: String, userId: Long) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
         val keyIdAsString = keyIds.second
-        keyPairManager.generateNewKey(userId.toLong(), keyIdAsString)?.let {
+        keyPairManager.generateNewKey(userId, keyIdAsString)?.let {
             throw Exception("Couldn't generate new key: ${it.details}")
         }
-        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId.toLong(), keyIdAsString).firstOrNull()!!
+        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
 
         val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(
             publicKey = publicKeyAsByteArray,
@@ -104,8 +104,8 @@ internal class AuthenticatorManager(
         return Xor.First(webAuthnRepository.verify(verifyAuthenticationData).accessToken)
     }
 
-    suspend fun removeAccount(token: String, userId: String) {
-        val passkeyId = keyPairManager.findKeyIdFor(userId.toLong()).firstOrNull()
+    suspend fun removeAccount(token: String, userId: Long) {
+        val passkeyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
 
         // This means this user is in error so in that case, we just need to remove the account id DB
         if (passkeyId != null) {

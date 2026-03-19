@@ -92,12 +92,12 @@ class DummyAuthenticatorFacade internal constructor(
         accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity() })
     }
 
-    override suspend fun removeAccount(token: String, id: String) {
+    override suspend fun removeAccount(token: String, id: Long) {
         authenticatorManager.removeAccount(token, id)
         accountsRepository.deleteAccount(id)
     }
 
-    override suspend fun registerPasskey(token: String, userId: String) {
+    override suspend fun registerPasskey(token: String, userId: Long) {
         authenticatorManager.registerPasskey(token, userId)
     }
 }
