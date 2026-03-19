@@ -58,16 +58,14 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
+        val fileNamePrefix = "$userId-"
         val userPassKey: File = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.find {
-            it.name.startsWith(userId.toString())
+            it.name.startsWith(fileNamePrefix)
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
-        val keyId = userPassKey.name.split('-').getOrElse(1) {
-            return Xor.Second(Failure.KeyManagement.KeyNotFound("No Key ID found"))
-        }
-
+        val keyId = userPassKey.name.substringAfter(fileNamePrefix).substringBefore('-')
         return Xor.First(keyId)
     }
 
@@ -75,7 +73,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         val keys = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.filter {
-            it.name.contains(keyId)
+            it.name.contains("-$keyId-")
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
         keys.forEach { it.delete() }
