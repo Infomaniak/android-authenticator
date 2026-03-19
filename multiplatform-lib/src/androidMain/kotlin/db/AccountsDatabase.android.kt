@@ -17,22 +17,16 @@
  */
 package com.infomaniak.auth.lib.db
 
-import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
 import com.infomaniak.auth.lib.room.accounts.getAccountsRoomDatabase
 import splitties.init.appCtx
 
-fun getAccountsDatabaseBuilder(context: Context): RoomDatabase.Builder<AccountsDatabase> {
-    val appContext = context.applicationContext
-    val dbFile = appContext.getDatabasePath("accounts.db")
-    return Room.databaseBuilder<AccountsDatabase>(
-        context = appContext,
-        name = dbFile.absolutePath
+actual fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase {
+    val dbBuilder = Room.databaseBuilder<AccountsDatabase>(
+        context = appCtx,
+        name = databaseNameOrPath ?: "accounts.db"
     )
-}
-
-actual fun getAccountsRoomDatabase(): AccountsDatabase {
-    return getAccountsRoomDatabase(getAccountsDatabaseBuilder(appCtx))
+    return getAccountsRoomDatabase(dbBuilder)
 }

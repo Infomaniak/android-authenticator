@@ -34,6 +34,44 @@ import kotlin.time.Duration.Companion.seconds
 abstract class AuthenticatorFacade internal constructor() {
     companion object {
 
+        fun create(
+            environment: ApiEnvironment,
+            userAgent: String,
+            clientId: String,
+            databaseNameOrPath: String? = null,
+            crashReport: CrashReportInterface,
+            getTokenFromCrossAppLogin: suspend (userId: Long) -> String?,
+            getTokenFromDatabase: suspend (userId: Long) -> String?,
+            persistTokenForAccount: suspend (userId: Long, token: String) -> Unit,
+            scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+        ): AuthenticatorFacade {
+            val webAuthnRepository = WebAuthnRepository(
+                authenticatorRequest = AuthenticatorRequest(
+                    httpClient = ApiClientProvider(
+                        userAgent = userAgent,
+                        environment = environment,
+                        crashReport = crashReport,
+                    ).httpClient
+                )
+            )
+            val db = getAccountsRoomDatabase(databaseNameOrPath)
+            val accountsRepository = AccountsRepository(db)
+            val authenticatorManager = AuthenticatorManager(
+                webAuthnRepository = webAuthnRepository,
+                accountsRepository = accountsRepository
+            )
+            return AuthenticatorFacadeImpl(
+                db = db,
+                clientId = clientId,
+                authenticatorManager = authenticatorManager,
+                webAuthnRepository = webAuthnRepository,
+                getTokenFromCrossAppLogin = getTokenFromCrossAppLogin,
+                getTokenFromDatabase = getTokenFromDatabase,
+                persistTokenForAccount = persistTokenForAccount,
+                coroutineScope = scope,
+            )
+        }
+
         fun dummyInstance(
             userAgent: String,
             environment: ApiEnvironment,
@@ -51,7 +89,7 @@ abstract class AuthenticatorFacade internal constructor() {
                     ).httpClient
                 )
             )
-            val accountsRepository = AccountsRepository(getAccountsRoomDatabase())
+            val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))
             val authenticatorManager =
                 AuthenticatorManager(webAuthnRepository = webAuthnRepository, accountsRepository = accountsRepository)
             return DummyAuthenticatorFacade(
