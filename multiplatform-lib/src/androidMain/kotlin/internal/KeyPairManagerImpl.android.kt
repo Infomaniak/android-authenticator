@@ -20,13 +20,14 @@ package com.infomaniak.auth.lib.internal
 import com.infomaniak.auth.lib.Failure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
+import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 import java.io.File
 
 internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @Throws(Exception::class)
-    actual override suspend fun generateNewKey(userId: Int, keyId: String): Failure.KeyManagement.GenerationFailed? {
+    actual override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
@@ -37,7 +38,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun retrievePublicKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         val file = File(appCtx.filesDir, "$userId-$keyId-public.key")
@@ -47,13 +48,37 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun retrievePrivateKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         val file = File(appCtx.filesDir, "$userId-$keyId-private.key")
         runCatching {
             Xor.First(file.readBytes())
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
+    }
+
+    actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
+        val fileNamePrefix = "$userId-"
+        val userPassKey: File = withContext(Dispatchers.IO) {
+            appCtx.filesDir.listFiles()
+        }?.find {
+            it.name.startsWith(fileNamePrefix)
+        } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+
+        val keyId = userPassKey.name.substringAfter(fileNamePrefix).substringBefore('-')
+        return Xor.First(keyId)
+    }
+
+    actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
+        val keys = withContext(Dispatchers.IO) {
+            appCtx.filesDir.listFiles()
+        }?.filter {
+            it.name.contains("-$keyId-")
+        } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+
+        keys.forEach { it.delete() }
+
+        return Xor.First(Unit)
     }
 
     private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {

@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.toNsData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.extensions.use
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
@@ -36,9 +37,22 @@ import kotlinx.cinterop.value
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.invoke
+import platform.CoreFoundation.CFArrayGetCount
+import platform.CoreFoundation.CFArrayGetValueAtIndex
+import platform.CoreFoundation.CFArrayRef
+import platform.CoreFoundation.CFDataGetBytePtr
+import platform.CoreFoundation.CFDataGetLength
+import platform.CoreFoundation.CFDataRef
+import platform.CoreFoundation.CFDictionaryGetValue
+import platform.CoreFoundation.CFDictionaryRef
 import platform.CoreFoundation.CFRelease
+import platform.CoreFoundation.CFStringCreateWithBytes
+import platform.CoreFoundation.CFTypeRef
 import platform.CoreFoundation.CFTypeRefVar
+import platform.CoreFoundation.kCFAllocatorDefault
+import platform.CoreFoundation.kCFStringEncodingUTF8
 import platform.Security.SecItemCopyMatching
+import platform.Security.SecItemDelete
 import platform.Security.SecKeyCopyExternalRepresentation
 import platform.Security.SecKeyCopyPublicKey
 import platform.Security.SecKeyRef
@@ -50,17 +64,20 @@ import platform.Security.kSecAttrKeyType
 import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
 import platform.Security.kSecClass
 import platform.Security.kSecClassKey
+import platform.Security.kSecMatchLimit
+import platform.Security.kSecMatchLimitAll
+import platform.Security.kSecReturnAttributes
 import platform.Security.kSecReturnRef
 
 internal actual class KeyPairManagerImpl : KeyPairManager {
 
     actual override suspend fun generateNewKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Failure.KeyManagement.GenerationFailed? = Dispatchers.IO {
 
         val result = generateEcPrivateKeyInTheKeychain(
-            tag = "$keyId-$userId",
+            tag = "$userId-$keyId",
             privateKeyPurposes = KeyPairManager.privateKeyPurposes,
             publicKeyPurposes = KeyPairManager.publicKeyPurposes,
             keyAccessGuard = KeyAccessGuard.Unguarded,
@@ -74,7 +91,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @OptIn(ExperimentalForeignApi::class)
     actual override suspend fun retrievePublicKey(
-        userId: Int,
+        userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
         memScoped {
@@ -96,7 +113,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     actual override suspend fun retrievePrivateKey(
-        userId: Int,
+        userId: Long,
         keyId: String
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> {
         memScoped {
@@ -113,8 +130,93 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }
     }
 
+    @OptIn(BetaInteropApi::class)
+    actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
+        val userIdPrefix = "$userId-"
+        val (resultsArray, count) = getAllPrivateKeysQuery()
+
+        if (resultsArray == null || count == 0) {
+            return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
+        }
+
+        for (i in 0 until count) {
+            val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
+
+            if (tag?.startsWith(userIdPrefix) == true) {
+                val keyId = tag.removePrefix(userIdPrefix)
+                return@memScoped Xor.First(keyId)
+            }
+        }
+
+        Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for userId $userId"))
+    }
+
+    actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
+        val (resultsArray, count) = getAllPrivateKeysQuery()
+
+        if (resultsArray == null || count == 0) {
+            return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
+        }
+
+        for (i in 0 until count) {
+            val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
+
+            if (tag?.contains(keyId) == true) {
+                deleteKeyByTag(tag)
+                return@memScoped Xor.First(Unit)
+            }
+        }
+
+        Xor.Second(Failure.KeyManagement.KeyNotFound("No key containing $keyId"))
+    }
+
+    @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
+    private fun MemScope.getAllPrivateKeysQuery(): Pair<CFArrayRef?, Int> {
+        val query = buildCFDictionary {
+            this[kSecClass] = kSecClassKey
+            this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
+            this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
+            this[kSecReturnAttributes] = true
+            this[kSecMatchLimit] = kSecMatchLimitAll
+        }
+
+        val resultRef = alloc<CFTypeRefVar>()
+        val status = SecItemCopyMatching(query, resultRef.ptr)
+        CFRelease(query)
+
+        return if (status == errSecSuccess && resultRef.value != null) {
+            val resultsArray = resultRef.value as CFArrayRef
+            Pair(resultsArray, CFArrayGetCount(resultsArray).toInt())
+        } else {
+            Pair(null, 0)
+        }
+    }
+
+    @OptIn(BetaInteropApi::class)
+    private fun extractTagFromItem(item: CFTypeRef?): String? {
+        val tagRef = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) ?: return null
+        val tagData = tagRef as CFDataRef
+        return CFStringCreateWithBytes(
+            kCFAllocatorDefault,
+            CFDataGetBytePtr(tagData),
+            CFDataGetLength(tagData),
+            kCFStringEncodingUTF8,
+            false
+        )?.toString()
+    }
+
+    private fun deleteKeyByTag(tag: String) {
+        val deleteQuery = buildCFDictionary {
+            this[kSecClass] = kSecClassKey
+            this[kSecAttrApplicationTag] = tag.toNsData()
+        }
+        SecItemDelete(deleteQuery)
+    }
+
     @OptIn(ExperimentalForeignApi::class)
-    private fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
+    private suspend fun MemScope.getPrivateKeyRef(keyAlias: String): SecKeyRef {
         val query = buildCFDictionary {
             this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
@@ -124,7 +226,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }
 
         val privateKeyRefVar = alloc<CFTypeRefVar>()
-        val resultStatus = SecItemCopyMatching(query, privateKeyRefVar.ptr)
+        val resultStatus = Dispatchers.IO { SecItemCopyMatching(query, privateKeyRefVar.ptr) }
 
         if (resultStatus != errSecSuccess || privateKeyRefVar.value == null) {
             throw Exception("Failed to retrieve private key from KeyChain (error: $resultStatus)")
