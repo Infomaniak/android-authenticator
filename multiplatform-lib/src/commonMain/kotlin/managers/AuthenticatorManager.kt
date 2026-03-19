@@ -107,8 +107,8 @@ internal class AuthenticatorManager(
     suspend fun removeAccount(token: String, userId: Long) {
         val passkeyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
 
-        // This means this user is in error so in that case, we just need to remove the account id DB
         if (passkeyId != null) {
+            // If we have a passkey for this account, revoke it against the backend and delete it
             webAuthnRepository.deletePasskey(token, passkeyId)
             keyPairManager.deleteKey(passkeyId)
         }
