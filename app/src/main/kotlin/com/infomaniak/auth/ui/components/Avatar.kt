@@ -55,7 +55,13 @@ private fun computeAvatarType(
             containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
             contentColor = localAvatarColors.contentColor,
         )
-        val initials = account.fullName.split(" ").map { it[0] }.joinToString("")
+        val initials = account.fullName
+            .split(" ")
+            .filter { it.isNotEmpty() }
+            .take(2)
+            .map { it.first() }
+            .joinToString("")
+            .uppercase()
         WithInitials.Initials(initials, avatarColors)
     } else {
         AvatarType.fromUser(user)
