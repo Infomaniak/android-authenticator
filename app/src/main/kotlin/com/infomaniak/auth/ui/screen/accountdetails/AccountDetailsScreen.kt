@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -52,6 +53,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.lib.network.models.UrlConstant
+import com.infomaniak.auth.lib.network.models.UrlConstant.ACTIVITY_MANAGER_URL
+import com.infomaniak.auth.lib.network.models.UrlConstant.SETTINGS_MANAGER_URL
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -63,10 +67,13 @@ import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
 import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -117,10 +124,12 @@ fun AccountDetailsScreen(
                 AccountDetailsContent(
                     paddingValues = paddingValues,
                     account = state.account,
+                    user = state.user,
                     onRemoveAccountClicked = onRemoveAccountClicked
                 )
             }
             is AccountDetailsUiState.Loading -> Unit
+            is AccountDetailsUiState.Error -> Unit
         }
     }
 }
@@ -129,6 +138,7 @@ fun AccountDetailsScreen(
 private fun AccountDetailsContent(
     paddingValues: PaddingValues,
     account: Account,
+    user: User?,
     onRemoveAccountClicked: () -> Unit,
 ) {
     Column(
@@ -147,6 +157,7 @@ private fun AccountDetailsContent(
         }
         SettingsSections(
             accountStatus = account.status,
+            user = user,
             onRemoveAccountClicked = onRemoveAccountClicked
         )
     }
@@ -293,9 +304,13 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 @Composable
 private fun SettingsSections(
     accountStatus: Account.Status,
+    user: User?,
     onRemoveAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val host = ApiEnvironment.current.host
+
     val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
         persistentListOf(
             OptionItemType.WithRightIcon(
@@ -310,12 +325,24 @@ private fun SettingsSections(
         OptionItemType.WithRightIcon(
             stringResId = R.string.activityHistoryButton,
             rightIconResId = R.drawable.square_arrow_up,
-            onClick = {},
+            onClick = {
+                WebViewActivity.startActivity(
+                    context = context,
+                    url = UrlConstant.autologUrl(host, UrlConstant.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
+                    headers = mapOf("Authorization" to "Bearer ${user?.apiToken?.accessToken}"),
+                )
+            },
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.accountSettingsButton,
             rightIconResId = R.drawable.square_arrow_up,
-            onClick = {},
+            onClick = {
+                WebViewActivity.startActivity(
+                    context = context,
+                    url = UrlConstant.autologUrl(host = host, UrlConstant.managerUrl(host, SETTINGS_MANAGER_URL)),
+                    headers = mapOf("Authorization" to "Bearer ${user?.apiToken?.accessToken}"),
+                )
+            },
         ),
         OptionItemType.Default(
             stringResId = R.string.disconnectButton,
@@ -371,7 +398,7 @@ private fun AccountDetailsScreenPreview(
 ) {
     AuthenticatorTheme {
         AccountDetailsScreen(
-            uiState = { AccountDetailsUiState.Success(account) },
+            uiState = { AccountDetailsUiState.Success(account, null) },
             onBackPressed = {},
             onRemoveAccountClicked = {},
         )

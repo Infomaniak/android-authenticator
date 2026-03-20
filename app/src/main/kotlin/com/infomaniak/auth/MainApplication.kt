@@ -54,7 +54,8 @@ class MainApplication : Application(), Configuration.Provider {
             appId = BuildConfig.APPLICATION_ID,
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
-            apiEnvironment = ApiEnvironment.PreProd,
+            //apiEnvironment = ApiEnvironment.PreProd,
+            apiEnvironment = ApiEnvironment.Custom(host = "staging-authenticator.dev.infomaniak.ch"),
         )
     }
 
