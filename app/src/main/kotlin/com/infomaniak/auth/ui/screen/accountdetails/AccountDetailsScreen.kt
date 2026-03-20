@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -159,9 +159,8 @@ private fun Header(account: Account) {
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = "Avatar de l'utilisateur",
+        Avatar(
+            account = account,
             modifier = Modifier
                 .padding(horizontal = Margin.Medium)
                 .size(40.dp)

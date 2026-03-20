@@ -21,6 +21,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
+import com.infomaniak.auth.ui.theme.color.AvatarColorsDark
+import com.infomaniak.auth.ui.theme.color.AvatarColorsLight
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.StatusColorScheme
 import com.infomaniak.auth.ui.theme.color.brand10
@@ -65,6 +67,8 @@ import com.infomaniak.auth.ui.theme.color.red40
 import com.infomaniak.auth.ui.theme.color.red80
 import com.infomaniak.auth.ui.theme.color.red95
 import com.infomaniak.auth.ui.theme.color.red99
+import com.infomaniak.core.avatar.AvatarColors
+import com.infomaniak.core.avatar.LocalAvatarColors
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -211,12 +215,14 @@ fun AuthenticatorTheme(
         trackerContainerShape = RoundedCornerShape(DefaultCornerRadius),
         trackerContainerPadding = PaddingValues(Margin.Medium, 0.dp)
     )
+    val avatarColors = if (isDarkTheme) AvatarColorsDark else AvatarColorsLight
 
     CompositionLocalProvider(
         LocalStatusColorScheme provides statusColors,
         LocalCustomColorScheme provides customColors,
         LocalIsThemeDarkMode provides isDarkTheme,
-        LocalPrivacyManagementTheme provides privacyManagementTheme
+        LocalPrivacyManagementTheme provides privacyManagementTheme,
+        LocalAvatarColors provides AvatarColors(avatarColors.colorList, customColors.sectionBackground),
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

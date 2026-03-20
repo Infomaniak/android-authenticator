@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
@@ -194,10 +194,8 @@ private fun AccountItem(account: Account, onClick: (Account) -> Unit) {
             modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            //TODO Use initial avatar here (or an image if it exist ?)
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = stringResource(R.string.avatarContentDescription),
+            Avatar(
+                account = account,
                 modifier = Modifier
                     .size(Dimens.bigAvatarSize)
                     .clip(CircleShape)
