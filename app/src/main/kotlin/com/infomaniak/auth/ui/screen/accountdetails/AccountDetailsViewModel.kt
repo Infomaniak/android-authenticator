@@ -56,7 +56,7 @@ class AccountDetailsViewModel @Inject constructor(
                 val user = users.find { it.id.toLong() == id }
                 val account = accounts.find { it.id == id }
 
-                if (account != null) {
+                if (account != null && user != null) {
                     AccountDetailsUiState.Success(account, user)
                 } else {
                     AccountDetailsUiState.Error
@@ -91,6 +91,6 @@ class AccountDetailsViewModel @Inject constructor(
 @Immutable
 sealed interface AccountDetailsUiState {
     data object Loading : AccountDetailsUiState
-    data class Success(val account: Account, val user: User?) : AccountDetailsUiState
+    data class Success(val account: Account, val user: User) : AccountDetailsUiState
     data object Error : AccountDetailsUiState
 }

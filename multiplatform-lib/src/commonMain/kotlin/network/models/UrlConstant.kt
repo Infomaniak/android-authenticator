@@ -18,13 +18,10 @@
 package com.infomaniak.auth.lib.network.models
 
 object UrlConstant {
-    private fun managerUrl(host: String) = "https://manager.$host/v3"
-    fun managerUrl(host: String, path: String) = "${managerUrl(host)}/$path"
+    fun managerUrl(host: String, path: String) = "https://manager.$host/v3/$path"
+    fun autologUrl(host: String, url: String) = "https://manager.$host/v3/$AUTOLOG_URL/?url=$url"
 
-    private fun autologUrl(host: String) = "${managerUrl(host)}/$AUTOLOG_URL"
-    fun autologUrl(host: String, url: String) = "${autologUrl(host)}/?url=$url"
-
-    const val AUTOLOG_URL = "mobile_login"
+    private const val AUTOLOG_URL = "mobile_login"
     const val ACTIVITY_MANAGER_URL = "ng/profile/user/connection-history/activity"
     const val SETTINGS_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard"
 }
