@@ -33,6 +33,7 @@ import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
+import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.value
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -46,11 +47,8 @@ import platform.CoreFoundation.CFDataRef
 import platform.CoreFoundation.CFDictionaryGetValue
 import platform.CoreFoundation.CFDictionaryRef
 import platform.CoreFoundation.CFRelease
-import platform.CoreFoundation.CFStringCreateWithBytes
 import platform.CoreFoundation.CFTypeRef
 import platform.CoreFoundation.CFTypeRefVar
-import platform.CoreFoundation.kCFAllocatorDefault
-import platform.CoreFoundation.kCFStringEncodingUTF8
 import platform.Security.SecItemCopyMatching
 import platform.Security.SecItemDelete
 import platform.Security.SecKeyCopyExternalRepresentation
@@ -198,13 +196,9 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     private fun extractTagFromItem(item: CFTypeRef?): String? {
         val tagRef = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) ?: return null
         val tagData = tagRef as CFDataRef
-        return CFStringCreateWithBytes(
-            kCFAllocatorDefault,
-            CFDataGetBytePtr(tagData),
-            CFDataGetLength(tagData),
-            kCFStringEncodingUTF8,
-            false
-        )?.toString()
+        val length = CFDataGetLength(tagData).toInt()
+        val bytes = CFDataGetBytePtr(tagData) ?: return null
+        return bytes.readBytes(length).decodeToString()
     }
 
     private fun deleteKeyByTag(tag: String) {

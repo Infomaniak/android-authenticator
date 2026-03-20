@@ -70,10 +70,12 @@ actual object SignUtils {
     }
 
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {
-        require(x962Signature.size == 64) { "X.962 signature must be exactly 64 bytes. Actual size: ${x962Signature.size}" }
+        val rawSignature = convertDerToRawSignature(x962Signature)
 
-        val r = x962Signature.copyOfRange(0, 32)
-        val s = x962Signature.copyOfRange(32, 64)
+        require(rawSignature.size == 64) { "Signature must be exactly 64 bytes. Actual size: ${rawSignature.size}" }
+
+        val r = rawSignature.copyOfRange(0, 32)
+        val s = rawSignature.copyOfRange(32, 64)
 
         fun trimLeadingZeros(bytes: ByteArray): ByteArray {
             var i = 0
@@ -116,6 +118,42 @@ actual object SignUtils {
             )
             byteArrayOf(0x30.toByte(), 0x82.toByte()) + lengthBytes + sequenceContent
         }
+    }
+
+    private fun convertDerToRawSignature(derSignature: ByteArray): ByteArray {
+        require(derSignature.size in 70..72) {
+            "Invalid DER signature length: ${derSignature.size}, expected 70-72"
+        }
+
+        // Position after SEQUENCE header (0x30, length)
+        var pos = 2
+
+        // Parse INTEGER r
+        require(derSignature[pos] == 0x02.toByte()) { "Expected INTEGER tag for r" }
+        pos++
+        val rLen = derSignature[pos].toInt() and 0xFF
+        pos++
+        val r = derSignature.copyOfRange(pos, pos + rLen).let {
+            // Enlever le padding 0x00 si présent (indicateur de signe positif ASN.1)
+            if (it.size == 33 && it[0] == 0x00.toByte()) it.copyOfRange(1, 33) else it
+        }
+        pos += rLen
+
+        // Parse INTEGER s
+        require(derSignature[pos] == 0x02.toByte()) { "Expected INTEGER tag for s" }
+        pos++
+        val sLen = derSignature[pos].toInt() and 0xFF
+        pos++
+        val s = derSignature.copyOfRange(pos, pos + sLen).let {
+            // Enlever le padding 0x00 si présent
+            if (it.size == 33 && it[0] == 0x00.toByte()) it.copyOfRange(1, 33) else it
+        }
+
+        require(r.size == 32 && s.size == 32) {
+            "Invalid r/s length: r=${r.size}, s=${s.size}, expected 32/32"
+        }
+
+        return r + s
     }
 
     private fun importPrivateKeyFromBytes(keyBytes: ByteArray): SecKeyRef? = memScoped {
