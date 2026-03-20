@@ -27,7 +27,7 @@ import platform.Foundation.NSUserDomainMask
 
 actual fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase {
     val dbBuilder = Room.databaseBuilder<AccountsDatabase>(
-        name = databaseNameOrPath?: (documentDirectory() + "/accounts.db"),
+        name = databaseNameOrPath ?: (documentDirectory() + "/accounts.db"),
     )
     return getAccountsRoomDatabase(dbBuilder)
 }
