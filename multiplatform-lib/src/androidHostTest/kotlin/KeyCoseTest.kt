@@ -18,6 +18,7 @@
 
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.webauthn.PublicKeyXY
 import com.infomaniak.auth.lib.internal.webauthn.keyCoseOf
 import okio.Buffer
 import kotlin.test.Test

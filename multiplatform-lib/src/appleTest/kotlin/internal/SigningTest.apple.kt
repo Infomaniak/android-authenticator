@@ -22,6 +22,9 @@ package com.infomaniak.auth.lib.internal
 import com.infomaniak.auth.lib.extensions.toByteArray
 import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
+import com.infomaniak.auth.lib.internal.utils.SignUtils
+import io.ktor.utils.io.core.toByteArray
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Security.SecKeyCopyExternalRepresentation
 import platform.Security.SecKeyCopyPublicKey

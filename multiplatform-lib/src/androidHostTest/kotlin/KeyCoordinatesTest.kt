@@ -22,6 +22,7 @@ import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.generateEcKeyPair
 import com.infomaniak.auth.lib.internal.utils.getKeyCoordinates
 import com.infomaniak.auth.lib.internal.utils.keyCoordinatesOf
+import com.infomaniak.auth.lib.internal.webauthn.PublicKeyXY
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

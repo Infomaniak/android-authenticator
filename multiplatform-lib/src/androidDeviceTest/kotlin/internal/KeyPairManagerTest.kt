@@ -18,7 +18,7 @@
 package com.infomaniak.auth.internal
 
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
-import com.infomaniak.auth.lib.internal.Xor
+import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertNull

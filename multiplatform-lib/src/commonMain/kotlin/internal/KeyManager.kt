@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.Failure
+import com.infomaniak.auth.lib.internal.utils.Xor
 
 internal interface KeyPairManager {
 

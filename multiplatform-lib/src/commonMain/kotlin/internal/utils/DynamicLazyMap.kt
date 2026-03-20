@@ -23,6 +23,8 @@ import androidx.collection.ScatterMap
 import androidx.collection.mutableObjectIntMapOf
 import androidx.collection.mutableObjectListOf
 import androidx.collection.mutableScatterMapOf
+import com.infomaniak.auth.lib.internal.extensions.hasFlag
+import com.infomaniak.auth.lib.internal.extensions.withFlag
 import io.ktor.utils.io.InternalAPI
 import io.ktor.utils.io.locks.ReentrantLock
 import io.ktor.utils.io.locks.reentrantLock
