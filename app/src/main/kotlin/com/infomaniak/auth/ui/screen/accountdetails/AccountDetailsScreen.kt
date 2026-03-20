@@ -75,6 +75,7 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun AccountDetailsScreen(
@@ -321,37 +322,46 @@ private fun SettingsSections(
         )
     } else persistentListOf()
 
-    val secondSectionItems = persistentListOf(
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.activityHistoryButton,
-            rightIconResId = R.drawable.square_arrow_up,
-            onClick = {
-                WebViewActivity.startActivity(
-                    context = context,
-                    url = UrlConstant.autologUrl(host, UrlConstant.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
-                    headers = mapOf("Authorization" to "Bearer ${user?.apiToken?.accessToken}"),
+    val secondSectionItems = buildList {
+        if (user?.apiToken?.accessToken != null) {
+            add(
+                OptionItemType.WithRightIcon(
+                    stringResId = R.string.activityHistoryButton,
+                    rightIconResId = R.drawable.square_arrow_up,
+                    onClick = {
+                        WebViewActivity.startActivity(
+                            context = context,
+                            url = UrlConstant.autologUrl(host, UrlConstant.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
+                            headers = mapOf("Authorization" to "Bearer ${user.apiToken.accessToken}"),
+                        )
+                    },
+                ),
+            )
+            add(
+                OptionItemType.WithRightIcon(
+                    stringResId = R.string.accountSettingsButton,
+                    rightIconResId = R.drawable.square_arrow_up,
+                    onClick = {
+                        WebViewActivity.startActivity(
+                            context = context,
+                            url = UrlConstant.autologUrl(host = host, UrlConstant.managerUrl(host, SETTINGS_MANAGER_URL)),
+                            headers = mapOf("Authorization" to "Bearer ${user.apiToken.accessToken}"),
+                        )
+                    },
                 )
-            },
-        ),
-        OptionItemType.WithRightIcon(
-            stringResId = R.string.accountSettingsButton,
-            rightIconResId = R.drawable.square_arrow_up,
-            onClick = {
-                WebViewActivity.startActivity(
-                    context = context,
-                    url = UrlConstant.autologUrl(host = host, UrlConstant.managerUrl(host, SETTINGS_MANAGER_URL)),
-                    headers = mapOf("Authorization" to "Bearer ${user?.apiToken?.accessToken}"),
-                )
-            },
-        ),
-        OptionItemType.Default(
-            stringResId = R.string.disconnectButton,
-            textColor = AuthenticatorTheme.materialColors.error,
-            onClick = {
-                onRemoveAccountClicked()
-            }
-        ),
-    )
+            )
+        }
+        add(
+            OptionItemType.Default(
+                stringResId = R.string.disconnectButton,
+                textColor = AuthenticatorTheme.materialColors.error,
+                onClick = {
+                    onRemoveAccountClicked()
+                }
+            ),
+        )
+
+    }.toPersistentList()
 
     OptionsSection(
         modifier = modifier,
