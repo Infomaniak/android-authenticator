@@ -48,7 +48,7 @@ fun Avatar(
 private fun computeAvatarType(
     account: Account,
     user: User?
-): WithInitials {
+): AvatarType {
     return if (user == null) {
         val localAvatarColors = LocalAvatarColors.current
         val avatarColors = AvatarColors(
