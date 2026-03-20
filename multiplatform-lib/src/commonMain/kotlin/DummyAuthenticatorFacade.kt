@@ -95,7 +95,10 @@ class DummyAuthenticatorFacade internal constructor(
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         _accounts += connectedAccounts
         if (connectedAccounts.isNotEmpty()) next.trySend(Unit)
-        accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) })
+        val accountWithNoError = connectedAccounts.first()
+        val accountInError = accountWithNoError.copy(id = 123).toEntity(AccountEntity.Status.PasskeyRegistrationPending)
+        accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity(AccountEntity.Status.LoggedIn) })
+        accountsRepository.upsertAccounts(listOf(accountInError))
     }
 
     override suspend fun removeAccount(token: String, id: Long) {
