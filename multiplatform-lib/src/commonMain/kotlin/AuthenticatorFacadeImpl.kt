@@ -26,8 +26,7 @@ import com.infomaniak.auth.lib.internal.utils.cancellable
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
-import com.infomaniak.auth.lib.network.interfaces.TokenBridge
-import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.network.interfaces.TokenProvider
 import com.infomaniak.auth.lib.room.accounts.AccountEntity
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
 import kotlinx.coroutines.CompletableDeferred
@@ -60,7 +59,6 @@ internal class AuthenticatorFacadeImpl(
     private val db: AccountsDatabase,
     private val clientId: String,
     private val authenticatorManager: AuthenticatorManager,
-    private val webAuthnRepository: WebAuthnRepository,
     private val tokenBridge: TokenBridge,
     private val coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {

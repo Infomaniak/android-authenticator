@@ -63,7 +63,6 @@ abstract class AuthenticatorFacade internal constructor() {
                 db = db,
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
-                webAuthnRepository = webAuthnRepository,
                 tokenBridge = tokenBridge,
                 coroutineScope = scope,
             )
