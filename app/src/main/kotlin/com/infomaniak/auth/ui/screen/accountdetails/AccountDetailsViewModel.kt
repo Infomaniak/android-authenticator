@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.core.auth.models.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,9 +32,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,8 +49,18 @@ class AccountDetailsViewModel @Inject constructor(
 
     val uiState: StateFlow<AccountDetailsUiState> = accountIdFlow
         .flatMapLatest { id ->
-            authenticatorFacade.accounts.mapNotNull { accounts ->
-                accounts.find { it.id == id }?.let { AccountDetailsUiState.Success(it) }
+            combine(
+                accountUtils.users,
+                authenticatorFacade.accounts
+            ) { users, accounts ->
+                val user = users.find { it.id.toLong() == id }
+                val account = accounts.find { it.id == id }
+
+                if (account != null) {
+                    AccountDetailsUiState.Success(account, user)
+                } else {
+                    AccountDetailsUiState.Error
+                }
             }
         }
         .stateIn(
@@ -80,5 +91,6 @@ class AccountDetailsViewModel @Inject constructor(
 @Immutable
 sealed interface AccountDetailsUiState {
     data object Loading : AccountDetailsUiState
-    data class Success(val account: Account) : AccountDetailsUiState
+    data class Success(val account: Account, val user: User?) : AccountDetailsUiState
+    data object Error : AccountDetailsUiState
 }

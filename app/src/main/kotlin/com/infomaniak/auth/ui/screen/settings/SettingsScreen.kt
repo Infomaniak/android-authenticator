@@ -39,6 +39,8 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.applock.AppLockHelper.requestCredentials
 import com.infomaniak.core.applock.AppLockManager
+import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.network.SUPPORT_URL
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
@@ -48,8 +50,8 @@ import kotlinx.collections.immutable.toPersistentList
 fun SettingsScreen(
     onThemeClicked: () -> Unit,
     onPrivacyManagementClicked: () -> Unit,
+    appSettingsViewModel: AppSettingsViewModel = hiltViewModel(),
 ) {
-    val appSettingsViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
     val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
     val hasBiometrics = remember { AppLockManager.hasBiometrics() }
     val notificationEnabled = GetSetCallbacks(
@@ -119,8 +121,10 @@ private fun SettingsScreen(
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.contactSupportTitle,
-            rightIconResId = R.drawable.right_indicator,
-            onClick = {},
+            rightIconResId = R.drawable.square_arrow_up,
+            onClick = {
+                fragmentActivity?.openUrl(SUPPORT_URL)
+            },
         ),
     )
     SinglePaneScaffold(
