@@ -30,7 +30,7 @@ data class CustomColorScheme(
     val sectionBackground: Color = Color.Unspecified,
 )
 
-val lightCustomScheme = CustomColorScheme(
+val LightCustomScheme = CustomColorScheme(
     iconTintSuccess = green40,
     iconTintWarning = orange40,
     iconTintError = red40,
@@ -38,7 +38,7 @@ val lightCustomScheme = CustomColorScheme(
     sectionBackground = neutral100,
 )
 
-val darkCustomScheme = CustomColorScheme(
+val DarkCustomScheme = CustomColorScheme(
     iconTintSuccess = green80,
     iconTintWarning = orange80,
     iconTintError = red20,

@@ -21,8 +21,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
-import com.infomaniak.auth.ui.theme.color.AvatarColorsDark
-import com.infomaniak.auth.ui.theme.color.AvatarColorsLight
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.StatusColorScheme
 import com.infomaniak.auth.ui.theme.color.brand10
@@ -37,10 +35,10 @@ import com.infomaniak.auth.ui.theme.color.brand70
 import com.infomaniak.auth.ui.theme.color.brand80
 import com.infomaniak.auth.ui.theme.color.brand90
 import com.infomaniak.auth.ui.theme.color.brand99
-import com.infomaniak.auth.ui.theme.color.darkCustomScheme
-import com.infomaniak.auth.ui.theme.color.darkStatusColorScheme
-import com.infomaniak.auth.ui.theme.color.lightCustomScheme
-import com.infomaniak.auth.ui.theme.color.lightStatusColorScheme
+import com.infomaniak.auth.ui.theme.color.DarkCustomScheme
+import com.infomaniak.auth.ui.theme.color.DarkStatusColorScheme
+import com.infomaniak.auth.ui.theme.color.LightCustomScheme
+import com.infomaniak.auth.ui.theme.color.LightStatusColorScheme
 import com.infomaniak.auth.ui.theme.color.neutral0
 import com.infomaniak.auth.ui.theme.color.neutral10
 import com.infomaniak.auth.ui.theme.color.neutral100
@@ -69,6 +67,8 @@ import com.infomaniak.auth.ui.theme.color.red95
 import com.infomaniak.auth.ui.theme.color.red99
 import com.infomaniak.core.avatar.AvatarColors
 import com.infomaniak.core.avatar.LocalAvatarColors
+import com.infomaniak.core.avatar.theme.DarkAvatarColorsScheme
+import com.infomaniak.core.avatar.theme.LightAvatarColorsScheme
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -207,15 +207,15 @@ fun AuthenticatorTheme(
         }
     }
 
-    val customColors = if (isDarkTheme) darkCustomScheme else lightCustomScheme
-    val statusColors = if (isDarkTheme) darkStatusColorScheme else lightStatusColorScheme
+    val customColors = if (isDarkTheme) DarkCustomScheme else LightCustomScheme
+    val statusColors = if (isDarkTheme) DarkStatusColorScheme else LightStatusColorScheme
     val privacyManagementTheme = PrivacyManagementTheme(
         trackerContainerColor = customColors.sectionBackground,
         trackerContainerContentColor = colorScheme.onSurface,
         trackerContainerShape = RoundedCornerShape(DefaultCornerRadius),
         trackerContainerPadding = PaddingValues(Margin.Medium, 0.dp)
     )
-    val avatarColors = if (isDarkTheme) AvatarColorsDark else AvatarColorsLight
+    val avatarColors = if (isDarkTheme) DarkAvatarColorsScheme else LightAvatarColorsScheme
 
     CompositionLocalProvider(
         LocalStatusColorScheme provides statusColors,
