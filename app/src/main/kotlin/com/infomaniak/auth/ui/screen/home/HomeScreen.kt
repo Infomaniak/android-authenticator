@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,18 +57,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
-import com.infomaniak.auth.ui.previewparameter.fakeAccounts
+import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
 import com.infomaniak.auth.ui.screen.home.AccountSecurityLevel.Companion.toAccountSecurityLevel
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 
 @Composable
@@ -97,11 +97,11 @@ fun HomeScreen(
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
     ) { paddingValues ->
-        when (val state = uiState()) {
+        when (val uiState = uiState()) {
             is HomeScreenUiState.Success -> {
                 HomeScreenContent(
                     paddingValues = paddingValues,
-                    accounts = state.accounts,
+                    uiState = uiState,
                     onAccountClicked = onAccountClicked
                 )
             }
@@ -113,11 +113,11 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenContent(
     paddingValues: PaddingValues,
-    accounts: ImmutableList<Account>,
+    uiState: HomeScreenUiState.Success,
     onAccountClicked: (Account) -> Unit
 ) {
-    val hasUnsecuredAccounts: Boolean by remember(accounts) {
-        derivedStateOf { accounts.any { it.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
+    val hasUnsecuredAccounts: Boolean by remember(uiState.accountPairs) {
+        derivedStateOf { uiState.accountPairs.any { it.first.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
     }
 
     Column(
@@ -147,9 +147,9 @@ private fun HomeScreenContent(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
-                accounts.forEach { account ->
+                uiState.accountPairs.forEach { (account, user) ->
                     key(account.email) {
-                        AccountItem(account, onClick = { account -> onAccountClicked(account) })
+                        AccountItem(account, user, onClick = { account -> onAccountClicked(account) })
                     }
                 }
             }
@@ -181,7 +181,11 @@ private fun ActionRequired() {
 }
 
 @Composable
-private fun AccountItem(account: Account, onClick: (Account) -> Unit) {
+private fun AccountItem(
+    account: Account,
+    user: User?,
+    onClick: (Account) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -194,10 +198,9 @@ private fun AccountItem(account: Account, onClick: (Account) -> Unit) {
             modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            //TODO Use initial avatar here (or an image if it exist ?)
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = stringResource(R.string.avatarContentDescription),
+            Avatar(
+                account = account,
+                user = user,
                 modifier = Modifier
                     .size(Dimens.bigAvatarSize)
                     .clip(CircleShape)
@@ -239,7 +242,7 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
 private fun HomeScreenPreview() {
     AuthenticatorTheme {
         HomeScreen(
-            uiState = { HomeScreenUiState.Success(fakeAccounts) },
+            uiState = { HomeScreenUiState.Success(fakeAccountPairs) },
             onAccountClicked = {},
         )
     }

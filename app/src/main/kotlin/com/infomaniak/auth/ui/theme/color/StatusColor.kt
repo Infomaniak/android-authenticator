@@ -33,7 +33,7 @@ data class StatusColorScheme(
     val onErrorContainer: Color = Color.Unspecified,
 )
 
-val lightStatusColorScheme = StatusColorScheme(
+val LightStatusColorScheme = StatusColorScheme(
     warning = orange40,
     onWarning = orange99,
     warningContainer = orange80,
@@ -45,7 +45,7 @@ val lightStatusColorScheme = StatusColorScheme(
     onErrorContainer = red15,
 )
 
-val darkStatusColorScheme = StatusColorScheme(
+val DarkStatusColorScheme = StatusColorScheme(
     warning = orange80,
     onWarning = orange20,
     warningContainer = orange20,
