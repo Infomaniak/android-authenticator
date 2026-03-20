@@ -55,6 +55,7 @@ import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.network.models.UrlConstant
 import com.infomaniak.auth.lib.network.models.UrlConstant.ACTIVITY_MANAGER_URL
 import com.infomaniak.auth.lib.network.models.UrlConstant.SETTINGS_MANAGER_URL
+import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -119,12 +120,12 @@ fun AccountDetailsScreen(
             )
         }
     ) { paddingValues ->
-        when (val state = uiState()) {
+        when (val uiState = uiState()) {
             is AccountDetailsUiState.Success -> {
                 AccountDetailsContent(
                     paddingValues = paddingValues,
-                    account = state.account,
-                    user = state.user,
+                    account = uiState.account,
+                    user = uiState.user,
                     onRemoveAccountClicked = onRemoveAccountClicked
                 )
             }
@@ -144,7 +145,7 @@ private fun AccountDetailsContent(
     Column(
         modifier = Modifier.padding(paddingValues)
     ) {
-        Header(account)
+        Header(account, user)
         SecurityCheck(account.status.toAccountStatus())
         if (account.status != Account.Status.LoggedIn) {
             var hasLogin by remember { mutableStateOf(false) }
@@ -164,7 +165,7 @@ private fun AccountDetailsContent(
 }
 
 @Composable
-private fun Header(account: Account) {
+private fun Header(account: Account, user: User?) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -172,6 +173,7 @@ private fun Header(account: Account) {
     ) {
         Avatar(
             account = account,
+            user = user,
             modifier = Modifier
                 .padding(horizontal = Margin.Medium)
                 .size(40.dp)

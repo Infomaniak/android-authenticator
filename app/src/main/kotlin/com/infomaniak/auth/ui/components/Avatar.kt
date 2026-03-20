@@ -20,30 +20,44 @@ package com.infomaniak.auth.ui.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.avatar.LocalAvatarColors
 import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
-import com.infomaniak.core.avatar.models.AvatarUrlData
+import com.infomaniak.core.avatar.models.AvatarType.WithInitials
 import com.infomaniak.core.coil.ImageLoaderProvider
 
 @Composable
-fun Avatar(account: Account, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
-
+fun Avatar(
+    account: Account,
+    user: User?,
+    modifier: Modifier = Modifier
+) {
     Avatar(
-        avatarType = AvatarType.getUrlOrInitials(
-            avatarUrlData = account.avatarUrl?.let { AvatarUrlData(it, unauthenticatedImageLoader) },
-            initials = account.initials,
-            colors = AvatarColors(
-                containerColor = Color(context.getBackgroundColorResBasedOnId(account.id.toInt())),
-                contentColor = Color.White,
-            ),
-        ),
+        avatarType = computeAvatarType(account, user),
         modifier = modifier
     )
+}
+
+
+@Composable
+private fun computeAvatarType(
+    account: Account,
+    user: User?
+): WithInitials {
+    return if (user == null) {
+        val localAvatarColors = LocalAvatarColors.current
+        val avatarColors = AvatarColors(
+            containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
+            contentColor = localAvatarColors.contentColor,
+        )
+        val initials = account.fullName.split(" ").map { it[0] }.joinToString("")
+        WithInitials.Initials(initials, avatarColors)
+    } else {
+        AvatarType.fromUser(user)
+    }
 }

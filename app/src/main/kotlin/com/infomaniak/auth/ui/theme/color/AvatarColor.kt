@@ -69,7 +69,6 @@ val AvatarColorsLight = AvatarColors(
     prince = prince_light,
 )
 
-
 val AvatarColorsDark = AvatarColors(
     yellow = yellow_dark,
     coral = coral_dark,
