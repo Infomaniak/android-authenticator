@@ -73,7 +73,6 @@ import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
-import com.infomaniak.core.ui.compose.preview.previewparameter.usersPreviewData
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -405,11 +404,11 @@ private enum class AccountStatus(
 @PreviewSmallWindow
 @Composable
 private fun AccountDetailsScreenPreview(
-    @PreviewParameter(AccountPreviewParameter::class) account: Account
+    @PreviewParameter(AccountPreviewParameter::class) accountPairs: Pair<Account, User>
 ) {
     AuthenticatorTheme {
         AccountDetailsScreen(
-            uiState = { AccountDetailsUiState.Success(account, usersPreviewData.first()) },
+            uiState = { AccountDetailsUiState.Success(accountPairs.first, accountPairs.second) },
             onBackPressed = {},
             onRemoveAccountClicked = {},
         )

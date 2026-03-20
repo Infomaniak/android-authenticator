@@ -20,10 +20,13 @@ package com.infomaniak.auth.ui.previewparameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.ui.compose.preview.previewparameter.dummyUserOf
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
-class AccountPreviewParameter : PreviewParameterProvider<Account> {
-    override val values: Sequence<Account> = fakeAccounts.asSequence()
+class AccountPreviewParameter : PreviewParameterProvider<Pair<Account, User>> {
+    override val values: Sequence<Pair<Account, User>> = fakeAccountPairs.asSequence()
 }
 
 val fakeAccounts = persistentListOf(
@@ -52,3 +55,9 @@ val fakeAccounts = persistentListOf(
         status = Account.Status.NotConnected(action = NotConnectedAction.Issue.NonRetriable("Preview error")),
     )
 )
+
+val fakeAccountPairs = fakeAccounts
+    .map {
+        it to dummyUserOf(it.id.toInt(), it.fullName.split(" ")[0], it.fullName.split(" ")[1])
+    }
+    .toPersistentList()
