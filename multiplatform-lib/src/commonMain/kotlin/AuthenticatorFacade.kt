@@ -21,7 +21,7 @@ import com.infomaniak.auth.lib.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.network.ApiClientProvider
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
-import com.infomaniak.auth.lib.network.interfaces.TokenProvider
+import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
 import com.infomaniak.auth.lib.repository.AccountsRepository
@@ -41,7 +41,7 @@ abstract class AuthenticatorFacade internal constructor() {
             clientId: String,
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
-            tokenProvider: TokenProvider,
+            tokenBridge: TokenBridge,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
         ): AuthenticatorFacade {
             val webAuthnRepository = WebAuthnRepository(
@@ -64,7 +64,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
                 webAuthnRepository = webAuthnRepository,
-                tokenProvider = tokenProvider,
+                tokenBridge = tokenBridge,
                 coroutineScope = scope,
             )
         }

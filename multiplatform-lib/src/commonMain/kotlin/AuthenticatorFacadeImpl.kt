@@ -26,7 +26,7 @@ import com.infomaniak.auth.lib.internal.utils.cancellable
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.managers.AuthenticatorManager
-import com.infomaniak.auth.lib.network.interfaces.TokenProvider
+import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.room.accounts.AccountEntity
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
@@ -61,7 +61,7 @@ internal class AuthenticatorFacadeImpl(
     private val clientId: String,
     private val authenticatorManager: AuthenticatorManager,
     private val webAuthnRepository: WebAuthnRepository,
-    private val tokenProvider: TokenProvider,
+    private val tokenBridge: TokenBridge,
     private val coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
 
@@ -182,7 +182,7 @@ internal class AuthenticatorFacadeImpl(
             else -> throw IllegalArgumentException("registrationAttempts doesn't support $accountStatus")
         }
         val userId = notRegisteredAccount.id
-        val token = tokenProvider.getTokenFromDatabase(userId) ?: return
+        val token = tokenBridge.getTokenFromDatabase(userId) ?: return
         withRetries {
             emit(null)
             if (!passKeyAlreadyRegistered) {
@@ -193,7 +193,7 @@ internal class AuthenticatorFacadeImpl(
                 clientId = clientId,
                 userId = userId,
             ).firstOrNull()!!
-            tokenProvider.persistTokenForAccount(userId, token)
+            tokenBridge.persistTokenForAccount(userId, token)
             dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.LoggedIn))
         }
     }
@@ -236,7 +236,7 @@ internal class AuthenticatorFacadeImpl(
         val userId = notConnectedAccount.id
         withRetries(onGiveUp = { return }) {
             emit(null)
-            val temporaryToken = tokenProvider.getTokenFromCrossAppLogin(userId) ?: return
+            val temporaryToken = tokenBridge.getTokenFromCrossAppLogin(userId) ?: return
             attemptMigration(notConnectedAccount, temporaryToken)
             onLoginSuccess()
         }
@@ -263,7 +263,7 @@ internal class AuthenticatorFacadeImpl(
             clientId = clientId,
             userId = userId,
         ).firstOrNull()!!
-        tokenProvider.persistTokenForAccount(userId, tokenFromPasskeyAuth)
+        tokenBridge.persistTokenForAccount(userId, tokenFromPasskeyAuth)
         dao.upsert(notConnectedAccount.copy(status = AccountEntity.Status.LoggedIn))
     }
 

@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.network.interfaces
 
-interface TokenProvider {
+interface TokenBridge {
     suspend fun getTokenFromCrossAppLogin(userId: Long): String?
     suspend fun getTokenFromDatabase(userId: Long): String?
     suspend fun persistTokenForAccount(userId: Long, token: String)
