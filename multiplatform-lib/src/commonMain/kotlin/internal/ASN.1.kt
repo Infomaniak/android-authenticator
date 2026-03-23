@@ -24,7 +24,7 @@ internal object AsnOneTypes {
     const val INTEGER: Byte = 0x02
 }
 
-fun ByteArray.encodeAsn1Integer(): ByteArray {
+internal fun ByteArray.encodeAsn1Integer(): ByteArray {
     val needsPadding = this[0].toInt() and 0x80 != 0
     val length = size + if (needsPadding) 1 else 0
     val result = ByteArray(2 + length)
