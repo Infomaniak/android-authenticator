@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
