@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
 import com.infomaniak.auth.lib.network.models.PasskeysOptions
