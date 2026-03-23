@@ -59,7 +59,7 @@ class WebAuthnTest {
         // Just getting the public key to generate RegisterPasskey object
         val cryptoObjectsBuilder = CryptoObjectsBuilder()
         val keyPairManager = KeyPairManagerImpl()
-        val userId = 12345
+        val userId = 12345L
         val keyIdAsByteArray = cryptoObjectsBuilder.getKeyIds().first
         val keyIdAsString = cryptoObjectsBuilder.getKeyIds().second
         keyPairManager.generateNewKey(userId, keyIdAsString)?.let { fail("Key generation failed: ${it.details}") }
