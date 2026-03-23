@@ -82,13 +82,17 @@ fun MainScreen(
 
     LaunchedEffect(appStatus) {
         when (val status = appStatus) {
+            is AppStatus.LoginRequired -> backStack.apply {
+                clear()
+                add(NavDestination.Onboarding.Start)
+            }
             is AppStatus.LoggingIn -> backStack.apply {
                 Log.v("Jamy", "MainScreen: LoggingIn")
                 status.needsResolution.let {
                     // TODO: maybe do somthing
                 }
                 clear()
-                add(NavDestination.Onboarding.Start)
+                add(NavDestination.SecuringAccount)
             }
             is AppStatus.OnboardingDone -> backStack.apply {
                 Log.v("Jamy", "MainScreen: OnboardingDone")

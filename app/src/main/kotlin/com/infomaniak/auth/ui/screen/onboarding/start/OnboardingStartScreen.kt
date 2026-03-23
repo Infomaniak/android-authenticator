@@ -95,7 +95,7 @@ fun OnboardingStartScreen(
 
     LaunchedEffect(onboardingStartViewModel.onLoginFinishedEvent) {
         onboardingStartViewModel.onLoginFinishedEvent.collect {
-            onLoginFinished()
+            //onLoginFinished()
         }
     }
 
