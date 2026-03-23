@@ -25,6 +25,7 @@ import com.infomaniak.auth.lib.extensions.toByteArray
 import com.infomaniak.auth.lib.extensions.toCFDataRef
 import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.Xor
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -91,7 +92,7 @@ actual object SignUtils {
             val length = value.size + if (needsPadding) 1 else 0
             val result = ByteArray(2 + length)
 
-            result[0] = 0x02 // INTEGER tag
+            result[0] = AsnOneTypes.INTEGER
             result[1] = length.toByte()
 
             if (needsPadding) {
@@ -129,7 +130,7 @@ actual object SignUtils {
         var pos = 2
 
         // Parse INTEGER r
-        require(derSignature[pos] == 0x02.toByte()) { "Expected INTEGER tag for r" }
+        require(derSignature[pos] == AsnOneTypes.INTEGER) { "Expected INTEGER tag for r" }
         pos++
         val rLen = derSignature[pos].toInt() and 0xFF
         pos++
@@ -140,7 +141,7 @@ actual object SignUtils {
         pos += rLen
 
         // Parse INTEGER s
-        require(derSignature[pos] == 0x02.toByte()) { "Expected INTEGER tag for s" }
+        require(derSignature[pos] == AsnOneTypes.INTEGER) { "Expected INTEGER tag for s" }
         pos++
         val sLen = derSignature[pos].toInt() and 0xFF
         pos++
