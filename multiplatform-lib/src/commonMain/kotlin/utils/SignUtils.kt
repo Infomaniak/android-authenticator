@@ -20,4 +20,6 @@ package com.infomaniak.auth.lib.utils
 expect object SignUtils {
 
     fun signWithPrivateKey(privateKey: ByteArray, data: ByteArray): ByteArray
+
+    fun verifySignature(publicKey: ByteArray, data: ByteArray, signatureData: ByteArray): Boolean
 }

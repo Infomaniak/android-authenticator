@@ -20,6 +20,7 @@ package com.infomaniak.auth.lib.utils
 import java.security.KeyFactory
 import java.security.Signature
 import java.security.spec.PKCS8EncodedKeySpec
+import java.security.spec.X509EncodedKeySpec
 
 actual object SignUtils {
 
@@ -33,5 +34,17 @@ actual object SignUtils {
         signature.update(data)
 
         return signature.sign()
+    }
+
+    actual fun verifySignature(publicKey: ByteArray, data: ByteArray, signatureData: ByteArray): Boolean {
+        val keyFactory = KeyFactory.getInstance("EC")
+        val keySpec = X509EncodedKeySpec(publicKey)
+        val key = keyFactory.generatePublic(keySpec)
+
+        val signature = Signature.getInstance("SHA256withECDSA")
+        signature.initVerify(key)
+        signature.update(data)
+
+        return signature.verify(signatureData)
     }
 }

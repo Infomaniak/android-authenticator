@@ -28,6 +28,7 @@ import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.Xor
 import com.infomaniak.auth.lib.internal.encodeAsn1Integer
+import com.infomaniak.auth.lib.internal.firstOrElse
 import com.infomaniak.auth.lib.internal.utils.trimOrPadStart
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -37,8 +38,10 @@ import platform.CoreFoundation.CFRelease
 import platform.Security.SecKeyCreateSignature
 import platform.Security.SecKeyCreateWithData
 import platform.Security.SecKeyRef
+import platform.Security.SecKeyVerifySignature
 import platform.Security.kSecAttrKeyClass
 import platform.Security.kSecAttrKeyClassPrivate
+import platform.Security.kSecAttrKeyClassPublic
 import platform.Security.kSecAttrKeySizeInBits
 import platform.Security.kSecAttrKeyType
 import platform.Security.kSecAttrKeyTypeECSECPrimeRandom
@@ -70,6 +73,26 @@ actual object SignUtils {
             is Xor.First -> convertX962ToDer(signatureResult.value.toByteArray())
             is Xor.Second -> throw IllegalStateException("Signing failed: ${signatureResult.value.localizedDescription}")
         }
+    }
+
+    actual fun verifySignature(publicKey: ByteArray, data: ByteArray, signatureData: ByteArray): Boolean {
+        val attributes = buildCFDictionary {
+            this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
+            this[kSecAttrKeyClass] = kSecAttrKeyClassPublic
+            this[kSecAttrKeySizeInBits] = 256
+        }
+        val key = tryIt { errorPtr ->
+            SecKeyCreateWithData(publicKey.toNSData().toCFDataRef(), attributes, errorPtr)
+        }.firstOrElse { println(it); return false }
+        return tryIt { errorPtr ->
+            SecKeyVerifySignature(
+                key = key,
+                algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256,
+                signedData = data.toNSData().toCFDataRef(),
+                signature = signatureData.toNSData().toCFDataRef(),
+                error = errorPtr
+            )
+        }.firstOrElse { println(it); return false }
     }
 
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {
