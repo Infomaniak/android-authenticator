@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.Xor
+import com.infomaniak.auth.lib.internal.encodeAsn1Integer
 import com.infomaniak.auth.lib.internal.utils.trimOrPadStart
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -74,46 +75,17 @@ actual object SignUtils {
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {
         val (r, s) = convertDerToRawSignature(x962Signature)
 
-        fun trimLeadingZeros(bytes: ByteArray): ByteArray {
-            var i = 0
-            while (i < bytes.size - 1 && bytes[i] == 0.toByte()) i++
-            return bytes.copyOfRange(i, bytes.size)
-        }
-
-        val rTrimmed = trimLeadingZeros(r)
-        val sTrimmed = trimLeadingZeros(s)
-
-        fun encodeAsn1Integer(value: ByteArray): ByteArray {
-            val needsPadding = value[0].toInt() and 0x80 != 0
-            val length = value.size + if (needsPadding) 1 else 0
-            val result = ByteArray(2 + length)
-
-            result[0] = AsnOneTypes.INTEGER
-            result[1] = length.toByte()
-
-            if (needsPadding) {
-                result[2] = 0x00
-                value.copyInto(result, 3)
-            } else {
-                value.copyInto(result, 2)
-            }
-
-            return result
-        }
-
-        val rEncoded = encodeAsn1Integer(rTrimmed)
-        val sEncoded = encodeAsn1Integer(sTrimmed)
-        val sequenceContent = rEncoded + sEncoded
+        val sequenceContent = r.encodeAsn1Integer() + s.encodeAsn1Integer()
 
         val sequenceLength = sequenceContent.size
         return if (sequenceLength <= 127) {
-            byteArrayOf(0x30, sequenceLength.toByte()) + sequenceContent
+            byteArrayOf(AsnOneTypes.SEQUENCE, sequenceLength.toByte()) + sequenceContent
         } else {
             val lengthBytes = byteArrayOf(
                 (sequenceLength shr 8).toByte(),
                 sequenceLength.toByte()
             )
-            byteArrayOf(0x30.toByte(), 0x82.toByte()) + lengthBytes + sequenceContent
+            byteArrayOf(AsnOneTypes.SEQUENCE, 0x82.toByte()) + lengthBytes + sequenceContent
         }
     }
 

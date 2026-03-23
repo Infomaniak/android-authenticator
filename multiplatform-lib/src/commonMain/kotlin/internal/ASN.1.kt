@@ -23,3 +23,21 @@ internal object AsnOneTypes {
     const val BIT_STRING: Byte = 0x03
     const val INTEGER: Byte = 0x02
 }
+
+fun ByteArray.encodeAsn1Integer(): ByteArray {
+    val needsPadding = this[0].toInt() and 0x80 != 0
+    val length = size + if (needsPadding) 1 else 0
+    val result = ByteArray(2 + length)
+
+    result[0] = AsnOneTypes.INTEGER
+    result[1] = length.toByte()
+
+    if (needsPadding) {
+        result[2] = 0x00
+        copyInto(result, 3)
+    } else {
+        copyInto(result, 2)
+    }
+
+    return result
+}
