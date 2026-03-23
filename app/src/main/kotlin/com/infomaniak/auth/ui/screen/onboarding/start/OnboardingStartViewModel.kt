@@ -58,8 +58,8 @@ class OnboardingStartViewModel @Inject constructor(
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
             users.forEach { user ->
-                addUserToAuthenticatorDB(user)
                 accountUtils.addUser(user)
+                addUserToAuthenticatorDB(user)
             }
             _onLoginFinishedEvent.emit(Unit)
         }
