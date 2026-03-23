@@ -1,8 +1,9 @@
 name: Euria Review
 
 on:
+  workflow_dispatch:
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [labeled]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -10,6 +11,6 @@ concurrency:
 
 jobs:
   euria-review:
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'euria-review')
+    if: ${{ github.event.label.name == 'euria-review' }}
     uses: infomaniak/.github/.github/workflows/euria-review.yml@v2
     secrets: inherit
