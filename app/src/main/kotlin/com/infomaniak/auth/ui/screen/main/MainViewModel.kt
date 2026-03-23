@@ -19,6 +19,8 @@ package com.infomaniak.auth.ui.screen.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.lib.AppStatus
+import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.manager.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,12 +33,16 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     appSettingsRepository: AppSettingsRepository,
+    authenticatorFacade: AuthenticatorFacade,
     private val accountUtils: AccountUtils,
 ) : ViewModel() {
 
     val uiState = flow {
         emit(UiState.Ready(accountUtils.isUserConnected()))
     }.stateIn(viewModelScope, SharingStarted.Eagerly, UiState.Loading)
+
+    val appStatus = authenticatorFacade.appStatus
+        .stateIn(viewModelScope, SharingStarted.Eagerly, AppStatus.LoginRequired.NotMigrating)
 
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
 

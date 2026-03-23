@@ -34,4 +34,17 @@ class AuthenticatorInjection(
             crashReport = crashReport,
         )
     }
+
+    fun getAuthenticatorFacade(
+        clientId: String,
+        getTokenFromDatabase: suspend (userId: Long) -> String?,
+    ) = AuthenticatorFacade.create(
+        userAgent = userAgent,
+        environment = environment,
+        crashReport = crashReport,
+        clientId = clientId,
+        getTokenFromCrossAppLogin = { userId -> null },
+        getTokenFromDatabase = getTokenFromDatabase,
+        persistTokenForAccount = { userId, token -> },
+    )
 }

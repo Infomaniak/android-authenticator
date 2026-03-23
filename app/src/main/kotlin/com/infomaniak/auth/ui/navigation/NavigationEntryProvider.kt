@@ -94,15 +94,18 @@ fun baseEntryProvider(
     }
     entry<NavDestination.SecuringAccount> {
         SecuringAccountScreen(
-            onFinish = { backStack.add(NavDestination.Onboarding.Complete) }
+            onFinish = {
+                // backStack.add(NavDestination.Onboarding.Complete)
+            }
         )
     }
     entry<NavDestination.Onboarding.Complete> {
         OnboardingCompleteScreen(
-            navigateToHome = {
-                backStack.clear()
-                backStack.add(NavDestination.Root.Home)
-            }
+            navigateToHome = it.onFinish
+            // navigateToHome = {
+            //     backStack.clear()
+            //     backStack.add(NavDestination.Root.Home)
+            // }
         )
     }
 }

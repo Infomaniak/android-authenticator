@@ -18,9 +18,11 @@
 package com.infomaniak.auth.di
 
 import android.content.Context
+import android.util.Log
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.AuthenticatorInjection
+import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
@@ -28,6 +30,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
 import javax.inject.Singleton
 
 @Module
@@ -59,7 +62,19 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticatorFacade(authenticatorInjection: AuthenticatorInjection): AuthenticatorFacade {
-        return authenticatorInjection.authenticatorFacade
+    fun provideAuthenticatorFacade(
+        authenticatorInjection: AuthenticatorInjection,
+        accountUtils: AccountUtils,
+    ): AuthenticatorFacade {
+        return authenticatorInjection.getAuthenticatorFacade(
+            clientId = BuildConfig.CLIENT_ID,
+            getTokenFromDatabase = { userId ->
+                Log.v("Jamy", "provideAuthenticatorFacade: wdsfpijfc")
+                Log.v("Jamy", "provideAuthenticatorFacade: $userId")
+                val accessToken = accountUtils.users.first().firstOrNull { userId == it.id.toLong() }?.apiToken?.accessToken
+                Log.v("Jamy", "provideAuthenticatorFacade: $accessToken")
+                accessToken
+            },
+        )
     }
 }

@@ -70,7 +70,7 @@ fun OnboardingCompleteScreen(navigateToHome: () -> Unit) {
 
 @PreviewSmallWindow
 @Composable
-fun OnboardingCompleteScreenPreview() {
+private fun OnboardingCompleteScreenPreview() {
     AuthenticatorTheme {
         OnboardingCompleteScreen(navigateToHome = {})
     }

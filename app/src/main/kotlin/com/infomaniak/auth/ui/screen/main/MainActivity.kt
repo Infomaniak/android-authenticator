@@ -19,6 +19,7 @@ package com.infomaniak.auth.ui.screen.main
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.applock.AppLockActivity
@@ -62,6 +64,7 @@ class MainActivity : FragmentActivity() {
         setContent {
             val appSettings by appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
             val uiState = viewModel.uiState.collectAsStateWithLifecycle(null).value
+            val appStatus by viewModel.appStatus.collectAsStateWithLifecycle()
 
             val isDarkTheme = when (appSettings?.theme) {
                 Theme.Light -> false
@@ -71,8 +74,10 @@ class MainActivity : FragmentActivity() {
 
             if (uiState is UiState.Ready) {
                 AuthenticatorTheme(isDarkTheme = isDarkTheme) {
+                    Log.v("Jamy", "onCreate: $appStatus")
                     MainScreen(
-                        startDestination = if (uiState.isUserConnected) {
+                        viewModel = viewModel,
+                        startDestination = if (uiState.isUserConnected && appStatus == AppStatus.SetupComplete) {
                             NavDestination.Root.Home
                         } else {
                             NavDestination.Onboarding.Start

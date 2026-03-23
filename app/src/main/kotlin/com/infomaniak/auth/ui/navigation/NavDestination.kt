@@ -30,7 +30,9 @@ sealed interface NavDestination : NavKey {
         data object Start : Onboarding
 
         @Serializable
-        data object Complete : Onboarding
+        data class Complete(
+            val onFinish: () -> Unit
+        ) : Onboarding
     }
 
     @Serializable

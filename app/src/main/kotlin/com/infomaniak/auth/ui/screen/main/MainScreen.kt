@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
+import android.util.Log
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -33,6 +34,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -41,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntryDecorator
@@ -52,6 +55,7 @@ import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.components.AuthenticatorFAB
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
@@ -63,13 +67,41 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun MainScreen(startDestination: NavDestination) {
+fun MainScreen(
+    startDestination: NavDestination,
+    viewModel: MainViewModel
+) {
     val backStack = rememberNavBackStack(startDestination)
     val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
     val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
         rememberSaveableStateHolderNavEntryDecorator(),
         rememberViewModelStoreNavEntryDecorator()
     )
+
+    val appStatus by viewModel.appStatus.collectAsStateWithLifecycle()
+
+    LaunchedEffect(appStatus) {
+        when (val status = appStatus) {
+            is AppStatus.LoggingIn -> backStack.apply {
+                Log.v("Jamy", "MainScreen: LoggingIn")
+                status.needsResolution.let {
+                    // TODO: maybe do somthing
+                }
+                clear()
+                add(NavDestination.Onboarding.Start)
+            }
+            is AppStatus.OnboardingDone -> backStack.apply {
+                Log.v("Jamy", "MainScreen: OnboardingDone")
+                clear()
+                add(NavDestination.Onboarding.Complete(status.proceed))
+            }
+            AppStatus.SetupComplete -> backStack.apply {
+                clear()
+                add(NavDestination.Root.Home)
+            }
+            else -> Unit
+        }
+    }
 
     MainScreen(backStack, currentDestination, entryDecorators)
 }
