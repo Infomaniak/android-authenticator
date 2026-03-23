@@ -182,6 +182,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         CFRelease(query)
 
         return if (status == errSecSuccess && resultRef.value != null) {
+            @Suppress("unchecked_cast")
             val resultsArray = resultRef.value as CFArrayRef
             Pair(resultsArray, CFArrayGetCount(resultsArray).toInt())
         } else {
@@ -191,7 +192,9 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @OptIn(BetaInteropApi::class)
     private fun extractTagFromItem(item: CFTypeRef?): String? {
+        @Suppress("unchecked_cast")
         val tagRef = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) ?: return null
+        @Suppress("unchecked_cast")
         val tagData = tagRef as CFDataRef
         return tagData.toNSData().toByteArray().decodeToString()
     }
