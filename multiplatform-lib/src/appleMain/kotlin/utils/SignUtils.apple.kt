@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.Xor
+import com.infomaniak.auth.lib.internal.utils.trimOrPadStart
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.memScoped
@@ -71,12 +72,7 @@ actual object SignUtils {
     }
 
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {
-        val rawSignature = convertDerToRawSignature(x962Signature)
-
-        require(rawSignature.size == 64) { "Signature must be exactly 64 bytes. Actual size: ${rawSignature.size}" }
-
-        val r = rawSignature.copyOfRange(0, 32)
-        val s = rawSignature.copyOfRange(32, 64)
+        val (r, s) = convertDerToRawSignature(x962Signature)
 
         fun trimLeadingZeros(bytes: ByteArray): ByteArray {
             var i = 0
@@ -121,7 +117,7 @@ actual object SignUtils {
         }
     }
 
-    private fun convertDerToRawSignature(derSignature: ByteArray): ByteArray {
+    private fun convertDerToRawSignature(derSignature: ByteArray): Pair<ByteArray, ByteArray> {
         require(derSignature.size in 70..72) {
             "Invalid DER signature length: ${derSignature.size}, expected 70-72"
         }
@@ -134,10 +130,7 @@ actual object SignUtils {
         pos++
         val rLen = derSignature[pos].toInt() and 0xFF
         pos++
-        val r = derSignature.copyOfRange(pos, pos + rLen).let {
-            // Enlever le padding 0x00 si présent (indicateur de signe positif ASN.1)
-            if (it.size == 33 && it[0] == 0x00.toByte()) it.copyOfRange(1, 33) else it
-        }
+        val r = derSignature.copyOfRange(pos, pos + rLen).trimOrPadStart(32)
         pos += rLen
 
         // Parse INTEGER s
@@ -145,16 +138,9 @@ actual object SignUtils {
         pos++
         val sLen = derSignature[pos].toInt() and 0xFF
         pos++
-        val s = derSignature.copyOfRange(pos, pos + sLen).let {
-            // Enlever le padding 0x00 si présent
-            if (it.size == 33 && it[0] == 0x00.toByte()) it.copyOfRange(1, 33) else it
-        }
+        val s = derSignature.copyOfRange(pos, pos + sLen).trimOrPadStart(32)
 
-        require(r.size == 32 && s.size == 32) {
-            "Invalid r/s length: r=${r.size}, s=${s.size}, expected 32/32"
-        }
-
-        return r + s
+        return r to s
     }
 
     private fun importPrivateKeyFromBytes(keyBytes: ByteArray): SecKeyRef? = memScoped {
