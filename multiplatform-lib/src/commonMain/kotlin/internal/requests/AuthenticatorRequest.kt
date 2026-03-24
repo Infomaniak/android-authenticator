@@ -66,11 +66,11 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     }
 
     /**
-     * Authenticates with [com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData], which contains private-key signed data.
+     * Authenticates with [VerifyAuthenticationData], which contains private-key signed data.
      *
      * That data includes the challenge retrieved in [challenge].
      *
-     * @return An [com.infomaniak.auth.lib.internal.models.AuthResult] that includes an access token.
+     * @return An [AuthResult] that includes an access token.
      */
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
         return httpClient.post(ApiRoutes.verify()) {
@@ -91,7 +91,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     }
 
     /**
-     * Get migration options (see [com.infomaniak.auth.lib.internal.models.MigrationOptions]), prior to migration from kAuth.
+     * Get migration options (see [MigrationOptions]), prior to migration from kAuth.
      *
      * @param deviceId The id of the device.
      * @param userId The id of the user.
