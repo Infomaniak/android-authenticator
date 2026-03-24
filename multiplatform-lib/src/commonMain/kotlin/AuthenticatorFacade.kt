@@ -17,13 +17,15 @@
  */
 package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.db.getAccountsRoomDatabase
-import com.infomaniak.auth.lib.managers.AuthenticatorManager
-import com.infomaniak.auth.lib.network.ApiClientProvider
+import com.infomaniak.auth.lib.internal.AuthenticatorFacadeImpl
+import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
+import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
+import com.infomaniak.auth.lib.internal.network.ApiClientProvider
+import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
+import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
-import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
-import com.infomaniak.auth.lib.repository.AccountsRepository
+import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -40,9 +42,7 @@ abstract class AuthenticatorFacade internal constructor() {
             clientId: String,
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
-            getTokenFromCrossAppLogin: suspend (userId: Long) -> String?,
-            getTokenFromDatabase: suspend (userId: Long) -> String?,
-            persistTokenForAccount: suspend (userId: Long, token: String) -> Unit,
+            tokenBridge: TokenBridge,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
         ): AuthenticatorFacade {
             val webAuthnRepository = WebAuthnRepository(
@@ -64,10 +64,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 db = db,
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
-                webAuthnRepository = webAuthnRepository,
-                getTokenFromCrossAppLogin = getTokenFromCrossAppLogin,
-                getTokenFromDatabase = getTokenFromDatabase,
-                persistTokenForAccount = persistTokenForAccount,
+                tokenBridge = tokenBridge,
                 coroutineScope = scope,
             )
         }

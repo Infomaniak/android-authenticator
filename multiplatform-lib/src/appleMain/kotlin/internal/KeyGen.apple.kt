@@ -19,10 +19,12 @@
 
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.extensions.buildCFDictionary
-import com.infomaniak.auth.lib.extensions.set
-import com.infomaniak.auth.lib.extensions.toNsData
-import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
+import com.infomaniak.auth.lib.internal.extensions.set
+import com.infomaniak.auth.lib.internal.extensions.toNsData
+import com.infomaniak.auth.lib.internal.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
+import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFMutableDictionaryRef
 import platform.CoreFoundation.kCFAllocatorDefault
@@ -154,6 +156,7 @@ private fun createKeyAttributes(
         this[kSecAttrAccessControl] = createAccessControl(
             accessControl = accessControl,
             accessibility = accessibility,
+            isForSecureEnclave = storageLocation == KeyStorageLocation.SecureEnclave
         )
         // No need to specify kSecAttrAccessible since it's already set in kSecAttrAccessControl just above.
         /*
@@ -186,12 +189,13 @@ private fun KeyPurposes.applyTo(dictionary: CFMutableDictionaryRef?) {
 
 private fun createAccessControl(
     accessControl: KeyAccessGuard,
-    accessibility: KeyAccessibility
+    accessibility: KeyAccessibility,
+    isForSecureEnclave: Boolean,
 ) = tryIt { errorPointer ->
     SecAccessControlCreateWithFlags(
         allocator = kCFAllocatorDefault,
         protection = accessibility.toKSecAttrAccessible(),
-        flags = accessControl.toAccessControlFlags(),
+        flags = accessControl.toAccessControlFlags(isForSecureEnclave),
         error = errorPointer
     )
 }.firstOrElse { error -> throw Exception("Error creating access control: $error") }

@@ -25,14 +25,6 @@ import kotlinx.serialization.cbor.ByteString
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.encodeToByteArray
 
-@Suppress("unused") // The properties are used by CBOR serialization, to be sent to the backend.
-@Serializable
-class WebAuthnAttestationObject(
-    val fmt: String,
-    @ByteString
-    val authData: ByteArray,
-)
-
 internal fun createEncodedWebAuthnAttestationObject(fmt: String, authData: ByteArray): ByteArray {
     val attestationObject = WebAuthnAttestationObject(
         fmt = fmt,
@@ -40,3 +32,11 @@ internal fun createEncodedWebAuthnAttestationObject(fmt: String, authData: ByteA
     )
     return Cbor.CoseCompliant.encodeToByteArray(attestationObject)
 }
+
+@Suppress("unused") // The properties are used by CBOR serialization, to be sent to the backend.
+@Serializable
+private class WebAuthnAttestationObject(
+    val fmt: String,
+    @ByteString
+    val authData: ByteArray,
+)

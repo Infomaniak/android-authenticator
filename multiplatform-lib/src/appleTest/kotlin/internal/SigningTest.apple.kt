@@ -19,21 +19,23 @@
 
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.extensions.toByteArray
-import com.infomaniak.auth.lib.extensions.toNSData
-import com.infomaniak.auth.lib.extensions.tryIt
-import com.infomaniak.auth.lib.utils.SignUtils
-import io.ktor.utils.io.core.toByteArray
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
+import com.infomaniak.auth.lib.internal.extensions.toByteArray
+import com.infomaniak.auth.lib.internal.extensions.toNSData
+import com.infomaniak.auth.lib.internal.extensions.tryIt
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Security.SecKeyCopyExternalRepresentation
 import platform.Security.SecKeyCopyPublicKey
 import kotlin.test.Test
 import kotlin.test.fail
 
-class SigningTest {
+class SigningTest : SigningTestBase() {
 
     @Test
-    fun testSigning() {
+    fun `__this is a test class with tests in the super class`() {
+    }
+
+    override fun getKeyPair(): Pair<ByteArray, ByteArray> {
         val privateKey = generateEcPrivateKeyInMemory(
             tag = "whatever",
             keyAccessGuard = KeyAccessGuard.Unguarded,
@@ -44,19 +46,20 @@ class SigningTest {
             SecKeyCopyExternalRepresentation(privateKey, errorPtr)
         }.firstOrElse { error -> fail("Error copying private key: $error") }.toNSData()
 
-        println("Private key: $privateKeyData")
-
         val publicKey = SecKeyCopyPublicKey(privateKey) ?: fail("Failed to extract public key from private key")
 
         val publicKeyData = tryIt { errorPtr ->
             SecKeyCopyExternalRepresentation(publicKey, errorPtr)
         }.firstOrElse { error -> fail("Error copying public key: $error") }.toNSData()
-        println("Public key: $publicKeyData")
-
-        val someData = "LOL".toByteArray()
-        println("Data to sign: $someData")
-        val signature = SignUtils.signWithPrivateKey(privateKeyData.toByteArray(), someData)
-        println("Signature: $signature")
-        TODO("test with a hardcoded key pair and check the signature is correct")
+        return privateKeyData.toByteArray() to publicKeyData.toByteArray()
     }
+
+    override fun getTestDataSet(): List<TestData> = listOf(
+        TestData(
+            privateKey = "0480780672c97a37ea97b9a7e11ba1d4b8a0a55f7dcdf6f188312306c81b37c978f2d40b7f70b9213ece44606f73410ed42f7fa4d6d8ef3fc23d608b76edb2942a1ca57a786db47d4b9a50c9cc6df7b87c1ee07ce3d41c791afd6ad469917d3244".hexToByteArray(),
+            publicKey = "0480780672c97a37ea97b9a7e11ba1d4b8a0a55f7dcdf6f188312306c81b37c978f2d40b7f70b9213ece44606f73410ed42f7fa4d6d8ef3fc23d608b76edb2942a".hexToByteArray(),
+            dataToSign = "4c4f4c".hexToByteArray(),
+            signature = "30450220205023db9fd540084a67f9439a858ebc3fd0b8b39380874d25f854868ad7bc4d022100be4669bc12a35bce32ae08d5f801e95363b58bf4502ecb916d386e8832ccf8bf".hexToByteArray(),
+        )
+    )
 }

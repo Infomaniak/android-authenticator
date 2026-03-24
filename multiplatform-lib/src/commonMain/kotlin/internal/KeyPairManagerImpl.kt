@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.Failure
+import com.infomaniak.auth.lib.internal.utils.Xor
 
 internal expect class KeyPairManagerImpl() : KeyPairManager {
     override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed?

@@ -22,7 +22,7 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-value class KeyAlgorithm(val constant: Byte) {
+internal value class KeyAlgorithm(val constant: Byte) {
     companion object {
         val ES256 = KeyAlgorithm(-7)
     }

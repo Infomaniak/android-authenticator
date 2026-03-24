@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth
+package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.CryptoObjectsBuilder
+import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.models.PasskeysOptions
+import com.infomaniak.auth.lib.internal.models.PubKeyCredParam
+import com.infomaniak.auth.lib.internal.models.RelyingParty
+import com.infomaniak.auth.lib.internal.models.User
 import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
-import com.infomaniak.auth.lib.network.models.PasskeysOptions
-import com.infomaniak.auth.lib.network.models.PubKeyCredParam
-import com.infomaniak.auth.lib.network.models.RelyingParty
-import com.infomaniak.auth.lib.network.models.User
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.test.Test
@@ -60,7 +60,7 @@ class WebAuthnTest {
         // Just getting the public key to generate RegisterPasskey object
         val cryptoObjectsBuilder = CryptoObjectsBuilder()
         val keyPairManager = KeyPairManagerImpl()
-        val userId = 12345
+        val userId = 12345L
         val keyIdAsByteArray = cryptoObjectsBuilder.getKeyIds().first
         val keyIdAsString = cryptoObjectsBuilder.getKeyIds().second
         keyPairManager.generateNewKey(userId, keyIdAsString)?.let { fail("Key generation failed: ${it.details}") }

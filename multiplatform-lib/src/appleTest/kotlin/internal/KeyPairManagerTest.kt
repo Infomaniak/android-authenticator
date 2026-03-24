@@ -18,6 +18,7 @@
 
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertNull
@@ -30,7 +31,7 @@ class KeyPairManagerTest {
         val keyPairManager = KeyPairManagerImpl()
 
         runTest {
-            val userId = 12345
+            val userId = 12345L
             val keyId = "keyId"
             //NOTE: The default KeyChain is not available on headless simulators,
             // so we need to remove this test, or update it to use in-memory keys instead.
