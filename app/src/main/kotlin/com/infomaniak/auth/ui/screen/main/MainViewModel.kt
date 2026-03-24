@@ -33,7 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     appSettingsRepository: AppSettingsRepository,
-    authenticatorFacade: AuthenticatorFacade,
+    private val authenticatorFacade: AuthenticatorFacade,
     private val accountUtils: AccountUtils,
 ) : ViewModel() {
 

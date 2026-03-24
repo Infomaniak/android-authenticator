@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnboardingStartScreen(
     snackbarHostState: SnackbarHostState,
-    onLoginFinished: () -> Unit,
+    // onLoginFinished: () -> Unit,
     onCreateAccount: () -> Unit,
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {

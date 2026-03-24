@@ -81,33 +81,38 @@ fun MainScreen(
     val appStatus by viewModel.appStatus.collectAsStateWithLifecycle()
 
     LaunchedEffect(appStatus) {
-        when (val status = appStatus) {
-            is AppStatus.LoginRequired -> backStack.apply {
-                clear()
-                add(NavDestination.Onboarding.Start)
-            }
-            is AppStatus.LoggingIn -> backStack.apply {
-                Log.v("Jamy", "MainScreen: LoggingIn")
-                status.needsResolution.let {
-                    // TODO: maybe do somthing
-                }
-                clear()
-                add(NavDestination.SecuringAccount)
-            }
-            is AppStatus.OnboardingDone -> backStack.apply {
-                Log.v("Jamy", "MainScreen: OnboardingDone")
-                clear()
-                add(NavDestination.Onboarding.Complete(status.proceed))
-            }
-            AppStatus.SetupComplete -> backStack.apply {
-                clear()
-                add(NavDestination.Root.Home)
-            }
-            else -> Unit
-        }
+        handleAppStatus(appStatus, backStack, viewModel)
     }
 
     MainScreen(backStack, currentDestination, entryDecorators)
+}
+
+
+private fun handleAppStatus(
+    appStatus: AppStatus,
+    backStack: NavBackStack<NavKey>,
+    viewModel: MainViewModel
+) {
+    when (appStatus) {
+        is AppStatus.LoginRequired -> backStack.apply {
+            clear()
+            add(NavDestination.Onboarding.Start)
+        }
+        is AppStatus.LoggingIn -> backStack.apply {
+            Log.v("Jamy", "MainScreen: LoggingIn")
+            clear()
+            add(NavDestination.SecuringAccount(appStatus.needsResolution))
+        }
+        is AppStatus.OnboardingDone -> backStack.apply {
+            Log.v("Jamy", "MainScreen: OnboardingDone")
+            clear()
+            add(NavDestination.Onboarding.Complete(appStatus.proceed))
+        }
+        AppStatus.SetupComplete -> backStack.apply {
+            clear()
+            add(NavDestination.Root.Home)
+        }
+    }
 }
 
 @Composable

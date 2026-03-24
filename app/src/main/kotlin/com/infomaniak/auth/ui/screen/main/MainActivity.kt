@@ -19,7 +19,6 @@ package com.infomaniak.auth.ui.screen.main
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -74,7 +73,6 @@ class MainActivity : FragmentActivity() {
 
             if (uiState is UiState.Ready) {
                 AuthenticatorTheme(isDarkTheme = isDarkTheme) {
-                    Log.v("Jamy", "onCreate: $appStatus")
                     MainScreen(
                         viewModel = viewModel,
                         startDestination = if (uiState.isUserConnected && appStatus == AppStatus.SetupComplete) {

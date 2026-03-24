@@ -19,17 +19,58 @@ package com.infomaniak.auth.ui.screen.securingaccount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.core.sentry.SentryLog
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class SecuringAccountViewModel @Inject constructor() : ViewModel() {
+class SecuringAccountViewModel @Inject constructor(
+    private val authenticatorFacade: AuthenticatorFacade
+) : ViewModel() {
     fun doMagicThing(onFinish: () -> Unit) {
         viewModelScope.launch {
             delay(5000L)
             onFinish()
         }
+    }
+
+    fun needResolution() {
+        viewModelScope.launch {
+            authenticatorFacade.accounts
+                .flatMapLatest { accounts ->
+                    accounts.mapNotNull { it.status as? Account.Status.NotConnected }.asFlow()
+                }
+                .onEach { status ->
+                    when (val action = status.action) {
+                        is NotConnectedAction.ReLogin -> {
+
+                        }
+                        is NotConnectedAction.Issue.Retriable -> {
+                            action.proceed(true)
+                        }
+                        is NotConnectedAction.Issue.NonRetriable -> {
+                            SentryLog.e(TAG, action.message)
+                        }
+                        null -> Unit
+                    }
+                }
+                .launchIn(viewModelScope)
+
+        }
+    }
+
+    companion object {
+        private val TAG = SecuringAccountViewModel::class.java.simpleName
     }
 }

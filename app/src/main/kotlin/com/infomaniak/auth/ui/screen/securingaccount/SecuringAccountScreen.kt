@@ -45,14 +45,20 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun SecuringAccountScreen(
-    viewModel: SecuringAccountViewModel = viewModel(),
-    onFinish: () -> Unit
+    needResolution: Boolean,
+    onFinish: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SecuringAccountViewModel = viewModel()
 ) {
     LaunchedEffect(viewModel) {
         viewModel.doMagicThing(onFinish)
+        if (needResolution) {
+            viewModel.needResolution()
+        }
     }
 
     SinglePaneScaffold(
+        modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
         }
@@ -78,6 +84,9 @@ fun SecuringAccountScreen(
 @Composable
 private fun SecuringAccountScreenPreview() {
     AuthenticatorTheme {
-        SecuringAccountScreen(onFinish = { })
+        SecuringAccountScreen(
+            needResolution = false,
+            onFinish = { }
+        )
     }
 }

@@ -81,19 +81,20 @@ fun baseEntryProvider(
     }
     entry<NavDestination.AccountDetails> {
         AccountDetailsScreen(
-            it.accountId,
+            accountId = it.accountId,
             onBackPressed = backStack::popLast
         )
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(
             snackbarHostState = snackbarHostState,
-            onLoginFinished = { backStack.add(NavDestination.SecuringAccount) },
+            // onLoginFinished = { backStack.add(NavDestination.SecuringAccount) },
             onCreateAccount = {}
         )
     }
     entry<NavDestination.SecuringAccount> {
         SecuringAccountScreen(
+            needResolution = it.needResolution,
             onFinish = {
                 // backStack.add(NavDestination.Onboarding.Complete)
             }
