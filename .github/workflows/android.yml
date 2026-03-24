@@ -37,4 +37,4 @@ jobs:
       - name: Run unit tests and analyze with sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --stacktrace
+        run: ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
