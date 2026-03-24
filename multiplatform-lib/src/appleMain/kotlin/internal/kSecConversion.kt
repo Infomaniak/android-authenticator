@@ -38,8 +38,8 @@ import platform.Security.kSecAttrAccessibleWhenUnlockedThisDeviceOnly
 internal fun KeyAccessibility.toKSecAttrAccessible(): CFStringRef? = when (this) {
     KeyAccessibility.WhenUnlocked.ThisDeviceOnly -> kSecAttrAccessibleWhenUnlockedThisDeviceOnly
     KeyAccessibility.WhenUnlocked -> kSecAttrAccessibleWhenUnlocked
-    KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly -> kSecAttrAccessibleAfterFirstUnlock
-    KeyAccessibility.AfterFirstUnlock -> kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly -> kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    KeyAccessibility.AfterFirstUnlock -> kSecAttrAccessibleAfterFirstUnlock
     KeyAccessibility.WhenPasscodeSet.ThisDeviceOnly -> kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
     KeyAccessibility.Always -> kSecAttrAccessibleAlways
     KeyAccessibility.Always.ThisDeviceOnly -> kSecAttrAccessibleAlwaysThisDeviceOnly
