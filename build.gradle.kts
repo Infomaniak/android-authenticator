@@ -30,5 +30,14 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.skie) apply false
 
+    alias(libs.plugins.sonarqube)
     id("com.infomaniak.core.compose.lint")
+}
+
+sonar {
+    properties {
+        property("sonar.scanner.skipJreProvisioning", "true")
+        property("sonar.projectKey", "Infomaniak_android-authenticator")
+        property("sonar.organization", "infomaniak")
+    }
 }
