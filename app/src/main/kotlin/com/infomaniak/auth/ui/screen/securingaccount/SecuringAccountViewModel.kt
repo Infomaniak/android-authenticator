@@ -25,7 +25,6 @@ import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.core.sentry.SentryLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -38,13 +37,6 @@ import javax.inject.Inject
 class SecuringAccountViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade
 ) : ViewModel() {
-    fun doMagicThing(onFinish: () -> Unit) {
-        viewModelScope.launch {
-            delay(5000L)
-            onFinish()
-        }
-    }
-
     fun needResolution() {
         viewModelScope.launch {
             authenticatorFacade.accounts

@@ -93,12 +93,7 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.SecuringAccount> {
-        SecuringAccountScreen(
-            needResolution = it.needResolution,
-            onFinish = {
-                // backStack.add(NavDestination.Onboarding.Complete)
-            }
-        )
+        SecuringAccountScreen(needResolution = it.needResolution)
     }
     entry<NavDestination.Onboarding.Complete> {
         OnboardingCompleteScreen(

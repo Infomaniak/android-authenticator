@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.securingaccount
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,17 +45,20 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 @Composable
 fun SecuringAccountScreen(
     needResolution: Boolean,
-    onFinish: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SecuringAccountViewModel = viewModel()
 ) {
     LaunchedEffect(viewModel) {
-        viewModel.doMagicThing(onFinish)
         if (needResolution) {
             viewModel.needResolution()
         }
     }
 
+    SecuringAccountScreen(modifier)
+}
+
+@Composable
+private fun SecuringAccountScreen(modifier: Modifier = Modifier) {
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {
@@ -66,9 +68,7 @@ fun SecuringAccountScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
-                // TODO[ik-auth]: Remove this when magic thing become not magic
-                .clickable(onClick = onFinish),
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -84,9 +84,6 @@ fun SecuringAccountScreen(
 @Composable
 private fun SecuringAccountScreenPreview() {
     AuthenticatorTheme {
-        SecuringAccountScreen(
-            needResolution = false,
-            onFinish = { }
-        )
+        SecuringAccountScreen()
     }
 }
