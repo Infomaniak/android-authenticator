@@ -22,11 +22,11 @@ import com.infomaniak.auth.lib.extensions.set
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.encodeAsn1Integer
-import com.infomaniak.auth.lib.internal.firstOrElse
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
+import com.infomaniak.auth.lib.internal.extensions.trimOrPadStart
 import com.infomaniak.auth.lib.internal.toByteArray
 import com.infomaniak.auth.lib.internal.toCFDataRef
 import com.infomaniak.auth.lib.internal.toNSData
-import com.infomaniak.auth.lib.internal.utils.trimOrPadStart
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.memScoped
@@ -139,7 +139,7 @@ internal actual object SignUtils {
         val keyData = keyBytes.toNSData().toCFDataRef()
 
         val attributes = buildCFDictionary {
-            this[kSecAttrKeyType] set kSecAttrKeyTypeECSECPrimeRandom
+            this[kSecAttrKeyType] = kSecAttrKeyTypeECSECPrimeRandom
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
             this[kSecAttrKeySizeInBits] = 256
         }

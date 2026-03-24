@@ -18,8 +18,6 @@
 package com.infomaniak.auth.lib.internal.db
 
 import androidx.room.Room
-import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
-import com.infomaniak.auth.lib.room.accounts.getAccountsRoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
