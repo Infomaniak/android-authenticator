@@ -26,9 +26,6 @@ import com.infomaniak.auth.lib.internal.repository.AccountsRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
-import com.infomaniak.auth.lib.network.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.network.requests.AuthenticatorRequest
-import com.infomaniak.auth.lib.repository.AccountsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

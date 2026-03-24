@@ -26,11 +26,9 @@ import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
-import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
-import com.infomaniak.auth.lib.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.lib.room.accounts.AccountEntity
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
