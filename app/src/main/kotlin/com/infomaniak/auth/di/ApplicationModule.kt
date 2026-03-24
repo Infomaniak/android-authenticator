@@ -21,6 +21,7 @@ import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.AuthenticatorInjection
+import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
@@ -69,17 +70,21 @@ object ApplicationModule {
     ): AuthenticatorFacade {
         return authenticatorInjection.getAuthenticatorFacade(
             clientId = BuildConfig.CLIENT_ID,
-            getTokenFromDatabase = { userId ->
-                accountUtils.users.first().firstOrNull { userId == it.id.toLong() }?.apiToken?.accessToken
-            },
-            getTokenFromCrossAppLogin = { userId ->
-                // TODO[Authenticator]: retrieve token from crossapplogin
-                null
-            },
-            persistTokenForAccount = { userId, token ->
-                val dao = UserDatabase().userDao()
-                val user = dao.findById(userId.toInt()) ?: return@getAuthenticatorFacade
-                dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = "Bearer", userId = userId.toInt())))
+            tokenBridge = object : TokenBridge {
+                override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
+                    // TODO[Authenticator]: retrieve token from crossapplogin
+                    return null
+                }
+
+                override suspend fun getTokenFromDatabase(userId: Long): String? {
+                    return accountUtils.users.first().firstOrNull { userId == it.id.toLong() }?.apiToken?.accessToken
+                }
+
+                override suspend fun persistTokenForAccount(userId: Long, token: String) {
+                    val dao = UserDatabase().userDao()
+                    val user = dao.findById(userId.toInt()) ?: return
+                    dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = "Bearer", userId = userId.toInt())))
+                }
             },
         )
     }
