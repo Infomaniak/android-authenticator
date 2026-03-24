@@ -193,9 +193,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     @OptIn(BetaInteropApi::class)
     private fun extractTagFromItem(item: CFTypeRef?): String? {
         @Suppress("unchecked_cast")
-        val tagRef = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) ?: return null
-        @Suppress("unchecked_cast")
-        val tagData = tagRef as CFDataRef
+        val tagData = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) as? CFDataRef ?: return null
         return tagData.toNSData().toByteArray().decodeToString()
     }
 
