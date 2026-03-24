@@ -156,6 +156,7 @@ private fun createKeyAttributes(
         this[kSecAttrAccessControl] = createAccessControl(
             accessControl = accessControl,
             accessibility = accessibility,
+            isForSecureEnclave = storageLocation == KeyStorageLocation.SecureEnclave
         )
         // No need to specify kSecAttrAccessible since it's already set in kSecAttrAccessControl just above.
         /*
@@ -188,12 +189,13 @@ private fun KeyPurposes.applyTo(dictionary: CFMutableDictionaryRef?) {
 
 private fun createAccessControl(
     accessControl: KeyAccessGuard,
-    accessibility: KeyAccessibility
+    accessibility: KeyAccessibility,
+    isForSecureEnclave: Boolean,
 ) = tryIt { errorPointer ->
     SecAccessControlCreateWithFlags(
         allocator = kCFAllocatorDefault,
         protection = accessibility.toKSecAttrAccessible(),
-        flags = accessControl.toAccessControlFlags(),
+        flags = accessControl.toAccessControlFlags(isForSecureEnclave),
         error = errorPointer
     )
 }.firstOrElse { error -> throw Exception("Error creating access control: $error") }
