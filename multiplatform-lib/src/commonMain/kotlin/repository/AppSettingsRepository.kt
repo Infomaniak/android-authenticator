@@ -24,7 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 
-class AppSettingsRepository(private val database: AppSettingsDatabase) {
+class AppSettingsRepository(database: AppSettingsDatabase) {
     private val dao = database.getDao()
 
     @OptIn(ExperimentalCoroutinesApi::class)

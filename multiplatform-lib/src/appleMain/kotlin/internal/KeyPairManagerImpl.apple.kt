@@ -19,14 +19,14 @@
 
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.Failure
-import com.infomaniak.auth.lib.extensions.buildCFDictionary
-import com.infomaniak.auth.lib.extensions.set
-import com.infomaniak.auth.lib.extensions.toByteArray
-import com.infomaniak.auth.lib.extensions.toNSData
-import com.infomaniak.auth.lib.extensions.toNsData
-import com.infomaniak.auth.lib.extensions.tryIt
-import com.infomaniak.auth.lib.extensions.use
+import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
+import com.infomaniak.auth.lib.internal.extensions.set
+import com.infomaniak.auth.lib.internal.extensions.toByteArray
+import com.infomaniak.auth.lib.internal.extensions.toNSData
+import com.infomaniak.auth.lib.internal.extensions.toNsData
+import com.infomaniak.auth.lib.internal.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.use
+import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.MemScope

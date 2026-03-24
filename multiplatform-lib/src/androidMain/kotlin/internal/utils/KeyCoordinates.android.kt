@@ -17,7 +17,8 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-import com.infomaniak.auth.lib.PublicKeyXY
+import com.infomaniak.auth.lib.internal.extensions.trimOrPadStart
+import com.infomaniak.auth.lib.internal.webauthn.PublicKeyXY
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.interfaces.ECPublicKey

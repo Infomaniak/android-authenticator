@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.utils.SignUtils
+import com.infomaniak.auth.lib.internal.utils.SignUtils
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

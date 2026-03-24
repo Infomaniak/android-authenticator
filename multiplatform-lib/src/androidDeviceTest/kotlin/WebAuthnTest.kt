@@ -17,12 +17,13 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.models.PasskeysOptions
+import com.infomaniak.auth.lib.internal.models.PubKeyCredParam
+import com.infomaniak.auth.lib.internal.models.RelyingParty
+import com.infomaniak.auth.lib.internal.models.User
 import com.infomaniak.auth.lib.internal.webauthn.KeyAlgorithm
-import com.infomaniak.auth.lib.network.models.PasskeysOptions
-import com.infomaniak.auth.lib.network.models.PubKeyCredParam
-import com.infomaniak.auth.lib.network.models.RelyingParty
-import com.infomaniak.auth.lib.network.models.User
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.test.Test

@@ -18,6 +18,7 @@
 
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertNull

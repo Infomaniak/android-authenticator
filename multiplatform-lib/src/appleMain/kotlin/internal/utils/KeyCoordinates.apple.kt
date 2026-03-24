@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-import com.infomaniak.auth.lib.PublicKeyXY
+import com.infomaniak.auth.lib.internal.webauthn.PublicKeyXY
 
 internal actual fun getKeyCoordinates(key: ByteArray): PublicKeyXY {
     return keyCoordinatesOf(uncompressedP256Key = key)
