@@ -17,7 +17,7 @@
  */
 @file:OptIn(ExperimentalForeignApi::class)
 
-package com.infomaniak.auth.lib.extensions
+package com.infomaniak.auth.lib.internal.extensions
 
 import com.infomaniak.auth.lib.internal.toNSError
 import com.infomaniak.auth.lib.internal.utils.Xor

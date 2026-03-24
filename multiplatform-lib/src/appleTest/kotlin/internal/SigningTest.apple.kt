@@ -19,7 +19,7 @@
 
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.tryIt
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Security.SecKeyCopyExternalRepresentation

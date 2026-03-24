@@ -17,9 +17,9 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-import com.infomaniak.auth.lib.extensions.buildCFDictionary
-import com.infomaniak.auth.lib.extensions.set
-import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
+import com.infomaniak.auth.lib.internal.extensions.set
+import com.infomaniak.auth.lib.internal.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.encodeAsn1Integer
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse

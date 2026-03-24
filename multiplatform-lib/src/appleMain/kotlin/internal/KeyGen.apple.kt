@@ -19,10 +19,10 @@
 
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.extensions.buildCFDictionary
-import com.infomaniak.auth.lib.extensions.set
-import com.infomaniak.auth.lib.extensions.toNsData
-import com.infomaniak.auth.lib.extensions.tryIt
+import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
+import com.infomaniak.auth.lib.internal.extensions.set
+import com.infomaniak.auth.lib.internal.extensions.toNsData
+import com.infomaniak.auth.lib.internal.extensions.tryIt
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.cinterop.ExperimentalForeignApi
