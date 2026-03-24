@@ -18,6 +18,7 @@
 
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.generateEcKeyPair
 import com.infomaniak.auth.lib.internal.utils.getKeyCoordinates
 import com.infomaniak.auth.lib.internal.utils.keyCoordinatesOf
@@ -105,12 +106,6 @@ private fun getKeyCoordinatesFromX509Key(key: ByteArray): PublicKeyXY {
     val y = uncompressedKey.copyOfRange(33, 65)
 
     return PublicKeyXY(x, y)
-}
-
-// See https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference.html#Types
-private object AsnOneTypes {
-    const val SEQUENCE: Byte = 0x30
-    const val BIT_STRING: Byte = 0x03
 }
 
 private fun parseX509SubjectPublicKeyInfoIntoCompressedP256UncompressedKey(bytes: ByteArray): ByteArray {

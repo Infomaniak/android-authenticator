@@ -40,17 +40,12 @@ import kotlinx.coroutines.invoke
 import platform.CoreFoundation.CFArrayGetCount
 import platform.CoreFoundation.CFArrayGetValueAtIndex
 import platform.CoreFoundation.CFArrayRef
-import platform.CoreFoundation.CFDataGetBytePtr
-import platform.CoreFoundation.CFDataGetLength
 import platform.CoreFoundation.CFDataRef
 import platform.CoreFoundation.CFDictionaryGetValue
 import platform.CoreFoundation.CFDictionaryRef
 import platform.CoreFoundation.CFRelease
-import platform.CoreFoundation.CFStringCreateWithBytes
 import platform.CoreFoundation.CFTypeRef
 import platform.CoreFoundation.CFTypeRefVar
-import platform.CoreFoundation.kCFAllocatorDefault
-import platform.CoreFoundation.kCFStringEncodingUTF8
 import platform.Security.SecItemCopyMatching
 import platform.Security.SecItemDelete
 import platform.Security.SecKeyCopyExternalRepresentation
@@ -187,6 +182,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         CFRelease(query)
 
         return if (status == errSecSuccess && resultRef.value != null) {
+            @Suppress("unchecked_cast")
             val resultsArray = resultRef.value as CFArrayRef
             Pair(resultsArray, CFArrayGetCount(resultsArray).toInt())
         } else {
@@ -196,15 +192,9 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
     @OptIn(BetaInteropApi::class)
     private fun extractTagFromItem(item: CFTypeRef?): String? {
-        val tagRef = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) ?: return null
-        val tagData = tagRef as CFDataRef
-        return CFStringCreateWithBytes(
-            kCFAllocatorDefault,
-            CFDataGetBytePtr(tagData),
-            CFDataGetLength(tagData),
-            kCFStringEncodingUTF8,
-            false
-        )?.toString()
+        @Suppress("unchecked_cast")
+        val tagData = CFDictionaryGetValue(item as CFDictionaryRef, kSecAttrApplicationTag) as? CFDataRef ?: return null
+        return tagData.toNSData().toByteArray().decodeToString()
     }
 
     private fun deleteKeyByTag(tag: String) {
