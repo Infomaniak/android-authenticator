@@ -40,12 +40,12 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 internal class CryptoObjectsBuilder {
 
-    internal val base64UrlSafeNoPadding = Base64.Default.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
-    internal val base64NoPadding = Base64.Default.withPadding(Base64.PaddingOption.ABSENT)
+    internal val base64UrlSafeNoPadding = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+    internal val base64NoPadding = Base64.withPadding(Base64.PaddingOption.ABSENT)
 
     fun getKeyIds(): Pair<ByteArray, String> {
         //TODO[ik-auth]: Check if we can bypass the hexString, converting the Uuid directly to a ByteArray.
-        val randomUuid = Uuid.Companion.random().toHexString()
+        val randomUuid = Uuid.random().toHexString()
         val rawId = randomUuid.toByteArray()
         val id = base64NoPadding.encode(rawId)
 
@@ -71,11 +71,11 @@ internal class CryptoObjectsBuilder {
         )
         val response = RegisterPasskeyResponse(
             attestationObject = base64UrlSafeNoPadding.encode(attestationObject),
-            clientDataJSON = base64UrlSafeNoPadding.encode(Json.Default.encodeToString(clientData).encodeToByteArray()),
+            clientDataJSON = base64UrlSafeNoPadding.encode(Json.encodeToString(clientData).encodeToByteArray()),
             transports = listOf("internal"),
             publicKey = base64UrlSafeNoPadding.encode(publicKey),
             authenticatorData = base64UrlSafeNoPadding.encode(authenticatorData),
-            publicKeyAlgorithm = KeyAlgorithm.Companion.ES256,
+            publicKeyAlgorithm = KeyAlgorithm.ES256,
         )
         val type = "public-key"
         val clientExtensionResult = ClientExtensionResults
@@ -110,7 +110,7 @@ internal class CryptoObjectsBuilder {
         val flags: Byte = 0x41
         val signCount = ByteArray(4)
 
-        val aaguid = Uuid.Companion.NIL.toByteArray() //TODO Might need to do this only once to have something unique for the App
+        val aaguid = Uuid.NIL.toByteArray() //TODO Might need to do this only once to have something unique for the App
         val credentialIdLength = byteArrayOf((credentialId.size shr 8).toByte(), (credentialId.size and 0xFF).toByte())
 
         val buffer = Buffer()
