@@ -40,14 +40,14 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyBu
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun OnboardingCompleteScreen(navigateToHome: () -> Unit) {
+fun OnboardingCompleteScreen(onContinue: () -> Unit) {
     BottomStickyButtonScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
         },
         bottomButton = { modifier ->
             Box {
-                LargeButton(modifier = modifier, title = stringResource(R.string.continueButton), onClick = navigateToHome)
+                LargeButton(modifier = modifier, title = stringResource(R.string.continueButton), onClick = onContinue)
             }
         }
     ) {
@@ -72,6 +72,6 @@ fun OnboardingCompleteScreen(navigateToHome: () -> Unit) {
 @Composable
 private fun OnboardingCompleteScreenPreview() {
     AuthenticatorTheme {
-        OnboardingCompleteScreen(navigateToHome = {})
+        OnboardingCompleteScreen(onContinue = {})
     }
 }

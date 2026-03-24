@@ -46,7 +46,7 @@ class SecuringAccountViewModel @Inject constructor(
                 .onEach { status ->
                     when (val action = status.action) {
                         is NotConnectedAction.ReLogin -> {
-
+                            // TODO[Authenticator]: Display relogin screen when migration ready
                         }
                         is NotConnectedAction.Issue.Retriable -> {
                             action.proceed(true)

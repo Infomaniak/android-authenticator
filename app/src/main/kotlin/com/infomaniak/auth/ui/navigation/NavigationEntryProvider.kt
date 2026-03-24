@@ -88,21 +88,14 @@ fun baseEntryProvider(
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(
             snackbarHostState = snackbarHostState,
-            // onLoginFinished = { backStack.add(NavDestination.SecuringAccount) },
             onCreateAccount = {}
         )
     }
     entry<NavDestination.SecuringAccount> {
-        SecuringAccountScreen(needResolution = it.needResolution)
+        SecuringAccountScreen(needResolution = it.needsResolution)
     }
     entry<NavDestination.Onboarding.Complete> {
-        OnboardingCompleteScreen(
-            navigateToHome = it.onFinish
-            // navigateToHome = {
-            //     backStack.clear()
-            //     backStack.add(NavDestination.Root.Home)
-            // }
-        )
+        OnboardingCompleteScreen(onContinue = it.onContinue)
     }
 }
 

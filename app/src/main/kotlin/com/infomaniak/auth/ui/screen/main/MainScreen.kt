@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
-import android.util.Log
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -81,7 +80,7 @@ fun MainScreen(
     val appStatus by viewModel.appStatus.collectAsStateWithLifecycle()
 
     LaunchedEffect(appStatus) {
-        handleAppStatus(appStatus, backStack, viewModel)
+        handleAppStatus(appStatus, backStack)
     }
 
     MainScreen(backStack, currentDestination, entryDecorators)
@@ -91,7 +90,6 @@ fun MainScreen(
 private fun handleAppStatus(
     appStatus: AppStatus,
     backStack: NavBackStack<NavKey>,
-    viewModel: MainViewModel
 ) {
     when (appStatus) {
         is AppStatus.LoginRequired -> backStack.apply {
@@ -99,12 +97,10 @@ private fun handleAppStatus(
             add(NavDestination.Onboarding.Start)
         }
         is AppStatus.LoggingIn -> backStack.apply {
-            Log.v("Jamy", "MainScreen: LoggingIn")
             clear()
             add(NavDestination.SecuringAccount(appStatus.needsResolution))
         }
         is AppStatus.OnboardingDone -> backStack.apply {
-            Log.v("Jamy", "MainScreen: OnboardingDone")
             clear()
             add(NavDestination.Onboarding.Complete(appStatus.proceed))
         }

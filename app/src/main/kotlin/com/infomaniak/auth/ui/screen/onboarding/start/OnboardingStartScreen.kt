@@ -58,7 +58,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnboardingStartScreen(
     snackbarHostState: SnackbarHostState,
-    // onLoginFinished: () -> Unit,
     onCreateAccount: () -> Unit,
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
@@ -93,11 +92,12 @@ fun OnboardingStartScreen(
         onboardingStartViewModel.activateUpdates(hostActivity)
     }
 
-    LaunchedEffect(onboardingStartViewModel.onLoginFinishedEvent) {
-        onboardingStartViewModel.onLoginFinishedEvent.collect {
-            //onLoginFinished()
-        }
-    }
+    // TODO[Authenticator]: Remove this when sure navigation by AppStatus work
+    // LaunchedEffect(onboardingStartViewModel.onLoginFinishedEvent) {
+    //     onboardingStartViewModel.onLoginFinishedEvent.collect {
+    //         onLoginFinished()
+    //     }
+    // }
 
     OnboardingStartScreen(
         accountsCheckingState = { accountsCheckingState },

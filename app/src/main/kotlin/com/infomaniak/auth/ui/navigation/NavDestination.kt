@@ -31,12 +31,12 @@ sealed interface NavDestination : NavKey {
 
         @Serializable
         data class Complete(
-            val onFinish: () -> Unit
+            val onContinue: () -> Unit
         ) : Onboarding
     }
 
     @Serializable
-    data class SecuringAccount(val needResolution: Boolean = false) : NavDestination
+    data class SecuringAccount(val needsResolution: Boolean = false) : NavDestination
 
     sealed interface Root : NavDestination {
         @Serializable

@@ -31,7 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -46,7 +46,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 fun SecuringAccountScreen(
     needResolution: Boolean,
     modifier: Modifier = Modifier,
-    viewModel: SecuringAccountViewModel = viewModel()
+    viewModel: SecuringAccountViewModel = hiltViewModel()
 ) {
     LaunchedEffect(viewModel) {
         if (needResolution) {
