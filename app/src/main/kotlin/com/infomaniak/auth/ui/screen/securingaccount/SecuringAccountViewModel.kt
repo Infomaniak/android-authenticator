@@ -29,7 +29,6 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,28 +37,25 @@ class SecuringAccountViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade
 ) : ViewModel() {
     fun needResolution() {
-        viewModelScope.launch {
-            authenticatorFacade.accounts
-                .flatMapLatest { accounts ->
-                    accounts.mapNotNull { it.status as? Account.Status.NotConnected }.asFlow()
-                }
-                .onEach { status ->
-                    when (val action = status.action) {
-                        is NotConnectedAction.ReLogin -> {
-                            // TODO[Authenticator]: Display relogin screen when migration ready
-                        }
-                        is NotConnectedAction.Issue.Retriable -> {
-                            action.proceed(true)
-                        }
-                        is NotConnectedAction.Issue.NonRetriable -> {
-                            SentryLog.e(TAG, action.message)
-                        }
-                        null -> Unit
+        authenticatorFacade.accounts
+            .flatMapLatest { accounts ->
+                accounts.mapNotNull { it.status as? Account.Status.NotConnected }.asFlow()
+            }
+            .onEach { status ->
+                when (val action = status.action) {
+                    is NotConnectedAction.ReLogin -> {
+                        // TODO[Authenticator]: Display relogin screen when migration ready
                     }
+                    is NotConnectedAction.Issue.Retriable -> {
+                        action.proceed(true)
+                    }
+                    is NotConnectedAction.Issue.NonRetriable -> {
+                        SentryLog.e(TAG, action.message)
+                    }
+                    null -> Unit
                 }
-                .launchIn(viewModelScope)
-
-        }
+            }
+            .launchIn(viewModelScope)
     }
 
     companion object {

@@ -48,7 +48,7 @@ fun SecuringAccountScreen(
     modifier: Modifier = Modifier,
     viewModel: SecuringAccountViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(needResolution) {
         if (needResolution) {
             viewModel.needResolution()
         }
