@@ -91,23 +91,17 @@ private fun handleAppStatus(
     appStatus: AppStatus,
     backStack: NavBackStack<NavKey>,
 ) {
-    when (appStatus) {
-        is AppStatus.LoginRequired -> backStack.apply {
-            clear()
-            add(NavDestination.Onboarding.Start)
-        }
-        is AppStatus.LoggingIn -> backStack.apply {
-            clear()
-            add(NavDestination.SecuringAccount(appStatus.needsResolution))
-        }
-        is AppStatus.OnboardingDone -> backStack.apply {
-            clear()
-            add(NavDestination.Onboarding.Complete(appStatus.proceed))
-        }
-        AppStatus.SetupComplete -> backStack.apply {
-            clear()
-            add(NavDestination.Root.Home)
-        }
+    val currentDestination = backStack.lastOrNull()
+    val targetDestination = when (appStatus) {
+        is AppStatus.LoginRequired -> NavDestination.Onboarding.Start
+        is AppStatus.LoggingIn -> NavDestination.SecuringAccount(appStatus.needsResolution)
+        is AppStatus.OnboardingDone -> NavDestination.Onboarding.Complete(appStatus.proceed)
+        AppStatus.SetupComplete -> NavDestination.Root.Home
+    }
+    
+    if (currentDestination != targetDestination) {
+        backStack.clear()
+        backStack.add(targetDestination)
     }
 }
 
