@@ -17,12 +17,11 @@
  */
 @file:OptIn(ExperimentalForeignApi::class)
 
-package com.infomaniak.auth.lib.extensions
+package com.infomaniak.auth.lib.internal
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFDataRef
 import platform.CoreFoundation.CFErrorRef
-import platform.CoreFoundation.CFRetain
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.CFBridgingRetain
 import platform.Foundation.NSData
@@ -33,8 +32,8 @@ import platform.Foundation.NSError
 // https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html#//apple_ref/doc/uid/TP40010677
 
 @Suppress("unchecked_cast") // It works. Source: trust us.
-fun NSData.toCFDataRef() = CFBridgingRetain(this) as CFDataRef
+internal fun NSData.toCFDataRef() = CFBridgingRetain(this) as CFDataRef
 
-fun CFDataRef.toNSData(): NSData = CFBridgingRelease(this) as NSData
+internal fun CFDataRef.toNSData(): NSData = CFBridgingRelease(this) as NSData
 
-fun CFErrorRef.toNSError(): NSError = CFBridgingRelease(this) as NSError
+internal fun CFErrorRef.toNSError(): NSError = CFBridgingRelease(this) as NSError

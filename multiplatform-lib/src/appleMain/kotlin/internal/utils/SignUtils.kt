@@ -19,14 +19,13 @@ package com.infomaniak.auth.lib.internal.utils
 
 import com.infomaniak.auth.lib.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.extensions.set
-import com.infomaniak.auth.lib.extensions.toByteArray
-import com.infomaniak.auth.lib.extensions.toCFDataRef
-import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
-import com.infomaniak.auth.lib.internal.Xor
 import com.infomaniak.auth.lib.internal.encodeAsn1Integer
 import com.infomaniak.auth.lib.internal.firstOrElse
+import com.infomaniak.auth.lib.internal.toByteArray
+import com.infomaniak.auth.lib.internal.toCFDataRef
+import com.infomaniak.auth.lib.internal.toNSData
 import com.infomaniak.auth.lib.internal.utils.trimOrPadStart
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi

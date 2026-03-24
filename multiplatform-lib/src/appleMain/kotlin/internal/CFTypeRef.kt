@@ -15,8 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.db
+@file:OptIn(ExperimentalContracts::class)
 
-import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
+package com.infomaniak.auth.lib.internal
 
-expect fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreFoundation.CFRelease
+import platform.CoreFoundation.CFTypeRef
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+
+@OptIn(ExperimentalForeignApi::class)
+internal inline fun <T : CFTypeRef, R> T.use(block: (T) -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    try {
+        return block(this)
+    } finally {
+        CFRelease(this)
+    }
+}

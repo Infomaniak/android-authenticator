@@ -15,23 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalContracts::class)
+package com.infomaniak.auth.lib.internal
 
-package com.infomaniak.auth.lib.extensions
-
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.CoreFoundation.CFRelease
-import platform.CoreFoundation.CFTypeRef
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.allocArrayOf
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.usePinned
+import platform.Foundation.NSData
+import platform.Foundation.create
+import platform.Foundation.getBytes
 
 @OptIn(ExperimentalForeignApi::class)
-inline fun <T : CFTypeRef, R> T.use(block: (T) -> R): R {
-    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
-    try {
-        return block(this)
-    } finally {
-        CFRelease(this)
+internal fun NSData.toByteArray(): ByteArray {
+    val length = this.length.toInt()
+    return ByteArray(length).apply {
+        usePinned { pinned ->
+            this@toByteArray.getBytes(pinned.addressOf(0))
+        }
     }
+}
+
+@OptIn(ExperimentalUnsignedTypes::class, ExperimentalForeignApi::class, BetaInteropApi::class)
+internal fun ByteArray.toNSData(): NSData = memScoped {
+    NSData.create(
+        bytes = allocArrayOf(this@toNSData),
+        length = size.toULong()
+    )
 }

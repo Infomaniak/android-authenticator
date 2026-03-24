@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.accounts
+package com.infomaniak.auth.lib.internal.db
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
@@ -24,30 +24,31 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.infomaniak.auth.lib.Account
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+
+internal expect fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase
 
 @Database(entities = [AccountEntity::class], version = 1)
 @TypeConverters(AccountStatusConverter::class)
 @ConstructedBy(AccountsDatabaseConstructor::class)
-abstract class AccountsDatabase : RoomDatabase() {
+internal abstract class AccountsDatabase : RoomDatabase() {
     abstract fun getDao(): AccountsDao
 }
 
 @Suppress("KotlinNoActualForExpect")
-expect object AccountsDatabaseConstructor : RoomDatabaseConstructor<AccountsDatabase> {
+internal expect object AccountsDatabaseConstructor : RoomDatabaseConstructor<AccountsDatabase> {
     override fun initialize(): AccountsDatabase
 }
 
-fun getAccountsRoomDatabase(builder: RoomDatabase.Builder<AccountsDatabase>): AccountsDatabase {
+internal fun getAccountsRoomDatabase(builder: RoomDatabase.Builder<AccountsDatabase>): AccountsDatabase {
     return builder
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }
 
-class AccountStatusConverter {
+internal class AccountStatusConverter {
 
     @TypeConverter
     fun fromStatus(status: AccountEntity.Status) = status.ordinal

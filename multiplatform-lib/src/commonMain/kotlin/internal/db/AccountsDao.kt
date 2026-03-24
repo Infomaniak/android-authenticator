@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.accounts
+package com.infomaniak.auth.lib.internal.db
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -24,7 +24,7 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AccountsDao {
+internal interface AccountsDao {
 
     @Query("SELECT * FROM AccountEntity")
     fun getAsFlow(): Flow<List<AccountEntity>>

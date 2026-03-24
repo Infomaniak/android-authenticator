@@ -17,11 +17,11 @@
  */
 package com.infomaniak.auth.lib
 
+import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
-import com.infomaniak.auth.lib.internal.repository.AccountsRepository
-import com.infomaniak.auth.lib.room.accounts.AccountEntity
+import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

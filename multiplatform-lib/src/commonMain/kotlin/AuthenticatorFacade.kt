@@ -17,12 +17,12 @@
  */
 package com.infomaniak.auth.lib
 
-import com.infomaniak.auth.lib.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.internal.AuthenticatorFacadeImpl
+import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.network.ApiClientProvider
+import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.internal.repository.AccountsRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge

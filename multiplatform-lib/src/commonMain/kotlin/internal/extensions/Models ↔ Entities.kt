@@ -19,7 +19,7 @@ package com.infomaniak.auth.lib.internal.extensions
 
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
-import com.infomaniak.auth.lib.room.accounts.AccountEntity
+import com.infomaniak.auth.lib.internal.db.AccountEntity
 
 internal fun AccountEntity.toAccount(action: NotConnectedAction?): Account {
     return Account(

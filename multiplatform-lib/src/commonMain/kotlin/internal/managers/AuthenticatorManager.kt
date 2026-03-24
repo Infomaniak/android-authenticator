@@ -17,14 +17,14 @@
  */
 package com.infomaniak.auth.lib.internal.managers
 
-import com.infomaniak.auth.lib.Failure
 import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
+import com.infomaniak.auth.lib.internal.Failure
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.models.VerifyResponse
+import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.internal.repository.AccountsRepository
 import com.infomaniak.auth.lib.internal.utils.SignUtils
 import com.infomaniak.auth.lib.internal.utils.Xor
 import io.ktor.utils.io.core.toByteArray

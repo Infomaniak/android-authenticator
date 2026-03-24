@@ -15,12 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib
+package com.infomaniak.auth.lib.internal.db
 
-sealed interface Failure {
-    sealed interface KeyManagement : Failure {
-        data class GenerationFailed(val details: String) : KeyManagement
-        data class KeyExtractionFailed(val details: String) : KeyManagement
-        data class KeyNotFound(val details: String) : KeyManagement
-    }
+import androidx.room.Room
+import splitties.init.appCtx
+
+internal actual fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase {
+    val dbBuilder = Room.databaseBuilder<AccountsDatabase>(
+        context = appCtx,
+        name = databaseNameOrPath ?: "accounts.db"
+    )
+    return getAccountsRoomDatabase(dbBuilder)
 }

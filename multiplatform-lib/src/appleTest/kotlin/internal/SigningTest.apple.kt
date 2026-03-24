@@ -19,8 +19,6 @@
 
 package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.extensions.toByteArray
-import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import kotlinx.cinterop.ExperimentalForeignApi

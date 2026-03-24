@@ -52,9 +52,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
-import com.infomaniak.auth.lib.network.models.UrlConstant
-import com.infomaniak.auth.lib.network.models.UrlConstant.ACTIVITY_MANAGER_URL
-import com.infomaniak.auth.lib.network.models.UrlConstant.SETTINGS_MANAGER_URL
+import com.infomaniak.auth.lib.models.UrlConstants
+import com.infomaniak.auth.lib.models.UrlConstants.ACTIVITY_MANAGER_URL
+import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_MANAGER_URL
 import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -331,7 +331,7 @@ private fun SettingsSections(
                     onClick = {
                         WebViewActivity.startActivity(
                             context = context,
-                            url = UrlConstant.autologUrl(host, UrlConstant.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
+                            url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
                             headers = mapOf("Authorization" to "Bearer ${user.apiToken.accessToken}"),
                         )
                     },
@@ -344,7 +344,7 @@ private fun SettingsSections(
                     onClick = {
                         WebViewActivity.startActivity(
                             context = context,
-                            url = UrlConstant.autologUrl(host = host, UrlConstant.managerUrl(host, SETTINGS_MANAGER_URL)),
+                            url = UrlConstants.autologUrl(host = host, UrlConstants.managerUrl(host, SETTINGS_MANAGER_URL)),
                             headers = mapOf("Authorization" to "Bearer ${user.apiToken.accessToken}"),
                         )
                     },

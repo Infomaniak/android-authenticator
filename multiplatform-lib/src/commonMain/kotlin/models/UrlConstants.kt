@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.models
+package com.infomaniak.auth.lib.models
 
-object UrlConstant {
+object UrlConstants {
     fun managerUrl(host: String, path: String) = "https://manager.$host/v3/$path"
     fun autologUrl(host: String, url: String) = "https://manager.$host/v3/$AUTOLOG_URL/?url=$url"
 

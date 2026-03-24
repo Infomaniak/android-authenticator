@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.accounts
+package com.infomaniak.auth.lib.internal.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.infomaniak.auth.lib.AuthenticatorFacade
 
 @Entity
-data class AccountEntity(
+internal data class AccountEntity(
     @PrimaryKey val id: Long = 0,
     val fullName: String,
     val initials: String,

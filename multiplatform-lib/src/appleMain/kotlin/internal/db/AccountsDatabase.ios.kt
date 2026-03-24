@@ -15,18 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.db
+package com.infomaniak.auth.lib.internal.db
 
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.infomaniak.auth.lib.room.accounts.AccountsDatabase
 import com.infomaniak.auth.lib.room.accounts.getAccountsRoomDatabase
-import splitties.init.appCtx
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSUserDomainMask
 
-actual fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase {
+internal actual fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase {
     val dbBuilder = Room.databaseBuilder<AccountsDatabase>(
-        context = appCtx,
-        name = databaseNameOrPath ?: "accounts.db"
+        name = databaseNameOrPath ?: (documentDirectory() + "/accounts.db"),
     )
     return getAccountsRoomDatabase(dbBuilder)
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun documentDirectory(): String {
+    val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
+        directory = NSDocumentDirectory,
+        inDomain = NSUserDomainMask,
+        appropriateForURL = null,
+        create = false,
+        error = null,
+    )
+    return requireNotNull(documentDirectory?.path)
 }

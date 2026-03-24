@@ -15,15 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal.webauthn
+package com.infomaniak.auth.lib.internal
 
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
-
-@Serializable
-@JvmInline
-internal value class KeyAlgorithm(val constant: Byte) {
-    companion object {
-        val ES256 = KeyAlgorithm(-7)
+internal sealed interface Failure {
+    sealed interface KeyManagement : Failure {
+        data class GenerationFailed(val details: String) : KeyManagement
+        data class KeyExtractionFailed(val details: String) : KeyManagement
+        data class KeyNotFound(val details: String) : KeyManagement
     }
 }
