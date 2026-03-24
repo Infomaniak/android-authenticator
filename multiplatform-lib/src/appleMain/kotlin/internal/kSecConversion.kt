@@ -51,7 +51,7 @@ internal fun KeyAccessibility.toKSecAttrAccessible(): CFStringRef? = when (this)
  * [See Apple doc](https://developer.apple.com/documentation/security/secaccesscontrolcreateflags?language=objc)
  * on `SecAccessControlCreateFlags`.
  */
-internal fun KeyAccessGuard.toAccessControlFlags(): SecAccessControlCreateFlags = when (this) {
+internal fun KeyAccessGuard.toAccessControlFlags(isForSecureEnclave: Boolean): SecAccessControlCreateFlags = when (this) {
     KeyAccessGuard.Biometry.Current -> kSecAccessControlBiometryCurrentSet
     KeyAccessGuard.Biometry.CurrentAndFuture -> kSecAccessControlBiometryAny
     KeyAccessGuard.DevicePasscode -> kSecAccessControlDevicePasscode
@@ -59,4 +59,9 @@ internal fun KeyAccessGuard.toAccessControlFlags(): SecAccessControlCreateFlags 
     KeyAccessGuard.DevicePasscodeOrNewBiometrics -> kSecAccessControlUserPresence
     KeyAccessGuard.UserConfirmation -> 0uL // Not supported on iOS.
     KeyAccessGuard.Unguarded -> 0uL
-} or kSecAccessControlPrivateKeyUsage or kSecAccessControlAnd
+}.let {
+    when {
+        isForSecureEnclave -> it or kSecAccessControlPrivateKeyUsage or kSecAccessControlAnd
+        else -> it
+    }
+}
