@@ -99,8 +99,7 @@ internal class AuthenticatorFacadeImpl(
         }
     }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
-    override val appStatus: Flow<AppStatus> =
-        appStatusFlow().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+    override val appStatus: Flow<AppStatus> = appStatusFlow().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         val entities = connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) }
