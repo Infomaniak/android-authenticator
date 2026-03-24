@@ -17,16 +17,16 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
-import com.infomaniak.auth.lib.internal.extensions.set
-import com.infomaniak.auth.lib.internal.extensions.tryIt
 import com.infomaniak.auth.lib.internal.AsnOneTypes
 import com.infomaniak.auth.lib.internal.encodeAsn1Integer
+import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
+import com.infomaniak.auth.lib.internal.extensions.set
+import com.infomaniak.auth.lib.internal.extensions.toByteArray
+import com.infomaniak.auth.lib.internal.extensions.toCFDataRef
+import com.infomaniak.auth.lib.internal.extensions.toNSData
 import com.infomaniak.auth.lib.internal.extensions.trimOrPadStart
-import com.infomaniak.auth.lib.internal.toByteArray
-import com.infomaniak.auth.lib.internal.toCFDataRef
-import com.infomaniak.auth.lib.internal.toNSData
+import com.infomaniak.auth.lib.internal.extensions.tryIt
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.memScoped

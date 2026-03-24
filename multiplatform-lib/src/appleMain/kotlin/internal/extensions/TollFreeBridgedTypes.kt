@@ -17,7 +17,7 @@
  */
 @file:OptIn(ExperimentalForeignApi::class)
 
-package com.infomaniak.auth.lib.internal
+package com.infomaniak.auth.lib.internal.extensions
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFDataRef

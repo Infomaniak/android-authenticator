@@ -19,7 +19,6 @@
 
 package com.infomaniak.auth.lib.internal.extensions
 
-import com.infomaniak.auth.lib.internal.toNSError
 import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
