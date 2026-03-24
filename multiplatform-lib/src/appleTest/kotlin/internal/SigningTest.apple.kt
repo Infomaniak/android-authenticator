@@ -23,8 +23,6 @@ import com.infomaniak.auth.lib.extensions.toByteArray
 import com.infomaniak.auth.lib.extensions.toNSData
 import com.infomaniak.auth.lib.extensions.tryIt
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
-import com.infomaniak.auth.lib.internal.utils.SignUtils
-import io.ktor.utils.io.core.toByteArray
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Security.SecKeyCopyExternalRepresentation
 import platform.Security.SecKeyCopyPublicKey
@@ -34,7 +32,8 @@ import kotlin.test.fail
 class SigningTest : SigningTestBase() {
 
     @Test
-    fun `__this is a test class with tests in the super class`() {}
+    fun `__this is a test class with tests in the super class`() {
+    }
 
     override fun getKeyPair(): Pair<ByteArray, ByteArray> {
         val privateKey = generateEcPrivateKeyInMemory(
