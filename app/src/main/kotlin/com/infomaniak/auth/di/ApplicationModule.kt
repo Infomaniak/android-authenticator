@@ -32,7 +32,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.first
 import javax.inject.Singleton
 
 @Module
@@ -77,13 +76,13 @@ object ApplicationModule {
                 }
 
                 override suspend fun getTokenFromDatabase(userId: Long): String? {
-                    return accountUtils.users.first().firstOrNull { userId == it.id.toLong() }?.apiToken?.accessToken
+                    return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
                 }
 
                 override suspend fun persistTokenForAccount(userId: Long, token: String) {
                     val dao = UserDatabase.getDatabase().userDao()
-                    val user = dao.findById(userId.toInt()) ?: return
-                    dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = "Bearer", userId = userId.toInt())))
+                    val user = accountUtils.getUserById(userId.toInt()) ?: return
+                    dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = user.apiToken.tokenType, userId = userId.toInt())))
                 }
             },
         )

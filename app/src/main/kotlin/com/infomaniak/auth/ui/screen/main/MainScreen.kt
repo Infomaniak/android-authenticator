@@ -42,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntryDecorator
@@ -77,10 +76,8 @@ fun MainScreen(
         rememberViewModelStoreNavEntryDecorator()
     )
 
-    val appStatus by viewModel.appStatus.collectAsStateWithLifecycle()
-
-    LaunchedEffect(appStatus) {
-        handleAppStatus(appStatus, backStack)
+    LaunchedEffect(Unit) {
+        viewModel.appStatus.collect { handleAppStatus(it, backStack) }
     }
 
     MainScreen(backStack, currentDestination, entryDecorators)
@@ -98,7 +95,7 @@ private fun handleAppStatus(
         is AppStatus.OnboardingDone -> NavDestination.Onboarding.Complete(appStatus.proceed)
         AppStatus.SetupComplete -> NavDestination.Root.Home
     }
-    
+
     if (currentDestination != targetDestination) {
         backStack.add(targetDestination)
         backStack.removeAll { it != targetDestination }

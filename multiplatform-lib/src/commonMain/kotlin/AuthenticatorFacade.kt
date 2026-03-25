@@ -29,6 +29,7 @@ import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import network.utils.ApiEnvironment
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -101,7 +102,7 @@ abstract class AuthenticatorFacade internal constructor() {
 
     abstract val accounts: Flow<List<Account>>
 
-    abstract val appStatus: Flow<AppStatus>
+    abstract val appStatus: SharedFlow<AppStatus>
 
     /**
      * Add successfully connected accounts.

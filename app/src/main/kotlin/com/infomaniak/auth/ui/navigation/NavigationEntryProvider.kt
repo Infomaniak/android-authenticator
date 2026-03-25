@@ -56,7 +56,7 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.Theme> {
-        ThemeSettingsScreen(onBackPressed = backStack::popLast)
+        ThemeSettingsScreen(onBackPressed = backStack::tryPopLast)
     }
     entry<NavDestination.PrivacyManagement> {
         PrivacyManagementScreen(
@@ -70,19 +70,19 @@ fun baseEntryProvider(
                     }
                 }
             },
-            onBackPressed = backStack::popLast
+            onBackPressed = backStack::tryPopLast
         )
     }
     entry<NavDestination.PrivacyManagementMatomo> {
-        PrivacyManagementMatomoScreen(onBackPressed = backStack::popLast)
+        PrivacyManagementMatomoScreen(onBackPressed = backStack::tryPopLast)
     }
     entry<NavDestination.PrivacyManagementSentry> {
-        PrivacyManagementSentryScreen(onBackPressed = backStack::popLast)
+        PrivacyManagementSentryScreen(onBackPressed = backStack::tryPopLast)
     }
     entry<NavDestination.AccountDetails> {
         AccountDetailsScreen(
             accountId = it.accountId,
-            onBackPressed = backStack::popLast
+            onBackPressed = backStack::tryPopLast
         )
     }
     entry<NavDestination.Onboarding.Start> {
@@ -99,6 +99,7 @@ fun baseEntryProvider(
     }
 }
 
-private fun NavBackStack<NavKey>.popLast() {
+private fun NavBackStack<NavKey>.tryPopLast() {
+    if (lastIndex == 0) return
     removeAt(lastIndex)
 }
