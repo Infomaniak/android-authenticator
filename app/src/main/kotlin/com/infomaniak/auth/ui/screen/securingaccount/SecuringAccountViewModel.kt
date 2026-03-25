@@ -29,6 +29,7 @@ class SecuringAccountViewModel @Inject constructor() : ViewModel() {
     fun doMagicThing(onFinish: () -> Unit) {
         viewModelScope.launch {
             delay(5000L)
+            delay(5000L)
             onFinish()
         }
     }
