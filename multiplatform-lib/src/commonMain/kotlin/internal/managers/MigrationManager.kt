@@ -36,14 +36,6 @@ internal class MigrationManager(
     private val clientId: String,
 ) {
 
-    // Get previous BDD => Done
-    // Get UserId and secret  => Done
-    // Generate OTP from secret => Done
-    // getMigrationOptions  => Done
-    // getTokenForMigration  => Done
-    // WebAuthn flow  => Done
-    // completeMigration  => Done
-
     suspend fun addLegacyAccountsToDB() {
         if (!needMigration()) return
 
