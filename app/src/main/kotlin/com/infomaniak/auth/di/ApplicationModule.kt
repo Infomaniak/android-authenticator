@@ -22,7 +22,7 @@ import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.AuthenticatorInjection
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
-import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager

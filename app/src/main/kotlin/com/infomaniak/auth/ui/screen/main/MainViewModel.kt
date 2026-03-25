@@ -22,7 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
-import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.auth.utils.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow

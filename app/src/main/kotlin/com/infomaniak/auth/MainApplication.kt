@@ -21,8 +21,9 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.infomaniak.auth.data.preferences.SentryPreferences
-import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
+import com.infomaniak.auth.utils.AccountUtils
+import com.infomaniak.auth.utils.NotificationUtils
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfoUpdateManager
 import com.infomaniak.core.network.ApiEnvironment
@@ -36,14 +37,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MainApplication : Application(), Configuration.Provider {
+open class MainApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var accountUtils: AccountUtils
 
     @Inject
+    lateinit var notificationUtils: NotificationUtils
+
+    @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    private val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
+    protected val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
@@ -61,6 +65,7 @@ class MainApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        notificationUtils.initNotificationChannel()
 
         userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
         applicationScope.launch {
@@ -72,6 +77,6 @@ class MainApplication : Application(), Configuration.Provider {
     companion object {
         @JvmStatic
         var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
-            private set
+            protected set
     }
 }

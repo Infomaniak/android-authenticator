@@ -151,6 +151,9 @@ dependencies {
     implementation(core.infomaniak.core.ui.view)
     implementation(core.infomaniak.core.webview)
 
+    "standardImplementation"(core.infomaniak.core.notifications.registration)
+    "standardImplementation"(core.firebase.messaging.ktx)
+
     implementation(core.androidx.core.splashscreen)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)

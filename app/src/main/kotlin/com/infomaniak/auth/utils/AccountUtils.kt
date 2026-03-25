@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.manager
+package com.infomaniak.auth.utils
 
 import android.content.Context
 import com.infomaniak.auth.MainApplication
@@ -28,6 +28,6 @@ import javax.inject.Singleton
 @Singleton
 class AccountUtils @Inject constructor(
     @ApplicationContext context: Context,
-) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
+) : UserAccountUtils(context, MainApplication.Companion.userDataCleanableList) {
     suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
 }

@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.service
 
-import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
