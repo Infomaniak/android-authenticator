@@ -71,6 +71,7 @@ object ApplicationModule {
     ): AuthenticatorFacade {
         return authenticatorInjection.getAuthenticatorFacade(
             clientId = BuildConfig.CLIENT_ID,
+            deviceId = "", // TODO Where to get the device ID from?
             tokenBridge = object : TokenBridge {
                 override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
                     // TODO[Authenticator]: retrieve token from crossapplogin
@@ -84,7 +85,15 @@ object ApplicationModule {
                 override suspend fun persistTokenForAccount(userId: Long, token: String) {
                     val dao = UserDatabase.getDatabase().userDao()
                     val user = accountUtils.getUserById(userId.toInt()) ?: return
-                    dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = user.apiToken.tokenType, userId = userId.toInt())))
+                    dao.update(
+                        user.copy(
+                            apiToken = ApiToken(
+                                accessToken = token,
+                                tokenType = user.apiToken.tokenType,
+                                userId = userId.toInt()
+                            )
+                        )
+                    )
                 }
             },
         )
