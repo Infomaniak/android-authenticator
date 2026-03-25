@@ -92,7 +92,7 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.SecuringAccount> {
-        SecuringAccountScreen(needResolution = it.needsResolution)
+        SecuringAccountScreen()
     }
     entry<NavDestination.Onboarding.Complete> {
         OnboardingCompleteScreen(onContinue = it.onContinue)

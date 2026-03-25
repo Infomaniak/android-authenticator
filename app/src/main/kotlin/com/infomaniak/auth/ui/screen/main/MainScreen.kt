@@ -91,7 +91,7 @@ private fun handleAppStatus(
     val currentDestination = backStack.lastOrNull()
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired -> NavDestination.Onboarding.Start
-        is AppStatus.LoggingIn -> NavDestination.SecuringAccount(appStatus.needsResolution)
+        is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.OnboardingDone -> NavDestination.Onboarding.Complete(appStatus.proceed)
         AppStatus.SetupComplete -> NavDestination.Root.Home
     }
