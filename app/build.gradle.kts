@@ -140,6 +140,8 @@ dependencies {
     implementation(core.infomaniak.core.onboarding)
     implementation(core.infomaniak.core.privacymanagement)
     implementation(core.infomaniak.core.sentry)
+    implementation(core.infomaniak.core.twofactorauth.back.withuserdb)
+    implementation(core.infomaniak.core.twofactorauth.front)
     implementation(core.infomaniak.core.ui.compose.basics)
     implementation(core.infomaniak.core.ui.compose.basicbutton)
     implementation(core.infomaniak.core.ui.compose.bottomstickybuttonscaffolds)

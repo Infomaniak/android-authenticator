@@ -25,6 +25,7 @@ import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.manager.AccountUtils
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
@@ -88,4 +89,8 @@ object ApplicationModule {
             },
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideTwoFactorAuthManager(accountUtils: AccountUtils) = TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
 }
