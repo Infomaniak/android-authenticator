@@ -50,7 +50,7 @@ fun SecuringAccountScreen(
 ) {
     LaunchedEffect(needResolution) {
         if (needResolution) {
-            viewModel.needResolution()
+            viewModel.needsResolution()
         }
     }
 

@@ -25,6 +25,7 @@ import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.core.sentry.SentryLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -36,8 +37,11 @@ import javax.inject.Inject
 class SecuringAccountViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade
 ) : ViewModel() {
-    fun needResolution() {
-        authenticatorFacade.accounts
+    private var resolutionJob: Job? = null
+
+    fun needsResolution() {
+        resolutionJob?.cancel()
+        resolutionJob = authenticatorFacade.accounts
             .flatMapLatest { accounts ->
                 accounts.mapNotNull { it.status as? Account.Status.NotConnected }.asFlow()
             }

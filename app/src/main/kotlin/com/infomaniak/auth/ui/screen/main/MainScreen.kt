@@ -100,8 +100,8 @@ private fun handleAppStatus(
     }
     
     if (currentDestination != targetDestination) {
-        backStack.clear()
         backStack.add(targetDestination)
+        backStack.removeAll { it != targetDestination }
     }
 }
 

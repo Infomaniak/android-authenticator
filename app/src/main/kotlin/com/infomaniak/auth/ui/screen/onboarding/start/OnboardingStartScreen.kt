@@ -92,13 +92,6 @@ fun OnboardingStartScreen(
         onboardingStartViewModel.activateUpdates(hostActivity)
     }
 
-    // TODO[Authenticator]: Remove this when sure navigation by AppStatus work
-    // LaunchedEffect(onboardingStartViewModel.onLoginFinishedEvent) {
-    //     onboardingStartViewModel.onLoginFinishedEvent.collect {
-    //         onLoginFinished()
-    //     }
-    // }
-
     OnboardingStartScreen(
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },

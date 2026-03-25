@@ -81,7 +81,7 @@ object ApplicationModule {
                 }
 
                 override suspend fun persistTokenForAccount(userId: Long, token: String) {
-                    val dao = UserDatabase().userDao()
+                    val dao = UserDatabase.getDatabase().userDao()
                     val user = dao.findById(userId.toInt()) ?: return
                     dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = "Bearer", userId = userId.toInt())))
                 }
