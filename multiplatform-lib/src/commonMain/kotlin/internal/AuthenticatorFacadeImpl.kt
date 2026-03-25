@@ -31,10 +31,10 @@ import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
+import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
-import com.infomaniak.auth.lib.managers.MigrationManager
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
@@ -78,8 +78,9 @@ internal class AuthenticatorFacadeImpl(
     init {
         GlobalScope.launch(Dispatchers.IO) {
             migrationManager.migrate(
-                onGetToken = { userId, token ->
-                    tokenBridge.persistTokenForAccount(userId.toLong(), token)
+                onGetToken = { userId, token -> tokenBridge.persistTokenForAccount(userId.toLong(), token) },
+                onError = { userId, exception ->
+                    
                 }
             )
         }
@@ -88,7 +89,7 @@ internal class AuthenticatorFacadeImpl(
     private val dao = db.getDao()
 
     private val accountEntities = flow {
-        //TODO[ik-auth]: Ensure old accounts are inserted in the new db if needed.
+        migrationManager.addLegacyAccountsToDB()
         emitAll(dao.getAsFlow())
     }.shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 

@@ -62,10 +62,10 @@ kotlin {
                 implementation(core.ktor.client.json)
                 implementation(core.ktor.client.encoding)
                 implementation(core.okio)
-                implementation(project.dependencies.platform("org.kotlincrypto.macs:bom:0.8.0"))
-                implementation("org.kotlincrypto.macs:hmac-sha1")
-                implementation("org.kotlincrypto.macs:hmac-sha2")
-                implementation("com.osmerion.kotlin:kotlin-base32:1.0.0")
+                implementation(project.dependencies.platform(libs.kotlincrypto.bom))
+                implementation(libs.hmac.sha1)
+                implementation(libs.hmac.sha2)
+                implementation(libs.kotlin.base32)
             }
         }
         commonTest {

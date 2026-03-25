@@ -20,6 +20,7 @@ package com.infomaniak.auth.lib.internal.extensions
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.internal.db.AccountEntity
+import com.infomaniak.auth.lib.otp.LegacyAccount
 
 internal fun AccountEntity.toAccount(action: NotConnectedAction?): Account {
     return Account(
@@ -42,6 +43,18 @@ internal fun Account.toEntity(status: AccountEntity.Status): AccountEntity {
         initials = initials,
         email = email,
         avatarUrl = avatarUrl,
+        status = status
+    )
+}
+
+internal fun LegacyAccount.toEntity(status: AccountEntity.Status): AccountEntity {
+    val initials = "${displayName.firstOrNull()?.uppercase()}${displayName.substring(displayName.indexOf(" ") + 1).uppercase()}"
+    return AccountEntity(
+        id = userId.toLong(),
+        fullName = displayName,
+        initials = initials,
+        email = email,
+        avatarUrl = avatar,
         status = status
     )
 }

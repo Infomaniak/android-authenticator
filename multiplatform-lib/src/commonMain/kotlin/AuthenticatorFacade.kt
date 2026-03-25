@@ -20,11 +20,11 @@ package com.infomaniak.auth.lib
 import com.infomaniak.auth.lib.internal.AuthenticatorFacadeImpl
 import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
+import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.network.ApiClientProvider
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
-import com.infomaniak.auth.lib.managers.MigrationManager
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CoroutineScope
@@ -57,20 +57,21 @@ abstract class AuthenticatorFacade internal constructor() {
                     ).httpClient
                 )
             )
-            val db = getAccountsRoomDatabase(databaseNameOrPath)
-            val accountsRepository = AccountsRepository(db)
+            val accountsDatabase = getAccountsRoomDatabase(databaseNameOrPath)
+            val accountsRepository = AccountsRepository(accountsDatabase)
             val authenticatorManager = AuthenticatorManager(
                 webAuthnRepository = webAuthnRepository,
                 accountsRepository = accountsRepository
             )
             val migrationManager = MigrationManager(
+                accountsDatabase = accountsDatabase,
                 authenticatorManager = authenticatorManager,
                 webAuthnRepository = webAuthnRepository,
                 clientId = clientId,
                 deviceId = deviceId,
             )
             return AuthenticatorFacadeImpl(
-                db = db,
+                db = accountsDatabase,
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
                 migrationManager = migrationManager,

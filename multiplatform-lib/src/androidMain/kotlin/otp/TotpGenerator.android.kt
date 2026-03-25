@@ -22,8 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 
-actual fun currentTimeMillis(): Long = System.currentTimeMillis()
-
 actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
     val database = OTPUserDatabase.getInstance(appCtx)
     val legacyAccounts = withContext(Dispatchers.IO) {

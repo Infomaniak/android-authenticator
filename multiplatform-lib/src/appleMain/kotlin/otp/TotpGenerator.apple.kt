@@ -28,11 +28,7 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import platform.Foundation.NSData
-import platform.Foundation.NSDate
 import platform.Foundation.NSUserDefaults
-import platform.Foundation.timeIntervalSince1970
-
-actual fun currentTimeMillis(): Long = (NSDate().timeIntervalSince1970 * 1000).toLong()
 
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
 actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withContext(Dispatchers.IO) {

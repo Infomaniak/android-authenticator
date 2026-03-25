@@ -15,17 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.managers
+package com.infomaniak.auth.lib.internal.managers
 
-import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
+import com.infomaniak.auth.lib.internal.db.AccountEntity.Status
+import com.infomaniak.auth.lib.internal.db.AccountsDatabase
+import com.infomaniak.auth.lib.internal.extensions.cancellable
+import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.otp.TotpGenerator
-import com.infomaniak.auth.lib.otp.currentTimeMillis
 import com.infomaniak.auth.lib.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.otp.needMigration
 import com.osmerion.kotlin.io.encoding.Base32
 
 internal class MigrationManager(
+    private val accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
     private val webAuthnRepository: WebAuthnRepository,
     private val clientId: String,
@@ -40,39 +43,59 @@ internal class MigrationManager(
     // WebAuthn flow  => Done
     // completeMigration  => Done
 
-    suspend fun migrate(onGetToken: suspend (userId: String, token: String) -> Unit) {
+    suspend fun addLegacyAccountsToDB() {
         if (!needMigration()) return
 
         getLegacyAccounts().apply {
             if (isEmpty()) return@apply
 
-            forEach { legacyAccount ->
-                val otp = getOtp(legacyAccount.secret)
-                val migrationOptions = webAuthnRepository.getMigrationOptions(
-                    deviceId = deviceId,
-                    userId = legacyAccount.userId.toString(),
-                )
-                val authResult = webAuthnRepository.getTokenForMigration(
-                    migrationOptions.session,
-                    deviceId = deviceId,
-                    userId = legacyAccount.userId.toString(),
-                    otp = otp,
-                )
-                authenticatorManager.registerPasskey(authResult.accessToken, legacyAccount.userId.toLong())
-                val token = authenticatorManager.getToken(clientId, legacyAccount.userId.toLong()).firstOrNull() ?: return@forEach
-                onGetToken(legacyAccount.userId.toString(), token)
-                webAuthnRepository.completeMigration(token, deviceId)
-            }
-
+            accountsDatabase.getDao().upsert(this.map { it.toEntity(Status.ToBeMigrated) })
         }
     }
 
-    private fun getOtp(secret: String): String {
+    suspend fun migrate(
+        onGetToken: suspend (userId: String, token: String) -> Unit,
+        onError: suspend (String, Throwable) -> Unit,
+    ) {
+        getLegacyAccounts().apply {
+            if (isEmpty()) return@apply
+
+            forEach { legacyAccount ->
+                runCatching {
+                    val migrationOptions = webAuthnRepository.getMigrationOptions(
+                        deviceId = deviceId,
+                        userId = legacyAccount.userId.toString(),
+                    )
+                    val otp = getOtp(secret = legacyAccount.secret, timestampSeconds = migrationOptions.timestamp)
+                    val authResult = webAuthnRepository.getTokenForMigration(
+                        migrationOptions.session,
+                        deviceId = deviceId,
+                        userId = legacyAccount.userId.toString(),
+                        otp = otp,
+                    )
+                    authenticatorManager.registerPasskey(
+                        token = authResult.accessToken,
+                        userId = legacyAccount.userId.toLong()
+                    )
+                    val token = authenticatorManager.getToken(
+                        clientId = this@MigrationManager.clientId,
+                        userId = legacyAccount.userId.toLong(),
+                    ).firstOrNull() ?: return@forEach
+                    onGetToken(legacyAccount.userId.toString(), token)
+                    webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
+                }.cancellable().onFailure { exception ->
+                    onError(legacyAccount.userId.toString(), exception)
+                }
+            }
+        }
+    }
+
+    private fun getOtp(secret: String, timestampSeconds: Long): String {
         val generator = TotpGenerator(
             secret = Base32.decode(secret),
             digits = 6,
             algorithm = TotpGenerator.Algorithm.SHA1,
         )
-        return generator.generate(currentTimeMillis() / 1000)
+        return generator.generate(timestampSeconds)
     }
 }

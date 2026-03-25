@@ -33,7 +33,7 @@ class TotpGenerator(
         SHA1, SHA256, SHA512
     }
 
-    fun generate(timestamp: Long = currentTimeMillis() / 1000): String {
+    fun generate(timestamp: Long): String {
         val counter = timestamp / timeStep
         return generateOtp(counter)
     }
@@ -94,7 +94,6 @@ private fun base32Decode(input: String): ByteArray {
     return output.toByteArray()
 }
 
-expect fun currentTimeMillis(): Long
 expect suspend fun needMigration(): Boolean
 expect suspend fun getLegacyAccounts(): List<LegacyAccount>
 

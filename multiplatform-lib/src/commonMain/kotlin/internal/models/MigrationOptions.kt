@@ -23,8 +23,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class MigrationOptions(
     val session: String,
-    @SerialName("datetime")
-    val dateTime: String,
+    val timestamp: Long,
     @SerialName("timezone")
     val timeZone: String
 )
