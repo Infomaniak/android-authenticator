@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.Account
@@ -36,11 +38,13 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -99,7 +103,8 @@ internal class AuthenticatorFacadeImpl(
         }
     }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
-    override val appStatus: Flow<AppStatus> = appStatusFlow().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+    override val appStatus: SharedFlow<AppStatus> = appStatusFlow()
+        .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         val entities = connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) }

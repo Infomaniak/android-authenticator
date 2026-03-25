@@ -33,6 +33,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -52,6 +53,7 @@ import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.components.AuthenticatorFAB
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
@@ -63,7 +65,10 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun MainScreen(startDestination: NavDestination) {
+fun MainScreen(
+    startDestination: NavDestination,
+    viewModel: MainViewModel
+) {
     val backStack = rememberNavBackStack(startDestination)
     val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
     val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>(
@@ -71,7 +76,30 @@ fun MainScreen(startDestination: NavDestination) {
         rememberViewModelStoreNavEntryDecorator()
     )
 
+    LaunchedEffect(Unit) {
+        viewModel.appStatus.collect { handleAppStatus(it, backStack) }
+    }
+
     MainScreen(backStack, currentDestination, entryDecorators)
+}
+
+
+private fun handleAppStatus(
+    appStatus: AppStatus,
+    backStack: NavBackStack<NavKey>,
+) {
+    val currentDestination = backStack.lastOrNull()
+    val targetDestination = when (appStatus) {
+        is AppStatus.LoginRequired -> NavDestination.Onboarding.Start
+        is AppStatus.LoggingIn -> NavDestination.SecuringAccount
+        is AppStatus.OnboardingDone -> NavDestination.Onboarding.Complete(appStatus.proceed)
+        AppStatus.SetupComplete -> NavDestination.Root.Home
+    }
+
+    if (currentDestination != targetDestination) {
+        backStack.add(targetDestination)
+        backStack.removeAll { it != targetDestination }
+    }
 }
 
 @Composable

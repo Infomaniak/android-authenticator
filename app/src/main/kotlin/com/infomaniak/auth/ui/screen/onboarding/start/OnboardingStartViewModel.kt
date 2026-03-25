@@ -51,6 +51,7 @@ class OnboardingStartViewModel @Inject constructor(
     private val _isButtonLoading = MutableStateFlow(false)
     val isButtonLoading = _isButtonLoading.asStateFlow()
 
+    // TODO[Authenticator]: Remove this when sure navigation by AppStatus work
     private val _onLoginFinishedEvent = MutableSharedFlow<Unit>()
     val onLoginFinishedEvent = _onLoginFinishedEvent.asSharedFlow()
 
@@ -58,8 +59,8 @@ class OnboardingStartViewModel @Inject constructor(
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
             users.forEach { user ->
-                addUserToAuthenticatorDB(user)
                 accountUtils.addUser(user)
+                addUserToAuthenticatorDB(user)
             }
             _onLoginFinishedEvent.emit(Unit)
         }

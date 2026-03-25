@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
+import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import network.utils.ApiEnvironment
 
 class AuthenticatorInjection(
@@ -34,4 +35,15 @@ class AuthenticatorInjection(
             crashReport = crashReport,
         )
     }
+
+    fun getAuthenticatorFacade(
+        clientId: String,
+        tokenBridge: TokenBridge,
+    ) = AuthenticatorFacade.create(
+        userAgent = userAgent,
+        environment = environment,
+        crashReport = crashReport,
+        clientId = clientId,
+        tokenBridge = tokenBridge
+    )
 }

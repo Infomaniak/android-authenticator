@@ -21,7 +21,11 @@ import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.AuthenticatorInjection
+import com.infomaniak.auth.lib.network.interfaces.TokenBridge
+import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
+import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
 import dagger.Provides
@@ -59,7 +63,28 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticatorFacade(authenticatorInjection: AuthenticatorInjection): AuthenticatorFacade {
-        return authenticatorInjection.authenticatorFacade
+    fun provideAuthenticatorFacade(
+        authenticatorInjection: AuthenticatorInjection,
+        accountUtils: AccountUtils,
+    ): AuthenticatorFacade {
+        return authenticatorInjection.getAuthenticatorFacade(
+            clientId = BuildConfig.CLIENT_ID,
+            tokenBridge = object : TokenBridge {
+                override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
+                    // TODO[Authenticator]: retrieve token from crossapplogin
+                    return null
+                }
+
+                override suspend fun getTokenFromDatabase(userId: Long): String? {
+                    return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
+                }
+
+                override suspend fun persistTokenForAccount(userId: Long, token: String) {
+                    val dao = UserDatabase.getDatabase().userDao()
+                    val user = accountUtils.getUserById(userId.toInt()) ?: return
+                    dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = user.apiToken.tokenType, userId = userId.toInt())))
+                }
+            },
+        )
     }
 }

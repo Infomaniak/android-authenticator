@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.securingaccount
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,11 +27,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -44,15 +41,9 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun SecuringAccountScreen(
-    viewModel: SecuringAccountViewModel = viewModel(),
-    onFinish: () -> Unit
-) {
-    LaunchedEffect(viewModel) {
-        viewModel.doMagicThing(onFinish)
-    }
-
+fun SecuringAccountScreen(modifier: Modifier = Modifier) {
     SinglePaneScaffold(
+        modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
         }
@@ -60,9 +51,7 @@ fun SecuringAccountScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
-                // TODO[ik-auth]: Remove this when magic thing become not magic
-                .clickable(onClick = onFinish),
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -78,6 +67,6 @@ fun SecuringAccountScreen(
 @Composable
 private fun SecuringAccountScreenPreview() {
     AuthenticatorTheme {
-        SecuringAccountScreen(onFinish = { })
+        SecuringAccountScreen()
     }
 }

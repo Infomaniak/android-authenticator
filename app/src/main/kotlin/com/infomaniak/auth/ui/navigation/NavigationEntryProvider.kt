@@ -56,7 +56,7 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.Theme> {
-        ThemeSettingsScreen(onBackPressed = backStack::popLast)
+        ThemeSettingsScreen(onBackPressed = backStack::tryPopLast)
     }
     entry<NavDestination.PrivacyManagement> {
         PrivacyManagementScreen(
@@ -70,43 +70,36 @@ fun baseEntryProvider(
                     }
                 }
             },
-            onBackPressed = backStack::popLast
+            onBackPressed = backStack::tryPopLast
         )
     }
     entry<NavDestination.PrivacyManagementMatomo> {
-        PrivacyManagementMatomoScreen(onBackPressed = backStack::popLast)
+        PrivacyManagementMatomoScreen(onBackPressed = backStack::tryPopLast)
     }
     entry<NavDestination.PrivacyManagementSentry> {
-        PrivacyManagementSentryScreen(onBackPressed = backStack::popLast)
+        PrivacyManagementSentryScreen(onBackPressed = backStack::tryPopLast)
     }
     entry<NavDestination.AccountDetails> {
         AccountDetailsScreen(
-            it.accountId,
-            onBackPressed = backStack::popLast
+            accountId = it.accountId,
+            onBackPressed = backStack::tryPopLast
         )
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(
             snackbarHostState = snackbarHostState,
-            onLoginFinished = { backStack.add(NavDestination.SecuringAccount) },
             onCreateAccount = {}
         )
     }
     entry<NavDestination.SecuringAccount> {
-        SecuringAccountScreen(
-            onFinish = { backStack.add(NavDestination.Onboarding.Complete) }
-        )
+        SecuringAccountScreen()
     }
     entry<NavDestination.Onboarding.Complete> {
-        OnboardingCompleteScreen(
-            navigateToHome = {
-                backStack.clear()
-                backStack.add(NavDestination.Root.Home)
-            }
-        )
+        OnboardingCompleteScreen(onContinue = it.onContinue)
     }
 }
 
-private fun NavBackStack<NavKey>.popLast() {
+private fun NavBackStack<NavKey>.tryPopLast() {
+    if (lastIndex == 0) return
     removeAt(lastIndex)
 }

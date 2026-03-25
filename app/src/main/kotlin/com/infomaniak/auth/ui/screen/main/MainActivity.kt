@@ -23,15 +23,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
-import com.infomaniak.auth.ui.screen.main.MainViewModel.UiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.applock.AppLockManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +49,7 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { viewModel.uiState.value == UiState.Loading }
+        splashScreen.setKeepOnScreenCondition { viewModel.appStatus.replayCache.isEmpty() }
 
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
@@ -61,7 +62,7 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val appSettings by appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
-            val uiState = viewModel.uiState.collectAsStateWithLifecycle(null).value
+            val appStatus by viewModel.appStatus.collectAsState(null)
 
             val isDarkTheme = when (appSettings?.theme) {
                 Theme.Light -> false
@@ -69,10 +70,11 @@ class MainActivity : FragmentActivity() {
                 else -> isSystemInDarkTheme()
             }
 
-            if (uiState is UiState.Ready) {
+            if (appStatus != null) {
                 AuthenticatorTheme(isDarkTheme = isDarkTheme) {
                     MainScreen(
-                        startDestination = if (uiState.isUserConnected) {
+                        viewModel = viewModel,
+                        startDestination = if (appStatus == AppStatus.SetupComplete) {
                             NavDestination.Root.Home
                         } else {
                             NavDestination.Onboarding.Start
