@@ -44,6 +44,9 @@ class AuthenticatorInjection(
         environment = environment,
         crashReport = crashReport,
         clientId = clientId,
-        tokenBridge = tokenBridge
+        tokenBridge = tokenBridge,
+        onMigrationError = {
+            // TODO[ik-Auth]: Handle the error
+        }
     )
 }

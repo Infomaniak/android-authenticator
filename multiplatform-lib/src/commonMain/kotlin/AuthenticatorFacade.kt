@@ -45,7 +45,8 @@ abstract class AuthenticatorFacade internal constructor() {
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
             tokenBridge: TokenBridge,
-            scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+            onMigrationError: () -> Unit,
         ): AuthenticatorFacade {
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
@@ -75,6 +76,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 migrationManager = migrationManager,
                 tokenBridge = tokenBridge,
                 coroutineScope = scope,
+                onMigrationError = onMigrationError,
             )
         }
 

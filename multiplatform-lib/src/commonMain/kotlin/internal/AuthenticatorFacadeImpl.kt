@@ -67,21 +67,20 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
-    private val accountsDatabase: AccountsDatabase,
+    accountsDatabase: AccountsDatabase,
     private val clientId: String,
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
     private val tokenBridge: TokenBridge,
     private val coroutineScope: CoroutineScope,
+    private val onMigrationError: () -> Unit,
 ) : AuthenticatorFacade() {
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
-            migrationManager.migrate(
+            migrationManager.startMigration(
                 onGetToken = { userId, token -> tokenBridge.persistTokenForAccount(userId.toLong(), token) },
-                onError = { userId, exception ->
-
-                }
+                onError = { onMigrationError() }
             )
         }
     }

@@ -47,16 +47,17 @@ internal class MigrationManager(
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    suspend fun migrate(
+    suspend fun startMigration(
         onGetToken: suspend (userId: String, token: String) -> Unit,
-        onError: suspend (String, Throwable) -> Unit,
+        onError: () -> Unit,
     ) {
         val deviceId = Uuid.random().toString()
-        getLegacyAccounts().apply {
-            if (isEmpty()) return@apply
+        runCatching {
+            getLegacyAccounts().apply {
+                if (isEmpty()) return@apply
 
-            forEach { legacyAccount ->
-                runCatching {
+                forEach { legacyAccount ->
+
                     val migrationOptions = webAuthnRepository.getMigrationOptions(
                         deviceId = deviceId,
                         userId = legacyAccount.userId.toString(),
@@ -78,11 +79,12 @@ internal class MigrationManager(
                     ).firstOrNull() ?: return@forEach
                     onGetToken(legacyAccount.userId.toString(), token)
                     webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
-                }.cancellable().onFailure { exception ->
-                    onError(legacyAccount.userId.toString(), exception)
                 }
             }
+        }.cancellable().onFailure {
+            onError()
         }
+
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {
