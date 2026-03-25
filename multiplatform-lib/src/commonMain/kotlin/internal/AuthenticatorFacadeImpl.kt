@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
-    private val db: AccountsDatabase,
+    private val accountsDatabase: AccountsDatabase,
     private val clientId: String,
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
@@ -80,13 +80,13 @@ internal class AuthenticatorFacadeImpl(
             migrationManager.migrate(
                 onGetToken = { userId, token -> tokenBridge.persistTokenForAccount(userId.toLong(), token) },
                 onError = { userId, exception ->
-                    
+
                 }
             )
         }
     }
 
-    private val dao = db.getDao()
+    private val dao = accountsDatabase.getDao()
 
     private val accountEntities = flow {
         migrationManager.addLegacyAccountsToDB()

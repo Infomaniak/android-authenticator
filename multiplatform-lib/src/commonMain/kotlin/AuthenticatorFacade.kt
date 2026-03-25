@@ -71,7 +71,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 deviceId = deviceId,
             )
             return AuthenticatorFacadeImpl(
-                db = accountsDatabase,
+                accountsDatabase = accountsDatabase,
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
                 migrationManager = migrationManager,
