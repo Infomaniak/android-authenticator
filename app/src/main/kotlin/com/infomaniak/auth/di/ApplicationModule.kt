@@ -71,7 +71,6 @@ object ApplicationModule {
     ): AuthenticatorFacade {
         return authenticatorInjection.getAuthenticatorFacade(
             clientId = BuildConfig.CLIENT_ID,
-            deviceId = "", // TODO Where to get the device ID from?
             tokenBridge = object : TokenBridge {
                 override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
                     // TODO[Authenticator]: retrieve token from crossapplogin

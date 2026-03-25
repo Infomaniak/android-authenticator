@@ -26,13 +26,14 @@ import com.infomaniak.auth.lib.otp.TotpGenerator
 import com.infomaniak.auth.lib.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.otp.needMigration
 import com.osmerion.kotlin.io.encoding.Base32
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 internal class MigrationManager(
     private val accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
     private val webAuthnRepository: WebAuthnRepository,
     private val clientId: String,
-    private val deviceId: String,
 ) {
 
     // Get previous BDD => Done
@@ -53,10 +54,12 @@ internal class MigrationManager(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     suspend fun migrate(
         onGetToken: suspend (userId: String, token: String) -> Unit,
         onError: suspend (String, Throwable) -> Unit,
     ) {
+        val deviceId = Uuid.random().toString()
         getLegacyAccounts().apply {
             if (isEmpty()) return@apply
 

@@ -42,7 +42,6 @@ abstract class AuthenticatorFacade internal constructor() {
             environment: ApiEnvironment,
             userAgent: String,
             clientId: String,
-            deviceId: String,
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
             tokenBridge: TokenBridge,
@@ -68,7 +67,6 @@ abstract class AuthenticatorFacade internal constructor() {
                 authenticatorManager = authenticatorManager,
                 webAuthnRepository = webAuthnRepository,
                 clientId = clientId,
-                deviceId = deviceId,
             )
             return AuthenticatorFacadeImpl(
                 accountsDatabase = accountsDatabase,

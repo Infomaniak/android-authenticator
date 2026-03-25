@@ -38,14 +38,12 @@ class AuthenticatorInjection(
 
     fun getAuthenticatorFacade(
         clientId: String,
-        deviceId: String,
         tokenBridge: TokenBridge,
     ) = AuthenticatorFacade.create(
         userAgent = userAgent,
         environment = environment,
         crashReport = crashReport,
         clientId = clientId,
-        deviceId = deviceId,
         tokenBridge = tokenBridge
     )
 }
