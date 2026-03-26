@@ -97,6 +97,9 @@ fun AccountDetailsScreen(
     AccountDetailsScreen(
         uiState = { uiState },
         onBackPressed = onBackPressed,
+        onChallengesRefreshClicked = {
+            viewModel.refreshChallenges(accountId)
+        },
         onRemoveAccountClicked = {
             viewModel.removeAccount()
         }
@@ -107,6 +110,7 @@ fun AccountDetailsScreen(
 fun AccountDetailsScreen(
     uiState: () -> AccountDetailsUiState,
     onBackPressed: () -> Unit,
+    onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -126,6 +130,7 @@ fun AccountDetailsScreen(
                     paddingValues = paddingValues,
                     account = uiState.account,
                     user = uiState.user,
+                    onChallengesRefreshClicked = onChallengesRefreshClicked,
                     onRemoveAccountClicked = onRemoveAccountClicked
                 )
             }
@@ -140,6 +145,7 @@ private fun AccountDetailsContent(
     paddingValues: PaddingValues,
     account: Account,
     user: User?,
+    onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
 ) {
     Column(
@@ -159,6 +165,7 @@ private fun AccountDetailsContent(
         SettingsSections(
             accountStatus = account.status,
             user = user,
+            onChallengesRefreshClicked = onChallengesRefreshClicked,
             onRemoveAccountClicked = onRemoveAccountClicked
         )
     }
@@ -306,6 +313,7 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 private fun SettingsSections(
     accountStatus: Account.Status,
     user: User?,
+    onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -317,7 +325,7 @@ private fun SettingsSections(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
                 rightIconResId = R.drawable.right_indicator,
-                onClick = {},
+                onClick = onChallengesRefreshClicked,
             ),
         )
     } else persistentListOf()
@@ -410,6 +418,7 @@ private fun AccountDetailsScreenPreview(
         AccountDetailsScreen(
             uiState = { AccountDetailsUiState.Success(accountPairs.first, accountPairs.second) },
             onBackPressed = {},
+            onChallengesRefreshClicked = {},
             onRemoveAccountClicked = {},
         )
     }

@@ -92,7 +92,8 @@ fun HomeScreen(
 
     HomeScreen(
         uiState = { uiState },
-        onAccountClicked = onAccountClicked
+        onAccountClicked = onAccountClicked,
+        onChallengesRefreshRequested = viewModel::refreshChallenges,
     )
 
     SideEffect {
@@ -104,6 +105,7 @@ fun HomeScreen(
 fun HomeScreen(
     uiState: () -> HomeScreenUiState,
     onAccountClicked: (Account) -> Unit,
+    onChallengesRefreshRequested: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
@@ -117,7 +119,8 @@ fun HomeScreen(
                 HomeScreenContent(
                     paddingValues = paddingValues,
                     uiState = uiState,
-                    onAccountClicked = onAccountClicked
+                    onAccountClicked = onAccountClicked,
+                    onChallengesRefreshRequested = onChallengesRefreshRequested
                 )
             }
             is HomeScreenUiState.Loading -> Unit
@@ -129,7 +132,8 @@ fun HomeScreen(
 private fun HomeScreenContent(
     paddingValues: PaddingValues,
     uiState: HomeScreenUiState.Success,
-    onAccountClicked: (Account) -> Unit
+    onAccountClicked: (Account) -> Unit,
+    onChallengesRefreshRequested: () -> Unit,
 ) {
     val hasUnsecuredAccounts: Boolean by remember(uiState.accountPairs) {
         derivedStateOf { uiState.accountPairs.any { it.first.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
@@ -154,7 +158,10 @@ private fun HomeScreenContent(
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             state = state,
-            onRefresh = { isRefreshing = true },
+            onRefresh = {
+                isRefreshing = true
+                onChallengesRefreshRequested()
+            },
         ) {
             Column(
                 modifier = Modifier
@@ -259,6 +266,7 @@ private fun HomeScreenPreview() {
         HomeScreen(
             uiState = { HomeScreenUiState.Success(fakeAccountPairs) },
             onAccountClicked = {},
+            onChallengesRefreshRequested = {}
         )
     }
 }
