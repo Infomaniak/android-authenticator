@@ -41,8 +41,6 @@ import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
@@ -63,7 +61,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transformLatest
-import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
@@ -73,17 +70,7 @@ internal class AuthenticatorFacadeImpl(
     private val migrationManager: MigrationManager,
     private val tokenBridge: TokenBridge,
     private val coroutineScope: CoroutineScope,
-    private val onMigrationError: () -> Unit,
 ) : AuthenticatorFacade() {
-
-    init {
-        GlobalScope.launch(Dispatchers.IO) {
-            migrationManager.startMigration(
-                onGetToken = { userId, token -> tokenBridge.persistTokenForAccount(userId.toLong(), token) },
-                onError = { onMigrationError() }
-            )
-        }
-    }
 
     private val dao = accountsDatabase.getDao()
 
@@ -131,6 +118,12 @@ internal class AuthenticatorFacadeImpl(
         authenticatorManager.removeAccount(token, id)
         dao.delete(id)
     }
+
+    override suspend fun startMigration() {
+        migrationManager.startMigration(
+            onGetToken = { userId, token -> tokenBridge.persistTokenForAccount(userId.toLong(), token) },
+        )
+	}
 
     override suspend fun refreshTokenFor(userId: Long) {
         val token = authenticatorManager.getToken(clientId, userId).firstOrElse {

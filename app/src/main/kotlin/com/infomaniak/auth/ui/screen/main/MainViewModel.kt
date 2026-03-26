@@ -18,10 +18,12 @@
 package com.infomaniak.auth.ui.screen.main
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,4 +34,10 @@ class MainViewModel @Inject constructor(
     val appStatus = authenticatorFacade.appStatus
 
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
+
+    init {
+        viewModelScope.launch {
+            authenticatorFacade.startMigration()
+        }
+    }
 }

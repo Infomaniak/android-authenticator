@@ -32,8 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import network.utils.ApiEnvironment
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 abstract class AuthenticatorFacade internal constructor() {
     companion object {
@@ -46,7 +44,6 @@ abstract class AuthenticatorFacade internal constructor() {
             crashReport: CrashReportInterface,
             tokenBridge: TokenBridge,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-            onMigrationError: () -> Unit,
         ): AuthenticatorFacade {
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
@@ -76,36 +73,6 @@ abstract class AuthenticatorFacade internal constructor() {
                 migrationManager = migrationManager,
                 tokenBridge = tokenBridge,
                 coroutineScope = scope,
-                onMigrationError = onMigrationError,
-            )
-        }
-
-        fun dummyInstance(
-            userAgent: String,
-            environment: ApiEnvironment,
-            crashReport: CrashReportInterface?,
-            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-            loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
-            resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
-        ): AuthenticatorFacade {
-            val webAuthnRepository = WebAuthnRepository(
-                authenticatorRequest = AuthenticatorRequest(
-                    httpClient = ApiClientProvider(
-                        userAgent = userAgent,
-                        environment = environment,
-                        crashReport = crashReport,
-                    ).httpClient
-                )
-            )
-            val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))
-            val authenticatorManager =
-                AuthenticatorManager(webAuthnRepository = webAuthnRepository, accountsRepository = accountsRepository)
-            return DummyAuthenticatorFacade(
-                accountsRepository = accountsRepository,
-                authenticatorManager = authenticatorManager,
-                scope = scope,
-                loadingDuration = loadingDurationMillis.milliseconds,
-                resetAfter = resetAfterMillis.milliseconds,
             )
         }
     }
@@ -125,6 +92,8 @@ abstract class AuthenticatorFacade internal constructor() {
      * Remove account from the authenticator.
      */
     abstract suspend fun removeAccount(token: String, id: Long)
+
+    abstract suspend fun startMigration()
 
     /**
      * Refresh the token for the specific userId
