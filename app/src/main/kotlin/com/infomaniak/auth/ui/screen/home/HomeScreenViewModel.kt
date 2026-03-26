@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList

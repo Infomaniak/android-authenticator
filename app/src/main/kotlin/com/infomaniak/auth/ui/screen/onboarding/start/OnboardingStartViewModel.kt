@@ -25,7 +25,7 @@ import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.matomo.MatomoName
-import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.utils.LoginUtils

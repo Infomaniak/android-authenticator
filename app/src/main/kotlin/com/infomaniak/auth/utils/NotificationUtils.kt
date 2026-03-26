@@ -15,22 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.manager
+package com.infomaniak.auth.utils
 
+import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
-import com.infomaniak.auth.MainApplication
-import com.infomaniak.core.auth.UserAccountUtils
-import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.twofactorauth.back.notifications.TwoFactorAuthNotifications
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AccountUtils @Inject constructor(
-    @ApplicationContext context: Context,
-) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
-    suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
+class NotificationUtils @Inject constructor(@ApplicationContext private val appContext: Context) {
+    fun initNotificationChannel() = with(appContext) {
+        val channelList = mutableListOf<NotificationChannel>()
 
-    suspend fun getUserById(id: Int): User? = userDao.findById(id)
+        channelList.add(TwoFactorAuthNotifications.channel())
+
+        (getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager).apply {
+            createNotificationChannels(channelList)
+        }
+    }
 }

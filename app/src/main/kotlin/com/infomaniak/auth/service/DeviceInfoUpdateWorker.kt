@@ -20,7 +20,7 @@ package com.infomaniak.auth.service
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
-import com.infomaniak.auth.manager.AccountUtils
+import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.AbstractDeviceInfoUpdateWorker
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

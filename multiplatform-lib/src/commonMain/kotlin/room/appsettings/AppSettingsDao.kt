@@ -32,9 +32,6 @@ interface AppSettingsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(item: AppSettingsEntity)
 
-    @Query("UPDATE AppSettingsEntity SET isNotificationEnabled = :isNotificationEnabled")
-    suspend fun setIsNotificationEnabled(isNotificationEnabled: Boolean)
-
     @Query("UPDATE AppSettingsEntity SET isAppLockEnabled = :isAppLockEnabled")
     suspend fun setIsAppLockEnabled(isAppLockEnabled: Boolean)
 

@@ -35,6 +35,8 @@ import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.applock.AppLockManager
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
+import com.infomaniak.core.twofactorauth.front.TwoFactorAuthApprovalAutoManagedBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -45,6 +47,9 @@ class MainActivity : FragmentActivity() {
 
     @Inject
     lateinit var appSettingsRepository: AppSettingsRepository
+
+    @Inject
+    lateinit var twoFactorAuthManager: TwoFactorAuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +66,8 @@ class MainActivity : FragmentActivity() {
         )
 
         setContent {
+            TwoFactorAuthApprovalAutoManagedBottomSheet(twoFactorAuthManager)
+
             val appSettings by appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
             val appStatus by viewModel.appStatus.collectAsState(null)
 

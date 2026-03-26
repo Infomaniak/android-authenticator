@@ -15,14 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.appsettings
+package com.infomaniak.auth.utils
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.content.Context
+import com.infomaniak.auth.MainApplication
+import com.infomaniak.core.auth.UserAccountUtils
+import com.infomaniak.core.auth.models.user.User
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Entity
-data class AppSettingsEntity(
-    @PrimaryKey val id: Long = 0,
-    val isAppLockEnabled: Boolean = false,
-    val theme: Theme = Theme.System,
-)
+@Singleton
+class AccountUtils @Inject constructor(
+    @ApplicationContext context: Context,
+) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
+    suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
+
+    suspend fun getUserById(id: Int): User? = userDao.findById(id)
+}

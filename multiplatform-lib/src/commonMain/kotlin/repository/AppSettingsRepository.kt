@@ -33,10 +33,6 @@ class AppSettingsRepository(database: AppSettingsDatabase) {
         dao.getAsFlow()
     }
 
-    suspend fun setIsNotificationEnabled(isNotificationEnabled: Boolean) {
-        dao.setIsNotificationEnabled(isNotificationEnabled)
-    }
-
     suspend fun setIsAppLockEnabled(isAppLockEnabled: Boolean) {
         dao.setIsAppLockEnabled(isAppLockEnabled)
     }
