@@ -48,7 +48,8 @@ internal fun Account.toEntity(status: AccountEntity.Status): AccountEntity {
 }
 
 internal fun LegacyAccount.toEntity(status: AccountEntity.Status): AccountEntity {
-    val initials = "${displayName.firstOrNull()?.uppercase()}${displayName.substring(displayName.indexOf(" ") + 1).uppercase()}"
+    val initials = "${displayName.firstOrNull()?.uppercase()}" +
+            "${displayName.substring(displayName.indexOf(" ") + 1).firstOrNull()?.uppercase()}"
     return AccountEntity(
         id = userId.toLong(),
         fullName = displayName,
