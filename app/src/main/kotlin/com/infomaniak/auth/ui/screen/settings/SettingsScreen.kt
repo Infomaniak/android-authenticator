@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.ui.screen.settings
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -54,21 +56,16 @@ fun SettingsScreen(
 ) {
     val uiState by appSettingsViewModel.uiState.collectAsStateWithLifecycle(SettingsUiState())
     val hasBiometrics = remember { AppLockManager.hasBiometrics() }
-    val notificationEnabled = GetSetCallbacks(
-        get = { uiState.isNotificationEnabled },
-        set = { appSettingsViewModel.setIsNotificationEnabled(it) }
-    )
     val appLocked = GetSetCallbacks(
         get = { uiState.isAppLocked },
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
 
-    SettingsScreen(notificationEnabled, appLocked, onThemeClicked, onPrivacyManagementClicked, hasBiometrics)
+    SettingsScreen(appLocked, onThemeClicked, onPrivacyManagementClicked, hasBiometrics)
 }
 
 @Composable
 private fun SettingsScreen(
-    notificationEnabled: GetSetCallbacks<Boolean>,
     appLocked: GetSetCallbacks<Boolean>,
     onThemeClicked: () -> Unit,
     onPrivacyManagementClicked: () -> Unit,
@@ -78,10 +75,19 @@ private fun SettingsScreen(
 
     val firstSectionItems = buildList {
         add(
-            OptionItemType.WithCheckBox(
+            OptionItemType.WithRightIcon(
                 stringResId = R.string.notificationsTitle,
-                isChecked = notificationEnabled.get(),
-                onCheckedChange = { notificationEnabled.set(it) }
+                rightIconResId = R.drawable.square_arrow_up,
+                onClick = {
+                    fragmentActivity?.let {
+                        Intent()
+                            .apply {
+                                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                                putExtra(Settings.EXTRA_APP_PACKAGE, fragmentActivity.packageName)
+                            }
+                            .also(fragmentActivity::startActivity)
+                    }
+                }
             )
         )
         if (hasBiometrics) {
@@ -145,7 +151,6 @@ private fun SettingsScreen(
 private fun SettingsScreenPreview() {
     AuthenticatorTheme {
         SettingsScreen(
-            notificationEnabled = GetSetCallbacks(get = { true }, set = {}),
             appLocked = GetSetCallbacks(get = { true }, set = {}),
             onThemeClicked = {},
             onPrivacyManagementClicked = {},

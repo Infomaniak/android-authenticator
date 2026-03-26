@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SettingsUiState(
-    val isNotificationEnabled: Boolean = false,
     val isAppLocked: Boolean = false,
     val theme: Theme? = null,
 )
@@ -45,16 +44,11 @@ class AppSettingsViewModel @Inject constructor(
     val uiState: StateFlow<SettingsUiState> = appSettingsRepository.getSettings()
         .map { settings ->
             SettingsUiState(
-                isNotificationEnabled = settings?.isNotificationEnabled ?: false,
                 isAppLocked = settings?.isAppLockEnabled ?: false,
                 theme = settings?.theme,
             )
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsUiState())
-
-    fun setIsNotificationEnabled(isNotificationEnabled: Boolean) {
-        viewModelScope.launch { appSettingsRepository.setIsNotificationEnabled(isNotificationEnabled) }
-    }
 
     fun setIsAppLockEnabled(isAppLocked: Boolean) {
         viewModelScope.launch { appSettingsRepository.setIsAppLockEnabled(isAppLocked) }
