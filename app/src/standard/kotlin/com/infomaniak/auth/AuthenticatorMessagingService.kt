@@ -23,8 +23,10 @@ import com.infomaniak.core.notifications.registration.NotificationsRegistrationM
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.back.notifications.TwoFactorAuthNotifications
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AuthenticatorMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var twoFactorAuthManager: TwoFactorAuthManager

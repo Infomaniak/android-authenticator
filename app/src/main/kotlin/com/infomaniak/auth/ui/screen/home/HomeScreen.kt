@@ -42,7 +42,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -96,7 +95,7 @@ fun HomeScreen(
         onChallengesRefreshRequested = viewModel::refreshChallenges,
     )
 
-    SideEffect {
+    LaunchedEffect(Unit) {
         notificationPermissionState?.launchPermissionRequest()
     }
 }
