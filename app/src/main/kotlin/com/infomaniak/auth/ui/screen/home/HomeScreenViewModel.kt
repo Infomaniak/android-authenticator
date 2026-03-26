@@ -31,6 +31,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -60,12 +61,13 @@ class HomeScreenViewModel @Inject constructor(
 
     fun refreshChallenges() {
         viewModelScope.launch {
-            authenticatorFacade.accounts.collect { accounts ->
-                accounts.filter { account -> account.status == Account.Status.LoggedIn }
-                    .forEach { account ->
-                        twoFactorAuthManager.refreshChallengeNow(account.id)
-                    }
-            }
+            authenticatorFacade.accounts.first()
+                .filter { account ->
+                    account.status == Account.Status.LoggedIn
+                }
+                .forEach { account ->
+                    twoFactorAuthManager.refreshChallengeNow(account.id)
+                }
         }
     }
 }

@@ -147,7 +147,6 @@ private fun HomeScreenContent(
 
         val state = rememberPullToRefreshState()
         var isRefreshing by remember { mutableStateOf(false) }
-        // TODO Handle the refresh correctly when we'll have real data to fetch
         LaunchedEffect(isRefreshing) {
             if (isRefreshing) {
                 delay(2_000)

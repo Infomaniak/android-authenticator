@@ -76,6 +76,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 
 @Composable
 fun AccountDetailsScreen(
@@ -320,12 +321,23 @@ private fun SettingsSections(
     val context = LocalContext.current
     val host = ApiEnvironment.current.host
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            delay(2_000)
+            isRefreshing = false
+        }
+    }
+
     val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
         persistentListOf(
-            OptionItemType.WithRightIcon(
+            OptionItemType.WithLoader(
                 stringResId = R.string.refreshPendingLoginsButton,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = onChallengesRefreshClicked,
+                isLoading = isRefreshing,
+                onClick = {
+                    onChallengesRefreshClicked()
+                    isRefreshing = true
+                },
             ),
         )
     } else persistentListOf()

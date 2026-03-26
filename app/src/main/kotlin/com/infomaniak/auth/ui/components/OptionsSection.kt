@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
@@ -135,35 +136,47 @@ private fun OptionContent(optionItemType: OptionItemType) {
             )
         }
 
-        Text(text = stringResource(optionItemType.stringResId), color = optionItemType.textColor)
-        Spacer(modifier = Modifier.weight(1f))
+        if (optionItemType is OptionItemType.WithLoader && optionItemType.isLoading) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                )
+            }
+        } else {
+            Text(text = stringResource(optionItemType.stringResId), color = optionItemType.textColor)
+            Spacer(modifier = Modifier.weight(1f))
 
-        when (optionItemType) {
-            is OptionItemType.WithRightIcon -> {
-                Icon(
-                    painter = painterResource(optionItemType.rightIconResId),
-                    contentDescription = null,
-                )
-            }
-            is OptionItemType.WithCheckBox -> {
-                Switch(
-                    modifier = Modifier
-                        .scale(0.7f),
-                    checked = optionItemType.isChecked,
-                    onCheckedChange = { optionItemType.onCheckedChange.invoke(it) },
-                )
-            }
-            is OptionItemType.WithSelection -> {
-                if (optionItemType.isSelected) {
+            when (optionItemType) {
+                is OptionItemType.WithRightIcon -> {
                     Icon(
-                        modifier = Modifier.size(20.dp),
-                        painter = painterResource(R.drawable.check),
+                        painter = painterResource(optionItemType.rightIconResId),
                         contentDescription = null,
-                        tint = AuthenticatorTheme.materialColors.primary,
                     )
                 }
+                is OptionItemType.WithCheckBox -> {
+                    Switch(
+                        modifier = Modifier
+                            .scale(0.7f),
+                        checked = optionItemType.isChecked,
+                        onCheckedChange = { optionItemType.onCheckedChange.invoke(it) },
+                    )
+                }
+                is OptionItemType.WithSelection -> {
+                    if (optionItemType.isSelected) {
+                        Icon(
+                            modifier = Modifier.size(20.dp),
+                            painter = painterResource(R.drawable.check),
+                            contentDescription = null,
+                            tint = AuthenticatorTheme.materialColors.primary,
+                        )
+                    }
+                }
+                else -> {}
             }
-            else -> {}
         }
     }
 }
@@ -198,6 +211,12 @@ sealed interface OptionItemType {
         val isSelected: Boolean,
         val leftIconResId: Int? = null,
     ) : OptionItemType
+
+    class WithLoader(
+        override val stringResId: Int,
+        override val onClick: () -> Unit,
+        val isLoading: Boolean,
+    ) : OptionItemType
 }
 
 @PreviewSmallWindow
@@ -219,7 +238,7 @@ private fun OptionsSectionPreview() {
             stringResId = R.string.appCompleteName,
             isSelected = true,
             onClick = {},
-        ),
+        )
     )
 
     val secondSectionItems =
@@ -227,7 +246,13 @@ private fun OptionsSectionPreview() {
             OptionItemType.WithCheckBox(
                 stringResId = R.string.appCompleteName,
                 isChecked = false,
-                onCheckedChange = {})
+                onCheckedChange = {}
+            ),
+            OptionItemType.WithLoader(
+                stringResId = R.string.appCompleteName,
+                isLoading = true,
+                onClick = {},
+            )
         )
 
     AuthenticatorTheme {
