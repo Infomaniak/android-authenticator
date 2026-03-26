@@ -52,6 +52,6 @@ class AuthenticatorMessagingService : FirebaseMessagingService() {
     }
 
     companion object {
-        private const val TAG = "DriveMessagingService"
+        private const val TAG = "AuthenticatorMessagingService"
     }
 }
