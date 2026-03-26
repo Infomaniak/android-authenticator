@@ -23,6 +23,7 @@ import com.infomaniak.auth.lib.internal.models.MigrationOptions
 import com.infomaniak.auth.lib.internal.models.PasskeysOptions
 import com.infomaniak.auth.lib.internal.models.RegisterPasskey
 import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
+import com.infomaniak.auth.lib.internal.models.TokenFromOtp
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.network.utils.decode
@@ -111,18 +112,14 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * The returned [AuthResult] contains an access token, to be used to register a passkey with [registerPasskey].
      *
      * @param sessionId ID of the session you get from [getMigrationOptions].
-     * @param deviceId ID of the device.
-     * @param userId ID of the user.
-     * @param otp The one-time password.
+     * @param tokenFromOtp Object representing the data we need to send to the server to get an access token
      */
     suspend fun getTokenForMigration(
         sessionId: String,
-        deviceId: String,
-        userId: String,
-        otp: String
+        tokenFromOtp: TokenFromOtp,
     ): SuccessfulApiResponse<AuthResult> {
         return httpClient.post(ApiRoutes.verifyMigration(sessionId)) {
-            setBody(mapOf("device" to deviceId, "id" to userId, "otp" to otp))
+            setBody(tokenFromOtp)
         }.decode()
     }
 

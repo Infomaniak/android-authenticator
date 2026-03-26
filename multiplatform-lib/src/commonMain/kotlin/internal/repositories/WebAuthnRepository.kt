@@ -23,6 +23,7 @@ import com.infomaniak.auth.lib.internal.models.MigrationOptions
 import com.infomaniak.auth.lib.internal.models.PasskeysOptions
 import com.infomaniak.auth.lib.internal.models.RegisterPasskey
 import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
+import com.infomaniak.auth.lib.internal.models.TokenFromOtp
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
 
@@ -65,8 +66,11 @@ internal class WebAuthnRepository(
         return authenticatorRequest.getMigrationOptions(deviceId, userId).data
     }
 
-    suspend fun getTokenForMigration(sessionId: String, deviceId: String, userId: String, otp: String): AuthResult {
-        return authenticatorRequest.getTokenForMigration(sessionId, deviceId, userId, otp).data
+    suspend fun getTokenForMigration(
+        sessionId: String,
+        tokenFromOtp: TokenFromOtp,
+    ): AuthResult {
+        return authenticatorRequest.getTokenForMigration(sessionId, tokenFromOtp).data
     }
 
     suspend fun completeMigration(token: String, deviceId: String) {

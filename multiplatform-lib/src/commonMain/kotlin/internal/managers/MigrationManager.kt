@@ -21,6 +21,7 @@ import com.infomaniak.auth.lib.internal.db.AccountEntity.Status
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.toEntity
+import com.infomaniak.auth.lib.internal.models.TokenFromOtp
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.otp.TotpGenerator
 import com.infomaniak.auth.lib.otp.getLegacyAccounts
@@ -49,7 +50,6 @@ internal class MigrationManager(
     @OptIn(ExperimentalUuidApi::class)
     suspend fun startMigration(
         onGetToken: suspend (userId: String, token: String) -> Unit,
-        onError: () -> Unit,
     ) {
         val deviceId = Uuid.random().toString()
         runCatching {
@@ -57,17 +57,14 @@ internal class MigrationManager(
                 if (isEmpty()) return@apply
 
                 forEach { legacyAccount ->
-
                     val migrationOptions = webAuthnRepository.getMigrationOptions(
                         deviceId = deviceId,
                         userId = legacyAccount.userId.toString(),
                     )
                     val otp = getOtp(secret = legacyAccount.secret, timestampSeconds = migrationOptions.timestamp)
                     val authResult = webAuthnRepository.getTokenForMigration(
-                        migrationOptions.session,
-                        deviceId = deviceId,
-                        userId = legacyAccount.userId.toString(),
-                        otp = otp,
+                        sessionId = migrationOptions.session,
+                        tokenFromOtp = TokenFromOtp(deviceId, legacyAccount.userId.toLong(), otp),
                     )
                     authenticatorManager.registerPasskey(
                         token = authResult.accessToken,
@@ -82,9 +79,9 @@ internal class MigrationManager(
                 }
             }
         }.cancellable().onFailure {
-            onError()
+            println("Error: $it")
+            // Send the right AppStatus for native to display the right screen
         }
-
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {
