@@ -23,5 +23,5 @@ object UrlConstants {
 
     private const val AUTOLOG_URL = "mobile_login"
     const val ACTIVITY_MANAGER_URL = "ng/profile/user/connection-history/activity"
-    const val SETTINGS_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard"
+    const val SETTINGS_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security"
 }

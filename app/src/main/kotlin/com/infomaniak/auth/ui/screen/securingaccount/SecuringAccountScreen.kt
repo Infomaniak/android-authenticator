@@ -27,11 +27,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -43,22 +41,7 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun SecuringAccountScreen(
-    needResolution: Boolean,
-    modifier: Modifier = Modifier,
-    viewModel: SecuringAccountViewModel = hiltViewModel()
-) {
-    LaunchedEffect(needResolution) {
-        if (needResolution) {
-            viewModel.needResolution()
-        }
-    }
-
-    SecuringAccountScreen(modifier)
-}
-
-@Composable
-private fun SecuringAccountScreen(modifier: Modifier = Modifier) {
+fun SecuringAccountScreen(modifier: Modifier = Modifier) {
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {

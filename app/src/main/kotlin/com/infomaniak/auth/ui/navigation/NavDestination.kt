@@ -36,7 +36,7 @@ sealed interface NavDestination : NavKey {
     }
 
     @Serializable
-    data class SecuringAccount(val needsResolution: Boolean = false) : NavDestination
+    data object SecuringAccount : NavDestination
 
     sealed interface Root : NavDestination {
         @Serializable

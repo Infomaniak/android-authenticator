@@ -18,36 +18,18 @@
 package com.infomaniak.auth.ui.screen.main
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
-import com.infomaniak.auth.utils.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     appSettingsRepository: AppSettingsRepository,
-    private val authenticatorFacade: AuthenticatorFacade,
-    private val accountUtils: AccountUtils,
+    authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
-
-    val uiState = flow {
-        emit(UiState.Ready(accountUtils.isUserConnected()))
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, UiState.Loading)
-
     val appStatus = authenticatorFacade.appStatus
-        .stateIn(viewModelScope, SharingStarted.Eagerly, AppStatus.LoginRequired.NotMigrating)
 
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
-
-    sealed interface UiState {
-        data object Loading : UiState
-        data class Ready(val isUserConnected: Boolean) : UiState
-    }
 }

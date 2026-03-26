@@ -27,6 +27,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
@@ -51,7 +52,7 @@ class DummyAuthenticatorFacade internal constructor(
 
     private val next = Channel<Unit>()
 
-    override val appStatus: Flow<AppStatus> = flow {
+    override val appStatus: SharedFlow<AppStatus> = flow {
         var i = 0
         var isMigratingFromLegacyKAuth = true
         while (true) {
