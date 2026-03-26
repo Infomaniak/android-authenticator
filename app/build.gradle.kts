@@ -9,6 +9,7 @@ plugins {
     alias(core.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(core.plugins.sentry.plugin)
+    alias(core.plugins.google.services)
 }
 
 val androidCompileSdk: Int by rootProject.extra
