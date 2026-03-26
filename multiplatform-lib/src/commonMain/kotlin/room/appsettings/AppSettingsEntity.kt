@@ -23,7 +23,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class AppSettingsEntity(
     @PrimaryKey val id: Long = 0,
-    val isNotificationEnabled: Boolean = false,
     val isAppLockEnabled: Boolean = false,
     val theme: Theme = Theme.System,
 )

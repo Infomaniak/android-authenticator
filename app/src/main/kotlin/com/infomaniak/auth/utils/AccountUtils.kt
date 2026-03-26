@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class AccountUtils @Inject constructor(
     @ApplicationContext context: Context,
-) : UserAccountUtils(context, MainApplication.Companion.userDataCleanableList) {
+) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
     suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
 
     suspend fun getUserById(id: Int): User? = userDao.findById(id)
