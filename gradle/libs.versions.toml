@@ -1,4 +1,5 @@
 [versions]
+accompanistPermissions = "0.37.3"
 kotlin = "2.3.0"
 ksp = "2.3.4"
 lifecycleViewmodelNav3 = "2.10.0"
@@ -9,6 +10,7 @@ sonarqube = "7.2.3.7755"
 sqlite = "2.6.2"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }

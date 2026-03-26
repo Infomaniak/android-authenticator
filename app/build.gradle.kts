@@ -151,20 +151,24 @@ dependencies {
     implementation(core.infomaniak.core.ui.view)
     implementation(core.infomaniak.core.webview)
 
-    "standardImplementation"(core.infomaniak.core.notifications.registration)
-    "standardImplementation"(core.firebase.messaging.ktx)
 
     implementation(core.androidx.core.splashscreen)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(core.androidx.work.runtime.ktx)
-    implementation(core.kotlinx.collections.immutable)
-    implementation(core.splitties.preferences)
 
+    implementation(core.kotlinx.collections.immutable)
     implementation(core.kotlinx.serialization.json)
 
     implementation(core.okhttp)
+
+    implementation(libs.accompanist.permissions)
+    implementation(core.splitties.preferences)
+
+    // Notification
+    "standardImplementation"(core.infomaniak.core.notifications.registration)
+    "standardImplementation"(core.firebase.messaging.ktx)
 
     // Room
     implementation(core.room.ktx)
