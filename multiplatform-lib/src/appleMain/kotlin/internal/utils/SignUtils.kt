@@ -80,7 +80,10 @@ internal actual object SignUtils {
         }
         val key = tryIt { errorPtr ->
             SecKeyCreateWithData(publicKey.toNSData().toCFDataRef(), attributes, errorPtr)
-        }.firstOrElse { println(it); return false }
+        }.firstOrElse {
+            println(it)
+            return false
+        }
         return tryIt { errorPtr ->
             SecKeyVerifySignature(
                 key = key,
@@ -89,7 +92,10 @@ internal actual object SignUtils {
                 signature = signatureData.toNSData().toCFDataRef(),
                 error = errorPtr
             )
-        }.firstOrElse { println(it); return false }
+        }.firstOrElse {
+            println(it)
+            return false
+        }
     }
 
     private fun convertX962ToDer(x962Signature: ByteArray): ByteArray {

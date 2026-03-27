@@ -20,10 +20,10 @@
 package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.set
 import com.infomaniak.auth.lib.internal.extensions.toNsData
 import com.infomaniak.auth.lib.internal.extensions.tryIt
-import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFMutableDictionaryRef
@@ -148,7 +148,9 @@ private fun createKeyAttributes(
         KeyStorageLocation.SecureEnclave -> {
             this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave
         }
-        KeyStorageLocation.KeyChain, null -> {}
+        KeyStorageLocation.KeyChain, null -> {
+            // TODO Check if we really need this case
+        }
     }
     this[kSecPrivateKeyAttrs] = buildCFDictionary {
         privateKeyPurposes?.applyTo(this)
