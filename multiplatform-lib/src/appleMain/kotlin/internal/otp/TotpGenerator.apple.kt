@@ -57,6 +57,13 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withConte
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
+internal actual suspend fun getSecretFor(userId: String): String? {
+    return getLegacyAccounts().find {
+        it.userId.toString() == userId
+    }?.secret
+}
+
 internal actual suspend fun needMigration(): Boolean = withContext(Dispatchers.IO) {
     val userDefaults = NSUserDefaults.standardUserDefaults
     userDefaults.objectForKey("ALL_USERS") as? List<*> != null

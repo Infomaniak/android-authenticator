@@ -245,9 +245,8 @@ internal class AuthenticatorFacadeImpl(
             credentialsAsync.await()
             emit(null)
 
-            attemptMigration(accountToMigrate, TODO("Try to login with credentials and OTP"))
+            attemptMigration(accountToMigrate, TODO("Try to login with credentials and OTP (native login)"))
         }
-
     }
 
     private suspend inline fun FlowCollector<NotConnectedAction?>.tryCrossAppLogin(
@@ -267,24 +266,22 @@ internal class AuthenticatorFacadeImpl(
         notConnectedAccount: AccountEntity,
         onLoginSuccess: () -> Nothing
     ) {
-        val userId = notConnectedAccount.id
         withRetries(onGiveUp = { return }) {
             emit(null)
-            attemptMigration(notConnectedAccount, TODO("Try to jump into an ongoing login"))
+            attemptMigration(notConnectedAccount)
             onLoginSuccess()
         }
     }
 
-    private suspend fun attemptMigration(notConnectedAccount: AccountEntity, temporaryToken: String) {
+    private suspend fun attemptMigration(notConnectedAccount: AccountEntity, temporaryToken: String? = null) {
         val userId = notConnectedAccount.id
-        TODO("Perform the migration and passkey registration steps")
-        // webAuthnRepository.getMigrationOptions()
-        // authenticatorManager.registerPasskey()
-        val tokenFromPasskeyAuth = authenticatorManager.getToken(
-            clientId = clientId,
-            userId = userId,
-        ).firstOrNull()!!
-        tokenBridge.persistTokenForAccount(userId, tokenFromPasskeyAuth)
+        migrationManager.startMigration(
+            userId = userId.toString(),
+            token = temporaryToken,
+            onGetToken = { _, token ->
+                tokenBridge.persistTokenForAccount(userId, token)
+            }
+        )
         dao.upsert(notConnectedAccount.copy(status = AccountEntity.Status.LoggedIn))
     }
 

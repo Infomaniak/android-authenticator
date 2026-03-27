@@ -24,6 +24,7 @@ import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.models.TokenFromOtp
 import com.infomaniak.auth.lib.internal.otp.TotpGenerator
 import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
+import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.osmerion.kotlin.io.encoding.Base32
@@ -49,34 +50,34 @@ internal class MigrationManager(
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun startMigration(
+        userId: String,
         onGetToken: suspend (userId: String, token: String) -> Unit,
+        token: String?,
     ) {
         val deviceId = Uuid.random().toString()
         runCatching {
-            getLegacyAccounts().apply {
-                if (isEmpty()) return@apply
-
-                forEach { legacyAccount ->
-                    val migrationOptions = webAuthnRepository.getMigrationOptions(
-                        deviceId = deviceId,
-                        userId = legacyAccount.userId.toString(),
-                    )
-                    val otp = getOtp(secret = legacyAccount.secret, timestampSeconds = migrationOptions.timestamp)
-                    val authResult = webAuthnRepository.getTokenForMigration(
+            getSecretFor(userId)?.let { secret ->
+                val migrationOptions = webAuthnRepository.getMigrationOptions(
+                    deviceId = deviceId,
+                    userId = userId,
+                )
+                val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
+                val tokenToUse = token
+                    ?: webAuthnRepository.getTokenForMigration(
                         sessionId = migrationOptions.session,
-                        tokenFromOtp = TokenFromOtp(deviceId, legacyAccount.userId.toLong(), otp),
-                    )
-                    authenticatorManager.registerPasskey(
-                        token = authResult.accessToken,
-                        userId = legacyAccount.userId.toLong()
-                    )
-                    val token = authenticatorManager.getToken(
-                        clientId = this@MigrationManager.clientId,
-                        userId = legacyAccount.userId.toLong(),
-                    ).firstOrNull() ?: return@forEach
-                    onGetToken(legacyAccount.userId.toString(), token)
-                    webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
-                }
+                        tokenFromOtp = TokenFromOtp(deviceId, userId.toLong(), otp),
+                    ).accessToken
+
+                authenticatorManager.registerPasskey(
+                    token = tokenToUse,
+                    userId = userId.toLong()
+                )
+                val token = authenticatorManager.getToken(
+                    clientId = this@MigrationManager.clientId,
+                    userId = userId.toLong(),
+                ).firstOrNull() ?: return@runCatching
+                onGetToken(userId, token)
+                webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
             }
         }.cancellable().onFailure {
             println("Error: $it")
