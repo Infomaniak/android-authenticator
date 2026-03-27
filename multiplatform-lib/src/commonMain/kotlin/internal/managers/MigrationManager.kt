@@ -73,7 +73,7 @@ internal class MigrationManager(
                     userId = userId.toLong()
                 )
                 val token = authenticatorManager.getToken(
-                    clientId = this@MigrationManager.clientId,
+                    clientId = clientId,
                     userId = userId.toLong(),
                 ).firstOrNull() ?: return@runCatching
                 onGetToken(userId, token)
