@@ -26,18 +26,14 @@ import splitties.init.appCtx
 internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
     val database = OTPUserDatabase.getInstance(appCtx)
     return withContext(Dispatchers.IO) {
-        try {
-            database.otpUserDao().getAllUsers().map {
-                LegacyAccount(
-                    userId = it.userID,
-                    email = it.email,
-                    displayName = it.displayName,
-                    avatar = it.avatar,
-                    secret = it.secret
-                )
-            }
-        } finally {
-            database.close()
+        database.otpUserDao().getAllUsers().map {
+            LegacyAccount(
+                userId = it.userID,
+                email = it.email,
+                displayName = it.displayName,
+                avatar = it.avatar,
+                secret = it.secret
+            )
         }
     }
 }
