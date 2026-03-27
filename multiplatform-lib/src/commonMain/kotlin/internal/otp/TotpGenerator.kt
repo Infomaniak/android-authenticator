@@ -15,15 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.otp
+package com.infomaniak.auth.lib.internal.otp
 
+import com.infomaniak.auth.lib.internal.models.LegacyAccount
 import org.kotlincrypto.core.mac.Mac
 import org.kotlincrypto.macs.hmac.sha1.HmacSHA1
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA512
 import kotlin.math.pow
 
-class TotpGenerator(
+internal class TotpGenerator(
     private val secret: ByteArray,
     private val digits: Int = 6,
     private val timeStep: Long = 30L, // secondes
@@ -94,13 +95,5 @@ private fun base32Decode(input: String): ByteArray {
     return output.toByteArray()
 }
 
-expect suspend fun needMigration(): Boolean
-expect suspend fun getLegacyAccounts(): List<LegacyAccount>
-
-data class LegacyAccount(
-    var userId: Int,
-    var email: String,
-    var displayName: String,
-    var avatar: String?,
-    var secret: String
-)
+internal expect suspend fun needMigration(): Boolean
+internal expect suspend fun getLegacyAccounts(): List<LegacyAccount>

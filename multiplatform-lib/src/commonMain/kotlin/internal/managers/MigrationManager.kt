@@ -22,10 +22,10 @@ import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.models.TokenFromOtp
+import com.infomaniak.auth.lib.internal.otp.TotpGenerator
+import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
+import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.otp.TotpGenerator
-import com.infomaniak.auth.lib.otp.getLegacyAccounts
-import com.infomaniak.auth.lib.otp.needMigration
 import com.osmerion.kotlin.io.encoding.Base32
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

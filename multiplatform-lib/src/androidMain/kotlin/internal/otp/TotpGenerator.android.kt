@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.otp
+package com.infomaniak.auth.lib.internal.otp
 
+import com.infomaniak.auth.lib.internal.models.LegacyAccount
 import com.infomaniak.auth.lib.room.legacy.OTPUserDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 
-actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
+internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
     val database = OTPUserDatabase.getInstance(appCtx)
     val legacyAccounts = withContext(Dispatchers.IO) {
         database.otpUserDao().getAllUsers().map {
@@ -39,4 +40,4 @@ actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
     return legacyAccounts
 }
 
-actual suspend fun needMigration() = withContext(Dispatchers.IO) { appCtx.getDatabasePath("Infomaniak.db").exists() }
+internal actual suspend fun needMigration() = withContext(Dispatchers.IO) { appCtx.getDatabasePath("Infomaniak.db").exists() }

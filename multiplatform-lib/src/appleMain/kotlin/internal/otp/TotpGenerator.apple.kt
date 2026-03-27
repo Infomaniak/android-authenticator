@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.otp
+package com.infomaniak.auth.lib.internal.otp
 
+import com.infomaniak.auth.lib.internal.models.LegacyAccount
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readBytes
@@ -31,9 +32,9 @@ import platform.Foundation.NSData
 import platform.Foundation.NSUserDefaults
 
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
-actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withContext(Dispatchers.IO) {
+internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withContext(Dispatchers.IO) {
     val userDefaults = NSUserDefaults.standardUserDefaults
-    val usersData = userDefaults.objectForKey("ALL_USERS") as? List<*> ?: emptyList()
+    val usersData = userDefaults.objectForKey("ALL_USERS") as? List<*> ?: emptyList<Any>()
 
     usersData.mapNotNull { item ->
         val data = item as? NSData ?: return@mapNotNull null
@@ -56,7 +57,7 @@ actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withContext(Dispat
     }
 }
 
-actual suspend fun needMigration(): Boolean = withContext(Dispatchers.IO) {
+internal actual suspend fun needMigration(): Boolean = withContext(Dispatchers.IO) {
     val userDefaults = NSUserDefaults.standardUserDefaults
     userDefaults.objectForKey("ALL_USERS") as? List<*> != null
 }

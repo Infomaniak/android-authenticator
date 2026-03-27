@@ -20,7 +20,7 @@ package com.infomaniak.auth.lib.internal.extensions
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.internal.db.AccountEntity
-import com.infomaniak.auth.lib.otp.LegacyAccount
+import com.infomaniak.auth.lib.internal.models.LegacyAccount
 
 internal fun AccountEntity.toAccount(action: NotConnectedAction?): Account {
     return Account(
