@@ -25,19 +25,21 @@ import splitties.init.appCtx
 
 internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
     val database = OTPUserDatabase.getInstance(appCtx)
-    val legacyAccounts = withContext(Dispatchers.IO) {
-        database.otpUserDao().getAllUsers().map {
-            LegacyAccount(
-                userId = it.userID,
-                email = it.email,
-                displayName = it.displayName,
-                avatar = it.avatar,
-                secret = it.secret
-            )
+    return withContext(Dispatchers.IO) {
+        try {
+            database.otpUserDao().getAllUsers().map {
+                LegacyAccount(
+                    userId = it.userID,
+                    email = it.email,
+                    displayName = it.displayName,
+                    avatar = it.avatar,
+                    secret = it.secret
+                )
+            }
+        } finally {
+            database.close()
         }
     }
-    database.close()
-    return legacyAccounts
 }
 
 internal actual suspend fun needMigration() = withContext(Dispatchers.IO) { appCtx.getDatabasePath("Infomaniak.db").exists() }
