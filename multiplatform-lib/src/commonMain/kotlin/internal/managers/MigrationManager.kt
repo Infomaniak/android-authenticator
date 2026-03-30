@@ -40,11 +40,8 @@ internal class MigrationManager(
     suspend fun addLegacyAccountsToDB() {
         if (!needMigration()) return
 
-        getLegacyAccounts().apply {
-            if (isEmpty()) return@apply
-
-            accountsDatabase.getDao().upsert(this.map { it.toEntity() })
-        }
+        val legacyAccounts = getLegacyAccounts().ifEmpty { return }
+        accountsDatabase.getDao().upsert(legacyAccounts.map { it.toEntity() })
     }
 
     @OptIn(ExperimentalUuidApi::class)
