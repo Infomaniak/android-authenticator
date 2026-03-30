@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.lib.internal.managers
 
-import com.infomaniak.auth.lib.internal.db.AccountEntity.Status
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.toEntity
@@ -44,7 +43,7 @@ internal class MigrationManager(
         getLegacyAccounts().apply {
             if (isEmpty()) return@apply
 
-            accountsDatabase.getDao().upsert(this.map { it.toEntity(Status.ToBeMigrated) })
+            accountsDatabase.getDao().upsert(this.map { it.toEntity() })
         }
     }
 
