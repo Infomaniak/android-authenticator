@@ -113,6 +113,6 @@ internal class AuthenticatorManager(
             keyPairManager.deleteKey(passkeyId)
         }
 
-        accountsRepository?.deleteAccount(userId)
+        accountsRepository.deleteAccount(userId)
     }
 }
