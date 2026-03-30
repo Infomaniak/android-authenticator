@@ -56,29 +56,28 @@ internal class MigrationManager(
     ) {
         val deviceId = Uuid.random().toString()
         runCatching {
-            getSecretFor(userId)?.let { secret ->
-                val migrationOptions = webAuthnRepository.getMigrationOptions(
-                    deviceId = deviceId,
-                    userId = userId,
-                )
-                val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
-                val tokenToUse = token
-                    ?: webAuthnRepository.getTokenForMigration(
-                        sessionId = migrationOptions.session,
-                        tokenFromOtp = TokenFromOtp(deviceId, userId.toLong(), otp),
-                    ).accessToken
+            val secret = getSecretFor(userId) ?: return
+            val migrationOptions = webAuthnRepository.getMigrationOptions(
+                deviceId = deviceId,
+                userId = userId,
+            )
+            val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
+            val tokenToUse = token
+                ?: webAuthnRepository.getTokenForMigration(
+                    sessionId = migrationOptions.session,
+                    tokenFromOtp = TokenFromOtp(deviceId, userId.toLong(), otp),
+                ).accessToken
 
-                authenticatorManager.registerPasskey(
-                    token = tokenToUse,
-                    userId = userId.toLong()
-                )
-                val token = authenticatorManager.getToken(
-                    clientId = clientId,
-                    userId = userId.toLong(),
-                ).firstOrNull() ?: return@runCatching
-                onGetToken(userId, token)
-                webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
-            }
+            authenticatorManager.registerPasskey(
+                token = tokenToUse,
+                userId = userId.toLong()
+            )
+            val token = authenticatorManager.getToken(
+                clientId = clientId,
+                userId = userId.toLong(),
+            ).firstOrNull() ?: return@runCatching
+            onGetToken(userId, token)
+            webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
         }.cancellable().onFailure {
             println("Error: $it")
             // Send the right AppStatus for native to display the right screen
