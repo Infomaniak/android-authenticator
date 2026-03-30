@@ -24,7 +24,6 @@ kotlincrypto-bom = { module = "org.kotlincrypto.macs:bom", version.ref = "kotlin
 hmac-sha1 = { module = "org.kotlincrypto.macs:hmac-sha1" }
 hmac-sha2 = { module = "org.kotlincrypto.macs:hmac-sha2" }
 kotlin-base32 = { module = "com.osmerion.kotlin:kotlin-base32", version.ref = "kotlinBase32" }
-kotlin-onetimepassword = { module = "com.marcelkliemannel:kotlin-onetimepassword", version.ref = "kotlinOnetimepassword" }
 
 [plugins]
 androidx-room = { id = "androidx.room", version.ref = "room" }
