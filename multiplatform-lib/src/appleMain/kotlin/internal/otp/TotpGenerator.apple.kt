@@ -17,17 +17,14 @@
  */
 package com.infomaniak.auth.lib.internal.otp
 
+import com.infomaniak.auth.lib.internal.extensions.toByteArray
 import com.infomaniak.auth.lib.internal.models.LegacyUser
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.readBytes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import platform.Foundation.NSData
 import platform.Foundation.NSUserDefaults
 
@@ -36,24 +33,17 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> = withContext(
     val userDefaults = NSUserDefaults.standardUserDefaults
     val usersData = userDefaults.objectForKey("ALL_USERS") as? List<*> ?: emptyList<Any>()
 
+    val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        explicitNulls = false
+    }
+
     usersData.mapNotNull { item ->
         val data = item as? NSData ?: return@mapNotNull null
-        val bytes = data.bytes?.readBytes(data.length.toInt()) ?: return@mapNotNull null
-        val jsonString = bytes.decodeToString()
-
-        try {
-            val json = Json.parseToJsonElement(jsonString).jsonObject
-
-            LegacyUser(
-                userId = json["id"]?.jsonPrimitive?.int ?: return@mapNotNull null,
-                email = json["email"]?.jsonPrimitive?.content ?: return@mapNotNull null,
-                displayName = json["display_name"]?.jsonPrimitive?.content ?: return@mapNotNull null,
-                avatar = json["avatar"]?.jsonPrimitive?.content,
-                secret = json["secret"]?.jsonPrimitive?.content ?: return@mapNotNull null
-            )
-        } catch (_: Exception) {
-            null
-        }
+        runCatching {
+            json.decodeFromString<LegacyUser>(data.toByteArray().decodeToString())
+        }.getOrNull()
     }
 }
 

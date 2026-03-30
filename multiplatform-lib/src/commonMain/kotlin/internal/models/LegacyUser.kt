@@ -20,15 +20,25 @@ package com.infomaniak.auth.lib.internal.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "users")
+@Serializable
 internal data class LegacyUser(
+
     @PrimaryKey
     @ColumnInfo(name = "userid")
+    @SerialName("id")
     val userId: Int,
+
     val email: String,
+
     @ColumnInfo(name = "displayname")
+    @SerialName("display_name")
     val displayName: String,
+
     val avatar: String?,
-    val secret: String
+
+    val secret: String,
 )
