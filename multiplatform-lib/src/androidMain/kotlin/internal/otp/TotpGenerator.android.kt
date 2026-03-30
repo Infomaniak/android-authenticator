@@ -24,17 +24,7 @@ import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 
 internal actual suspend fun getLegacyAccounts(): List<LegacyUser> {
-    return withContext(Dispatchers.IO) {
-        OTPUserDatabase.instance.otpUserDao().getAllUsers().map {
-            LegacyUser(
-                userId = it.userId,
-                email = it.email,
-                displayName = it.displayName,
-                avatar = it.avatar,
-                secret = it.secret
-            )
-        }
-    }
+    return OTPUserDatabase.instance.otpUserDao().getAllUsers()
 }
 
 internal actual suspend fun getSecretFor(userId: Long): String? {
