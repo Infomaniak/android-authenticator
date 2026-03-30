@@ -76,6 +76,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import com.infomaniak.core.webview.ui.WebViewActivity
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 
 @Composable
 fun AccountDetailsScreen(
@@ -97,6 +98,9 @@ fun AccountDetailsScreen(
     AccountDetailsScreen(
         uiState = { uiState },
         onBackPressed = onBackPressed,
+        onChallengesRefreshClicked = {
+            viewModel.refreshChallenges(accountId)
+        },
         onRemoveAccountClicked = {
             viewModel.removeAccount()
         }
@@ -107,6 +111,7 @@ fun AccountDetailsScreen(
 fun AccountDetailsScreen(
     uiState: () -> AccountDetailsUiState,
     onBackPressed: () -> Unit,
+    onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -126,6 +131,7 @@ fun AccountDetailsScreen(
                     paddingValues = paddingValues,
                     account = uiState.account,
                     user = uiState.user,
+                    onChallengesRefreshClicked = onChallengesRefreshClicked,
                     onRemoveAccountClicked = onRemoveAccountClicked
                 )
             }
@@ -140,6 +146,7 @@ private fun AccountDetailsContent(
     paddingValues: PaddingValues,
     account: Account,
     user: User?,
+    onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
 ) {
     Column(
@@ -159,6 +166,7 @@ private fun AccountDetailsContent(
         SettingsSections(
             accountStatus = account.status,
             user = user,
+            onChallengesRefreshClicked = onChallengesRefreshClicked,
             onRemoveAccountClicked = onRemoveAccountClicked
         )
     }
@@ -306,18 +314,32 @@ private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
 private fun SettingsSections(
     accountStatus: Account.Status,
     user: User?,
+    onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val host = ApiEnvironment.current.host
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            delay(2_000)
+            isRefreshing = false
+        }
+    }
+
+    val onClickRefreshChallenges = {
+        onChallengesRefreshClicked()
+        isRefreshing = true
+    }
+
     val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
         persistentListOf(
-            OptionItemType.WithRightIcon(
+            OptionItemType.WithLoader(
                 stringResId = R.string.refreshPendingLoginsButton,
-                rightIconResId = R.drawable.right_indicator,
-                onClick = {},
+                isLoading = isRefreshing,
+                onClick = if (!isRefreshing) onClickRefreshChallenges else null,
             ),
         )
     } else persistentListOf()
@@ -410,6 +432,7 @@ private fun AccountDetailsScreenPreview(
         AccountDetailsScreen(
             uiState = { AccountDetailsUiState.Success(accountPairs.first, accountPairs.second) },
             onBackPressed = {},
+            onChallengesRefreshClicked = {},
             onRemoveAccountClicked = {},
         )
     }
