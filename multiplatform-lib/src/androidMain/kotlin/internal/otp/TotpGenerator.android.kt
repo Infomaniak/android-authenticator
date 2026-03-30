@@ -27,7 +27,7 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> {
     return withContext(Dispatchers.IO) {
         OTPUserDatabase.instance.otpUserDao().getAllUsers().map {
             LegacyUser(
-                userID = it.userID,
+                userId = it.userId,
                 email = it.email,
                 displayName = it.displayName,
                 avatar = it.avatar,
@@ -38,7 +38,7 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> {
 }
 
 internal actual suspend fun getSecretFor(userId: String): String? {
-    return getLegacyAccounts().find { it.userID.toString() == userId }?.secret
+    return getLegacyAccounts().find { it.userId.toString() == userId }?.secret
 }
 
 internal actual suspend fun needMigration() = withContext(Dispatchers.IO) { appCtx.getDatabasePath("Infomaniak.db").exists() }

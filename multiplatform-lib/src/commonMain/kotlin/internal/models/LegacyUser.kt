@@ -25,7 +25,7 @@ import androidx.room.PrimaryKey
 internal data class LegacyUser(
     @PrimaryKey
     @ColumnInfo(name = "userid")
-    val userID: Int,
+    val userId: Int,
     val email: String,
     @ColumnInfo(name = "displayname")
     val displayName: String,

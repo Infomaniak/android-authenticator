@@ -45,7 +45,7 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> = withContext(
             val json = Json.parseToJsonElement(jsonString).jsonObject
 
             LegacyUser(
-                userID = json["id"]?.jsonPrimitive?.int ?: return@mapNotNull null,
+                userId = json["id"]?.jsonPrimitive?.int ?: return@mapNotNull null,
                 email = json["email"]?.jsonPrimitive?.content ?: return@mapNotNull null,
                 displayName = json["display_name"]?.jsonPrimitive?.content ?: return@mapNotNull null,
                 avatar = json["avatar"]?.jsonPrimitive?.content,
@@ -60,7 +60,7 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> = withContext(
 @OptIn(ExperimentalForeignApi::class)
 internal actual suspend fun getSecretFor(userId: String): String? {
     return getLegacyAccounts().find {
-        it.userID.toString() == userId
+        it.userId.toString() == userId
     }?.secret
 }
 

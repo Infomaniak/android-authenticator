@@ -23,13 +23,13 @@ import androidx.room.Query
 import com.infomaniak.auth.lib.internal.models.LegacyUser
 
 @Dao
-interface OTPUserDao {
+internal interface OTPUserDao {
 
     @Delete
     suspend fun delete(user: LegacyUser)
 
-    @Query("SELECT * FROM users WHERE userid = :userID")
-    suspend fun findUserById(userID: Int): LegacyUser?
+    @Query("SELECT * FROM users WHERE userid = :userId")
+    suspend fun findUserById(userId: Int): LegacyUser?
 
     @Query("SELECT * FROM users")
     suspend fun getAllUsers(): List<LegacyUser>

@@ -52,7 +52,7 @@ internal fun LegacyUser.toEntity(): AccountEntity {
     val initials = "${displayName.firstOrNull()?.uppercase()}" +
             "${displayName.substring(displayName.indexOf(" ") + 1).firstOrNull()?.uppercase()}"
     return AccountEntity(
-        id = userID.toLong(),
+        id = userId.toLong(),
         fullName = displayName,
         initials = initials,
         email = email,
