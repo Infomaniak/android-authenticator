@@ -272,7 +272,7 @@ internal class AuthenticatorFacadeImpl(
         migrationManager.startMigration(
             userId = userId.toString(),
             token = temporaryToken,
-            onGetToken = { _, token ->
+            persistToken = { _, token ->
                 tokenBridge.persistTokenForAccount(userId, token)
             }
         )

@@ -51,7 +51,7 @@ internal class MigrationManager(
     @OptIn(ExperimentalUuidApi::class)
     suspend fun startMigration(
         userId: String,
-        onGetToken: suspend (userId: String, token: String) -> Unit,
+        persistToken: suspend (userId: String, token: String) -> Unit,
         token: String?,
     ) {
         val deviceId = Uuid.random().toHexDashString()
@@ -76,7 +76,7 @@ internal class MigrationManager(
                 clientId = clientId,
                 userId = userId.toLong(),
             ).firstOrNull() ?: return@runCatching
-            onGetToken(userId, token)
+            persistToken(userId, token)
             webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
         }.cancellable().onFailure {
             println("Error: $it")
