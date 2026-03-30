@@ -54,7 +54,7 @@ internal class MigrationManager(
         onGetToken: suspend (userId: String, token: String) -> Unit,
         token: String?,
     ) {
-        val deviceId = Uuid.random().toString()
+        val deviceId = Uuid.random().toHexDashString()
         runCatching {
             val secret = getSecretFor(userId) ?: return
             val migrationOptions = webAuthnRepository.getMigrationOptions(
