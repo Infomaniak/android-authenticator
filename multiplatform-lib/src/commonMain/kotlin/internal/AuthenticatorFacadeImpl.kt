@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
@@ -114,6 +115,13 @@ internal class AuthenticatorFacadeImpl(
     override suspend fun removeAccount(token: String, id: Long) {
         authenticatorManager.removeAccount(token, id)
         dao.delete(id)
+    }
+
+    override suspend fun refreshTokenFor(userId: Long) {
+        val token = authenticatorManager.getToken(clientId, userId).firstOrElse {
+            error("Could not get the key for user $userId from the storage: $it")
+        }
+        tokenBridge.persistTokenForAccount(userId, token)
     }
 
     private fun accountsFlow(

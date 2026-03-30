@@ -106,4 +106,8 @@ class DummyAuthenticatorFacade internal constructor(
         authenticatorManager.removeAccount(token, id)
         accountsRepository.deleteAccount(id)
     }
+
+    override suspend fun refreshTokenFor(userId: Long) {
+        TODO("Not yet implemented")
+    }
 }
