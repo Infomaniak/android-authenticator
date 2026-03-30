@@ -119,12 +119,6 @@ internal class AuthenticatorFacadeImpl(
         dao.delete(id)
     }
 
-    override suspend fun startMigration() {
-        migrationManager.startMigration(
-            onGetToken = { userId, token -> tokenBridge.persistTokenForAccount(userId.toLong(), token) },
-        )
-	}
-
     override suspend fun refreshTokenFor(userId: Long) {
         val token = authenticatorManager.getToken(clientId, userId).firstOrElse {
             error("Could not get the key for user $userId from the storage: $it")

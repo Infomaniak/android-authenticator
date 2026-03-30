@@ -93,8 +93,6 @@ abstract class AuthenticatorFacade internal constructor() {
      */
     abstract suspend fun removeAccount(token: String, id: Long)
 
-    abstract suspend fun startMigration()
-
     /**
      * Refresh the token for the specific userId
      */
