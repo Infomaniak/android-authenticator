@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.otp
 
-import com.infomaniak.auth.lib.internal.models.LegacyAccount
+import com.infomaniak.auth.lib.internal.models.LegacyUser
 import org.kotlincrypto.core.mac.Mac
 import org.kotlincrypto.macs.hmac.sha1.HmacSHA1
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
@@ -96,5 +96,5 @@ private fun base32Decode(input: String): ByteArray {
 }
 
 internal expect suspend fun needMigration(): Boolean
-internal expect suspend fun getLegacyAccounts(): List<LegacyAccount>
+internal expect suspend fun getLegacyAccounts(): List<LegacyUser>
 internal expect suspend fun getSecretFor(userId: String): String?

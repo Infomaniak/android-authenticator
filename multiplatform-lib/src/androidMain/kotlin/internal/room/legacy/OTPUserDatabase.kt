@@ -15,21 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.legacy
+package com.infomaniak.auth.lib.internal.room.legacy
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.infomaniak.auth.lib.internal.models.LegacyUser
+import splitties.init.appCtx
 
-@Dao
-interface OTPUserDao {
+@Database(entities = [LegacyUser::class], version = 1)
+internal abstract class OTPUserDatabase : RoomDatabase() {
 
-    @Delete
-    suspend fun delete(user: OTPUser)
+    abstract fun otpUserDao(): OTPUserDao
 
-    @Query("SELECT * FROM users WHERE userid = :userID")
-    suspend fun findUserById(userID: Int): OTPUser?
+    companion object {
+        val instance = buildDatabase(appCtx)
 
-    @Query("SELECT * FROM users")
-    suspend fun getAllUsers(): List<OTPUser>
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(
+                context.applicationContext,
+                OTPUserDatabase::class.java, "Infomaniak.db"
+            ).build()
+    }
 }

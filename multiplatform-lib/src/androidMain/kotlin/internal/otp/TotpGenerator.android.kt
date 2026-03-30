@@ -17,18 +17,17 @@
  */
 package com.infomaniak.auth.lib.internal.otp
 
-import com.infomaniak.auth.lib.internal.models.LegacyAccount
-import com.infomaniak.auth.lib.room.legacy.OTPUserDatabase
+import com.infomaniak.auth.lib.internal.models.LegacyUser
+import com.infomaniak.auth.lib.internal.room.legacy.OTPUserDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 
-internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
-    val database = OTPUserDatabase.getInstance(appCtx)
+internal actual suspend fun getLegacyAccounts(): List<LegacyUser> {
     return withContext(Dispatchers.IO) {
-        database.otpUserDao().getAllUsers().map {
-            LegacyAccount(
-                userId = it.userID,
+        OTPUserDatabase.instance.otpUserDao().getAllUsers().map {
+            LegacyUser(
+                userID = it.userID,
                 email = it.email,
                 displayName = it.displayName,
                 avatar = it.avatar,
@@ -39,7 +38,7 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> {
 }
 
 internal actual suspend fun getSecretFor(userId: String): String? {
-    return getLegacyAccounts().find { it.userId.toString() == userId }?.secret
+    return getLegacyAccounts().find { it.userID.toString() == userId }?.secret
 }
 
 internal actual suspend fun needMigration() = withContext(Dispatchers.IO) { appCtx.getDatabasePath("Infomaniak.db").exists() }

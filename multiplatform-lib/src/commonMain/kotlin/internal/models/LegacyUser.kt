@@ -17,10 +17,18 @@
  */
 package com.infomaniak.auth.lib.internal.models
 
-internal data class LegacyAccount(
-    var userId: Int,
-    var email: String,
-    var displayName: String,
-    var avatar: String?,
-    var secret: String
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "users")
+data class LegacyUser(
+    @PrimaryKey
+    @ColumnInfo(name = "userid")
+    val userID: Int,
+    val email: String,
+    @ColumnInfo(name = "displayname")
+    val displayName: String,
+    val avatar: String?,
+    val secret: String
 )

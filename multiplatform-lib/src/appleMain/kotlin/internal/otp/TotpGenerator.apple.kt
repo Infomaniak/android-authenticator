@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.otp
 
-import com.infomaniak.auth.lib.internal.models.LegacyAccount
+import com.infomaniak.auth.lib.internal.models.LegacyUser
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readBytes
@@ -32,7 +32,7 @@ import platform.Foundation.NSData
 import platform.Foundation.NSUserDefaults
 
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
-internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withContext(Dispatchers.IO) {
+internal actual suspend fun getLegacyAccounts(): List<LegacyUser> = withContext(Dispatchers.IO) {
     val userDefaults = NSUserDefaults.standardUserDefaults
     val usersData = userDefaults.objectForKey("ALL_USERS") as? List<*> ?: emptyList<Any>()
 
@@ -44,8 +44,8 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withConte
         try {
             val json = Json.parseToJsonElement(jsonString).jsonObject
 
-            LegacyAccount(
-                userId = json["id"]?.jsonPrimitive?.int ?: return@mapNotNull null,
+            LegacyUser(
+                userID = json["id"]?.jsonPrimitive?.int ?: return@mapNotNull null,
                 email = json["email"]?.jsonPrimitive?.content ?: return@mapNotNull null,
                 displayName = json["display_name"]?.jsonPrimitive?.content ?: return@mapNotNull null,
                 avatar = json["avatar"]?.jsonPrimitive?.content,
@@ -60,7 +60,7 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyAccount> = withConte
 @OptIn(ExperimentalForeignApi::class)
 internal actual suspend fun getSecretFor(userId: String): String? {
     return getLegacyAccounts().find {
-        it.userId.toString() == userId
+        it.userID.toString() == userId
     }?.secret
 }
 

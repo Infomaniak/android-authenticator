@@ -15,20 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.room.legacy
+package com.infomaniak.auth.lib.internal.room.legacy
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import com.infomaniak.auth.lib.internal.models.LegacyUser
 
-@Entity(tableName = "users")
-data class OTPUser(
-    @PrimaryKey
-    @ColumnInfo(name = "userid")
-    var userID: Int,
-    var email: String,
-    @ColumnInfo(name = "displayname")
-    var displayName: String,
-    var avatar: String?,
-    var secret: String
-)
+@Dao
+interface OTPUserDao {
+
+    @Delete
+    suspend fun delete(user: LegacyUser)
+
+    @Query("SELECT * FROM users WHERE userid = :userID")
+    suspend fun findUserById(userID: Int): LegacyUser?
+
+    @Query("SELECT * FROM users")
+    suspend fun getAllUsers(): List<LegacyUser>
+}
