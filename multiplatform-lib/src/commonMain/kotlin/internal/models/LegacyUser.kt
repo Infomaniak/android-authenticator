@@ -22,7 +22,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
-data class LegacyUser(
+internal data class LegacyUser(
     @PrimaryKey
     @ColumnInfo(name = "userid")
     val userID: Int,
