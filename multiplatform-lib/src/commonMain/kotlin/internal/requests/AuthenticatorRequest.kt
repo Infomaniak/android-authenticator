@@ -97,9 +97,9 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param deviceId The id of the device.
      * @param userId The id of the user.
      */
-    suspend fun getMigrationOptions(deviceId: String, userId: String): SuccessfulApiResponse<MigrationOptions> {
+    suspend fun getMigrationOptions(deviceId: String, userId: Long): SuccessfulApiResponse<MigrationOptions> {
         return httpClient.post(ApiRoutes.migrationsOptions()) {
-            setBody(mapOf("device" to deviceId, "id" to userId))
+            setBody(mapOf("device" to deviceId, "id" to userId.toString()))
         }.decode()
     }
 

@@ -62,7 +62,7 @@ internal class WebAuthnRepository(
 
     //region Migration
 
-    suspend fun getMigrationOptions(deviceId: String, userId: String): MigrationOptions {
+    suspend fun getMigrationOptions(deviceId: String, userId: Long): MigrationOptions {
         return authenticatorRequest.getMigrationOptions(deviceId, userId).data
     }
 

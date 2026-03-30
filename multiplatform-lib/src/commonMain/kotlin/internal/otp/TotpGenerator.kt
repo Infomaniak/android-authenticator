@@ -97,4 +97,4 @@ private fun base32Decode(input: String): ByteArray {
 
 internal expect suspend fun needMigration(): Boolean
 internal expect suspend fun getLegacyAccounts(): List<LegacyUser>
-internal expect suspend fun getSecretFor(userId: String): String?
+internal expect suspend fun getSecretFor(userId: Long): String?

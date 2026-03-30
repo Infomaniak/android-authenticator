@@ -48,9 +48,9 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> = withContext(
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual suspend fun getSecretFor(userId: String): String? {
+internal actual suspend fun getSecretFor(userId: Long): String? {
     return getLegacyAccounts().find {
-        it.userId.toString() == userId
+        it.userId.toLong() == userId
     }?.secret
 }
 
