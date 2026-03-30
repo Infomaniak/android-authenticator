@@ -48,6 +48,7 @@ object ApplicationModule {
             appUID = BuildConfig.APPLICATION_ID,
             clientID = BuildConfig.CLIENT_ID,
             accessType = null,
+            sentryCallback = { _, _ -> }
         )
     }
 
