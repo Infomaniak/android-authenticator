@@ -115,4 +115,10 @@ abstract class AuthenticatorFacade internal constructor() {
      * Remove account from the authenticator.
      */
     abstract suspend fun removeAccount(token: String, id: Long)
+
+    /**
+     * Refresh the token for the specific userId
+     */
+    @Throws(Exception::class)
+    abstract suspend fun refreshTokenFor(userId: Long)
 }
