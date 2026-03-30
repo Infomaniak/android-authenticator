@@ -214,7 +214,7 @@ sealed interface OptionItemType {
 
     class WithLoader(
         override val stringResId: Int,
-        override val onClick: () -> Unit,
+        override val onClick: (() -> Unit)?,
         val isLoading: Boolean,
     ) : OptionItemType
 }

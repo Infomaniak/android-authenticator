@@ -329,15 +329,17 @@ private fun SettingsSections(
         }
     }
 
+    val onClickRefreshChallenges = {
+        onChallengesRefreshClicked()
+        isRefreshing = true
+    }
+
     val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
         persistentListOf(
             OptionItemType.WithLoader(
                 stringResId = R.string.refreshPendingLoginsButton,
                 isLoading = isRefreshing,
-                onClick = {
-                    onChallengesRefreshClicked()
-                    isRefreshing = true
-                },
+                onClick = if (!isRefreshing) onClickRefreshChallenges else null,
             ),
         )
     } else persistentListOf()
