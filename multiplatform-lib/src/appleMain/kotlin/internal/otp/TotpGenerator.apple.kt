@@ -59,9 +59,9 @@ internal actual suspend fun deleteLegacyAccount(userId: String) {
 
         val userIdInt = userId.toIntOrNull() ?: return@withContext false
 
-        val updatedList = usersData.mapIndexedNotNull { index, item ->
-            val data = item as? NSData ?: return@mapIndexedNotNull item
-            val bytes = data.bytes?.readBytes(data.length.toInt()) ?: return@mapIndexedNotNull item
+        val updatedList = usersData.mapNotNull { item ->
+            val data = item as? NSData ?: return@mapNotNull item
+            val bytes = data.bytes?.readBytes(data.length.toInt()) ?: return@mapNotNull item
             val jsonString = bytes.decodeToString()
 
             try {
