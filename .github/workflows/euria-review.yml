@@ -10,5 +10,6 @@ concurrency:
 
 jobs:
   euria-review:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'euria-review')
     uses: infomaniak/.github/.github/workflows/euria-review.yml@v2
     secrets: inherit
