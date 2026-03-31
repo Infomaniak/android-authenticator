@@ -21,9 +21,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class MigrationOptions(
-    val session: String,
-    val timestamp: Long,
-    @SerialName("timezone")
-    val timeZone: String
+internal data class OtpPayload(
+    @SerialName("device")
+    val deviceId: String,
+    @SerialName("id")
+    val userId: Long,
+    val code: String
 )

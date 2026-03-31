@@ -154,16 +154,15 @@ dependencies {
 
 
     implementation(core.androidx.core.splashscreen)
-    implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(core.androidx.work.runtime.ktx)
 
     implementation(core.kotlinx.collections.immutable)
     implementation(core.kotlinx.serialization.json)
-
     implementation(core.okhttp)
 
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.accompanist.permissions)
     implementation(core.splitties.preferences)
 
