@@ -19,6 +19,7 @@ package com.infomaniak.auth.lib.internal.managers
 
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.models.TokenFromOtp
 import com.infomaniak.auth.lib.internal.otp.TotpGenerator
@@ -51,7 +52,6 @@ internal class MigrationManager(
     ) {
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
-        runCatching {
             val secret = getSecretFor(userId) ?: return
             val migrationOptions = webAuthnRepository.getMigrationOptions(
                 deviceId = deviceId,
@@ -72,13 +72,9 @@ internal class MigrationManager(
             val token = authenticatorManager.getToken(
                 clientId = clientId,
                 userId = userId,
-            ).firstOrNull() ?: return@runCatching
+            ).firstOrElse { error("Didn't find the key locally: $it") }
             persistToken(token)
             webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
-        }.cancellable().onFailure {
-            println("Error: $it")
-            // Send the right AppStatus for native to display the right screen
-        }
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {
