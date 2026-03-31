@@ -269,7 +269,7 @@ internal class AuthenticatorFacadeImpl(
 
     private suspend fun attemptMigration(notConnectedAccount: AccountEntity, temporaryToken: String? = null) {
         val userId = notConnectedAccount.id
-        migrationManager.startMigration(
+        migrationManager.tryMigrating(
             userId = userId,
             token = temporaryToken,
             persistToken = { token ->

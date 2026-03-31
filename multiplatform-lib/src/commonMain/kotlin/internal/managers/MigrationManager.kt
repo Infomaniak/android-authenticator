@@ -45,7 +45,7 @@ internal class MigrationManager(
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    suspend fun startMigration(
+    suspend fun tryMigrating(
         userId: Long,
         persistToken: suspend (token: String) -> Unit,
         token: String?,
