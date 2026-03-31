@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class TokenFromOtp(
+internal data class OtpPayload(
     @SerialName("device")
     val deviceId: String,
     @SerialName("id")

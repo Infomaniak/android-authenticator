@@ -18,10 +18,9 @@
 package com.infomaniak.auth.lib.internal.managers
 
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
-import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toEntity
-import com.infomaniak.auth.lib.internal.models.TokenFromOtp
+import com.infomaniak.auth.lib.internal.models.OtpPayload
 import com.infomaniak.auth.lib.internal.otp.TotpGenerator
 import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
@@ -52,29 +51,29 @@ internal class MigrationManager(
     ) {
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
-            val secret = getSecretFor(userId) ?: return
-            val migrationOptions = webAuthnRepository.getMigrationOptions(
-                deviceId = deviceId,
-                userId = userId,
-            )
-            val tokenToUse = temporaryToken ?: run {
-                val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
-                webAuthnRepository.getTokenForMigration(
-                    sessionId = migrationOptions.session,
-                    tokenFromOtp = TokenFromOtp(deviceId, userId, otp),
-                ).accessToken
-            }
+        val secret = getSecretFor(userId) ?: return
+        val migrationOptions = webAuthnRepository.getMigrationOptions(
+            deviceId = deviceId,
+            userId = userId,
+        )
+        val tokenToUse = temporaryToken ?: run {
+            val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
+            webAuthnRepository.getTokenForMigration(
+                sessionId = migrationOptions.session,
+                otpPayload = OtpPayload(deviceId, userId, otp),
+            ).accessToken
+        }
 
-            authenticatorManager.registerPasskey(
-                token = tokenToUse,
-                userId = userId
-            )
-            val token = authenticatorManager.getToken(
-                clientId = clientId,
-                userId = userId,
-            ).firstOrElse { error("Didn't find the key locally: $it") }
-            persistToken(token)
-            webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
+        authenticatorManager.registerPasskey(
+            token = tokenToUse,
+            userId = userId
+        )
+        val token = authenticatorManager.getToken(
+            clientId = clientId,
+            userId = userId,
+        ).firstOrElse { error("Didn't find the key locally: $it") }
+        persistToken(token)
+        webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {
