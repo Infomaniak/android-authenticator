@@ -24,20 +24,24 @@ import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     accountUtils: AccountUtils,
-    authenticatorFacade: AuthenticatorFacade
+    private val authenticatorFacade: AuthenticatorFacade,
+    private val twoFactorAuthManager: TwoFactorAuthManager
 ) : ViewModel() {
     val uiState: StateFlow<HomeScreenUiState> = authenticatorFacade.accounts
         .combine(accountUtils.users) { accounts, users ->
@@ -54,6 +58,18 @@ class HomeScreenViewModel @Inject constructor(
             SharingStarted.Eagerly,
             HomeScreenUiState.Loading
         )
+
+    fun refreshChallenges() {
+        viewModelScope.launch {
+            authenticatorFacade.accounts.first()
+                .filter { account ->
+                    account.status == Account.Status.LoggedIn
+                }
+                .forEach { account ->
+                    twoFactorAuthManager.refreshChallengeNow(account.id)
+                }
+        }
+    }
 }
 
 @Immutable

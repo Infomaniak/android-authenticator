@@ -15,15 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal.models
+package com.infomaniak.auth.lib.internal.otp
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.infomaniak.auth.lib.internal.models.LegacyUser
+import com.infomaniak.auth.lib.internal.room.legacy.OTPUserDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import splitties.init.appCtx
 
-@Serializable
-internal data class MigrationOptions(
-    val session: String,
-    val timestamp: Long,
-    @SerialName("timezone")
-    val timeZone: String
-)
+internal actual suspend fun getLegacyAccounts(): List<LegacyUser> {
+    return OTPUserDatabase.instance.otpUserDao().getAllUsers()
+}
+
+internal actual suspend fun getSecretFor(userId: Long): String? {
+    return getLegacyAccounts().find { it.userId.toLong() == userId }?.secret
+}
+
+internal actual suspend fun needMigration() = withContext(Dispatchers.IO) { appCtx.getDatabasePath("Infomaniak.db").exists() }

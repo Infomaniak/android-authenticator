@@ -20,6 +20,7 @@ package com.infomaniak.auth.lib.internal.requests
 import com.infomaniak.auth.lib.internal.models.AuthResult
 import com.infomaniak.auth.lib.internal.models.AuthenticationOptions
 import com.infomaniak.auth.lib.internal.models.MigrationOptions
+import com.infomaniak.auth.lib.internal.models.OtpPayload
 import com.infomaniak.auth.lib.internal.models.PasskeysOptions
 import com.infomaniak.auth.lib.internal.models.RegisterPasskey
 import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
@@ -96,9 +97,9 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param deviceId The id of the device.
      * @param userId The id of the user.
      */
-    suspend fun getMigrationOptions(deviceId: String, userId: String): SuccessfulApiResponse<MigrationOptions> {
+    suspend fun getMigrationOptions(deviceId: String, userId: Long): SuccessfulApiResponse<MigrationOptions> {
         return httpClient.post(ApiRoutes.migrationsOptions()) {
-            setBody(mapOf("device" to deviceId, "id" to userId))
+            setBody(mapOf("device" to deviceId, "id" to userId.toString()))
         }.decode()
     }
 
@@ -111,18 +112,14 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * The returned [AuthResult] contains an access token, to be used to register a passkey with [registerPasskey].
      *
      * @param sessionId ID of the session you get from [getMigrationOptions].
-     * @param deviceId ID of the device.
-     * @param userId ID of the user.
-     * @param otp The one-time password.
+     * @param otpPayload Object representing the data we need to send to the server to get an access token
      */
     suspend fun getTokenForMigration(
         sessionId: String,
-        deviceId: String,
-        userId: String,
-        otp: String
+        otpPayload: OtpPayload,
     ): SuccessfulApiResponse<AuthResult> {
         return httpClient.post(ApiRoutes.verifyMigration(sessionId)) {
-            setBody(mapOf("device" to deviceId, "id" to userId, "otp" to otp))
+            setBody(otpPayload)
         }.decode()
     }
 

@@ -24,6 +24,7 @@ import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,6 +45,7 @@ import javax.inject.Inject
 class AccountDetailsViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
+    private val twoFactorAuthManager: TwoFactorAuthManager,
 ) : ViewModel() {
     private val accountIdFlow = MutableSharedFlow<Long>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
@@ -85,6 +87,10 @@ class AccountDetailsViewModel @Inject constructor(
                     accountRemovedChannel.send(Unit)
                 }
         }
+    }
+
+    fun refreshChallenges(userId: Long) {
+        twoFactorAuthManager.refreshChallengeNow(userId)
     }
 }
 

@@ -15,15 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal.models
+package com.infomaniak.auth.lib.internal.room.legacy
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import com.infomaniak.auth.lib.internal.models.LegacyUser
 
-@Serializable
-internal data class MigrationOptions(
-    val session: String,
-    val timestamp: Long,
-    @SerialName("timezone")
-    val timeZone: String
-)
+@Dao
+internal interface OTPUserDao {
+
+    @Delete
+    suspend fun delete(user: LegacyUser)
+
+    @Query("SELECT * FROM users WHERE userid = :userId")
+    suspend fun findUserById(userId: Int): LegacyUser?
+
+    @Query("SELECT * FROM users")
+    suspend fun getAllUsers(): List<LegacyUser>
+}

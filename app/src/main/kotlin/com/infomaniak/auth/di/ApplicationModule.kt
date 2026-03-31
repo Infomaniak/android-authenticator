@@ -20,7 +20,9 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.AuthenticatorInjection
+import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
+import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
+import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.room.UserDatabase
@@ -33,6 +35,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import network.utils.ApiEnvironment
 import javax.inject.Singleton
 
 @Module
@@ -48,6 +51,7 @@ object ApplicationModule {
             appUID = BuildConfig.APPLICATION_ID,
             clientID = BuildConfig.CLIENT_ID,
             accessType = null,
+            sentryCallback = { _, _ -> }
         )
     }
 
@@ -65,31 +69,73 @@ object ApplicationModule {
     @Provides
     @Singleton
     fun provideAuthenticatorFacade(
-        authenticatorInjection: AuthenticatorInjection,
+        @UserAgent userAgent: String,
         accountUtils: AccountUtils,
     ): AuthenticatorFacade {
-        return authenticatorInjection.getAuthenticatorFacade(
+        return AuthenticatorFacade.create(
+            environment = ApiEnvironment.Staging,
+            userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
-            tokenBridge = object : TokenBridge {
-                override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
-                    // TODO[Authenticator]: retrieve token from crossapplogin
-                    return null
-                }
-
-                override suspend fun getTokenFromDatabase(userId: Long): String? {
-                    return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
-                }
-
-                override suspend fun persistTokenForAccount(userId: Long, token: String) {
-                    val dao = UserDatabase.getDatabase().userDao()
-                    val user = accountUtils.getUserById(userId.toInt()) ?: return
-                    dao.update(user.copy(apiToken = ApiToken(accessToken = token, tokenType = user.apiToken.tokenType, userId = userId.toInt())))
-                }
-            },
+            crashReport = createCrashReportInterface(),
+            tokenBridge = createTokenBridge(accountUtils),
         )
     }
 
     @Provides
     @Singleton
-    fun provideTwoFactorAuthManager(accountUtils: AccountUtils) = TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
+    fun provideTwoFactorAuthManager(accountUtils: AccountUtils) =
+        TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
+
+    private fun createCrashReportInterface() = object : CrashReportInterface {
+        override fun addBreadcrumb(
+            message: String,
+            category: String,
+            level: CrashReportLevel,
+            type: BreadcrumbType,
+            data: Map<String, String>?
+        ) {
+            //TODO[Authenticator] forward to sentry
+        }
+
+        override fun capture(
+            message: String,
+            error: Throwable,
+            data: Map<String, String>?
+        ) {
+            //TODO[Authenticator] forward to sentry
+        }
+
+        override fun capture(
+            message: String,
+            data: Map<String, String>?,
+            level: CrashReportLevel?
+        ) {
+            //TODO[Authenticator] forward to sentry
+        }
+    }
+
+    private fun createTokenBridge(accountUtils: AccountUtils) = object : TokenBridge {
+        override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
+            // TODO[Authenticator]: retrieve token from crossapplogin
+            return null
+        }
+
+        override suspend fun getTokenFromDatabase(userId: Long): String? {
+            return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
+        }
+
+        override suspend fun persistTokenForAccount(userId: Long, token: String) {
+            val dao = UserDatabase.getDatabase().userDao()
+            val user = accountUtils.getUserById(userId.toInt()) ?: return
+            dao.update(
+                user.copy(
+                    apiToken = ApiToken(
+                        accessToken = token,
+                        tokenType = user.apiToken.tokenType,
+                        userId = userId.toInt()
+                    )
+                )
+            )
+        }
+    }
 }
