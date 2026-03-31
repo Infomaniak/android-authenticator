@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   pull_request:
-    paths-ignore: [.github, "**.md"]
+    paths-ignore: [.github/*, "**.md"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
