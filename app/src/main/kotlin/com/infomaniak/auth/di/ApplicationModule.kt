@@ -76,7 +76,7 @@ object ApplicationModule {
             environment = ApiEnvironment.Staging,
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
-            crashReport = getCrashReportInterface(),
+            crashReport = createCrashReportInterface(),
             tokenBridge = createTokenBridge(accountUtils),
         )
     }
@@ -86,7 +86,7 @@ object ApplicationModule {
     fun provideTwoFactorAuthManager(accountUtils: AccountUtils) =
         TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
 
-    private fun getCrashReportInterface() = object : CrashReportInterface {
+    private fun createCrashReportInterface() = object : CrashReportInterface {
         override fun addBreadcrumb(
             message: String,
             category: String,
