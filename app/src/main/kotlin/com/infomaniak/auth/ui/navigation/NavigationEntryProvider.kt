@@ -25,6 +25,7 @@ import androidx.navigation3.runtime.entryProvider
 import com.infomaniak.auth.ui.screen.accountdetails.AccountDetailsScreen
 import com.infomaniak.auth.ui.screen.home.HomeScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
+import com.infomaniak.auth.ui.screen.onboarding.migration.MigrationScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
 import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
@@ -84,6 +85,9 @@ fun baseEntryProvider(
             accountId = it.accountId,
             onBackPressed = backStack::tryPopLast
         )
+    }
+    entry<NavDestination.Onboarding.Migration> {
+        MigrationScreen(snackbarHostState = snackbarHostState)
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(

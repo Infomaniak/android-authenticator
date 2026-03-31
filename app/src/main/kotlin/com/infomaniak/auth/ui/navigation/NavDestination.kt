@@ -27,6 +27,9 @@ sealed interface NavDestination : NavKey {
 
     sealed interface Onboarding : NavDestination {
         @Serializable
+        data object Migration : Onboarding
+
+        @Serializable
         data object Start : Onboarding
 
         @Serializable
