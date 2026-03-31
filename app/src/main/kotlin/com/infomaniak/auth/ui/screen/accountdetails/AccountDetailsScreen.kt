@@ -316,7 +316,7 @@ private fun SettingsSections(
         persistentListOf(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.refreshPendingLoginsButton,
-                rightIconResId = R.drawable.right_indicator,
+                rightIconResId = R.drawable.chevron_right,
                 onClick = {},
             ),
         )
