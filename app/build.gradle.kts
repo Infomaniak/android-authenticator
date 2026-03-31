@@ -82,6 +82,10 @@ android {
         compose = true
         buildConfig = true
     }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 val isRelease = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
