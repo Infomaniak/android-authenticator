@@ -271,7 +271,7 @@ internal class AuthenticatorFacadeImpl(
         val userId = notConnectedAccount.id
         migrationManager.tryMigrating(
             userId = userId,
-            token = temporaryToken,
+            temporaryToken = temporaryToken,
             persistToken = { token ->
                 tokenBridge.persistTokenForAccount(userId, token)
             }

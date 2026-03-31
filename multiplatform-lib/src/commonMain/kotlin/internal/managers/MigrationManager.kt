@@ -48,7 +48,7 @@ internal class MigrationManager(
     suspend fun tryMigrating(
         userId: Long,
         persistToken: suspend (token: String) -> Unit,
-        token: String?,
+        temporaryToken: String?,
     ) {
         val deviceId = Uuid.random().toHexDashString()
         runCatching {
@@ -58,7 +58,7 @@ internal class MigrationManager(
                 userId = userId,
             )
             val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
-            val tokenToUse = token
+            val tokenToUse = temporaryToken
                 ?: webAuthnRepository.getTokenForMigration(
                     sessionId = migrationOptions.session,
                     tokenFromOtp = TokenFromOtp(deviceId, userId, otp),
