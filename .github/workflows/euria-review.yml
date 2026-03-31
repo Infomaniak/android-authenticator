@@ -1,7 +1,6 @@
 name: Euria Review
 
 on:
-  workflow_dispatch:
   pull_request:
     types: [labeled]
 
