@@ -65,34 +65,6 @@ internal class TotpGenerator(
             ((this shr (56 - i * 8)) and 0xFF).toByte()
         }
     }
-
-    companion object {
-        fun decodeBase32Secret(base32Secret: String): ByteArray {
-            return base32Decode(base32Secret.uppercase().replace(" ", ""))
-        }
-    }
-}
-
-private fun base32Decode(input: String): ByteArray {
-    val base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-    val output = mutableListOf<Byte>()
-    var bits = 0
-    var value = 0
-
-    for (char in input) {
-        val index = base32Chars.indexOf(char)
-        if (index == -1) continue // Skip padding '=' ou espaces
-
-        value = (value shl 5) or index
-        bits += 5
-
-        if (bits >= 8) {
-            output.add(((value shr (bits - 8)) and 0xFF).toByte())
-            bits -= 8
-        }
-    }
-
-    return output.toByteArray()
 }
 
 internal expect suspend fun needMigration(): Boolean

@@ -72,67 +72,70 @@ object ApplicationModule {
         @UserAgent userAgent: String,
         accountUtils: AccountUtils,
     ): AuthenticatorFacade {
-        val crashReport = object : CrashReportInterface {
-            override fun addBreadcrumb(
-                message: String,
-                category: String,
-                level: CrashReportLevel,
-                type: BreadcrumbType,
-                data: Map<String, String>?
-            ) {
-                //TODO[Authenticator] forward to sentry
-            }
-
-            override fun capture(
-                message: String,
-                error: Throwable,
-                data: Map<String, String>?
-            ) {
-                //TODO[Authenticator] forward to sentry
-            }
-
-            override fun capture(
-                message: String,
-                data: Map<String, String>?,
-                level: CrashReportLevel?
-            ) {
-                //TODO[Authenticator] forward to sentry
-            }
-        }
-        val tokenBridge = object : TokenBridge {
-            override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
-                // TODO[Authenticator]: retrieve token from crossapplogin
-                return null
-            }
-
-            override suspend fun getTokenFromDatabase(userId: Long): String? {
-                return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
-            }
-
-            override suspend fun persistTokenForAccount(userId: Long, token: String) {
-                val dao = UserDatabase.getDatabase().userDao()
-                val user = accountUtils.getUserById(userId.toInt()) ?: return
-                dao.update(
-                    user.copy(
-                        apiToken = ApiToken(
-                            accessToken = token,
-                            tokenType = user.apiToken.tokenType,
-                            userId = userId.toInt()
-                        )
-                    )
-                )
-            }
-        }
         return AuthenticatorFacade.create(
             environment = ApiEnvironment.Staging,
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
-            crashReport = crashReport,
-            tokenBridge = tokenBridge,
+            crashReport = getCrashReportInterface(),
+            tokenBridge = createTokenBridge(accountUtils),
         )
     }
 
     @Provides
     @Singleton
-    fun provideTwoFactorAuthManager(accountUtils: AccountUtils) = TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
+    fun provideTwoFactorAuthManager(accountUtils: AccountUtils) =
+        TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
+
+    private fun getCrashReportInterface() = object : CrashReportInterface {
+        override fun addBreadcrumb(
+            message: String,
+            category: String,
+            level: CrashReportLevel,
+            type: BreadcrumbType,
+            data: Map<String, String>?
+        ) {
+            //TODO[Authenticator] forward to sentry
+        }
+
+        override fun capture(
+            message: String,
+            error: Throwable,
+            data: Map<String, String>?
+        ) {
+            //TODO[Authenticator] forward to sentry
+        }
+
+        override fun capture(
+            message: String,
+            data: Map<String, String>?,
+            level: CrashReportLevel?
+        ) {
+            //TODO[Authenticator] forward to sentry
+        }
+    }
+
+    private fun createTokenBridge(accountUtils: AccountUtils) = object : TokenBridge {
+        override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
+            // TODO[Authenticator]: retrieve token from crossapplogin
+            return null
+        }
+
+        override suspend fun getTokenFromDatabase(userId: Long): String? {
+            return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
+        }
+
+        override suspend fun persistTokenForAccount(userId: Long, token: String) {
+            val dao = UserDatabase.getDatabase().userDao()
+            val user = accountUtils.getUserById(userId.toInt()) ?: return
+            dao.update(
+                user.copy(
+                    apiToken = ApiToken(
+                        accessToken = token,
+                        tokenType = user.apiToken.tokenType,
+                        userId = userId.toInt()
+                    )
+                )
+            )
+        }
+    }
 }
