@@ -23,6 +23,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          LABEL_NAME: "needs-review"
         run: |
-          gh pr edit $PR_NUMBER --remove-label "$LABEL_NAME"
+          gh pr edit $PR_NUMBER --repo ${{ github.repository }} --remove-label 'euria-review'
