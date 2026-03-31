@@ -2,15 +2,43 @@ name: Android CI
 
 on:
   pull_request:
-    paths-ignore: [.github/**, "**.md"]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  instrumentation-tests:
+  check-changes:
     if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v5.0.0
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 2 # Fetches the merge commit and its two parents
+
+      - id: check
+        shell: bash
+        run: |
+          # HEAD^1 = Base Branch (e.g., main)
+          # HEAD^2 = Your PR Branch
+          # Filter out .md files and .github directory
+          CHANGES=$(git diff --name-only HEAD^1 HEAD^2 | grep -vE '^(\.github/|.*\.md$)' || true)
+          
+          if [ -z "$CHANGES" ]; then
+            echo "No relevant changes found. Skipping tests."
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          else
+            echo "Relevant changes detected."
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          fi
+  instrumentation-tests:
+    needs: check-changes
+      # This job ONLY runs if the previous job found relevant files
+    if: needs.check-changes.outputs.should_run == 'true'
     runs-on: [ self-hosted, Android ]
 
     steps:
