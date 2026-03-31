@@ -12,3 +12,16 @@ jobs:
       group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: true
     secrets: inherit
+  label-removal:
+    needs: [euria-review]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Required to modify labels
+    steps:
+      - name: Remove label using GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          LABEL_NAME: "needs-review"
+        run: |
+          gh pr edit $PR_NUMBER --remove-label "$LABEL_NAME"
