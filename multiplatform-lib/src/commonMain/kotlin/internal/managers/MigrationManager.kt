@@ -57,12 +57,13 @@ internal class MigrationManager(
                 deviceId = deviceId,
                 userId = userId,
             )
-            val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
-            val tokenToUse = temporaryToken
-                ?: webAuthnRepository.getTokenForMigration(
+            val tokenToUse = temporaryToken ?: run {
+                val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
+                webAuthnRepository.getTokenForMigration(
                     sessionId = migrationOptions.session,
                     tokenFromOtp = TokenFromOtp(deviceId, userId, otp),
                 ).accessToken
+            }
 
             authenticatorManager.registerPasskey(
                 token = tokenToUse,
