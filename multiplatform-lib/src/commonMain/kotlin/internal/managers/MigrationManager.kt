@@ -44,12 +44,12 @@ internal class MigrationManager(
         accountsDatabase.getDao().upsert(legacyAccounts.map { it.toEntity() })
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     suspend fun tryMigrating(
         userId: Long,
         persistToken: suspend (token: String) -> Unit,
         temporaryToken: String?,
     ) {
+        @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
         runCatching {
             val secret = getSecretFor(userId) ?: return
