@@ -288,7 +288,7 @@ internal class AuthenticatorFacadeImpl(
                 return block()
             }.cancellable().onFailure {
                 //TODO[ik-Auth]: Report the issue
-                if (it is NullPointerException) { // Local errors, no recourse.
+                if (it is NullPointerException || it is IllegalStateException) { // Local errors, no recourse.
                     emit(NotConnectedAction.Issue.NonRetriable("Ooops…"))
                     awaitCancellation()
                 }
