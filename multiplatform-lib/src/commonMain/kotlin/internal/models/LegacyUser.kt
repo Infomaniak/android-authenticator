@@ -23,6 +23,17 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * This is the model that was used for users in kAuth (version 1.X of the app).
+ * It contains basic info, with the [email] being potentially outdated,
+ * and the [secret] for the (OTP) one-time-password generation.
+ *
+ * On Android, this was saved in a SQLite database (managed by Room).
+ * On iOS, this was saved in NSUserDefaults, encoded in JSON.
+ *
+ * This model is used only for migration of users from kAuth,
+ * and the whole data is set to be deleted right after it completes.
+ */
 @Entity(tableName = "users")
 @Serializable
 internal data class LegacyUser(
