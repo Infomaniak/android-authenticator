@@ -2,14 +2,26 @@ name: Euria Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+    types: [labeled]
 
 jobs:
   euria-review:
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'euria-review')
+    if: ${{ github.event.label.name == 'euria-review' }}
     uses: infomaniak/.github/.github/workflows/euria-review.yml@v2
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     secrets: inherit
+  label-removal:
+    needs: [euria-review]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Required to modify labels
+    steps:
+      - name: Remove label using GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit $PR_NUMBER --repo ${{ github.repository }} --remove-label 'euria-review'
