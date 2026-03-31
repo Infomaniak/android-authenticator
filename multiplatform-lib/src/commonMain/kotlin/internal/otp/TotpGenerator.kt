@@ -27,7 +27,7 @@ import kotlin.math.pow
 internal class TotpGenerator(
     private val secret: ByteArray,
     private val digits: Int = 6,
-    private val timeStep: Long = 30L, // secondes
+    private val timeStep: Long = 30L, // seconds
     private val algorithm: Algorithm = Algorithm.SHA1
 ) {
     enum class Algorithm {
