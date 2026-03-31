@@ -28,7 +28,7 @@ internal interface OTPUserDao {
     @Delete
     suspend fun delete(user: LegacyUser)
 
-    @Delete
+    @Query("DELETE FROM users WHERE userid = :userId")
     suspend fun deleteById(userId: Int)
 
     @Query("SELECT * FROM users WHERE userid = :userId")
