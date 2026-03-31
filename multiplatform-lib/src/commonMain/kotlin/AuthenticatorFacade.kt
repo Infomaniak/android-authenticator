@@ -32,8 +32,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import network.utils.ApiEnvironment
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 abstract class AuthenticatorFacade internal constructor() {
+
+    abstract val accounts: Flow<List<Account>>
+
+    abstract val appStatus: SharedFlow<AppStatus>
+
+    /**
+     * Add successfully connected accounts.
+     *
+     * Will lead to [appStatus] to switch to the [AppStatus.LoggingIn] case.
+     */
+    abstract suspend fun addAccounts(connectedAccounts: List<Account>)
+
+    /**
+     * Remove account from the authenticator.
+     */
+    abstract suspend fun removeAccount(token: String, id: Long)
+
+    /**
+     * Refresh the token for the specific userId
+     */
+    @Throws(Exception::class)
+    abstract suspend fun refreshTokenFor(userId: Long)
+
     companion object {
 
         fun create(
@@ -75,27 +100,34 @@ abstract class AuthenticatorFacade internal constructor() {
                 coroutineScope = scope,
             )
         }
+
+        fun dummyInstance(
+            userAgent: String,
+            environment: ApiEnvironment,
+            crashReport: CrashReportInterface?,
+            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+            loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
+            resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
+        ): AuthenticatorFacade {
+            val webAuthnRepository = WebAuthnRepository(
+                authenticatorRequest = AuthenticatorRequest(
+                    httpClient = ApiClientProvider(
+                        userAgent = userAgent,
+                        environment = environment,
+                        crashReport = crashReport,
+                    ).httpClient
+                )
+            )
+            val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))
+            val authenticatorManager =
+                AuthenticatorManager(webAuthnRepository = webAuthnRepository, accountsRepository = accountsRepository)
+            return DummyAuthenticatorFacade(
+                accountsRepository = accountsRepository,
+                authenticatorManager = authenticatorManager,
+                scope = scope,
+                loadingDuration = loadingDurationMillis.milliseconds,
+                resetAfter = resetAfterMillis.milliseconds,
+            )
+        }
     }
-
-    abstract val accounts: Flow<List<Account>>
-
-    abstract val appStatus: SharedFlow<AppStatus>
-
-    /**
-     * Add successfully connected accounts.
-     *
-     * Will lead to [appStatus] to switch to the [AppStatus.LoggingIn] case.
-     */
-    abstract suspend fun addAccounts(connectedAccounts: List<Account>)
-
-    /**
-     * Remove account from the authenticator.
-     */
-    abstract suspend fun removeAccount(token: String, id: Long)
-
-    /**
-     * Refresh the token for the specific userId
-     */
-    @Throws(Exception::class)
-    abstract suspend fun refreshTokenFor(userId: Long)
 }
