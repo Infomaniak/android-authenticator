@@ -21,7 +21,6 @@ import com.infomaniak.auth.lib.internal.extensions.toByteArray
 import com.infomaniak.auth.lib.internal.models.LegacyUser
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.readBytes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -59,8 +58,7 @@ internal actual suspend fun deleteLegacyAccount(userId: String) {
 
         val updatedList = usersData.mapNotNull { item ->
             val data = item as? NSData ?: return@mapNotNull item
-            val bytes = data.bytes?.readBytes(data.length.toInt()) ?: return@mapNotNull item
-            val jsonString = bytes.decodeToString()
+            val jsonString = data.toByteArray().decodeToString()
 
             try {
                 val id = Json.parseToJsonElement(jsonString).jsonObject["id"]?.jsonPrimitive?.int
