@@ -35,6 +35,7 @@ import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
+import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
@@ -58,7 +59,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlin.time.Duration.Companion.seconds
@@ -161,12 +161,9 @@ internal class AuthenticatorFacadeImpl(
                         list.all { account -> (account.status as? Account.Status.NotConnected)?.action != null }
                     }
                 }
-            } else {
-                if (needsToShowEverythingReady) {
-                    val proceedAsync: CompletableJob = Job()
+            } else if (needsToShowEverythingReady) {
+                waitForComplete { proceedAsync ->
                     emit(AppStatus.EverythingReady(proceed = proceedAsync::complete))
-                    proceedAsync.join()
-                    needsToShowEverythingReady = false
                 }
             }
             while (true) {
@@ -174,8 +171,11 @@ internal class AuthenticatorFacadeImpl(
                 waitForComplete { addAnAccountAsync ->
                     emit(AppStatus.SetupComplete(addAnAccount = addAnAccountAsync::complete))
                 }
+                needsToShowEverythingReady = true
+                waitForComplete { backAsync ->
+                    emit(AppStatus.AddingAnAccount(cancel = backAsync::complete))
+                }
             }
-            emit(AppStatus.SetupComplete)
         }
 
         emitAll(appStatusFlow)

@@ -50,5 +50,7 @@ sealed interface AppStatus {
      */
     data class EverythingReady(val proceed: () -> Unit) : AppStatus
 
-    data object SetupComplete : AppStatus
+    data class SetupComplete(val addAnAccount: () -> Unit) : AppStatus
+
+    data class AddingAnAccount(val cancel: () -> Unit) : AppStatus
 }

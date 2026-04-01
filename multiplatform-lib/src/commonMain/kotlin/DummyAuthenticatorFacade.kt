@@ -22,6 +22,8 @@ import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
+import com.infomaniak.auth.lib.internal.utils.raceOf
+import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -87,8 +90,17 @@ class DummyAuthenticatorFacade internal constructor(
             }
             emit(AppStatus.EverythingReady(proceed = { next.trySend(Unit) }))
             next.receive()
-            emit(AppStatus.SetupComplete)
-            delay(resetAfter)
+            do {
+                emit(AppStatus.SetupComplete(addAnAccount = { next.trySend(Unit) }))
+                val addAnAccount = raceOf(
+                    { next.receive(); true },
+                    { delay(resetAfter); false },
+                )
+                if (addAnAccount) {
+                    emit(AppStatus.AddingAnAccount(cancel = { next.trySend(Unit) }))
+                    next.receive()
+                }
+            } while (addAnAccount)
             i++
         }
     }.distinctUntilChanged().shareIn(scope, SharingStarted.Lazily, replay = 1)
