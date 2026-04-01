@@ -70,7 +70,6 @@ internal actual suspend fun deleteLegacyAccount(userId: String) {
 
         if (updatedList.size < usersData.size) {
             userDefaults.setObject(updatedList, "ALL_USERS")
-            userDefaults.synchronize()
         }
     }
 }
