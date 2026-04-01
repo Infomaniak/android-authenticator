@@ -147,18 +147,19 @@ internal class AuthenticatorFacadeImpl(
                 needsToShowOnboarding = true
                 if (entities.isEmpty()) {
                     emit(AppStatus.LoginRequired.NotMigrating)
-                    /** Waiting for [addAccounts] to be called. */
+                    /** Waiting for [addAccounts] to be called, which will cancel this, as `accountEntities` emits. */
+                    awaitCancellation()
                 } else {
                     val needsMigration = entities.any { it.status == AccountEntity.Status.ToBeMigrated }
                     if (needsMigration) {
                         emit(AppStatus.LoginRequired.MigratingFromLegacyKAuth(proceed = proceedMigration::complete))
                         proceedMigration.join()
                     }
-                    emit(AppStatus.LoggingIn(needsResolution = false))
-                    emitAll(accounts.mapLatest { list ->
-                        val somethingToResolve = list.any { (it.status as? Account.Status.NotConnected)?.action != null }
-                        AppStatus.LoggingIn(needsResolution = somethingToResolve)
-                    })
+                    emit(AppStatus.LoggingIn)
+                    /** Continue towards [AppStatus.SetupComplete] once all accounts are waiting for an action (no loading). */
+                    accounts.first { list ->
+                        list.all { account -> (account.status as? Account.Status.NotConnected)?.action != null }
+                    }
                 }
             } else {
                 if (needsToShowOnboarding) {
@@ -167,8 +168,8 @@ internal class AuthenticatorFacadeImpl(
                     proceedAsync.join()
                     needsToShowOnboarding = false
                 }
-                emit(AppStatus.SetupComplete)
             }
+            emit(AppStatus.SetupComplete)
         }
 
         emitAll(appStatusFlow)
