@@ -34,14 +34,14 @@ sealed interface AppStatus {
     }
 
     /**
-     * This status is emitted by [AuthenticatorFacade.appStatus] once [AuthenticatorFacade.addAccounts] is called.
+     * This status is emitted by [AuthenticatorFacade.appStatus] once either
+     * [AuthenticatorFacade.addAccounts] or [LoginRequired.MigratingFromLegacyKAuth.proceed] is called.
      *
-     * After the login completes successfully, [AuthenticatorFacade.appStatus] will switch to [OnboardingDone].
-     *
-     * If [needsResolution] is true, the [Account.status] property from the accounts in [AuthenticatorFacade.accounts]
-     * need to be checked, and addressed.
+     * After the 1st login completes, [AuthenticatorFacade.appStatus] will switch to [OnboardingDone], if at least one
+     * account was successfully connected/migrated, or straight to [SetupComplete] otherwise, with the errors being
+     * surfaced in the [Account.status] property from the accounts in [AuthenticatorFacade.accounts].
      */
-    data class LoggingIn(val needsResolution: Boolean) : AppStatus
+    data object LoggingIn : AppStatus
 
     /**
      * Calling [proceed] will lead [AuthenticatorFacade.appStatus] to switch to [SetupComplete].
