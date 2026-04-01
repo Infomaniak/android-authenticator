@@ -93,7 +93,8 @@ private fun handleAppStatus(
         is AppStatus.LoginRequired -> NavDestination.Onboarding.Start
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete(appStatus.proceed)
-        AppStatus.SetupComplete -> NavDestination.Root.Home
+        is AppStatus.SetupComplete -> NavDestination.Root.Home
+        is AppStatus.AddingAnAccount -> TODO("Jamy will do it later")
     }
 
     if (currentDestination != targetDestination) {
