@@ -87,7 +87,10 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.Onboarding.Migration> {
-        MigrationScreen(snackbarHostState = snackbarHostState)
+        MigrationScreen(
+            snackbarHostState = snackbarHostState,
+            onContinue = it.onContinue
+        )
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(

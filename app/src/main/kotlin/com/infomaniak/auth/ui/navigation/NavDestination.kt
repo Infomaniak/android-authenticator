@@ -27,7 +27,9 @@ sealed interface NavDestination : NavKey {
 
     sealed interface Onboarding : NavDestination {
         @Serializable
-        data object Migration : Onboarding
+        data class Migration(
+            val onContinue: () -> Unit
+        ) : Onboarding
 
         @Serializable
         data object Start : Onboarding
