@@ -62,7 +62,7 @@ class DummyAuthenticatorFacade internal constructor(
             }
             emit(loginRequiredStatus)
             next.receive() // Waits for the addAccounts function or the proceed lambda to be called.
-            emit(AppStatus.LoggingIn(needsResolution = false))
+            emit(AppStatus.LoggingIn)
             delay(loadingDuration)
             if (isMigratingFromLegacyKAuth) {
                 isMigratingFromLegacyKAuth = false
@@ -82,7 +82,7 @@ class DummyAuthenticatorFacade internal constructor(
                         )
                     )
                 )
-                emit(AppStatus.LoggingIn(needsResolution = true))
+                emit(AppStatus.LoggingIn)
                 next.receive()
             }
             emit(AppStatus.OnboardingDone(proceed = { next.trySend(Unit) }))
