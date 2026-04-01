@@ -137,14 +137,14 @@ internal class AuthenticatorFacadeImpl(
     }
 
     private fun appStatusFlow(): Flow<AppStatus> = flow {
-        var needsToShowOnboarding = false
+        var needsToShowEverythingReady = false
 
         val appStatusFlow: Flow<AppStatus> = accountEntities.transformLatest { entities ->
             val atLeastOneConnectedAccount = entities.any { it.status == AccountEntity.Status.LoggedIn }
             val noConnectedAccount = !atLeastOneConnectedAccount
 
             if (noConnectedAccount) {
-                needsToShowOnboarding = true
+                needsToShowEverythingReady = true
                 if (entities.isEmpty()) {
                     emit(AppStatus.LoginRequired.NotMigrating)
                     /** Waiting for [addAccounts] to be called, which will cancel this, as `accountEntities` emits. */
@@ -162,11 +162,17 @@ internal class AuthenticatorFacadeImpl(
                     }
                 }
             } else {
-                if (needsToShowOnboarding) {
+                if (needsToShowEverythingReady) {
                     val proceedAsync: CompletableJob = Job()
-                    emit(AppStatus.OnboardingDone(proceed = proceedAsync::complete))
+                    emit(AppStatus.EverythingReady(proceed = proceedAsync::complete))
                     proceedAsync.join()
-                    needsToShowOnboarding = false
+                    needsToShowEverythingReady = false
+                }
+            }
+            while (true) {
+                needsToShowEverythingReady = false
+                waitForComplete { addAnAccountAsync ->
+                    emit(AppStatus.SetupComplete(addAnAccount = addAnAccountAsync::complete))
                 }
             }
             emit(AppStatus.SetupComplete)

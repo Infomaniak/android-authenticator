@@ -85,7 +85,7 @@ class DummyAuthenticatorFacade internal constructor(
                 emit(AppStatus.LoggingIn)
                 next.receive()
             }
-            emit(AppStatus.OnboardingDone(proceed = { next.trySend(Unit) }))
+            emit(AppStatus.EverythingReady(proceed = { next.trySend(Unit) }))
             next.receive()
             emit(AppStatus.SetupComplete)
             delay(resetAfter)
