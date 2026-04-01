@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.onboarding.migration.component
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +32,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +40,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +61,6 @@ import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.avatar.models.AvatarUrlData
 import com.infomaniak.core.coil.ImageLoaderProvider
-import com.infomaniak.core.crossapplogin.front.views.components.smallProgressStrokeWidth
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -73,26 +70,18 @@ import com.infomaniak.core.common.R as RCore
 fun MigrationSelectAccounts(
     accounts: () -> List<Account>,
     onClick: () -> Unit,
-    isLoading: () -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-
-    // val selectedAccounts = accounts().filter { it.id !in skippedIds() }
-
     val accounts = accounts()
     val count = accounts.count()
-
-    SideEffect {
-        Log.v("Jamy", "MigrationSelectAccounts: $accounts")
-    }
 
     SelectedAccountsButton(
         onClick = onClick,
         modifier = modifier,
     ) {
         when {
-            count == 1 -> SingleAccount(accounts.single(), Modifier.weight(1.0f), isLoading)
-            count > 1 -> MultipleAccounts(accounts, Modifier.weight(1.0f), isLoading)
+            count == 1 -> SingleAccount(accounts.single(), Modifier.weight(1.0f))
+            count > 1 -> MultipleAccounts(accounts, Modifier.weight(1.0f))
         }
     }
 }
@@ -111,6 +100,11 @@ private fun SelectedAccountsButton(
             .height(Dimens.buttonHeight),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = AuthenticatorTheme.materialColors.onSurface,
+            disabledContainerColor = Color.Transparent,
+        ),
         onClick = onClick,
         contentPadding = contentPadding,
     ) {
@@ -138,7 +132,6 @@ private fun SelectedAccountsButton(
 internal fun SingleAccount(
     account: Account,
     modifier: Modifier = Modifier,
-    isLoading: () -> Boolean = { false },
 ) {
     Row(
         modifier = modifier,
@@ -159,18 +152,13 @@ internal fun SingleAccount(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = pluralStringResource(RCore.plurals.myAccount, count = 1),
+                    text = account.fullName,
                     style = Typography.bodyMedium,
-                    // color = customization.colors.titleColor,
                 )
-                if (isLoading()) {
-                    CircularProgressIndicator(Modifier.size(Dimens.smallIconSize), strokeWidth = smallProgressStrokeWidth)
-                }
             }
             Text(
                 text = account.email,
                 style = Typography.bodyRegular,
-                // color = customization.colors.descriptionColor,
             )
         }
     }
@@ -181,7 +169,6 @@ internal fun SingleAccount(
 internal fun MultipleAccounts(
     accounts: List<Account>,
     modifier: Modifier = Modifier,
-    isLoading: () -> Boolean = { false },
 ) {
 
     val count = accounts.count()
@@ -192,26 +179,15 @@ internal fun MultipleAccounts(
         horizontalArrangement = Arrangement.spacedBy(Margin.Mini)
     ) {
         if (count == 2) {
-            TwoAccountsView(
-                accounts,
-                // customization.colors.avatarStrokeColor
-            )
+            TwoAccountsView(accounts)
         } else {
-            ThreeAccountsView(
-                accounts,
-                // customization.colors.avatarStrokeColor
-            )
+            ThreeAccountsView(accounts)
         }
 
         Text(
             text = pluralStringResource(RCore.plurals.myAccount, count, count),
             style = Typography.bodyMedium,
-            //color = MaterialTheme.colorScheme.primary,
         )
-
-        if (isLoading()) {
-            CircularProgressIndicator(modifier = Modifier.size(Dimens.smallIconSize), strokeWidth = smallProgressStrokeWidth)
-        }
     }
 }
 
@@ -242,24 +218,19 @@ internal fun MigrationLoginAvatar(
 }
 
 @Composable
-internal fun TwoAccountsView(
-    accounts: List<Account>,
-    // avatarStrokeColor: Color,
-) {
+internal fun TwoAccountsView(accounts: List<Account>) {
     Box(
         modifier = Modifier.size(
             width = Dimens.avatarsBoxWidth,
             height = Dimens.avatarsBoxHeight,
         ),
     ) {
-
         // Right
         MigrationLoginAvatar(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterEnd),
             account = accounts[1],
-            // strokeColor = avatarStrokeColor,
         )
 
         // Left
@@ -268,24 +239,18 @@ internal fun TwoAccountsView(
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterStart),
             account = accounts[0],
-            // strokeColor = avatarStrokeColor,
         )
     }
 }
 
 @Composable
-internal fun ThreeAccountsView(
-    accounts: List<Account>,
-    // avatarStrokeColor: Color,
-) {
+internal fun ThreeAccountsView(accounts: List<Account>) {
     Box(contentAlignment = Alignment.Center) {
-
         Row {
             // Left
             MigrationLoginAvatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 account = accounts[1],
-                // strokeColor = avatarStrokeColor,
             )
 
             Spacer(Modifier.width(width = Dimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
@@ -294,7 +259,6 @@ internal fun ThreeAccountsView(
             MigrationLoginAvatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 account = accounts[2],
-                // strokeColor = avatarStrokeColor,
             )
         }
 
@@ -302,7 +266,6 @@ internal fun ThreeAccountsView(
         MigrationLoginAvatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
             account = accounts[0],
-            // strokeColor = avatarStrokeColor,
         )
     }
 }
@@ -313,10 +276,7 @@ private fun MultipleAccountsPreview() {
     AuthenticatorTheme {
         Surface {
             Row {
-                MultipleAccounts(
-                    accounts = fakeAccounts,
-                    isLoading = { true },
-                )
+                MultipleAccounts(accounts = fakeAccounts)
             }
         }
     }
@@ -328,12 +288,23 @@ private fun SingleAccountPreview() {
     AuthenticatorTheme {
         Surface {
             Row {
-                SingleAccount(
-                    account = fakeAccounts.first(),
-                    isLoading = { true },
-                )
+                SingleAccount(account = fakeAccounts.first())
             }
         }
     }
 }
 
+@Preview
+@Composable
+private fun MigrationSelectAccountsPreview() {
+    AuthenticatorTheme {
+        Surface {
+            Row {
+                MigrationSelectAccounts(
+                    accounts = { fakeAccounts },
+                    onClick = {},
+                )
+            }
+        }
+    }
+}

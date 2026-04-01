@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,14 +55,13 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun MigrationScreen(
-    snackbarHostState: SnackbarHostState,
-    onContinue: () -> Unit,
     viewModel: MigrationViewModel = hiltViewModel(),
+    onContinue: () -> Unit,
 ) {
     val accounts by viewModel.accounts.collectAsStateWithLifecycle(emptyList())
     MigrationScreen(
         accounts = { accounts },
-        onContinue = {}
+        onContinue = onContinue
     )
 }
 
@@ -87,7 +85,6 @@ fun MigrationScreen(
             ) {
                 MigrationSelectAccounts(
                     accounts = accounts,
-                    isLoading = { false },
                     onClick = { showAccountsBottomSheet = true },
                 )
                 LargeButton(
