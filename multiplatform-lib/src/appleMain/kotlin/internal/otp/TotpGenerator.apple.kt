@@ -57,18 +57,14 @@ internal actual suspend fun deleteLegacyAccount(userId: String) {
         val userDefaults = NSUserDefaults.standardUserDefaults
         val usersData = userDefaults.objectForKey("ALL_USERS") as? MutableList<*> ?: return@withContext false
 
-        val userIdInt = userId.toIntOrNull() ?: return@withContext false
-
         val updatedList = usersData.mapNotNull { item ->
             val data = item as? NSData ?: return@mapNotNull item
             val bytes = data.bytes?.readBytes(data.length.toInt()) ?: return@mapNotNull item
             val jsonString = bytes.decodeToString()
 
             try {
-                val json = Json.parseToJsonElement(jsonString).jsonObject
-                val id = json["id"]?.jsonPrimitive?.int
-
-                if (id == userIdInt) null else item
+                val id = Json.parseToJsonElement(jsonString).jsonObject["id"]?.jsonPrimitive?.int
+                if (id == userId.toInt()) null else item
             } catch (_: Exception) {
                 item
             }
@@ -77,9 +73,6 @@ internal actual suspend fun deleteLegacyAccount(userId: String) {
         if (updatedList.size < usersData.size) {
             userDefaults.setObject(updatedList, "ALL_USERS")
             userDefaults.synchronize()
-            true
-        } else {
-            false
         }
     }
 }
