@@ -116,9 +116,7 @@ fun MainScreen(
         bottomBar = {
             if (currentDestination is NavDestination.Root) AuthenticatorBottomBar(
                 backStack = backStack,
-                onMyAccountsClicked = {
-                    backStack.tryPopLast()
-                },
+                onMyAccountsClicked = { backStack.tryPopLast() },
                 onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
             )
         },
