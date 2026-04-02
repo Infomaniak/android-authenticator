@@ -91,9 +91,9 @@ private fun handleAppStatus(
     val currentDestination = backStack.lastOrNull()
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
-        is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration(appStatus.proceed)
+        is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
-        is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete(appStatus.proceed)
+        is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> NavDestination.Root.Home
         is AppStatus.AddingAnAccount -> NavDestination.Onboarding.Start
     }

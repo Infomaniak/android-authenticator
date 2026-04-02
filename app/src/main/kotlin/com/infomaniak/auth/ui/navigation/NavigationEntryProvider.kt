@@ -87,7 +87,7 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.Onboarding.Migration> {
-        MigrationScreen(onContinue = it.onContinue)
+        MigrationScreen()
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(
@@ -99,7 +99,7 @@ fun baseEntryProvider(
         SecuringAccountScreen()
     }
     entry<NavDestination.Onboarding.Complete> {
-        OnboardingCompleteScreen(onContinue = it.onContinue)
+        OnboardingCompleteScreen()
     }
 }
 

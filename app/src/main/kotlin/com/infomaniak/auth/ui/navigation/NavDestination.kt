@@ -26,17 +26,13 @@ import kotlinx.serialization.Serializable
 sealed interface NavDestination : NavKey {
     sealed interface Onboarding : NavDestination {
         @Serializable
-        data class Migration(
-            val onContinue: () -> Unit
-        ) : Onboarding
+        data object Migration : Onboarding
 
         @Serializable
         data object Start : Onboarding
 
         @Serializable
-        data class Complete(
-            val onContinue: () -> Unit
-        ) : Onboarding
+        data object Complete : Onboarding
     }
 
     @Serializable

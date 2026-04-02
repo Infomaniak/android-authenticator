@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
@@ -40,7 +41,16 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyBu
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun OnboardingCompleteScreen(onContinue: () -> Unit) {
+fun OnboardingCompleteScreen(
+    viewModel: OnboardingCompleteViewModel = hiltViewModel(),
+) {
+    OnboardingCompleteScreen(onContinue = viewModel::onContinue)
+}
+
+@Composable
+private fun OnboardingCompleteScreen(
+    onContinue: () -> Unit
+) {
     BottomStickyButtonScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
