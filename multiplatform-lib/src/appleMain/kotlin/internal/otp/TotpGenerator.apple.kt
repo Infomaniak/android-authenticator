@@ -25,6 +25,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import platform.Foundation.NSData
 import platform.Foundation.NSUserDefaults
 
@@ -48,8 +51,38 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> = withContext(
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual suspend fun getSecretFor(userId: Long): String? {
-    return getLegacyAccounts().find {
+internal actual suspend fun deleteLegacyAccount(userId: String) {
+    withContext(Dispatchers.IO) {
+        val userDefaults = NSUserDefaults.standardUserDefaults
+        val usersData = userDefaults.objectForKey("ALL_USERS") as? MutableList<*> ?: return@withContext false
+
+        val updatedList = usersData.mapNotNull { item ->
+            val data = item as? NSData ?: return@mapNotNull item
+            val jsonString = data.toByteArray().decodeToString()
+
+            try {
+                val id = Json.parseToJsonElement(jsonString).jsonObject["id"]?.jsonPrimitive?.int
+                if (id == userId.toInt()) null else item
+            } catch (_: Exception) {
+                item
+            }
+        }
+
+        if (updatedList.size < usersData.size) {
+            userDefaults.setObject(updatedList, "ALL_USERS")
+        }
+    }
+}
+
+internal actual suspend fun deleteLegacyDB() {
+    withContext(Dispatchers.IO) {
+        NSUserDefaults.standardUserDefaults.removeObjectForKey("ALL_USERS")
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class)
+internal actual suspend fun getSecretFor(userId: Long): String? = withContext(Dispatchers.IO) {
+    getLegacyAccounts().find {
         it.userId.toLong() == userId
     }?.secret
 }

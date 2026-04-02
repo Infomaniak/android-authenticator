@@ -27,6 +27,18 @@ internal actual suspend fun getLegacyAccounts(): List<LegacyUser> {
     return OTPUserDatabase.instance.otpUserDao().getAllUsers()
 }
 
+internal actual suspend fun deleteLegacyAccount(userId: String) {
+    withContext(Dispatchers.IO) {
+        OTPUserDatabase.instance.otpUserDao().deleteById(userId.toInt())
+    }
+}
+
+internal actual suspend fun deleteLegacyDB() {
+    withContext(Dispatchers.IO) {
+        appCtx.getDatabasePath("Infomaniak.db").delete()
+    }
+}
+
 internal actual suspend fun getSecretFor(userId: Long): String? {
     return getLegacyAccounts().find { it.userId.toLong() == userId }?.secret
 }

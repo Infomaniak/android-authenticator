@@ -69,4 +69,6 @@ internal class TotpGenerator(
 
 internal expect suspend fun needMigration(): Boolean
 internal expect suspend fun getLegacyAccounts(): List<LegacyUser>
+internal expect suspend fun deleteLegacyAccount(userId: String)
+internal expect suspend fun deleteLegacyDB()
 internal expect suspend fun getSecretFor(userId: Long): String?
