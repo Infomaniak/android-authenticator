@@ -129,8 +129,8 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param token The access token of the user.
      * @param deviceId ID of the device.
      */
-    suspend fun completeMigration(token: String, deviceId: String) {
-        httpClient.post(ApiRoutes.finishMigration(deviceId)) {
+    suspend fun completeMigration(token: String, sessionId: String, deviceId: String) {
+        httpClient.delete(ApiRoutes.finishMigration(sessionId)) {
             addAuthenticationHeader(token)
             setBody(mapOf("device" to deviceId))
         }

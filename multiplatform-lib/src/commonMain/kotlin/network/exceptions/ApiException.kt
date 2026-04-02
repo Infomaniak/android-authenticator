@@ -44,7 +44,7 @@ sealed class ApiException(
      * @param requestContextId The request context id send by the backend to track the call
      */
     open class ApiErrorException(
-        val errorCode: Int,
+        val errorCode: String,
         val errorMessage: String,
         requestContextId: String,
     ) : ApiException(errorMessage, null, requestContextId)
