@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -34,9 +35,13 @@ import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
 @Composable
-fun TitleAndDescription(title: String, description: String) {
+fun TitleAndDescription(
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(Margin.Large)
             .widthIn(max = 300.dp),
         verticalArrangement = Arrangement.spacedBy(Margin.Medium),
@@ -45,7 +50,7 @@ fun TitleAndDescription(title: String, description: String) {
         Text(
             textAlign = TextAlign.Center,
             text = title,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
         )
         Text(
             textAlign = TextAlign.Center,
@@ -57,7 +62,7 @@ fun TitleAndDescription(title: String, description: String) {
 
 @PreviewLightAndDark
 @Composable
-fun TitleAndDescriptionPreview() {
+private fun TitleAndDescriptionPreview() {
     AuthenticatorTheme {
         Surface {
             TitleAndDescription(

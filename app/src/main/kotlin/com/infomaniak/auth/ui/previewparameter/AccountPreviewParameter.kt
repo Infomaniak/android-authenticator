@@ -40,9 +40,9 @@ val fakeAccounts = persistentListOf(
     ),
     Account(
         id = 1,
-        fullName = "John Issue",
+        fullName = "John Issue big name to take place",
         initials = "JS",
-        email = "john.smith@ik.me",
+        email = "john.smith.apple.lol.infomaniak@ik.me",
         avatarUrl = null,
         status = Account.Status.NotConnected(action = null),
     ),
