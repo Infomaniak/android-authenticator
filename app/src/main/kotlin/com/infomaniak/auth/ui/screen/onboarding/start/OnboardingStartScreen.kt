@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.screen.onboarding.start
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
@@ -111,7 +112,8 @@ fun OnboardingStartScreen(
         },
         onSaveSkippedAccounts = { crossAppLoginFacade.skippedAccountIds.value = it },
         // TODO[ik-auth]: Remove create account
-        onCreateAccount = onCreateAccount
+        onCreateAccount = onCreateAccount,
+        onCancel = onboardingStartViewModel.cancelOnboarding
     )
 }
 
@@ -124,8 +126,13 @@ private fun OnboardingStartScreen(
     onLoginRequest: (accounts: List<ExternalAccount>) -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     onCreateAccount: () -> Unit,
+    onCancel: (() -> Unit)? = null,
 ) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
+
+    BackHandler(onCancel != null) {
+        onCancel?.invoke()
+    }
 
     OnboardingScaffold(
         pagerState = pagerState,
