@@ -42,8 +42,8 @@ import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.utils.LoginUtils
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingState
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel.AccountsCheckingStatus
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingState
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomContent
 import com.infomaniak.core.crossapplogin.front.components.NoCrossAppLoginAccountsContent
@@ -61,8 +61,10 @@ fun OnboardingStartScreen(
     onCreateAccount: () -> Unit,
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
-    val accountsCheckingState by onboardingStartViewModel.accountsCheckingState.collectAsStateWithLifecycle()
-    val skippedIds by onboardingStartViewModel.skippedAccountIds.collectAsStateWithLifecycle()
+    val crossAppLoginFacade = onboardingStartViewModel.crossAppLoginFacade
+
+    val accountsCheckingState by crossAppLoginFacade.accountsCheckingState.collectAsStateWithLifecycle()
+    val skippedIds by crossAppLoginFacade.skippedAccountIds.collectAsStateWithLifecycle()
     val isButtonLoading by onboardingStartViewModel.isButtonLoading.collectAsStateWithLifecycle()
 
     // TODO[ik-auth]: Remove SignUp
@@ -88,8 +90,8 @@ fun OnboardingStartScreen(
         if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
     }
 
-    LaunchedEffect(onboardingStartViewModel) {
-        onboardingStartViewModel.activateUpdates(hostActivity)
+    LaunchedEffect(crossAppLoginFacade) {
+        crossAppLoginFacade.activateUpdates(hostActivity)
     }
 
     OnboardingStartScreen(
@@ -107,7 +109,7 @@ fun OnboardingStartScreen(
                 scope.launch { onboardingStartViewModel.connectSelectedAccounts(accounts, snackbarHostState) }
             }
         },
-        onSaveSkippedAccounts = { onboardingStartViewModel.skippedAccountIds.value = it },
+        onSaveSkippedAccounts = { crossAppLoginFacade.skippedAccountIds.value = it },
         // TODO[ik-auth]: Remove create account
         onCreateAccount = onCreateAccount
     )
@@ -178,4 +180,3 @@ private fun OnboardingStartScreenPreview(
         )
     }
 }
-

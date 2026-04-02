@@ -19,8 +19,8 @@ package com.infomaniak.auth.ui.screen.onboarding.start
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
@@ -29,7 +29,8 @@ import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.utils.LoginUtils
-import com.infomaniak.core.crossapplogin.back.BaseCrossAppLoginViewModel
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +48,8 @@ class OnboardingStartViewModel @Inject constructor(
     val infomaniakLogin: InfomaniakLogin,
     val accountUtils: AccountUtils,
     val authenticatorFacade: AuthenticatorFacade,
-) : BaseCrossAppLoginViewModel(BuildConfig.APPLICATION_ID, BuildConfig.CLIENT_ID) {
+    val crossAppLoginFacade: CrossAppLoginFacade,
+) : ViewModel() {
     private val _isButtonLoading = MutableStateFlow(false)
     val isButtonLoading = _isButtonLoading.asStateFlow()
 
@@ -83,7 +85,7 @@ class OnboardingStartViewModel @Inject constructor(
         snackbarHostState: SnackbarHostState,
     ) {
         startLoadingLoginButtons()
-        val loginResult = attemptLogin(selectedAccounts = accounts)
+        val loginResult = crossAppLoginFacade.attemptLogin(selectedAccounts = accounts)
         loginUsers(loginResult, snackbarHostState)
         loginResult.errorMessageIds.forEach { messageResId ->
             snackbarHostState.showSnackbar(context.resources.getString(messageResId))
