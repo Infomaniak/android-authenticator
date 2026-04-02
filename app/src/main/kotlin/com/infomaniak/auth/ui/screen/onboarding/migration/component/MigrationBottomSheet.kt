@@ -40,7 +40,6 @@ import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.common.R as RCore
 
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MigrationListAccounts(accounts: () -> List<Account>, ) {
