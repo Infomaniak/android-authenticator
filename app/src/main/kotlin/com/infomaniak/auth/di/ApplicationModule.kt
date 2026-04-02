@@ -27,6 +27,8 @@ import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
@@ -35,12 +37,18 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.transform
 import network.utils.ApiEnvironment
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
+
+    private val appScope = CoroutineScope(Dispatchers.Default)
 
     @Provides
     @Singleton
@@ -71,13 +79,24 @@ object ApplicationModule {
     fun provideAuthenticatorFacade(
         @UserAgent userAgent: String,
         accountUtils: AccountUtils,
+        crossAppLoginFacade: CrossAppLoginFacade,
     ): AuthenticatorFacade {
         return AuthenticatorFacade.create(
             environment = ApiEnvironment.Staging,
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),
-            tokenBridge = createTokenBridge(accountUtils),
+            tokenBridge = createTokenBridge(accountUtils, crossAppLoginFacade),
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCrossAppLoginFacade(): CrossAppLoginFacade {
+        return CrossAppLoginFacade.create(
+            applicationId = BuildConfig.APPLICATION_ID,
+            clientId = BuildConfig.CLIENT_ID,
+            scope = appScope
         )
     }
 
@@ -114,11 +133,16 @@ object ApplicationModule {
         }
     }
 
-    private fun createTokenBridge(accountUtils: AccountUtils) = object : TokenBridge {
-        override suspend fun getTokenFromCrossAppLogin(userId: Long): String? {
-            // TODO[Authenticator]: retrieve token from crossapplogin
-            return null
-        }
+    private fun createTokenBridge(accountUtils: AccountUtils, crossAppLoginFacade: CrossAppLoginFacade) = object : TokenBridge {
+
+        override suspend fun getTokenFromCrossAppLogin(
+            userId: Long
+        ): String? = crossAppLoginFacade.accountsCheckingState.transform { state ->
+            val matchingAccount = state.checkedAccounts.find { it.id == userId }
+                ?: if (state.status is AccountsCheckingStatus.UpToDate) null else return@transform
+            emit(matchingAccount?.tokens?.first())
+
+        }.first()
 
         override suspend fun getTokenFromDatabase(userId: Long): String? {
             return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
