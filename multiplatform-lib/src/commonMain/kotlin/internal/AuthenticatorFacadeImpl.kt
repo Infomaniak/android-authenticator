@@ -243,10 +243,10 @@ internal class AuthenticatorFacadeImpl(
                 sendCredentials = credentialsAsync::complete,
             )
             emit(reLogin)
-            credentialsAsync.await()
+            val credentialsForMigration = credentialsAsync.await()
             emit(null)
-
-            attemptMigration(accountToMigrate, TODO("Try to login with credentials and OTP (native login)"))
+            val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
+            attemptMigration(accountToMigrate, authentication)
         }
     }
 
@@ -258,8 +258,8 @@ internal class AuthenticatorFacadeImpl(
         withRetries(onGiveUp = { return }) {
             emit(null)
             val temporaryToken = tokenBridge.getTokenFromCrossAppLogin(userId) ?: return
-            attemptMigration(notConnectedAccount, temporaryToken)
-            onLoginSuccess()
+            val authentication = MigrationAuthentication.CrossAppLogin(temporaryToken)
+            if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
         }
     }
 
@@ -269,21 +269,29 @@ internal class AuthenticatorFacadeImpl(
     ) {
         withRetries(onGiveUp = { return }) {
             emit(null)
-            attemptMigration(notConnectedAccount)
-            onLoginSuccess()
+            val authentication = MigrationAuthentication.OngoingLogin
+            if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
         }
     }
 
-    private suspend fun attemptMigration(notConnectedAccount: AccountEntity, temporaryToken: String? = null) {
+    private suspend fun attemptMigration(
+        notConnectedAccount: AccountEntity,
+        authentication: MigrationAuthentication,
+    ): Boolean {
         val userId = notConnectedAccount.id
-        migrationManager.tryMigrating(
+        val succeeded = migrationManager.tryMigrating(
             userId = userId,
-            temporaryToken = temporaryToken,
+            authentication = authentication,
             persistToken = { token ->
                 tokenBridge.persistTokenForAccount(userId, token)
             }
         )
+
+        if (succeeded.not()) return false
+
         dao.upsert(notConnectedAccount.copy(status = AccountEntity.Status.LoggedIn))
+
+        return true
     }
 
     private suspend inline fun <R> FlowCollector<NotConnectedAction?>.withRetries(

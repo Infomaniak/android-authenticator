@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.network
 
-import com.infomaniak.auth.lib.internal.models.ApiError
+import com.infomaniak.auth.lib.internal.models.ApiResponseForError
 import com.infomaniak.auth.lib.internal.network.utils.getHttpClientEngine
 import com.infomaniak.auth.lib.internal.network.utils.getRequestContextId
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
@@ -115,11 +115,11 @@ internal class ApiClientProvider(
         if (statusCode >= 300) {
             val bodyResponse = response.bodyAsText()
             val apiError = runCatching {
-                jsonConfig.decodeFromString<ApiError>(bodyResponse)
+                jsonConfig.decodeFromString<ApiResponseForError>(bodyResponse)
             }.getOrElse {
                 throw ApiException.UnexpectedApiErrorFormatException(statusCode, bodyResponse, null, requestContextId)
             }
-            throw ApiException.ApiErrorException(apiError.errorCode, apiError.message, requestContextId)
+            throw ApiException.ApiErrorException(apiError.error.code, apiError.error.description, requestContextId)
         }
     }
 

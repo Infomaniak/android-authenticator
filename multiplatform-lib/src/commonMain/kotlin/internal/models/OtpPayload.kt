@@ -26,5 +26,7 @@ internal data class OtpPayload(
     val deviceId: String,
     @SerialName("id")
     val userId: Long,
-    val code: String
+    val assertion: String,
+    val code: String,
+    val password: String? = null,
 )
