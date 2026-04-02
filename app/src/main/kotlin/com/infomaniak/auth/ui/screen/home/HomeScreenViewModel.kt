@@ -21,6 +21,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
@@ -69,6 +70,11 @@ class HomeScreenViewModel @Inject constructor(
                     twoFactorAuthManager.refreshChallengeNow(account.id)
                 }
         }
+    }
+
+    fun onAddAccountClicked() {
+        val appStatus = authenticatorFacade.appStatus.replayCache.first() as? AppStatus.SetupComplete
+        appStatus?.addAnAccount()
     }
 }
 

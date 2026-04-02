@@ -43,7 +43,7 @@ fun baseEntryProvider(
         HomeScreen(
             onAccountClicked = { account ->
                 backStack.add(NavDestination.AccountDetails(account.id))
-            }
+            },
         )
     }
     entry<NavDestination.Root.Settings> {
@@ -103,7 +103,7 @@ fun baseEntryProvider(
     }
 }
 
-private fun NavBackStack<NavKey>.tryPopLast() {
+fun NavBackStack<NavKey>.tryPopLast() {
     if (lastIndex == 0) return
     removeAt(lastIndex)
 }
