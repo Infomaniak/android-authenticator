@@ -93,8 +93,9 @@ private fun handleAppStatus(
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration(appStatus.proceed)
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
-        is AppStatus.OnboardingDone -> NavDestination.Onboarding.Complete(appStatus.proceed)
-        AppStatus.SetupComplete -> NavDestination.Root.Home
+        is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete(appStatus.proceed)
+        is AppStatus.SetupComplete -> NavDestination.Root.Home
+        is AppStatus.AddingAnAccount -> TODO("Jamy will do it later")
     }
 
     if (currentDestination != targetDestination) {

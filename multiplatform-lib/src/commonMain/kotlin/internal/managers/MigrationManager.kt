@@ -22,6 +22,8 @@ import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.models.OtpPayload
 import com.infomaniak.auth.lib.internal.otp.TotpGenerator
+import com.infomaniak.auth.lib.internal.otp.deleteLegacyAccount
+import com.infomaniak.auth.lib.internal.otp.deleteLegacyDB
 import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
@@ -74,6 +76,9 @@ internal class MigrationManager(
         ).firstOrElse { error("Didn't find the key locally: $it") }
         persistToken(token)
         webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
+        deleteLegacyAccount(userId.toString())
+
+        if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {

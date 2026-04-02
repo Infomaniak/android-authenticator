@@ -15,25 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal.room.legacy
+package com.infomaniak.auth.lib.internal.utils
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
-import com.infomaniak.auth.lib.internal.models.LegacyUser
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.Job
 
-@Dao
-internal interface OTPUserDao {
-
-    @Delete
-    suspend fun delete(user: LegacyUser)
-
-    @Query("DELETE FROM users WHERE userid = :userId")
-    suspend fun deleteById(userId: Int)
-
-    @Query("SELECT * FROM users WHERE userid = :userId")
-    suspend fun findUserById(userId: Int): LegacyUser?
-
-    @Query("SELECT * FROM users")
-    suspend fun getAllUsers(): List<LegacyUser>
+internal suspend inline fun <R> waitForComplete(block: (completable: CompletableJob) -> R): R {
+    val completable: CompletableJob = Job()
+    return block(completable).also { completable.join() }
 }
