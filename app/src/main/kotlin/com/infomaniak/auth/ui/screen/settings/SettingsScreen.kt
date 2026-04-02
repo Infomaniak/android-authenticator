@@ -108,7 +108,7 @@ private fun SettingsScreen(
         add(
             OptionItemType.WithRightIcon(
                 stringResId = R.string.themeTitle,
-                rightIconResId = R.drawable.right_indicator,
+                rightIconResId = R.drawable.chevron_right,
                 onClick = { onThemeClicked() },
             )
         )
@@ -117,7 +117,7 @@ private fun SettingsScreen(
     val secondSectionItems = persistentListOf(
         OptionItemType.WithRightIcon(
             stringResId = R.string.dataManagementTitle,
-            rightIconResId = R.drawable.right_indicator,
+            rightIconResId = R.drawable.chevron_right,
             onClick = onPrivacyManagementClicked,
         ),
         OptionItemType.WithRightIcon(

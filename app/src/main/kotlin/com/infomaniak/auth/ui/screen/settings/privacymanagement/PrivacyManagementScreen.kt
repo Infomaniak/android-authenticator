@@ -73,7 +73,7 @@ fun PrivacyManagementScreen(
             },
             rightIcon = {
                 Icon(
-                    painter = painterResource(R.drawable.right_indicator),
+                    painter = painterResource(R.drawable.chevron_right),
                     contentDescription = null,
                 )
             },

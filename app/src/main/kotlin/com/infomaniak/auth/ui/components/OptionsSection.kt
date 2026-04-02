@@ -230,7 +230,7 @@ private fun OptionsSectionPreview() {
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.appCompleteName,
-            rightIconResId = R.drawable.right_indicator,
+            rightIconResId = R.drawable.chevron_right,
             onClick = {}
         ),
         OptionItemType.WithSelection(
