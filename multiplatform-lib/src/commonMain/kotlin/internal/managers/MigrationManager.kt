@@ -17,7 +17,9 @@
  */
 package com.infomaniak.auth.lib.internal.managers
 
+import com.infomaniak.auth.lib.internal.MigrationAuthentication
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
+import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.models.OtpPayload
@@ -29,6 +31,9 @@ import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.osmerion.kotlin.io.encoding.Base32
+import io.ktor.utils.io.core.toByteArray
+import network.exceptions.ApiException
+import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -49,21 +54,46 @@ internal class MigrationManager(
     suspend fun tryMigrating(
         userId: Long,
         persistToken: suspend (token: String) -> Unit,
-        temporaryToken: String?,
-    ) {
+        authentication: MigrationAuthentication,
+    ): Boolean {
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
-        val secret = getSecretFor(userId) ?: return
+        val secret = getSecretFor(userId) ?: return false
         val migrationOptions = webAuthnRepository.getMigrationOptions(
             deviceId = deviceId,
             userId = userId,
         )
-        val tokenToUse = temporaryToken ?: run {
-            val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
-            webAuthnRepository.getTokenForMigration(
-                sessionId = migrationOptions.session,
-                otpPayload = OtpPayload(deviceId, userId, otp),
-            ).accessToken
+        val tokenToUse = when (authentication) {
+            is MigrationAuthentication.CrossAppLogin -> authentication.derivedToken
+            else -> {
+                val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
+                val assertion = HmacSHA256(secret.toByteArray())
+                    .doFinal("${migrationOptions.session}:${migrationOptions.timestamp}".toByteArray())
+                    .toHexString()
+                val password = when (authentication) {
+                    is MigrationAuthentication.NoOngoingLogin -> authentication.password
+                    is MigrationAuthentication.OngoingLogin -> null
+                }
+
+                runCatching {
+                    webAuthnRepository.getTokenForMigration(
+                        sessionId = migrationOptions.session,
+                        otpPayload = OtpPayload(
+                            deviceId = deviceId,
+                            userId = userId,
+                            code = otp,
+                            assertion = assertion,
+                            password = password,
+                        ),
+                    ).accessToken
+                }.cancellable().getOrElse {
+                    if (it is ApiException.ApiErrorException && it.errorCode == "access_denied") {
+                        return false
+                    } else {
+                        throw it
+                    }
+                }
+            }
         }
 
         authenticatorManager.registerPasskey(
@@ -75,10 +105,12 @@ internal class MigrationManager(
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
         persistToken(token)
-        webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
+        webAuthnRepository.completeMigration(token = token, sessionId = migrationOptions.session, deviceId = deviceId)
         deleteLegacyAccount(userId.toString())
 
         if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
+
+        return true
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {

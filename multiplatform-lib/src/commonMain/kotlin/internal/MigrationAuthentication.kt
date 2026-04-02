@@ -15,23 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal.models
+package com.infomaniak.auth.lib.internal
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
-enum class ApiResponseStatus {
-
-    @SerialName("error")
-    ERROR,
-
-    @SerialName("success")
-    SUCCESS,
-
-    @SerialName("asynchronous")
-    ASYNCHRONOUS,
-
-    @SerialName("unknown")
-    UNKNOWN;
+internal sealed interface MigrationAuthentication {
+    data class CrossAppLogin(val derivedToken: String) : MigrationAuthentication
+    data class NoOngoingLogin(val password: String) : MigrationAuthentication
+    data object OngoingLogin : MigrationAuthentication
 }

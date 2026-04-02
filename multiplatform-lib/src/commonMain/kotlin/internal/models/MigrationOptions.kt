@@ -17,13 +17,10 @@
  */
 package com.infomaniak.auth.lib.internal.models
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class MigrationOptions(
     val session: String,
     val timestamp: Long,
-    @SerialName("timezone")
-    val timeZone: String
 )

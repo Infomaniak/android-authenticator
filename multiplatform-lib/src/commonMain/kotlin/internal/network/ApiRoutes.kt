@@ -28,7 +28,7 @@ internal object ApiRoutes {
     fun delete(passkeyId: String) = "users/me/passkeys/$passkeyId"
     fun migrationsOptions() = "authenticator/migrations"
     fun verifyMigration(sessionId: String) = "authenticator/migrations/$sessionId/verify"
-    fun finishMigration(deviceId: String) = "users/me/authenticator/migrations/$deviceId"
+    fun finishMigration(sessionId: String) = "users/me/authenticator/migrations/$sessionId"
     fun challenge() = "authenticator/challenge"
     fun verify() = "authenticator/verify"
 }

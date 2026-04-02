@@ -55,7 +55,7 @@ internal fun generateKeyPairInTheKeystore(
         (privateKeyPurposes + publicKeyPurposes).asFlags()
     ).also {
         it.setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
-        if (preferStrongbox) if (SDK_INT >= 28) {
+        if (preferStrongbox && SDK_INT >= 28) {
             if (appCtx.packageManager.hasSystemFeature(PackageManager.FEATURE_STRONGBOX_KEYSTORE)) {
                 // Note: We can see the Strongbox version since API 32 (Android 12).
                 // See the Javadoc of `PackageManager.FEATURE_STRONGBOX_KEYSTORE` (mentioned just above).
@@ -84,7 +84,7 @@ private fun KeyAccessGuard.applyTo(builder: KeyGenParameterSpec.Builder) {
         KeyAccessGuard.UserConfirmation -> {
             if (SDK_INT >= 28) builder.setUserConfirmationRequired(true)
         }
-        KeyAccessGuard.Unguarded -> {}
+        KeyAccessGuard.Unguarded -> Unit
     }
 }
 

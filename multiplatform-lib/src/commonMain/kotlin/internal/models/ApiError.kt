@@ -20,7 +20,13 @@ package com.infomaniak.auth.lib.internal.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ApiError(
-    val errorCode: Int,
-    val message: String,
+internal data class ApiResponseForError(
+    val result: ApiResponseStatus = ApiResponseStatus.ERROR,
+    val error: ApiErrorV2
+)
+
+@Serializable
+data class ApiErrorV2(
+    val code: String,
+    val description: String,
 )
