@@ -175,8 +175,7 @@ private fun AccountDetailsContent(
 @Composable
 private fun Header(account: Account, user: User?) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Avatar(

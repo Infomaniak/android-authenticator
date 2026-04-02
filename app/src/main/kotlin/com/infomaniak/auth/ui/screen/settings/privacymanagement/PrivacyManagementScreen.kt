@@ -18,13 +18,19 @@
 package com.infomaniak.auth.ui.screen.settings.privacymanagement
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -33,6 +39,7 @@ import com.infomaniak.auth.ui.images.illus.dataProtection.DataProtection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.privacymanagement.screencontent.PrivacyManagementHomeContent
 import com.infomaniak.core.privacymanagement.tracker.Tracker
+import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -48,37 +55,46 @@ fun PrivacyManagementScreen(
         modifier = modifier,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
-                withTitle = true,
+                withTitle = false,
                 isCentered = false,
                 onBackPressed = onBackPressed
             )
         }
     ) { paddingValues ->
-        PrivacyManagementHomeContent(
-            modifier = Modifier.padding(paddingValues),
-            contentPadding = PaddingValues(horizontal = Margin.Medium),
-            sourceUrl = BuildConfig.GITHUB_REPO_URL,
-            trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
-            header = {
-                Image(
-                    imageVector = AppIllus.DataProtection.image(),
-                    contentDescription = null,
-                    modifier = Modifier.padding(Margin.Medium),
-                )
-            },
-            divider = {
-                HorizontalDivider(
-                    color = AuthenticatorTheme.materialColors.outlineVariant,
-                )
-            },
-            rightIcon = {
-                Icon(
-                    painter = painterResource(R.drawable.chevron_right),
-                    contentDescription = null,
-                )
-            },
-            onTrackerClick = navigateToTrackerPage
-        )
+        Column(modifier = Modifier.padding(paddingValues)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Margin.Medium),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(R.string.dataManagementTitle), style = Typography.h1)
+            }
+            PrivacyManagementHomeContent(
+                contentPadding = PaddingValues(horizontal = Margin.Medium),
+                sourceUrl = BuildConfig.GITHUB_REPO_URL,
+                trackerList = persistentListOf(Tracker.Sentry, Tracker.Matomo),
+                header = {
+                    Image(
+                        imageVector = AppIllus.DataProtection.image(),
+                        contentDescription = null,
+                        modifier = Modifier.padding(Margin.Medium),
+                    )
+                },
+                divider = {
+                    HorizontalDivider(
+                        color = AuthenticatorTheme.materialColors.outlineVariant,
+                    )
+                },
+                rightIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.chevron_right),
+                        contentDescription = null,
+                    )
+                },
+                onTrackerClick = navigateToTrackerPage
+            )
+        }
     }
 }
 
