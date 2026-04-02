@@ -148,9 +148,7 @@ private fun createKeyAttributes(
         KeyStorageLocation.SecureEnclave -> {
             this[kSecAttrTokenID] = kSecAttrTokenIDSecureEnclave
         }
-        KeyStorageLocation.KeyChain, null -> {
-            // TODO Check if we really need this case
-        }
+        KeyStorageLocation.KeyChain, null -> Unit
     }
     this[kSecPrivateKeyAttrs] = buildCFDictionary {
         privateKeyPurposes?.applyTo(this)

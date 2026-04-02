@@ -84,9 +84,7 @@ private fun KeyAccessGuard.applyTo(builder: KeyGenParameterSpec.Builder) {
         KeyAccessGuard.UserConfirmation -> {
             if (SDK_INT >= 28) builder.setUserConfirmationRequired(true)
         }
-        KeyAccessGuard.Unguarded -> {
-            // TODO Check if we really need this case
-        }
+        KeyAccessGuard.Unguarded -> Unit
     }
 }
 
