@@ -81,7 +81,7 @@ class MainActivity : FragmentActivity() {
                 AuthenticatorTheme(isDarkTheme = isDarkTheme) {
                     MainScreen(
                         viewModel = viewModel,
-                        startDestination = if (appStatus == AppStatus.SetupComplete) {
+                        startDestination = if (appStatus is AppStatus.SetupComplete) {
                             NavDestination.Root.Home
                         } else {
                             NavDestination.Onboarding.Start
