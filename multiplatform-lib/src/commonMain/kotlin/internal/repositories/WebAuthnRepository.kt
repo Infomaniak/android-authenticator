@@ -73,8 +73,8 @@ internal class WebAuthnRepository(
         return authenticatorRequest.getTokenForMigration(sessionId, otpPayload).data
     }
 
-    suspend fun completeMigration(token: String, deviceId: String) {
-        return authenticatorRequest.completeMigration(token, deviceId)
+    suspend fun completeMigration(token: String, sessionId: String, deviceId: String) {
+        return authenticatorRequest.completeMigration(token, sessionId, deviceId)
     }
 
     //endregion

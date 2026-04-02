@@ -105,7 +105,7 @@ internal class MigrationManager(
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
         persistToken(token)
-        webAuthnRepository.completeMigration(token = token, deviceId = deviceId)
+        webAuthnRepository.completeMigration(token = token, sessionId = migrationOptions.session, deviceId = deviceId)
         deleteLegacyAccount(userId.toString())
 
         if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
