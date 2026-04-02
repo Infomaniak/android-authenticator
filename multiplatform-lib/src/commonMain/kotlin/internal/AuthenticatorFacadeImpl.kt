@@ -200,7 +200,7 @@ internal class AuthenticatorFacadeImpl(
             true
         },
         {
-            atLeastOneConnectedAccount.first()
+            atLeastOneConnectedAccount.first { it }
             false
         },
     ) || proceedMigration.isCompleted // In case it finished after a connected account was added.
