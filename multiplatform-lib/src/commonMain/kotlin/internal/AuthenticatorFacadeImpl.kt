@@ -193,8 +193,14 @@ internal class AuthenticatorFacadeImpl(
     }
 
     private suspend fun shouldTryImmediateLogin(): Boolean = raceOf(
-        { proceedMigration.join(); true },
-        { atLeastOneConnectedAccount.first(); false }
+        {
+            proceedMigration.join()
+            true
+        },
+        {
+            atLeastOneConnectedAccount.first()
+            false
+        },
     ) || proceedMigration.isCompleted // In case it finished after a connected account was added.
 
     private suspend fun FlowCollector<NotConnectedAction?>.registrationAttempts(notRegisteredAccount: AccountEntity) {
