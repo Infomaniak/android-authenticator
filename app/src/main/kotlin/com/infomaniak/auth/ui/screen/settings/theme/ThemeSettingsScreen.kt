@@ -18,10 +18,16 @@
 package com.infomaniak.auth.ui.screen.settings.theme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
@@ -31,13 +37,17 @@ import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
+import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun ThemeSettingsScreen(onBackPressed: () -> Unit) {
-    val themeViewModel: AppSettingsViewModel = hiltViewModel<AppSettingsViewModel>()
+fun ThemeSettingsScreen(
+    onBackPressed: () -> Unit,
+    themeViewModel: AppSettingsViewModel = hiltViewModel(),
+) {
     val uiState by themeViewModel.uiState.collectAsStateWithLifecycle()
     val theme = GetSetCallbacks(get = { uiState.theme }, set = { it?.let { themeViewModel.setTheme(it) } })
 
@@ -80,18 +90,23 @@ private fun ThemeSettingsScreen(
                 onClick = { theme.set(Theme.System) },
             ),
         )
-
-        OptionsSection(
-            sections = persistentListOf(section),
-            modifier = Modifier
-                .padding(paddingValues),
-        )
+        Column(modifier = Modifier.padding(paddingValues)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Margin.Medium),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(R.string.themeTitle), style = Typography.h1)
+            }
+            OptionsSection(sections = persistentListOf(section),)
+        }
     }
 }
 
 @PreviewSmallWindow
 @Composable
-fun ThemeSettingsScreenPreview() {
+private fun ThemeSettingsScreenPreview() {
     AuthenticatorTheme {
         ThemeSettingsScreen(
             theme = GetSetCallbacks(get = { Theme.Light }, set = {}),

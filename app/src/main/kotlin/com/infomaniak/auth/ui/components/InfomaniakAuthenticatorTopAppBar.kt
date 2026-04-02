@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
@@ -50,7 +51,7 @@ fun InfomaniakAuthenticatorTopAppBar(
         if (withTitle) {
             Text(
                 text = stringResource(R.string.appCompleteName),
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
             )
         }
     }

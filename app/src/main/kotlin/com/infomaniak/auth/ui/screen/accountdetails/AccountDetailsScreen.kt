@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,8 +30,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -175,8 +179,7 @@ private fun AccountDetailsContent(
 @Composable
 private fun Header(account: Account, user: User?) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Avatar(
@@ -197,13 +200,14 @@ private fun Header(account: Account, user: User?) {
 
 @Composable
 private fun SecurityCheck(accountStatus: AccountStatus) {
-    StatusCard(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = Margin.Large)
             .padding(horizontal = Margin.Medium),
-        variant = StatusCardVariant.Neutral,
         shape = RoundedCornerShape(DefaultCornerRadius),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        colors = CardDefaults.outlinedCardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground)
     ) {
         Column(
             modifier = Modifier.padding(Margin.Medium),

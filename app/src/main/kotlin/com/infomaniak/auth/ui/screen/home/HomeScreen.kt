@@ -37,6 +37,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -54,6 +55,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -217,6 +221,7 @@ private fun AccountItem(
         Row(
             modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Margin.Micro)
         ) {
             Avatar(
                 account = account,
@@ -226,19 +231,35 @@ private fun AccountItem(
                     .clip(CircleShape)
                     .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
             )
-            Column(modifier = Modifier.padding(start = Margin.Medium)) {
-                Text(text = account.fullName)
-                Text(text = account.email)
+            Column(
+                modifier = Modifier
+                    .padding(start = Margin.Medium)
+                    .weight(1f),
+            ) {
+                Text(
+                    text = account.fullName,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = account.email,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            //TODO Add a different content description when we're sure what represent each state
+            Spacer(modifier = Modifier)
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
                 painter = painterResource(id = account.status.toAccountSecurityLevel().iconResId),
                 contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
                 tint = account.status.toAccountSecurityLevel().iconTint(),
             )
-            Icon(painterResource(R.drawable.right_arrow), null)
+            Icon(
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(R.drawable.chevron_right),
+                contentDescription = null
+            )
         }
     }
 }
