@@ -22,7 +22,7 @@
     <string name="accountLossRiskLastDoubleAuthDescription">Wenn Authenticator Ihre letzte Zwei-Faktor-Verifizierungsmethode ist, könnten Sie beim nächsten Anmeldeversuch gesperrt werden.</string>
     <string name="accountLossRiskTitle">Sie könnten den Zugriff auf dieses Konto verlieren</string>
     <string name="accountNotConnectedWarningTitle">Melden Sie sich erneut an, um Ihr Konto zu sichern.</string>
-    <string name="accountPartiallyProtectedDescription">Aktualisieren Sie Ihre Sicherheitseinstellungen, um Ihr Konto zu schützen</string>
+    <string name="accountPartiallyProtectedDescription">Aktualisieren Sie Ihre Sicherheitseinstellungen, um Ihr Konto zu schützen.</string>
     <string name="accountPartiallyProtectedTitle">Teilweise geschütztes Konto</string>
     <string name="accountPasswordTitle">Kontopasswort</string>
     <string name="accountProtected">Konto geschützt</string>
@@ -38,8 +38,10 @@
     <string name="accountsTitle">Konten</string>
     <string name="actionRequiredDescription">Aktion erforderlich, um eines Ihrer Konten zu sichern.</string>
     <string name="activityHistoryButton">Aktivitätsverlauf</string>
+    <string name="addAccountButton">Ein Konto hinzufügen</string>
     <string name="addAccountContentDescription">Hinzufügen eines Kontos</string>
     <string name="appAccessIsSecure">Der Zugriff auf Authenticator ist sicher</string>
+    <string name="appSecurityDescription">Schützen Sie den Zugriff auf Ihre App, indem Sie Ihre Telefonsperre aktivieren.</string>
     <string name="authorizationCodeTitle">Ihr Autorisierungscode</string>
     <string name="autoCloseTitle">Diese Information schliesst sich automatisch nach 15 Sekunden.</string>
     <string name="avatarContentDescription">Konto-Avatar</string>
@@ -57,6 +59,7 @@
     <string name="continueButton">Weiter</string>
     <string name="copyPassword">Kennwort kopieren</string>
     <string name="dataManagementTitle">Datenverwaltung</string>
+    <string name="daysSupportAvailability">%1$d T. / %2$d</string>
     <string name="deletePreventionDescription">Das Löschen der App kann die Sicherheit Ihres Kontos gefährden.</string>
     <string name="deletePreventionTitle">Brauchen Sie Hilfe?</string>
     <string name="denyButton">Ablehnen</string>
@@ -72,7 +75,6 @@
     <string name="doneButton">Fertig</string>
     <string name="emailPlaceholder">E-Mail</string>
     <string name="enableButton">Aktivieren</string>
-    <string name="enableNotifications">Benachrichtigungen aktivieren</string>
     <string name="errorLoginFailed">Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support. (Fehlercode: %d)</string>
     <string name="errorOccuredDescription">Der Vorgang konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.</string>
     <string name="errorOccuredTitle">Ein Fehler ist aufgetreten</string>
@@ -89,6 +91,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Diese Anfrage wurde bereits verarbeitet</string>
     <string name="loginRequestExpiredDescription">Die Verifizierungszeit ist abgelaufen. Bitte versuchen Sie es erneut.</string>
     <string name="loginRequestExpiredTitle">Diese Anmeldeanfrage ist abgelaufen</string>
+    <string name="manageNotifications">Benachrichtigungen verwalten</string>
     <string name="noInternetDescription">Der Vorgang konnte nicht abgeschlossen werden. Überprüfen Sie Ihre Einstellungen und versuchen Sie es erneut.</string>
     <string name="noInternetTitle">Keine Internetverbindung</string>
     <string name="notMeButton">Das war nicht ich</string>
@@ -117,6 +120,7 @@
     <string name="showAccountPasswordButton">Kontopasswort anzeigen</string>
     <string name="startButton">Starten</string>
     <string name="subjectPlaceholder">Betreff</string>
+    <string name="submitMyTicketButton">Mein Ticket einreichen</string>
     <string name="submitTicketDescription">Um Ihnen effektiv helfen zu können, geben Sie bitte so viele Details wie möglich zu Ihrem Problem an.</string>
     <string name="submitTicketTitle">Ein Ticket einreichen</string>
     <string name="supportResponseDelay">Wir antworten innerhalb der nächsten 24 Geschäftstage.</string>
@@ -126,6 +130,7 @@
     <string name="themeTitle">Thema</string>
     <string name="ticketSentSuccessDescription">Wir tun unser Bestes, um sicherzustellen, dass ein Agent so schnell wie möglich auf Sie antwortet.</string>
     <string name="ticketSentSuccessTitle">Ihr Ticket wurde an unsere Teams gesendet!</string>
+    <string name="timeSupportAvailability">%1$s bis %2$s</string>
     <string name="understandConfirmButton">Ich verstehe</string>
     <string name="unlockWithBiometrics">Entsperren mit Biometrie</string>
     <string name="unlockingWithFaceId">Mit Face ID entsperren</string>

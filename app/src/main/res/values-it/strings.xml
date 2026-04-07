@@ -22,7 +22,7 @@
     <string name="accountLossRiskLastDoubleAuthDescription">Se Authenticator è il tuo ultimo metodo di verifica a due passaggi, potresti essere bloccato al prossimo accesso.</string>
     <string name="accountLossRiskTitle">Potresti perdere l’accesso a questo account</string>
     <string name="accountNotConnectedWarningTitle">Effettuare nuovamente il login per proteggere il proprio account.</string>
-    <string name="accountPartiallyProtectedDescription">Aggiorna le impostazioni di sicurezza per proteggere il tuo account</string>
+    <string name="accountPartiallyProtectedDescription">Aggiorna le impostazioni di sicurezza per proteggere il tuo account.</string>
     <string name="accountPartiallyProtectedTitle">Account parzialmente protetto</string>
     <string name="accountPasswordTitle">Password account</string>
     <string name="accountProtected">Account protetto</string>
@@ -38,8 +38,10 @@
     <string name="accountsTitle">Account</string>
     <string name="actionRequiredDescription">Azioni richieste per proteggere uno dei tuoi account.</string>
     <string name="activityHistoryButton">Cronologia attività</string>
+    <string name="addAccountButton">Aggiungere un account</string>
     <string name="addAccountContentDescription">Aggiungere un account</string>
     <string name="appAccessIsSecure">L’accesso ad Authenticator è sicuro</string>
+    <string name="appSecurityDescription">Proteggete l’accesso alla vostra applicazione attivando il blocco del telefono.</string>
     <string name="authorizationCodeTitle">Il tuo codice di autorizzazione</string>
     <string name="autoCloseTitle">Queste informazioni si chiuderanno automaticamente in 15 secondi.</string>
     <string name="avatarContentDescription">Avatar dell’account</string>
@@ -57,6 +59,7 @@
     <string name="continueButton">Continua</string>
     <string name="copyPassword">Copia la password</string>
     <string name="dataManagementTitle">Gestione dati</string>
+    <string name="daysSupportAvailability">%1$d g. / %2$d</string>
     <string name="deletePreventionDescription">Eliminare l’app può compromettere la sicurezza del tuo account.</string>
     <string name="deletePreventionTitle">Hai bisogno di aiuto?</string>
     <string name="denyButton">Nega</string>
@@ -72,7 +75,6 @@
     <string name="doneButton">Fine</string>
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Attiva</string>
-    <string name="enableNotifications">Attiva le notifiche</string>
     <string name="errorLoginFailed">Accesso all’account fallito. Riprova o contatta l’assistenza. (codice errore: %d)</string>
     <string name="errorOccuredDescription">Impossibile completare l’operazione. Riprova.</string>
     <string name="errorOccuredTitle">Si è verificato un errore</string>
@@ -89,6 +91,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Questa richiesta è già stata elaborata</string>
     <string name="loginRequestExpiredDescription">Il tempo di verifica è scaduto. Riprova.</string>
     <string name="loginRequestExpiredTitle">Questa richiesta di accesso è scaduta</string>
+    <string name="manageNotifications">Gestisci le notifiche</string>
     <string name="noInternetDescription">Impossibile completare l’operazione. Controlla le impostazioni e riprova.</string>
     <string name="noInternetTitle">Nessuna connessione Internet</string>
     <string name="notMeButton">Non sono stato io</string>
@@ -117,6 +120,7 @@
     <string name="showAccountPasswordButton">Mostra password account</string>
     <string name="startButton">Inizia</string>
     <string name="subjectPlaceholder">Oggetto</string>
+    <string name="submitMyTicketButton">Invia il mio biglietto</string>
     <string name="submitTicketDescription">Per aiutarci a supportarti efficacemente, fornisci il maggior numero possibile di dettagli riguardo al tuo problema.</string>
     <string name="submitTicketTitle">Invia un ticket</string>
     <string name="supportResponseDelay">Risponderemo entro le prossime 24 ore lavorative.</string>
@@ -126,6 +130,7 @@
     <string name="themeTitle">Tema</string>
     <string name="ticketSentSuccessDescription">Stiamo facendo del nostro meglio per garantire che un operatore ti risponda il prima possibile.</string>
     <string name="ticketSentSuccessTitle">Il tuo ticket è stato inviato ai nostri team!</string>
+    <string name="timeSupportAvailability">%1$s - %2$s</string>
     <string name="understandConfirmButton">Capito</string>
     <string name="unlockWithBiometrics">Sblocco con la biometria</string>
     <string name="unlockingWithFaceId">Sblocca con Face ID</string>
