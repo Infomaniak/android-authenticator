@@ -115,25 +115,6 @@ fun OnboardingStartScreen(
     )
 }
 
-private fun openLoginWebView(
-    onboardingStartViewModel: OnboardingStartViewModel,
-    loginFlowController: LoginFlowController
-) {
-    trackAccountEvent(MatomoName.OpenLoginWebview)
-    onboardingStartViewModel.startLoadingLoginButtons()
-    loginFlowController.login()
-}
-
-private fun openAccountCreation(
-    onboardingStartViewModel: OnboardingStartViewModel,
-    loginFlowController: LoginFlowController
-) {
-    val host = ApiEnvironment.current.host
-    trackAccountEvent(MatomoName.OpenCreationWebview)
-    onboardingStartViewModel.startLoadingLoginButtons()
-    loginFlowController.createAccount(createAccountUrl(host), createAccountSuccessUrl(host), "")
-}
-
 @Composable
 private fun OnboardingStartScreen(
     accountsCheckingState: () -> AccountsCheckingState,
@@ -183,6 +164,25 @@ private fun OnboardingStartScreen(
             )
         }
     )
+}
+
+private fun openLoginWebView(
+    onboardingStartViewModel: OnboardingStartViewModel,
+    loginFlowController: LoginFlowController
+) {
+    trackAccountEvent(MatomoName.OpenLoginWebview)
+    onboardingStartViewModel.startLoadingLoginButtons()
+    loginFlowController.login()
+}
+
+private fun openAccountCreation(
+    onboardingStartViewModel: OnboardingStartViewModel,
+    loginFlowController: LoginFlowController
+) {
+    val host = ApiEnvironment.current.host
+    trackAccountEvent(MatomoName.OpenCreationWebview)
+    onboardingStartViewModel.startLoadingLoginButtons()
+    loginFlowController.createAccount(createAccountUrl(host), createAccountSuccessUrl(host), "")
 }
 
 @PreviewSmallWindow
