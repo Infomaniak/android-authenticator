@@ -110,9 +110,13 @@ internal class AuthenticatorManager(
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
             webAuthnRepository.deletePasskey(token, passkeyId)
-            keyPairManager.deleteKey(passkeyId)
+            keyPairManager.deleteKeysWith("-$passkeyId-")
         }
 
         accountsRepository.deleteAccount(userId)
+    }
+
+    suspend fun clearOldKeysWith(name: String) {
+        keyPairManager.deleteKeysWith(name)
     }
 }

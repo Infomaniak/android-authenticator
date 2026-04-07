@@ -147,24 +147,28 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for userId $userId"))
     }
 
-    actual override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> = memScoped {
-        //TODO[ik-auth]: Test this code somehow.
+    actual override suspend fun deleteKeysWith(name: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> = memScoped {
         val (resultsArray, count) = getAllPrivateKeysQuery()
 
         if (resultsArray == null || count == 0) {
             return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
         }
 
+        var hasDeleteAKey = false
         for (i in 0 until count) {
             val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
 
-            if (tag?.contains(keyId) == true) {
+            if (tag?.contains(name) == true) {
                 deleteKeyByTag(tag)
-                return@memScoped Xor.First(Unit)
+                hasDeleteAKey = true
             }
         }
 
-        Xor.Second(Failure.KeyManagement.KeyNotFound("No key containing $keyId"))
+        if (hasDeleteAKey) {
+            Xor.First(Unit)
+        } else {
+            Xor.Second(Failure.KeyManagement.KeyNotFound("No key containing $name"))
+        }
     }
 
     @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
