@@ -20,6 +20,7 @@ package com.infomaniak.auth.lib.models
 object UrlConstants {
     fun createAccountUrl(host: String) = "https://welcome.$host/signup"
     fun createAccountSuccessUrl(host: String) = "manager.$host"
+    fun createAccountCancelUrl(host: String) = "welcome.$host"
     fun managerUrl(host: String, path: String) = "https://manager.$host/v3/$path"
     fun autologUrl(host: String, url: String) = "https://manager.$host/v3/$AUTOLOG_URL/?url=$url"
 
