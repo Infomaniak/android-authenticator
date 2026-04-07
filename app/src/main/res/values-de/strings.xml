@@ -38,10 +38,8 @@
     <string name="accountsTitle">Konten</string>
     <string name="actionRequiredDescription">Aktion erforderlich, um eines Ihrer Konten zu sichern.</string>
     <string name="activityHistoryButton">Aktivitätsverlauf</string>
-    <string name="addAccountButton">Ein Konto hinzufügen</string>
     <string name="addAccountContentDescription">Hinzufügen eines Kontos</string>
     <string name="appAccessIsSecure">Der Zugriff auf Authenticator ist sicher</string>
-    <string name="appSecurityDescription">Schützen Sie den Zugriff auf Ihre App, indem Sie Ihre Telefonsperre aktivieren.</string>
     <string name="authorizationCodeTitle">Ihr Autorisierungscode</string>
     <string name="autoCloseTitle">Diese Information schliesst sich automatisch nach 15 Sekunden.</string>
     <string name="avatarContentDescription">Konto-Avatar</string>
@@ -50,7 +48,6 @@
     <string name="changePasswordButton">Passwort ändern</string>
     <string name="checkMyMethodsButton">Meine Methoden prüfen</string>
     <string name="closeButton">Schliessen</string>
-    <string name="closedSupportStatus">Geschlossen</string>
     <string name="confirmActionCompleteButton">Ich habe alles erledigt</string>
     <string name="confirmButton">Bestätigen</string>
     <string name="confirmLoginNotificationTitle">Anmeldung bestätigen</string>
@@ -59,7 +56,6 @@
     <string name="continueButton">Weiter</string>
     <string name="copyPassword">Kennwort kopieren</string>
     <string name="dataManagementTitle">Datenverwaltung</string>
-    <string name="daysSupportAvailability">%1$d T. / %2$d</string>
     <string name="deletePreventionDescription">Das Löschen der App kann die Sicherheit Ihres Kontos gefährden.</string>
     <string name="deletePreventionTitle">Brauchen Sie Hilfe?</string>
     <string name="denyButton">Ablehnen</string>
@@ -96,7 +92,6 @@
     <string name="noInternetTitle">Keine Internetverbindung</string>
     <string name="notMeButton">Das war nicht ich</string>
     <string name="notificationsDescription">Aktivieren Sie Benachrichtigungen, um Sicherheitsinformationen zu Ihren Infomaniak-Konten zu erhalten.</string>
-    <string name="notificationsTitle">Benachrichtigungen</string>
     <string name="onBoardingFaceIdDescription">Durch die Aktivierung von Face ID wird der Zugriff auf die App gesichert.</string>
     <string name="onBoardingFaceIdTitle">Möchten Sie Face ID aktivieren?</string>
     <string name="onBoardingLoginDescription">Melden Sie sich an, um Ihre Verbindungen sicher zu genehmigen und Ihren Zugriff zu schützen.</string>
@@ -120,7 +115,6 @@
     <string name="showAccountPasswordButton">Kontopasswort anzeigen</string>
     <string name="startButton">Starten</string>
     <string name="subjectPlaceholder">Betreff</string>
-    <string name="submitMyTicketButton">Mein Ticket einreichen</string>
     <string name="submitTicketDescription">Um Ihnen effektiv helfen zu können, geben Sie bitte so viele Details wie möglich zu Ihrem Problem an.</string>
     <string name="submitTicketTitle">Ein Ticket einreichen</string>
     <string name="supportResponseDelay">Wir antworten innerhalb der nächsten 24 Geschäftstage.</string>
@@ -130,7 +124,6 @@
     <string name="themeTitle">Thema</string>
     <string name="ticketSentSuccessDescription">Wir tun unser Bestes, um sicherzustellen, dass ein Agent so schnell wie möglich auf Sie antwortet.</string>
     <string name="ticketSentSuccessTitle">Ihr Ticket wurde an unsere Teams gesendet!</string>
-    <string name="timeSupportAvailability">%1$s bis %2$s</string>
     <string name="understandConfirmButton">Ich verstehe</string>
     <string name="unlockWithBiometrics">Entsperren mit Biometrie</string>
     <string name="unlockingWithFaceId">Mit Face ID entsperren</string>

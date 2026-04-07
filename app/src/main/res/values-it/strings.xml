@@ -38,10 +38,8 @@
     <string name="accountsTitle">Account</string>
     <string name="actionRequiredDescription">Azioni richieste per proteggere uno dei tuoi account.</string>
     <string name="activityHistoryButton">Cronologia attività</string>
-    <string name="addAccountButton">Aggiungere un account</string>
     <string name="addAccountContentDescription">Aggiungere un account</string>
     <string name="appAccessIsSecure">L’accesso ad Authenticator è sicuro</string>
-    <string name="appSecurityDescription">Proteggete l’accesso alla vostra applicazione attivando il blocco del telefono.</string>
     <string name="authorizationCodeTitle">Il tuo codice di autorizzazione</string>
     <string name="autoCloseTitle">Queste informazioni si chiuderanno automaticamente in 15 secondi.</string>
     <string name="avatarContentDescription">Avatar dell’account</string>
@@ -50,7 +48,6 @@
     <string name="changePasswordButton">Cambia password</string>
     <string name="checkMyMethodsButton">Controlla i miei metodi</string>
     <string name="closeButton">Chiudi</string>
-    <string name="closedSupportStatus">Chiuso</string>
     <string name="confirmActionCompleteButton">Ho fatto quanto necessario</string>
     <string name="confirmButton">Conferma</string>
     <string name="confirmLoginNotificationTitle">Conferma accesso</string>
@@ -59,7 +56,6 @@
     <string name="continueButton">Continua</string>
     <string name="copyPassword">Copia la password</string>
     <string name="dataManagementTitle">Gestione dati</string>
-    <string name="daysSupportAvailability">%1$d g. / %2$d</string>
     <string name="deletePreventionDescription">Eliminare l’app può compromettere la sicurezza del tuo account.</string>
     <string name="deletePreventionTitle">Hai bisogno di aiuto?</string>
     <string name="denyButton">Nega</string>
@@ -96,7 +92,6 @@
     <string name="noInternetTitle">Nessuna connessione Internet</string>
     <string name="notMeButton">Non sono stato io</string>
     <string name="notificationsDescription">Attiva le notifiche per ricevere informazioni sulla sicurezza dei tuoi account Infomaniak.</string>
-    <string name="notificationsTitle">Notifiche</string>
     <string name="onBoardingFaceIdDescription">L’attivazione di Face ID protegge l’accesso all’app.</string>
     <string name="onBoardingFaceIdTitle">Vuoi attivare Face ID?</string>
     <string name="onBoardingLoginDescription">Accedi per approvare in sicurezza le tue connessioni e proteggere l’accesso.</string>
@@ -120,7 +115,6 @@
     <string name="showAccountPasswordButton">Mostra password account</string>
     <string name="startButton">Inizia</string>
     <string name="subjectPlaceholder">Oggetto</string>
-    <string name="submitMyTicketButton">Invia il mio biglietto</string>
     <string name="submitTicketDescription">Per aiutarci a supportarti efficacemente, fornisci il maggior numero possibile di dettagli riguardo al tuo problema.</string>
     <string name="submitTicketTitle">Invia un ticket</string>
     <string name="supportResponseDelay">Risponderemo entro le prossime 24 ore lavorative.</string>
@@ -130,7 +124,6 @@
     <string name="themeTitle">Tema</string>
     <string name="ticketSentSuccessDescription">Stiamo facendo del nostro meglio per garantire che un operatore ti risponda il prima possibile.</string>
     <string name="ticketSentSuccessTitle">Il tuo ticket è stato inviato ai nostri team!</string>
-    <string name="timeSupportAvailability">%1$s - %2$s</string>
     <string name="understandConfirmButton">Capito</string>
     <string name="unlockWithBiometrics">Sblocco con la biometria</string>
     <string name="unlockingWithFaceId">Sblocca con Face ID</string>

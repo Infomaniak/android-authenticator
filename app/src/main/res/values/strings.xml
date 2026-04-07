@@ -38,10 +38,8 @@
     <string name="accountsTitle">Accounts</string>
     <string name="actionRequiredDescription">Action required to secure one of your accounts.</string>
     <string name="activityHistoryButton">Activity history</string>
-    <string name="addAccountButton">Add an account</string>
     <string name="addAccountContentDescription">Add an account</string>
     <string name="appAccessIsSecure">Access to Authenticator is secure</string>
-    <string name="appSecurityDescription">Protect access to your app by enabling your phone lock.</string>
     <string name="authorizationCodeTitle">Your authorization code</string>
     <string name="autoCloseTitle">This information closes automatically in 15 seconds.</string>
     <string name="avatarContentDescription">Account avatar</string>
@@ -50,7 +48,6 @@
     <string name="changePasswordButton">Change password</string>
     <string name="checkMyMethodsButton">Check my methods</string>
     <string name="closeButton">Close</string>
-    <string name="closedSupportStatus">Closed</string>
     <string name="confirmActionCompleteButton">I’ve done what’s needed</string>
     <string name="confirmButton">Confirm</string>
     <string name="confirmLoginNotificationTitle">Confirm login</string>
@@ -59,7 +56,6 @@
     <string name="continueButton">Continue</string>
     <string name="copyPassword">Copy password</string>
     <string name="dataManagementTitle">Data management</string>
-    <string name="daysSupportAvailability">%1$d d. / %2$d</string>
     <string name="deletePreventionDescription">Deleting the app may compromise the security of your account.</string>
     <string name="deletePreventionTitle">Need help?</string>
     <string name="denyButton">Deny</string>
@@ -96,7 +92,6 @@
     <string name="noInternetTitle">No internet connection</string>
     <string name="notMeButton">It wasn’t me</string>
     <string name="notificationsDescription">Enable notifications to receive security information about your Infomaniak accounts.</string>
-    <string name="notificationsTitle">Notifications</string>
     <string name="onBoardingFaceIdDescription">Enabling Face ID secures access to the app.</string>
     <string name="onBoardingFaceIdTitle">Do you want to enable Face ID?</string>
     <string name="onBoardingLoginDescription">Log in to securely approve your connections and protect your access.</string>
@@ -120,7 +115,6 @@
     <string name="showAccountPasswordButton">Show account password</string>
     <string name="startButton">Start</string>
     <string name="subjectPlaceholder">Subject</string>
-    <string name="submitMyTicketButton">Submit my ticket</string>
     <string name="submitTicketDescription">To help us assist you effectively, please provide as many details as possible regarding your issue.</string>
     <string name="submitTicketTitle">Submit a ticket</string>
     <string name="supportResponseDelay">We will respond within the next 24 business hours.</string>
@@ -130,7 +124,6 @@
     <string name="themeTitle">Theme</string>
     <string name="ticketSentSuccessDescription">We are doing our best to ensure an agent responds to you as soon as possible.</string>
     <string name="ticketSentSuccessTitle">Your ticket has been sent to our teams!</string>
-    <string name="timeSupportAvailability">%1$s to %2$s</string>
     <string name="understandConfirmButton">I understand</string>
     <string name="unlockWithBiometrics">Unlock with Biometrics</string>
     <string name="unlockingWithFaceId">Unlock with Face ID</string>
