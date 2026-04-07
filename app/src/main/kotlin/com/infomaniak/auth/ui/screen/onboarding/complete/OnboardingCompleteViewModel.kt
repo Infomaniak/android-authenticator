@@ -28,7 +28,7 @@ class OnboardingCompleteViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
     fun onContinue() {
-        val appStatus = authenticatorFacade.appStatus.replayCache.first() as? AppStatus.EverythingReady
-        appStatus?.proceed()
+        val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.EverythingReady>() ?: return
+        appStatus.proceed()
     }
 }

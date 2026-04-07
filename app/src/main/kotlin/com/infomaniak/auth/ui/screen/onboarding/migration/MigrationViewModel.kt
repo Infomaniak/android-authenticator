@@ -18,7 +18,7 @@
 package com.infomaniak.auth.ui.screen.onboarding.migration
 
 import androidx.lifecycle.ViewModel
-import com.infomaniak.auth.lib.AppStatus
+import com.infomaniak.auth.lib.AppStatus.LoginRequired
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class MigrationViewModel @Inject constructor(
     val accounts = authenticatorFacade.accounts
 
     fun onContinue() {
-        val appStatus = authenticatorFacade.appStatus.replayCache.first() as? AppStatus.LoginRequired.MigratingFromLegacyKAuth
-        appStatus?.proceed()
+        val appStatus = authenticatorFacade.appStatusOrNull<LoginRequired.MigratingFromLegacyKAuth>() ?: return
+        appStatus.proceed()
     }
 }

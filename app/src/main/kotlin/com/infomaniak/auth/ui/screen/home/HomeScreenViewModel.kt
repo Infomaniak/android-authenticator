@@ -73,8 +73,8 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onAddAccountClicked() {
-        val appStatus = authenticatorFacade.appStatus.replayCache.first() as? AppStatus.SetupComplete
-        appStatus?.addAnAccount()
+        val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.SetupComplete>() ?: return
+        appStatus.addAnAccount()
     }
 }
 

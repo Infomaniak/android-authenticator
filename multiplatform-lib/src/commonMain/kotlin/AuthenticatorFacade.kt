@@ -41,6 +41,8 @@ abstract class AuthenticatorFacade internal constructor() {
 
     abstract val appStatus: SharedFlow<AppStatus>
 
+    inline fun <reified T : AppStatus> appStatusOrNull(): T? = appStatus.replayCache.first() as? T
+
     /**
      * Add successfully connected accounts.
      *

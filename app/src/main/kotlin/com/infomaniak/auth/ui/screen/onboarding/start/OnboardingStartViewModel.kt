@@ -119,5 +119,5 @@ class OnboardingStartViewModel @Inject constructor(
         _isButtonLoading.value = false
     }
 
-    val cancelOnboarding: (() -> Unit)? get() = (authenticatorFacade.appStatus.replayCache.first() as? AppStatus.AddingAnAccount)?.cancel
+    val cancelOnboarding: (() -> Unit)? get() = authenticatorFacade.appStatusOrNull<AppStatus.AddingAnAccount>()?.cancel
 }
