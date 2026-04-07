@@ -33,7 +33,7 @@ internal interface KeyPairManager {
 
     suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound>
 
-    suspend fun deleteKeysWith(name: String): Xor<Unit, Failure.KeyManagement.KeyNotFound>
+    suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound>
 
     companion object {
         val privateKeyPurposes = KeyPurposes.privateKeyDefaults

@@ -69,11 +69,11 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         return Xor.First(keyId)
     }
 
-    actual override suspend fun deleteKeysWith(name: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
+    actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
         val keys = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.filter {
-            it.name.contains(name)
+            predicate(it.name)
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
         keys.forEach { it.delete() }

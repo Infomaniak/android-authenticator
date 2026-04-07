@@ -147,29 +147,30 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for userId $userId"))
     }
 
-    actual override suspend fun deleteKeysWith(name: String): Xor<Unit, Failure.KeyManagement.KeyNotFound> = memScoped {
-        val (resultsArray, count) = getAllPrivateKeysQuery()
+    actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> =
+        memScoped {
+            val (resultsArray, count) = getAllPrivateKeysQuery()
 
-        if (resultsArray == null || count == 0) {
-            return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
-        }
+            if (resultsArray == null || count == 0) {
+                return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
+            }
 
-        var hasDeletedAtLeastOneKey = false
-        for (i in 0 until count) {
-            val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
+            var hasDeletedAtLeastOneKey = false
+            for (i in 0 until count) {
+                val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong())) ?: continue
 
-            if (tag?.contains(name) == true) {
-                deleteKeyByTag(tag)
-                hasDeletedAtLeastOneKey = true
+                if (predicate(tag)) {
+                    deleteKeyByTag(tag)
+                    hasDeletedAtLeastOneKey = true
+                }
+            }
+
+            if (hasDeletedAtLeastOneKey) {
+                Xor.First(Unit)
+            } else {
+                Xor.Second(Failure.KeyManagement.KeyNotFound("No key containing $predicate"))
             }
         }
-
-        if (hasDeletedAtLeastOneKey) {
-            Xor.First(Unit)
-        } else {
-            Xor.Second(Failure.KeyManagement.KeyNotFound("No key containing $name"))
-        }
-    }
 
     @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
     private fun MemScope.getAllPrivateKeysQuery(): Pair<CFArrayRef?, Int> {

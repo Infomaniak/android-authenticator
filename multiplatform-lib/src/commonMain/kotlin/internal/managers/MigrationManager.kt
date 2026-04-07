@@ -96,7 +96,7 @@ internal class MigrationManager(
             }
         }
 
-        authenticatorManager.deleteKeysWith("$userId-")
+        authenticatorManager.deleteKeysFor(userId)
         authenticatorManager.registerPasskey(
             token = tokenToUse,
             userId = userId
