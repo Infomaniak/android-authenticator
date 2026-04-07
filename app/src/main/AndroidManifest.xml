@@ -57,6 +57,11 @@
             android:theme="@style/LoginWebViewTheme" />
 
         <activity
+            android:name="com.infomaniak.lib.login.WebViewCreateAccountActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/LoginWebViewTheme" />
+
+        <activity
             android:name="com.infomaniak.auth.ui.applock.AppLockActivity"
             android:exported="false"
             android:launchMode="singleTop" />

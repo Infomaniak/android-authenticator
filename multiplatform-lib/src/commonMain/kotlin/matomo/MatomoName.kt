@@ -24,6 +24,7 @@ enum class MatomoName(val value: String) {
     ToggleBiometry("toggleBiometry"),
     LoggedIn("loggedIn"),
     OpenLoginWebview("openLoginWebview"),
+    OpenCreationWebview("openCreationWebview"),
     //endregion
 
     //region iOS

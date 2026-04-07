@@ -38,10 +38,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
+import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.UserLoginResult
+import com.infomaniak.core.auth.utils.LoginFlowController
 import com.infomaniak.core.auth.utils.LoginUtils
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingState
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
@@ -50,6 +53,7 @@ import com.infomaniak.core.crossapplogin.front.components.CrossLoginBottomConten
 import com.infomaniak.core.crossapplogin.front.components.NoCrossAppLoginAccountsContent
 import com.infomaniak.core.crossapplogin.front.data.CrossLoginDefaults
 import com.infomaniak.core.crossapplogin.front.previews.AccountsPreviewParameter
+import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import com.infomaniak.core.ui.compose.basics.ButtonStyle
@@ -59,7 +63,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnboardingStartScreen(
     snackbarHostState: SnackbarHostState,
-    onCreateAccount: () -> Unit,
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
     val crossAppLoginFacade = onboardingStartViewModel.crossAppLoginFacade
@@ -99,20 +102,16 @@ fun OnboardingStartScreen(
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
         isLoginButtonLoading = { isButtonLoading },
-        // TODO: Remove SignUpButton
         isSignUpButtonLoading = { isSignUpButtonLoading },
         onLoginRequest = { accounts ->
             if (accounts.isEmpty()) {
-                trackAccountEvent(MatomoName.OpenLoginWebview)
-                onboardingStartViewModel.startLoadingLoginButtons()
-                loginFlowController.login()
+                openLoginWebView(onboardingStartViewModel, loginFlowController)
             } else {
                 scope.launch { onboardingStartViewModel.connectSelectedAccounts(accounts, snackbarHostState) }
             }
         },
         onSaveSkippedAccounts = { crossAppLoginFacade.skippedAccountIds.value = it },
-        // TODO[ik-auth]: Remove create account
-        onCreateAccount = onCreateAccount,
+        onCreateAccount = { openAccountCreation(onboardingStartViewModel, loginFlowController) },
         onCancel = onboardingStartViewModel.cancelOnboarding
     )
 }
@@ -165,6 +164,29 @@ private fun OnboardingStartScreen(
                 )
             )
         }
+    )
+}
+
+private fun openLoginWebView(
+    onboardingStartViewModel: OnboardingStartViewModel,
+    loginFlowController: LoginFlowController
+) {
+    trackAccountEvent(MatomoName.OpenLoginWebview)
+    onboardingStartViewModel.startLoadingLoginButtons()
+    loginFlowController.login()
+}
+
+private fun openAccountCreation(
+    onboardingStartViewModel: OnboardingStartViewModel,
+    loginFlowController: LoginFlowController
+) {
+    val host = ApiEnvironment.current.host
+    trackAccountEvent(MatomoName.OpenCreationWebview)
+    onboardingStartViewModel.startLoadingLoginButtons()
+    loginFlowController.createAccount(
+        createAccountUrl = createAccountUrl(host),
+        successHost = createAccountSuccessUrl(host),
+        cancelHost = ""
     )
 }
 

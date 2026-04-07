@@ -1,5 +1,6 @@
 import co.touchlab.skie.configuration.DefaultArgumentInterop
 import com.android.build.api.dsl.androidLibrary
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -14,6 +15,7 @@ plugins {
 
 val androidCompileSdk: Int by rootProject.extra
 val androidMinSdk: Int by rootProject.extra
+val javaVersion: JavaVersion by rootProject.extra
 
 kotlin {
     @Suppress("UnstableApiUsage")
@@ -26,6 +28,9 @@ kotlin {
             sourceSetTreeName = "test"
         }
         withHostTest {}
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
+        }
     }
 
     val xcframeworkName = "CoreAuthenticator"
