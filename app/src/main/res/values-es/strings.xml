@@ -22,7 +22,7 @@
     <string name="accountLossRiskLastDoubleAuthDescription">Si Authenticator es su último método de verificación en dos pasos, podría quedar bloqueado la próxima vez que inicie sesión.</string>
     <string name="accountLossRiskTitle">Podría perder acceso a esta cuenta</string>
     <string name="accountNotConnectedWarningTitle">Inicie sesión de nuevo para proteger su cuenta.</string>
-    <string name="accountPartiallyProtectedDescription">Actualiza tus configuraciones de seguridad para proteger tu cuenta</string>
+    <string name="accountPartiallyProtectedDescription">Actualiza tus configuraciones de seguridad para proteger tu cuenta.</string>
     <string name="accountPartiallyProtectedTitle">Cuenta parcialmente protegida</string>
     <string name="accountPasswordTitle">Contraseña de la cuenta</string>
     <string name="accountProtected">Cuenta protegida</string>
@@ -38,8 +38,10 @@
     <string name="accountsTitle">Cuentas</string>
     <string name="actionRequiredDescription">Se requiere acción para proteger una de tus cuentas.</string>
     <string name="activityHistoryButton">Historial de actividad</string>
+    <string name="addAccountButton">Añadir una cuenta</string>
     <string name="addAccountContentDescription">Añadir una cuenta</string>
     <string name="appAccessIsSecure">El acceso a Authenticator está seguro</string>
+    <string name="appSecurityDescription">Protege el acceso a tu aplicación activando el bloqueo del teléfono.</string>
     <string name="authorizationCodeTitle">Tu código de autorización</string>
     <string name="autoCloseTitle">Esta información se cerrará automáticamente en 15 segundos.</string>
     <string name="avatarContentDescription">Avatar de la cuenta</string>
@@ -57,6 +59,7 @@
     <string name="continueButton">Continuar</string>
     <string name="copyPassword">Copiar contraseña</string>
     <string name="dataManagementTitle">Gestión de datos</string>
+    <string name="daysSupportAvailability">%1$d d. / %2$d</string>
     <string name="deletePreventionDescription">Eliminar la aplicación puede comprometer la seguridad de su cuenta.</string>
     <string name="deletePreventionTitle">¿Necesita ayuda?</string>
     <string name="denyButton">Denegar</string>
@@ -72,7 +75,6 @@
     <string name="doneButton">Listo</string>
     <string name="emailPlaceholder">Correo electrónico</string>
     <string name="enableButton">Habilitar</string>
-    <string name="enableNotifications">Activar notificaciones</string>
     <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte. (código de error: %d)</string>
     <string name="errorOccuredDescription">No se pudo completar la operación. Por favor, inténtelo de nuevo.</string>
     <string name="errorOccuredTitle">Se produjo un error</string>
@@ -89,6 +91,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Esta solicitud ya ha sido procesada</string>
     <string name="loginRequestExpiredDescription">El tiempo de verificación ha expirado. Por favor, inténtelo de nuevo.</string>
     <string name="loginRequestExpiredTitle">Esta solicitud de inicio de sesión ha expirado</string>
+    <string name="manageNotifications">Gestionar notificaciones</string>
     <string name="noInternetDescription">No se pudo completar la operación. Verifique su configuración e inténtelo de nuevo.</string>
     <string name="noInternetTitle">Sin conexión a internet</string>
     <string name="notMeButton">No fui yo</string>
@@ -117,6 +120,7 @@
     <string name="showAccountPasswordButton">Mostrar contraseña de la cuenta</string>
     <string name="startButton">Comenzar</string>
     <string name="subjectPlaceholder">Asunto</string>
+    <string name="submitMyTicketButton">Enviar mi billete</string>
     <string name="submitTicketDescription">Para ayudarnos a asistirle eficazmente, proporcione tantos detalles como sea posible sobre su problema.</string>
     <string name="submitTicketTitle">Enviar un ticket</string>
     <string name="supportResponseDelay">Responderemos en las próximas 24 horas hábiles.</string>
@@ -126,6 +130,7 @@
     <string name="themeTitle">Tema</string>
     <string name="ticketSentSuccessDescription">Estamos haciendo todo lo posible para que un agente le responda lo antes posible.</string>
     <string name="ticketSentSuccessTitle">¡Su ticket ha sido enviado a nuestros equipos!</string>
+    <string name="timeSupportAvailability">%1$s a %2$s</string>
     <string name="understandConfirmButton">Entiendo</string>
     <string name="unlockWithBiometrics">Desbloqueo biométrico</string>
     <string name="unlockingWithFaceId">Desbloquear con Face ID</string>
