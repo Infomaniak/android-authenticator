@@ -28,5 +28,5 @@ internal expect class KeyPairManagerImpl() : KeyPairManager {
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 
     override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound>
-    override suspend fun deleteKey(keyId: String): Xor<Unit, Failure.KeyManagement.KeyNotFound>
+    override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound>
 }
