@@ -76,7 +76,7 @@ internal class AuthenticatorManager(
         val authenticatorData = base64NoPadding.encode(rawAuthenticatorData)
 
         val clientData = cryptoObjectsBuilder.buildClientData(authenticationOptions.challenge)
-        val clientDataJsonBytes = Json.Default.encodeToString(clientData).encodeToByteArray()
+        val clientDataJsonBytes = Json.encodeToString(clientData).encodeToByteArray()
         val clientDataJsonHash = clientDataJsonBytes.toByteString().sha256().toByteArray()
 
         val privateKey = keyPairManager.retrievePrivateKey(userId, keyId).firstOrNull()
@@ -110,9 +110,13 @@ internal class AuthenticatorManager(
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
             webAuthnRepository.deletePasskey(token, passkeyId)
-            keyPairManager.deleteKey(passkeyId)
+            val _ = keyPairManager.deleteKeysMatching { "-$passkeyId-" in it }
         }
 
         accountsRepository.deleteAccount(userId)
+    }
+
+    suspend fun deleteKeysFor(userId: Long) {
+        val _ = keyPairManager.deleteKeysMatching { it.startsWith("$userId-") }
     }
 }
