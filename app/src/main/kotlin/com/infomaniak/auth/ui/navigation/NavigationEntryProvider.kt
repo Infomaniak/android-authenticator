@@ -90,10 +90,7 @@ fun baseEntryProvider(
         MigrationScreen()
     }
     entry<NavDestination.Onboarding.Start> {
-        OnboardingStartScreen(
-            snackbarHostState = snackbarHostState,
-            onCreateAccount = {}
-        )
+        OnboardingStartScreen(snackbarHostState = snackbarHostState,)
     }
     entry<NavDestination.SecuringAccount> {
         SecuringAccountScreen()
