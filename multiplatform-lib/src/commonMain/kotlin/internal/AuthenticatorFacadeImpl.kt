@@ -36,6 +36,7 @@ import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
+import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
@@ -69,6 +70,7 @@ internal class AuthenticatorFacadeImpl(
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
     private val tokenBridge: TokenBridge,
+    private val crashReport: CrashReportInterface,
     private val coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
 
@@ -198,7 +200,7 @@ internal class AuthenticatorFacadeImpl(
             true
         },
         {
-            atLeastOneConnectedAccount.first()
+            atLeastOneConnectedAccount.first { it }
             false
         },
     ) || proceedMigration.isCompleted // In case it finished after a connected account was added.
@@ -308,7 +310,7 @@ internal class AuthenticatorFacadeImpl(
             runCatching {
                 return block()
             }.cancellable().onFailure {
-                //TODO[ik-Auth]: Report the issue
+                crashReport.capture("Operation failed", it)
                 if (it is NullPointerException || it is IllegalStateException) { // Local errors, no recourse.
                     emit(NotConnectedAction.Issue.NonRetriable("Ooops…"))
                     awaitCancellation()

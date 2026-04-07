@@ -99,6 +99,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 authenticatorManager = authenticatorManager,
                 migrationManager = migrationManager,
                 tokenBridge = tokenBridge,
+                crashReport = crashReport,
                 coroutineScope = scope,
             )
         }

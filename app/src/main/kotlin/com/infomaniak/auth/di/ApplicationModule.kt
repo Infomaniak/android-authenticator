@@ -37,6 +37,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.sentry.Breadcrumb
+import io.sentry.Sentry
+import io.sentry.SentryEvent
+import io.sentry.SentryLevel
+import io.sentry.protocol.Message
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -113,7 +118,13 @@ object ApplicationModule {
             type: BreadcrumbType,
             data: Map<String, String>?
         ) {
-            //TODO[Authenticator] forward to sentry
+            val breadcrumb = Breadcrumb()
+            breadcrumb.message = message
+            breadcrumb.category = category
+            breadcrumb.level = level.sentryLevel
+            breadcrumb.type = type.value
+            data?.forEach { (key, value) -> breadcrumb.setData(key, value) }
+            Sentry.addBreadcrumb(breadcrumb)
         }
 
         override fun capture(
@@ -121,7 +132,11 @@ object ApplicationModule {
             error: Throwable,
             data: Map<String, String>?
         ) {
-            //TODO[Authenticator] forward to sentry
+            val sentryEvent = SentryEvent(error).apply {
+                data?.forEach { (key, value) -> setExtra(key, value) }
+                this.message = Message().apply { this.message = message }
+            }
+            Sentry.captureEvent(sentryEvent)
         }
 
         override fun capture(
@@ -129,8 +144,19 @@ object ApplicationModule {
             data: Map<String, String>?,
             level: CrashReportLevel?
         ) {
-            //TODO[Authenticator] forward to sentry
+            Sentry.captureMessage(message, level?.sentryLevel ?: SentryLevel.INFO) { scope ->
+                data?.forEach { (key, value) -> scope.setExtra(key, value) }
+            }
         }
+
+        private val CrashReportLevel.sentryLevel: SentryLevel
+            get() = when (this) {
+                CrashReportLevel.DEBUG -> SentryLevel.DEBUG
+                CrashReportLevel.INFO -> SentryLevel.INFO
+                CrashReportLevel.WARNING -> SentryLevel.WARNING
+                CrashReportLevel.ERROR -> SentryLevel.ERROR
+                CrashReportLevel.FATAL -> SentryLevel.FATAL
+            }
     }
 
     private fun createTokenBridge(accountUtils: AccountUtils, crossAppLoginFacade: CrossAppLoginFacade) = object : TokenBridge {
