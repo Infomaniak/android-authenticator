@@ -76,7 +76,7 @@ private fun SettingsScreen(
     val firstSectionItems = buildList {
         add(
             OptionItemType.WithRightIcon(
-                stringResId = R.string.notificationsTitle,
+                stringResId = R.string.manageNotifications,
                 rightIconResId = R.drawable.square_arrow_up,
                 onClick = {
                     fragmentActivity?.let {
