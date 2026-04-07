@@ -116,7 +116,7 @@ internal class AuthenticatorManager(
         accountsRepository.deleteAccount(userId)
     }
 
-    suspend fun clearOldKeysWith(name: String) {
+    suspend fun deleteKeysWith(name: String) {
         keyPairManager.deleteKeysWith(name)
     }
 }
