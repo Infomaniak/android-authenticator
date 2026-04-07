@@ -183,7 +183,11 @@ private fun openAccountCreation(
     val host = ApiEnvironment.current.host
     trackAccountEvent(MatomoName.OpenCreationWebview)
     onboardingStartViewModel.startLoadingLoginButtons()
-    loginFlowController.createAccount(createAccountUrl(host), createAccountSuccessUrl(host), "")
+    loginFlowController.createAccount(
+        createAccountUrl = createAccountUrl(host),
+        successHost = createAccountSuccessUrl(host),
+        cancelHost = ""
+    )
 }
 
 @PreviewSmallWindow
