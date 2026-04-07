@@ -38,6 +38,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.models.UrlConstants.createAccountCancelUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
 import com.infomaniak.auth.ui.theme.AppDimens
@@ -186,7 +187,7 @@ private fun openAccountCreation(
     loginFlowController.createAccount(
         createAccountUrl = createAccountUrl(host),
         successHost = createAccountSuccessUrl(host),
-        cancelHost = ""
+        cancelHost = createAccountCancelUrl(host)
     )
 }
 
