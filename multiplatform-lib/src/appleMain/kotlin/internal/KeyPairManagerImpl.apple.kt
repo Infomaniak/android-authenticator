@@ -154,17 +154,17 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
             return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
         }
 
-        var hasDeleteAKey = false
+        var hasDeletedAtLeastOneKey = false
         for (i in 0 until count) {
             val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
 
             if (tag?.contains(name) == true) {
                 deleteKeyByTag(tag)
-                hasDeleteAKey = true
+                hasDeletedAtLeastOneKey = true
             }
         }
 
-        if (hasDeleteAKey) {
+        if (hasDeletedAtLeastOneKey) {
             Xor.First(Unit)
         } else {
             Xor.Second(Failure.KeyManagement.KeyNotFound("No key containing $name"))
