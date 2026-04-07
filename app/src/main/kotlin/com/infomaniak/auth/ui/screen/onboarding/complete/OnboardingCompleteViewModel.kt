@@ -15,22 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.onboarding.migration
+package com.infomaniak.auth.ui.screen.onboarding.complete
 
 import androidx.lifecycle.ViewModel
-import com.infomaniak.auth.lib.AppStatus.LoginRequired
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MigrationViewModel @Inject constructor(
+class OnboardingCompleteViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
-    val accounts = authenticatorFacade.accounts
-
     fun onContinue() {
-        val appStatus = authenticatorFacade.appStatusOrNull<LoginRequired.MigratingFromLegacyKAuth>() ?: return
+        val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.EverythingReady>() ?: return
         appStatus.proceed()
     }
 }

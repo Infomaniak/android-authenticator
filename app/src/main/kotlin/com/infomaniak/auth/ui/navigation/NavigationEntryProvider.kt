@@ -43,7 +43,7 @@ fun baseEntryProvider(
         HomeScreen(
             onAccountClicked = { account ->
                 backStack.add(NavDestination.AccountDetails(account.id))
-            }
+            },
         )
     }
     entry<NavDestination.Root.Settings> {
@@ -87,7 +87,7 @@ fun baseEntryProvider(
         )
     }
     entry<NavDestination.Onboarding.Migration> {
-        MigrationScreen(onContinue = it.onContinue)
+        MigrationScreen()
     }
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen(
@@ -99,11 +99,11 @@ fun baseEntryProvider(
         SecuringAccountScreen()
     }
     entry<NavDestination.Onboarding.Complete> {
-        OnboardingCompleteScreen(onContinue = it.onContinue)
+        OnboardingCompleteScreen()
     }
 }
 
-private fun NavBackStack<NavKey>.tryPopLast() {
+fun NavBackStack<NavKey>.tryPopLast() {
     if (lastIndex == 0) return
     removeAt(lastIndex)
 }

@@ -24,20 +24,15 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable
 sealed interface NavDestination : NavKey {
-
     sealed interface Onboarding : NavDestination {
         @Serializable
-        data class Migration(
-            val onContinue: () -> Unit
-        ) : Onboarding
+        data object Migration : Onboarding
 
         @Serializable
         data object Start : Onboarding
 
         @Serializable
-        data class Complete(
-            val onContinue: () -> Unit
-        ) : Onboarding
+        data object Complete : Onboarding
     }
 
     @Serializable
@@ -46,6 +41,7 @@ sealed interface NavDestination : NavKey {
     sealed interface Root : NavDestination {
         @Serializable
         data object Home : Root
+
         @Serializable
         data object Settings : Root
     }

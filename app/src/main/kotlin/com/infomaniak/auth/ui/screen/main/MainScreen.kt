@@ -54,9 +54,9 @@ import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.ui.components.AuthenticatorFAB
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
+import com.infomaniak.auth.ui.navigation.tryPopLast
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -91,11 +91,11 @@ private fun handleAppStatus(
     val currentDestination = backStack.lastOrNull()
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
-        is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration(appStatus.proceed)
+        is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
-        is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete(appStatus.proceed)
+        is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> NavDestination.Root.Home
-        is AppStatus.AddingAnAccount -> TODO("Jamy will do it later")
+        is AppStatus.AddingAnAccount -> NavDestination.Onboarding.Start
     }
 
     if (currentDestination != targetDestination) {
@@ -113,26 +113,21 @@ fun MainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     SinglePaneScaffold(
-        floatingActionButton = {
-            if (currentDestination == NavDestination.Root.Home) AuthenticatorFAB(onClick = {})
-        },
         bottomBar = {
             if (currentDestination is NavDestination.Root) AuthenticatorBottomBar(
                 backStack = backStack,
-                onMyAccountsClicked = {
-                    backStack.clear()
-                    backStack.add(NavDestination.Root.Home)
-                },
+                onMyAccountsClicked = { backStack.tryPopLast() },
                 onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { _ ->
+    ) { contentPadding ->
         val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
                 slideOutHorizontally(targetOffsetX = { -it })
         val exitAnimation = slideInHorizontally(initialOffsetX = { -it }) togetherWith
                 slideOutHorizontally(targetOffsetX = { it })
         NavDisplay(
+            modifier = Modifier.padding(contentPadding),
             backStack = backStack,
             entryDecorators = entryDecorators,
             entryProvider = baseEntryProvider(backStack, snackbarHostState),
@@ -159,13 +154,13 @@ private fun AuthenticatorBottomBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             NavigationBarItem(
-                selected = backStack.last() == NavDestination.Root.Home,
+                selected = backStack.last() is NavDestination.Root.Home,
                 onClick = onMyAccountsClicked,
                 icon = { Icon(painterResource(R.drawable.accounts), null) },
                 label = { Text(stringResource(R.string.accountsTitle)) },
             )
             NavigationBarItem(
-                selected = backStack.last() == NavDestination.Root.Settings,
+                selected = backStack.last() is NavDestination.Root.Settings,
                 onClick = onSettingsClicked,
                 icon = { Icon(painterResource(R.drawable.settings), null) },
                 label = { Text(stringResource(R.string.settingsTitle)) },

@@ -27,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
@@ -68,7 +67,7 @@ class MainActivity : FragmentActivity() {
         setContent {
             TwoFactorAuthApprovalAutoManagedBottomSheet(twoFactorAuthManager)
 
-            val appSettings by appSettingsRepository.getSettings().collectAsStateWithLifecycle(initialValue = null)
+            val appSettings by appSettingsRepository.getSettings().collectAsState(null)
             val appStatus by viewModel.appStatus.collectAsState(null)
 
             val isDarkTheme = when (appSettings?.theme) {

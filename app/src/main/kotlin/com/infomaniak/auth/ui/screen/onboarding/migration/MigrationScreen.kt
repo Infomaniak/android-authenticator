@@ -56,12 +56,11 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 @Composable
 fun MigrationScreen(
     viewModel: MigrationViewModel = hiltViewModel(),
-    onContinue: () -> Unit,
 ) {
     val accounts by viewModel.accounts.collectAsStateWithLifecycle(emptyList())
     MigrationScreen(
         accounts = { accounts },
-        onContinue = onContinue
+        onContinue = viewModel::onContinue
     )
 }
 

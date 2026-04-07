@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.utils.AccountUtils
@@ -117,4 +118,6 @@ class OnboardingStartViewModel @Inject constructor(
     fun stopLoadingLoginButtons() {
         _isButtonLoading.value = false
     }
+
+    val cancelOnboarding: (() -> Unit)? get() = authenticatorFacade.appStatusOrNull<AppStatus.AddingAnAccount>()?.cancel
 }

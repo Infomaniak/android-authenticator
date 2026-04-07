@@ -66,6 +66,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.ui.components.AuthenticatorFab
 import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.StatusCard
@@ -96,6 +97,7 @@ fun HomeScreen(
     HomeScreen(
         uiState = { uiState },
         onAccountClicked = onAccountClicked,
+        onAddAccountClicked = viewModel::onAddAccountClicked,
         onChallengesRefreshRequested = viewModel::refreshChallenges,
     )
 
@@ -108,6 +110,7 @@ fun HomeScreen(
 fun HomeScreen(
     uiState: () -> HomeScreenUiState,
     onAccountClicked: (Account) -> Unit,
+    onAddAccountClicked: () -> Unit,
     onChallengesRefreshRequested: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,6 +119,9 @@ fun HomeScreen(
         topBar = {
             InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
         },
+        floatingActionButton = {
+            AuthenticatorFab(onClick = onAddAccountClicked)
+        }
     ) { paddingValues ->
         when (val uiState = uiState()) {
             is HomeScreenUiState.Success -> {
@@ -285,6 +291,7 @@ private fun HomeScreenPreview() {
         HomeScreen(
             uiState = { HomeScreenUiState.Success(fakeAccountPairs) },
             onAccountClicked = {},
+            onAddAccountClicked = {},
             onChallengesRefreshRequested = {}
         )
     }
