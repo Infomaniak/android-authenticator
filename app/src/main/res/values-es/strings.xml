@@ -69,6 +69,7 @@
     <string name="disconnectButton">Cerrar sesión</string>
     <string name="disconnectSuccess">Cuenta desconectada</string>
     <string name="doneButton">Listo</string>
+    <string name="emailLabel">Email</string>
     <string name="emailPlaceholder">Correo electrónico</string>
     <string name="enableButton">Habilitar</string>
     <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte. (código de error: %d)</string>
@@ -106,6 +107,7 @@
     <string name="passwordChangedDescription">La contraseña de inicio de sesión de la cuenta Infomaniak %s ha sido actualizada.</string>
     <string name="passwordChangedNotification">Contraseña de inicio de sesión modificada</string>
     <string name="passwordChangedTitle">Contraseña de inicio de sesión modificada</string>
+    <string name="passwordLabel">Contraseña</string>
     <string name="refreshPendingLoginsButton">Actualizar inicios de sesión pendientes</string>
     <string name="removeAccountDescription">Ya no podrá verificar su inicio de sesión en esta cuenta con Authenticator.</string>
     <string name="removeAccountSuccess">Cuenta eliminada</string>

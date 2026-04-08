@@ -69,6 +69,7 @@
     <string name="disconnectButton">Log out</string>
     <string name="disconnectSuccess">Account disconnected</string>
     <string name="doneButton">Done</string>
+    <string name="emailLabel">Email</string>
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Enable</string>
     <string name="errorLoginFailed">Account login failed. Please try again or contact support. (error code: %d)</string>
@@ -106,6 +107,7 @@
     <string name="passwordChangedDescription">The login password for your Infomaniak account %s has been updated.</string>
     <string name="passwordChangedNotification">Login password changed</string>
     <string name="passwordChangedTitle">Login password changed</string>
+    <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Refresh pending logins</string>
     <string name="removeAccountDescription">You will no longer be able to verify your login to this account with Authenticator.</string>
     <string name="removeAccountSuccess">Account removed</string>

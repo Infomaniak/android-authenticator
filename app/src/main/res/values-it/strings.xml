@@ -69,6 +69,7 @@
     <string name="disconnectButton">Disconnettiti</string>
     <string name="disconnectSuccess">Account disconnesso</string>
     <string name="doneButton">Fine</string>
+    <string name="emailLabel">Email</string>
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Attiva</string>
     <string name="errorLoginFailed">Accesso all’account fallito. Riprova o contatta l’assistenza. (codice errore: %d)</string>
@@ -106,6 +107,7 @@
     <string name="passwordChangedDescription">La password di accesso dell’account Infomaniak %s è stata aggiornata.</string>
     <string name="passwordChangedNotification">Password di accesso modificata</string>
     <string name="passwordChangedTitle">Password di accesso modificata</string>
+    <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Aggiorna accessi in sospeso</string>
     <string name="removeAccountDescription">Non potrai più verificare l’accesso a questo account con Authenticator.</string>
     <string name="removeAccountSuccess">Account rimosso</string>
