@@ -19,7 +19,11 @@ package com.infomaniak.auth.lib.internal.utils
 
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 
-internal suspend fun <R> withTimeoutOrNullAndReport(
+/**
+ * Tries to execute [block], but if [waitForTimeout] finishes first, cancels [block], and reports the timeout
+ * over [crashReportInterface], using the message returned by [waitForTimeout].
+ */
+internal suspend fun <R> withTimeoutOrNull(
     waitForTimeout: suspend () -> String,
     crashReportInterface: CrashReportInterface,
     block: suspend () -> R

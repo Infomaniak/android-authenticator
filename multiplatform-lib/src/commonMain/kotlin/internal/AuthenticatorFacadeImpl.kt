@@ -36,7 +36,7 @@ import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
-import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNullAndReport
+import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CompletableDeferred
@@ -266,7 +266,7 @@ internal class AuthenticatorFacadeImpl(
         val userId = notConnectedAccount.id
         withRetries(onGiveUp = { return }) {
             emit(null)
-            val temporaryToken = withTimeoutOrNullAndReport(
+            val temporaryToken = withTimeoutOrNull(
                 waitForTimeout = {
                     delay(8.seconds)
                     "getTokenFromCrossAppLogin timed out"
