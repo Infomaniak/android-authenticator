@@ -38,6 +38,6 @@ internal suspend fun <R> withTimeoutOrNullAndReport(
 }
 
 private sealed interface TimeoutResult<out T> {
-    data class TimedOut(val message: String) : TimeoutResult<Nothing>
-    data class Returned<T>(val value: T) : TimeoutResult<T>
+    class TimedOut(val message: String) : TimeoutResult<Nothing>
+    class Returned<T>(val value: T) : TimeoutResult<T>
 }
