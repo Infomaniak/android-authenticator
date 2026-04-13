@@ -29,6 +29,7 @@ import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
+import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
@@ -60,7 +61,7 @@ object ApplicationModule {
     fun providesInfomaniakLogin(@ApplicationContext appContext: Context): InfomaniakLogin {
         return InfomaniakLogin(
             context = appContext,
-            loginUrl = "https://login.staging-authenticator.dev.infomaniak.ch/",
+            loginUrl =  "${LOGIN_ENDPOINT_URL}/",
             appUID = BuildConfig.APPLICATION_ID,
             clientID = BuildConfig.CLIENT_ID,
             accessType = null,
@@ -87,7 +88,7 @@ object ApplicationModule {
         crossAppLoginFacade: CrossAppLoginFacade,
     ): AuthenticatorFacade {
         return AuthenticatorFacade.create(
-            environment = ApiEnvironment.Staging,
+            environment = ApiEnvironment.Prod,
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),

@@ -25,6 +25,6 @@ sealed class ApiEnvironment(val baseUrl: String) {
     data object Preprod :
         ApiEnvironment("https://authenticator.preprod.dev.infomaniak.ch") //TODO Change this to the final baseUrl
 
-    data object Prod : ApiEnvironment("")
+    data object Prod : ApiEnvironment("https://login.infomaniak.com")
     data class Custom(private val url: String) : ApiEnvironment(url)
 }
