@@ -59,7 +59,6 @@ open class MainApplication : Application(), Configuration.Provider {
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
             apiEnvironment = ApiEnvironment.Prod,
-            //apiEnvironment = ApiEnvironment.Custom(host = "staging-authenticator.dev.infomaniak.ch"),
         )
     }
 
