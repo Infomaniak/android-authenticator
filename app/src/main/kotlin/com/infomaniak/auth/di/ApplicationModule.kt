@@ -87,7 +87,7 @@ object ApplicationModule {
         crossAppLoginFacade: CrossAppLoginFacade,
     ): AuthenticatorFacade {
         return AuthenticatorFacade.create(
-            environment = ApiEnvironment.Staging,
+            environment = ApiEnvironment.Prod,
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),
