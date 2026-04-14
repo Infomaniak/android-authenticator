@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -169,6 +170,7 @@ private fun AccountDetailsContent(
                 hasLogin,
                 logIn = {
                     hasLogin = true
+                    Log.v("Jamy", "AccountDetailsContent: $account")
                     val status = account.status as Account.Status.NotConnected
                     val legacyAccount = (status.action as NotConnectedAction.ReLogin).legacyAccount
                     onLoginPressed(legacyAccount.email)
