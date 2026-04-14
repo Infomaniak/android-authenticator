@@ -53,6 +53,7 @@ abstract class AuthenticatorFacade internal constructor() {
     /**
      * Remove account from the authenticator.
      */
+    @Throws(Exception::class)
     abstract suspend fun removeAccount(token: String, id: Long)
 
     /**
