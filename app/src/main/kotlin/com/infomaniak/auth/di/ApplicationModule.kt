@@ -166,7 +166,12 @@ object ApplicationModule {
             userId: Long
         ): String? = crossAppLoginFacade.accountsCheckingState.transform { state ->
             val matchingAccount = state.checkedAccounts.find { it.id == userId }
-                ?: if (state.status is AccountsCheckingStatus.UpToDate) null else return@transform
+                ?: when (state.status) {
+                    AccountsCheckingStatus.Checking -> return@transform // Wait for next emission.
+                    AccountsCheckingStatus.UpToDate -> null // Not found.
+                    AccountsCheckingStatus.Error.Network -> null // TODO[Authenticator]: Consider auto-retrying on network change.
+                    AccountsCheckingStatus.Error.Unknown -> null // Give up.
+                }
             emit(matchingAccount?.tokens?.first())
 
         }.first()
