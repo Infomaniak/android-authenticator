@@ -80,6 +80,7 @@
     <string name="laterButton">Más tarde</string>
     <string name="locationLoginTitle">Ubicación</string>
     <string name="logInButton">Iniciar sesión</string>
+    <string name="logInDescription">Introduce tu contraseña.</string>
     <string name="loginAttemptQuery">¿Está intentando iniciar sesión?</string>
     <string name="loginAuthorizationWarning">Confirmar este inicio de sesión autorizará a este dispositivo a acceder a su cuenta de Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Ha rechazado un intento de inicio de sesión. Para proteger su cuenta, cambie su contraseña.\n\nSi usted inició esta solicitud, intente iniciar sesión nuevamente.</string>

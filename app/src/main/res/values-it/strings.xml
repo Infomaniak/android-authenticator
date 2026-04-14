@@ -80,6 +80,7 @@
     <string name="laterButton">Più tardi</string>
     <string name="locationLoginTitle">Posizione</string>
     <string name="logInButton">Accedi</string>
+    <string name="logInDescription">Inserire la password.</string>
     <string name="loginAttemptQuery">Stai cercando di accedere?</string>
     <string name="loginAuthorizationWarning">Confermando questo accesso, autorizzerai questo dispositivo ad accedere al tuo account Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Hai rifiutato un tentativo di accesso. Per proteggere il tuo account, cambia la tua password.\n\nSe hai avviato tu questa richiesta, prova ad accedere nuovamente.</string>

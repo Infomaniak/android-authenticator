@@ -80,6 +80,7 @@
     <string name="laterButton">Plus tard</string>
     <string name="locationLoginTitle">Lieu</string>
     <string name="logInButton">Se connecter</string>
+    <string name="logInDescription">Saisissez votre mot de passe.</string>
     <string name="loginAttemptQuery">Êtes-vous en train d’essayer\nde vous connecter ?</string>
     <string name="loginAuthorizationWarning">Confirmer cette connexion autorisera cet appareil à accéder à votre compte Infomaniak</string>
     <string name="loginDeniedSuccessDescription">Vous avez refusé une tentative de connexion. Pour sécuriser votre compte, changez votre mot de passe.\n\nSi vous êtes à l’origine de cette demande, réessayez de vous connecter.</string>
