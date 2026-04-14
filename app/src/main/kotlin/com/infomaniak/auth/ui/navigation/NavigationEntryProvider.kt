@@ -24,6 +24,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.infomaniak.auth.ui.screen.accountdetails.AccountDetailsScreen
 import com.infomaniak.auth.ui.screen.home.HomeScreen
+import com.infomaniak.auth.ui.screen.login.LoginScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
 import com.infomaniak.auth.ui.screen.onboarding.migration.MigrationScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
@@ -83,6 +84,9 @@ fun baseEntryProvider(
     entry<NavDestination.AccountDetails> {
         AccountDetailsScreen(
             accountId = it.accountId,
+            onLoginPressed = { email ->
+                //backStack.add(NavDestination.LoginInApp(email))
+            },
             onBackPressed = backStack::tryPopLast
         )
     }
@@ -97,6 +101,12 @@ fun baseEntryProvider(
     }
     entry<NavDestination.Onboarding.Complete> {
         OnboardingCompleteScreen()
+    }
+    entry<NavDestination.LoginInApp> {
+        LoginScreen(
+            legacyAccountId = it.legacyAccountId,
+            onBackPressed = {}
+        )
     }
 }
 

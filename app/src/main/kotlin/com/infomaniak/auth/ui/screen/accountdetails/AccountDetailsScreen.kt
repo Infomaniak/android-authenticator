@@ -86,6 +86,7 @@ import kotlinx.coroutines.delay
 fun AccountDetailsScreen(
     accountId: Long,
     onBackPressed: () -> Unit,
+    onLoginPressed: (String) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,6 +102,7 @@ fun AccountDetailsScreen(
 
     AccountDetailsScreen(
         uiState = { uiState },
+        onLoginPressed = onLoginPressed,
         onBackPressed = onBackPressed,
         onChallengesRefreshClicked = {
             viewModel.refreshChallenges(accountId)
@@ -114,6 +116,7 @@ fun AccountDetailsScreen(
 @Composable
 fun AccountDetailsScreen(
     uiState: () -> AccountDetailsUiState,
+    onLoginPressed: (String) -> Unit,
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
@@ -135,6 +138,7 @@ fun AccountDetailsScreen(
                     paddingValues = paddingValues,
                     account = uiState.account,
                     user = uiState.user,
+                    onLoginPressed = onLoginPressed,
                     onChallengesRefreshClicked = onChallengesRefreshClicked,
                     onRemoveAccountClicked = onRemoveAccountClicked
                 )
@@ -150,6 +154,7 @@ private fun AccountDetailsContent(
     paddingValues: PaddingValues,
     account: Account,
     user: User?,
+    onLoginPressed: (String) -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
 ) {
@@ -164,6 +169,9 @@ private fun AccountDetailsContent(
                 hasLogin,
                 logIn = {
                     hasLogin = true
+                    val status = account.status as Account.Status.NotConnected
+                    val legacyAccount = (status.action as NotConnectedAction.ReLogin).legacyAccount
+                    onLoginPressed(legacyAccount.email)
                 }
             )
         }
@@ -435,6 +443,7 @@ private fun AccountDetailsScreenPreview(
     AuthenticatorTheme {
         AccountDetailsScreen(
             uiState = { AccountDetailsUiState.Success(accountPairs.first, accountPairs.second) },
+            onLoginPressed = {},
             onBackPressed = {},
             onChallengesRefreshClicked = {},
             onRemoveAccountClicked = {},
