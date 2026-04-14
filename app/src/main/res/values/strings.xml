@@ -81,6 +81,7 @@
     <string name="locationLoginTitle">Location</string>
     <string name="logInButton">Log in</string>
     <string name="logInDescription">Enter your password.</string>
+    <string name="logInTitle">Log in</string>
     <string name="loginAttemptQuery">Are you trying to log in?</string>
     <string name="loginAuthorizationWarning">Confirming this login will authorize this device to access your Infomaniak account.</string>
     <string name="loginDeniedSuccessDescription">You declined a login attempt. To secure your account, change your password.\n\nIf you initiated this request, try logging in again.</string>
