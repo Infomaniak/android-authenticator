@@ -7,16 +7,14 @@ assignees: ''
 
 ---
 
-*Note: Please write your issue only in english*
+## ⚠️ ✨ Feature Requests
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+Thank you for your interest in improving this project! 🙌
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+⚠️ We don’t handle feature requests in this issue tracker.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+👉 Please share your idea here instead:  
+**[Submit your feedback (EN)](https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/)**  
+**[Soumettre une demande (FR)](https://feedback.userreport.com/6b7dde99-c4cd-4bcd-8d41-e855dfccac91/)**
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+Thanks for your understanding 💙
