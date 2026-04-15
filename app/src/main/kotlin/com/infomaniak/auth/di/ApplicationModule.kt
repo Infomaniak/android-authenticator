@@ -86,12 +86,12 @@ object ApplicationModule {
         accountUtils: AccountUtils,
         crossAppLoginFacade: CrossAppLoginFacade,
     ): AuthenticatorFacade {
-        return AuthenticatorFacade.dummyInstance(
+        return AuthenticatorFacade.create(
             environment = ApiEnvironment.Staging,
             userAgent = userAgent,
-            //clientId = BuildConfig.CLIENT_ID,
+            clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),
-            //tokenBridge = createTokenBridge(accountUtils),
+            tokenBridge = createTokenBridge(accountUtils, crossAppLoginFacade),
         )
     }
 
