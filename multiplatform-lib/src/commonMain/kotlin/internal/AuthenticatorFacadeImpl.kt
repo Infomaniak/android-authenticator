@@ -217,6 +217,8 @@ internal class AuthenticatorFacadeImpl(
         withRetries {
             emit(null)
             if (!passKeyAlreadyRegistered) {
+                // TODO do that only if we don't need to use the backed up files
+                authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
                 authenticatorManager.registerPasskey(token, userId)
                 dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.FirstPasskeyAuthenticationPending))
             }
