@@ -53,6 +53,7 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.CredentialsForMigration
 import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
@@ -143,7 +144,7 @@ private fun LoginScreen(
             }
             OpenUrlButton(
                 text = stringResource(R.string.passwordForgottenButton),
-                sourceUrl = "https://login.infomaniak.com/recover",
+                sourceUrl = RECOVER_PASSWORD_URL,
                 leadingIcon = {
                     Icon(
                         modifier = Modifier.padding(end = Margin.Mini),
