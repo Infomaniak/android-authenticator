@@ -59,7 +59,6 @@ class DummyAuthenticatorFacade internal constructor(
                     action = NotConnectedAction.ReLogin(
                         legacyAccount = legacyAccount,
                         sendCredentials = {
-                            println("Sending credentials")
                             next.trySend(Unit)
                         }
                     )

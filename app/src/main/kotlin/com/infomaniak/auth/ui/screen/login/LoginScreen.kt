@@ -56,6 +56,7 @@ import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
+import com.infomaniak.auth.ui.components.OpenUrlButton
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -123,20 +124,32 @@ private fun LoginScreen(
             )
         },
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = Margin.Medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Margin.Medium),
-        ) {
-            Text(stringResource(R.string.logInTitle), style = Typography.h1)
-            Text(
-                text = stringResource(R.string.logInDescription),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            LoginForm(
-                legacyAccount = legacyAccount,
-                password = password,
-                onPasswordChange = { password = it },
+        Column(verticalArrangement = Arrangement.spacedBy(Margin.Mini)) {
+            Column(
+                modifier = Modifier.padding(horizontal = Margin.Medium),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Margin.Medium),
+            ) {
+                Text(stringResource(R.string.logInTitle), style = Typography.h1)
+                Text(
+                    text = stringResource(R.string.logInDescription),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                LoginForm(
+                    legacyAccount = legacyAccount,
+                    password = password,
+                    onPasswordChange = { password = it },
+                )
+            }
+            OpenUrlButton(
+                text = stringResource(R.string.passwordForgottenButton),
+                sourceUrl = "https://login.infomaniak.com/recover",
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.padding(end = Margin.Mini),
+                        painter = painterResource(R.drawable.ic_circle_information_full), contentDescription = null
+                    )
+                }
             )
         }
     }

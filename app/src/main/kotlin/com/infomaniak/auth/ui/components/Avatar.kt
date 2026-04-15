@@ -75,30 +75,3 @@ private fun computeAvatarType(
         AvatarType.fromUser(user)
     }
 }
-// TODO: Remove
-//
-// @Composable
-// private fun AccountAvatar(
-//     account: Account,
-//     modifier: Modifier = Modifier,
-//     strokeColor: Color? = null
-// ) {
-//     val localAvatarColors = LocalAvatarColors.current
-//     val context = LocalContext.current
-//     val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
-//
-//     val avatarColors = AvatarColors(
-//         containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
-//         contentColor = localAvatarColors.contentColor,
-//     )
-//
-//     Avatar(
-//         avatarType = AvatarType.getUrlOrInitials(
-//             account.avatarUrl?.let { AvatarUrlData(it, unauthenticatedImageLoader) },
-//             initials = account.initials,
-//             colors = avatarColors,
-//         ),
-//         modifier = modifier,
-//         border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
-//     )
-// }

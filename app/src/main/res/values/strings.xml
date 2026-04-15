@@ -108,6 +108,7 @@
     <string name="passwordChangedDescription">The login password for your Infomaniak account %s has been updated.</string>
     <string name="passwordChangedNotification">Login password changed</string>
     <string name="passwordChangedTitle">Login password changed</string>
+    <string name="passwordForgottenButton">Forgotten password?</string>
     <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Refresh pending logins</string>
     <string name="removeAccountDescription">You will no longer be able to verify your login to this account with Authenticator.</string>

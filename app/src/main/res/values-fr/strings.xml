@@ -108,6 +108,7 @@
     <string name="passwordChangedDescription">Le mot de passe de connexion du compte Infomaniak %s a été mis à jour.</string>
     <string name="passwordChangedNotification">Mot de passe de connexion modifié</string>
     <string name="passwordChangedTitle">Mot de passe de connexion modifié</string>
+    <string name="passwordForgottenButton">Mot de passe oublié ?</string>
     <string name="passwordLabel">Mot de passe</string>
     <string name="refreshPendingLoginsButton">Actualiser les connexions en attente</string>
     <string name="removeAccountDescription">Vous ne pourrez plus valider la connexion à ce compte avec Authenticator.</string>

@@ -108,6 +108,7 @@
     <string name="passwordChangedDescription">Das Anmeldekennwort des Infomaniak-Kontos %s wurde aktualisiert.</string>
     <string name="passwordChangedNotification">Anmeldekennwort geändert</string>
     <string name="passwordChangedTitle">Anmeldekennwort geändert</string>
+    <string name="passwordForgottenButton">Haben Sie Ihr Passwort vergessen?</string>
     <string name="passwordLabel">Passwort</string>
     <string name="refreshPendingLoginsButton">Ausstehende Anmeldungen aktualisieren</string>
     <string name="removeAccountDescription">Sie können sich nicht mehr mit Authenticator bei diesem Konto anmelden.</string>
