@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.login
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.Account
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -39,19 +40,25 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val legacyAccountIdFlow = MutableSharedFlow<Long>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
-    val legacyAccount: StateFlow<Account?> = legacyAccountIdFlow
+    val uiState: StateFlow<LoginUiState> = legacyAccountIdFlow
         .flatMapLatest { id ->
-            authenticatorFacade.accounts.map { accounts ->
-                accounts.firstOrNull { it.id == id }
+            authenticatorFacade.accounts.mapNotNull { accounts ->
+                accounts.firstOrNull { it.id == id }?.let { LoginUiState.Ready(it) }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
+            initialValue = LoginUiState.Loading
         )
 
     fun fetchLegacyAccount(accountId: Long) {
         legacyAccountIdFlow.tryEmit(accountId)
     }
+}
+
+@Immutable
+sealed interface LoginUiState {
+    data object Loading : LoginUiState
+    data class Ready(val legacyAccount: Account) : LoginUiState
 }

@@ -47,7 +47,7 @@ class DummyAuthenticatorFacade internal constructor(
     private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
         accounts = accountsRepository.getAccounts().map {
             val legacyAccount = Account(
-                id = 0,
+                id = 42,
                 fullName = "John",
                 initials = "Smith",
                 email = "john.smith@example.com",
@@ -58,7 +58,10 @@ class DummyAuthenticatorFacade internal constructor(
                 it.toAccount(
                     action = NotConnectedAction.ReLogin(
                         legacyAccount = legacyAccount,
-                        sendCredentials = { next.trySend(Unit) }
+                        sendCredentials = {
+                            println("Sending credentials")
+                            next.trySend(Unit)
+                        }
                     )
                 )
             }

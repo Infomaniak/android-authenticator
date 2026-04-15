@@ -15,76 +15,75 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.onboarding.migration.component
+package com.infomaniak.auth.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
+import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.common.R as RCore
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun MigrationListAccounts(accounts: () -> List<Account>, ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium),
-        verticalArrangement = Arrangement.spacedBy(Margin.Medium),
-    ) {
-        Text(
-            text = pluralStringResource(RCore.plurals.myAccount, accounts().size),
-            style = Typography.h1
-        )
-        accounts().forEach { account ->
-            BottomSheetItem(
-                account = account,
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun BottomSheetItem(account: Account) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = Dimens.buttonHeight),
+fun AccountRow(
+    account: Account,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
+        Avatar(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = Margin.Mini),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AccountRow(account, Modifier.weight(1.0f))
+                .size(Dimens.bigAvatarSize)
+                .clip(CircleShape),
+            account = account,
+        )
+
+        Spacer(Modifier.width(Margin.Mini))
+
+        Column {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = account.fullName,
+                    style = Typography.bodyMedium,
+                )
+            }
+            Text(
+                text = account.email,
+                style = Typography.bodyRegular,
+            )
         }
     }
 }
 
 @Preview
 @Composable
-private fun Preview() {
-    Surface {
-        MigrationListAccounts(accounts = { fakeAccounts })
+private fun AccountRowPreview() {
+    AuthenticatorTheme {
+        Surface {
+            Row {
+                AccountRow(account = fakeAccounts.first())
+            }
+        }
     }
 }

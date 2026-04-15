@@ -69,7 +69,6 @@
     <string name="disconnectButton">Log out</string>
     <string name="disconnectSuccess">Account disconnected</string>
     <string name="doneButton">Done</string>
-    <string name="emailLabel">Email</string>
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Enable</string>
     <string name="errorLoginFailed">Account login failed. Please try again or contact support. (error code: %d)</string>
@@ -131,6 +130,7 @@
     <string name="understandConfirmButton">I understand</string>
     <string name="unlockWithBiometrics">Unlock with Biometrics</string>
     <string name="unlockingWithFaceId">Unlock with Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Verify my security</string>
     <string name="viewGuidesButton">Browse the guides</string>
     <string name="whenLoginTitle">When</string>

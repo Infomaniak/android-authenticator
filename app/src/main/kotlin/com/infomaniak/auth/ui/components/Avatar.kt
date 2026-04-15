@@ -18,9 +18,7 @@
 package com.infomaniak.auth.ui.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.LocalAvatarColors
@@ -29,7 +27,6 @@ import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
 import com.infomaniak.core.avatar.models.AvatarType.WithInitials
-import com.infomaniak.core.coil.ImageLoaderProvider
 
 @Composable
 fun Avatar(
@@ -39,6 +36,17 @@ fun Avatar(
 ) {
     Avatar(
         avatarType = computeAvatarType(account, user),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun Avatar(
+    account: Account,
+    modifier: Modifier = Modifier
+) {
+    Avatar(
+        avatarType = computeAvatarType(account, user = null),
         modifier = modifier
     )
 }
@@ -67,3 +75,30 @@ private fun computeAvatarType(
         AvatarType.fromUser(user)
     }
 }
+// TODO: Remove
+//
+// @Composable
+// private fun AccountAvatar(
+//     account: Account,
+//     modifier: Modifier = Modifier,
+//     strokeColor: Color? = null
+// ) {
+//     val localAvatarColors = LocalAvatarColors.current
+//     val context = LocalContext.current
+//     val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
+//
+//     val avatarColors = AvatarColors(
+//         containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
+//         contentColor = localAvatarColors.contentColor,
+//     )
+//
+//     Avatar(
+//         avatarType = AvatarType.getUrlOrInitials(
+//             account.avatarUrl?.let { AvatarUrlData(it, unauthenticatedImageLoader) },
+//             initials = account.initials,
+//             colors = avatarColors,
+//         ),
+//         modifier = modifier,
+//         border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
+//     )
+// }

@@ -19,34 +19,50 @@ package com.infomaniak.auth.ui.screen.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
-import com.infomaniak.auth.ui.components.ButtonStyle
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.CredentialsForMigration
+import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
+import com.infomaniak.auth.ui.previewparameter.fakeAccounts
+import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
-import com.infomaniak.core.common.R as RCore
 
 @Composable
 fun LoginScreen(
@@ -54,30 +70,45 @@ fun LoginScreen(
     onBackPressed: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val legacyAccount by viewModel.legacyAccount.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.fetchLegacyAccount(legacyAccountId)
     }
 
-    LoginScreen(
-        legacyEmail = { legacyAccount?.email ?: "" },
-        onBackPressed = onBackPressed,
-    )
+    when (val state = uiState) {
+        is LoginUiState.Loading -> Unit
+        is LoginUiState.Ready -> {
+            LoginScreen(
+                legacyAccount = { state.legacyAccount },
+                onBackPressed = onBackPressed,
+                onLoginPressed = { email, password ->
+                    val status = state.legacyAccount.status as? Account.Status.NotConnected
+                    val action = status?.action as? NotConnectedAction.ReLogin
+                    if (password.isNotEmpty()) {
+                        action?.sendCredentials(CredentialsForMigration(email, password))
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
 private fun LoginScreen(
-    legacyEmail: () -> String,
+    legacyAccount: () -> Account,
     onBackPressed: () -> Unit,
+    onLoginPressed: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var password by rememberSaveable { mutableStateOf("") }
+
     BottomStickyButtonScaffold(
-        modifier = modifier,
+        modifier = modifier.imePadding(),
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
-                isCentered = false,
+                isCentered = true,
                 isBackgroundTransparent = true,
                 onBackPressed = onBackPressed
             )
@@ -86,76 +117,82 @@ private fun LoginScreen(
             LargeButton(
                 modifier = topModifier.fillMaxWidth(),
                 title = stringResource(R.string.logInButton),
-                onClick = {  }
+                onClick = {
+                    onLoginPressed(legacyAccount().email, password)
+                }
             )
         },
-        bottomButton = { bottomModifier ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                LargeButton(
-                    modifier = bottomModifier.fillMaxWidth(),
-                    style = ButtonStyle.Tertiary,
-                    title = stringResource(RCore.string.buttonCancel),
-                    onClick = onBackPressed
-                )
-            }
-        }
     ) {
         Column(
-            modifier = Modifier.padding(Margin.Medium),
+            modifier = Modifier.padding(horizontal = Margin.Medium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Margin.Medium),
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Margin.Medium),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(stringResource(R.string.logInButton), style = Typography.h1)
-            }
+            Text(stringResource(R.string.logInTitle), style = Typography.h1)
             Text(
-                text = stringResource(R.string.onBoardingLoginTitle),
-                // textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                text = stringResource(R.string.logInDescription),
+                style = MaterialTheme.typography.bodyLarge
             )
-            LoginForm(legacyEmail)
-            Spacer(modifier = Modifier.weight(1f))
-            // Image(
-            //     painter = painterResource(R.drawable.),
-            //     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
-            //     contentDescription = null
-            // )
-            // IllustrationWithHalo(AppImages.AppIllus.GridTilesWithAuthenticator)
+            LoginForm(
+                legacyAccount = legacyAccount,
+                password = password,
+                onPasswordChange = { password = it },
+            )
         }
     }
 }
 
 @Composable
 private fun LoginForm(
-    legacyEmail: () -> String,
+    legacyAccount: () -> Account,
+    password: String,
+    onPasswordChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Margin.Medium),
     ) {
-        val emailInputState = rememberTextFieldState(legacyEmail())
-        val passwordInputState = rememberTextFieldState("")
-        OutlinedTextField(
-            state = emailInputState,
-            lineLimits = TextFieldLineLimits.MultiLine(maxHeightInLines = 1),
-            label = { Text(stringResource(R.string.emailLabel)) },
-            modifier = Modifier.fillMaxWidth()
-        )
+        var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-        OutlinedTextField(
-            state = passwordInputState,
-            lineLimits = TextFieldLineLimits.MultiLine(maxHeightInLines = 1),
-            label = { Text(stringResource(R.string.passwordLabel)) },
-            modifier = Modifier.fillMaxWidth()
-        )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
+            shape = RoundedCornerShape(DefaultCornerRadius),
+        ) {
+            AccountRow(
+                modifier = Modifier.padding(Margin.Medium),
+                account = legacyAccount()
+            )
+            HorizontalDivider(
+                color = AuthenticatorTheme.materialColors.outlineVariant,
+            )
+            TextField(
+                value = password,
+                onValueChange = onPasswordChange,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    disabledBorderColor = Color.Transparent,
+                    errorBorderColor = Color.Transparent,
+                ),
+                singleLine = true,
+                label = { Text(stringResource(R.string.passwordLabel)) },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    IconButton(onClick = {
+                        passwordVisible = !passwordVisible
+                    }) {
+                        Icon(painterResource(R.drawable.ic_eye_crossed), contentDescription = null)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Margin.Micro),
+            )
+        }
     }
 }
 
@@ -164,8 +201,9 @@ private fun LoginForm(
 private fun LoginScreenPreview() {
     AuthenticatorTheme {
         LoginScreen(
-            legacyEmail = { "auth@infomaniak.com" },
+            legacyAccount = { fakeAccounts.first() },
             onBackPressed = {},
+            onLoginPressed = { _, _ -> },
         )
     }
 }

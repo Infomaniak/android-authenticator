@@ -69,7 +69,6 @@
     <string name="disconnectButton">Cerrar sesión</string>
     <string name="disconnectSuccess">Cuenta desconectada</string>
     <string name="doneButton">Listo</string>
-    <string name="emailLabel">Email</string>
     <string name="emailPlaceholder">Correo electrónico</string>
     <string name="enableButton">Habilitar</string>
     <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte. (código de error: %d)</string>
@@ -131,6 +130,7 @@
     <string name="understandConfirmButton">Entiendo</string>
     <string name="unlockWithBiometrics">Desbloqueo biométrico</string>
     <string name="unlockingWithFaceId">Desbloquear con Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/55f0cfb4-9f53-431f-aae5-413925a4aaad/</string>
     <string name="verifySecurityButton">Verificar mi seguridad</string>
     <string name="viewGuidesButton">Explorar las guías</string>
     <string name="whenLoginTitle">Cuándo</string>

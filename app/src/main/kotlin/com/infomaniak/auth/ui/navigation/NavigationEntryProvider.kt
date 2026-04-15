@@ -84,8 +84,8 @@ fun baseEntryProvider(
     entry<NavDestination.AccountDetails> {
         AccountDetailsScreen(
             accountId = it.accountId,
-            onLoginPressed = { email ->
-                //backStack.add(NavDestination.LoginInApp(email))
+            onLoginPressed = { legacyAccount ->
+                backStack.add(NavDestination.LoginInApp(legacyAccount))
             },
             onBackPressed = backStack::tryPopLast
         )
@@ -105,7 +105,7 @@ fun baseEntryProvider(
     entry<NavDestination.LoginInApp> {
         LoginScreen(
             legacyAccountId = it.legacyAccountId,
-            onBackPressed = {}
+            onBackPressed = backStack::tryPopLast
         )
     }
 }

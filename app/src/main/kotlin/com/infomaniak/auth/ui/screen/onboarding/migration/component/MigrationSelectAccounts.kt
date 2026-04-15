@@ -20,7 +20,6 @@ package com.infomaniak.auth.ui.screen.onboarding.migration.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -30,7 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,27 +38,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.ui.components.AccountRow
+import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.avatar.LocalAvatarColors
-import com.infomaniak.core.avatar.components.Avatar
-import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
-import com.infomaniak.core.avatar.models.AvatarColors
-import com.infomaniak.core.avatar.models.AvatarType
-import com.infomaniak.core.avatar.models.AvatarUrlData
-import com.infomaniak.core.coil.ImageLoaderProvider
 import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -80,7 +70,7 @@ fun MigrationSelectAccounts(
         modifier = modifier,
     ) {
         when {
-            count == 1 -> SingleAccount(accounts.single(), Modifier.weight(1.0f))
+            count == 1 -> AccountRow(accounts.single(), Modifier.weight(1.0f))
             count > 1 -> MultipleAccounts(accounts, Modifier.weight(1.0f))
         }
     }
@@ -129,43 +119,6 @@ private fun SelectedAccountsButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SingleAccount(
-    account: Account,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        MigrationLoginAvatar(
-            modifier = Modifier
-                .size(Dimens.bigAvatarSize)
-                .clip(CircleShape),
-            account = account,
-        )
-
-        Spacer(Modifier.width(Margin.Mini))
-
-        Column {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(Margin.Mini),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = account.fullName,
-                    style = Typography.bodyMedium,
-                )
-            }
-            Text(
-                text = account.email,
-                style = Typography.bodyRegular,
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 internal fun MultipleAccounts(
     accounts: List<Account>,
     modifier: Modifier = Modifier,
@@ -192,32 +145,6 @@ internal fun MultipleAccounts(
 }
 
 @Composable
-internal fun MigrationLoginAvatar(
-    account: Account,
-    modifier: Modifier = Modifier,
-    strokeColor: Color? = null
-) {
-    val localAvatarColors = LocalAvatarColors.current
-    val context = LocalContext.current
-    val unauthenticatedImageLoader = remember(context) { ImageLoaderProvider.newImageLoader(context) }
-
-    val avatarColors = AvatarColors(
-        containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
-        contentColor = localAvatarColors.contentColor,
-    )
-
-    Avatar(
-        avatarType = AvatarType.getUrlOrInitials(
-            account.avatarUrl?.let { AvatarUrlData(it, unauthenticatedImageLoader) },
-            initials = account.initials,
-            colors = avatarColors,
-        ),
-        modifier = modifier,
-        border = strokeColor?.let { BorderStroke(width = 1.dp, color = it) },
-    )
-}
-
-@Composable
 internal fun TwoAccountsView(accounts: List<Account>) {
     Box(
         modifier = Modifier.size(
@@ -226,7 +153,7 @@ internal fun TwoAccountsView(accounts: List<Account>) {
         ),
     ) {
         // Right
-        MigrationLoginAvatar(
+        Avatar(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterEnd),
@@ -234,7 +161,7 @@ internal fun TwoAccountsView(accounts: List<Account>) {
         )
 
         // Left
-        MigrationLoginAvatar(
+        Avatar(
             modifier = Modifier
                 .size(Dimens.avatarsBoxHeight)
                 .align(Alignment.CenterStart),
@@ -248,7 +175,7 @@ internal fun ThreeAccountsView(accounts: List<Account>) {
     Box(contentAlignment = Alignment.Center) {
         Row {
             // Left
-            MigrationLoginAvatar(
+            Avatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 account = accounts[1],
             )
@@ -256,14 +183,14 @@ internal fun ThreeAccountsView(accounts: List<Account>) {
             Spacer(Modifier.width(width = Dimens.avatarsBoxWidth - (Dimens.iconSize + Dimens.iconSize)))
 
             // Right
-            MigrationLoginAvatar(
+            Avatar(
                 modifier = Modifier.size(Dimens.iconSize),
                 account = accounts[2],
             )
         }
 
         // Center
-        MigrationLoginAvatar(
+        Avatar(
             modifier = Modifier.size(Dimens.avatarsBoxHeight),
             account = accounts[0],
         )
@@ -277,18 +204,6 @@ private fun MultipleAccountsPreview() {
         Surface {
             Row {
                 MultipleAccounts(accounts = fakeAccounts)
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun SingleAccountPreview() {
-    AuthenticatorTheme {
-        Surface {
-            Row {
-                SingleAccount(account = fakeAccounts.first())
             }
         }
     }

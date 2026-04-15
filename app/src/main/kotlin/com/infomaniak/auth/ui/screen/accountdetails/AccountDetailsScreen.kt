@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -87,7 +86,7 @@ import kotlinx.coroutines.delay
 fun AccountDetailsScreen(
     accountId: Long,
     onBackPressed: () -> Unit,
-    onLoginPressed: (String) -> Unit,
+    onLoginPressed: (Long) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -117,7 +116,7 @@ fun AccountDetailsScreen(
 @Composable
 fun AccountDetailsScreen(
     uiState: () -> AccountDetailsUiState,
-    onLoginPressed: (String) -> Unit,
+    onLoginPressed: (Long) -> Unit,
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
@@ -155,7 +154,7 @@ private fun AccountDetailsContent(
     paddingValues: PaddingValues,
     account: Account,
     user: User?,
-    onLoginPressed: (String) -> Unit,
+    onLoginPressed: (Long) -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
 ) {
@@ -169,11 +168,10 @@ private fun AccountDetailsContent(
             ActionRequired(
                 hasLogin,
                 logIn = {
-                    hasLogin = true
-                    Log.v("Jamy", "AccountDetailsContent: $account")
                     val status = account.status as Account.Status.NotConnected
                     val legacyAccount = (status.action as NotConnectedAction.ReLogin).legacyAccount
-                    onLoginPressed(legacyAccount.email)
+                    onLoginPressed(legacyAccount.id)
+                    hasLogin = true
                 }
             )
         }
