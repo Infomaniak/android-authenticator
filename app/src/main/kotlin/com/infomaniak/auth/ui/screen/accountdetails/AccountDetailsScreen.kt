@@ -165,15 +165,15 @@ private fun AccountDetailsContent(
         SecurityCheck(account.status.toAccountStatus())
         if (account.status != Account.Status.LoggedIn) {
             // TODO: Manager better this state with better status handler
-            var onLoginClicked by remember { mutableStateOf(false) }
+            var hasLogin by remember { mutableStateOf(false) }
             ActionRequired(
-                onLoginClicked,
-                logIn = {
+                hasLogin,
+                onLoginClicked = {
                     val status = account.status as? Account.Status.NotConnected
                     val legacyAccount = (status?.action as? NotConnectedAction.ReLogin)?.legacyAccount
                     legacyAccount?.id?.let {
                         onLoginPressed(it)
-                        onLoginClicked = true
+                        hasLogin = true
                     }
                 }
             )
@@ -254,7 +254,7 @@ private data class ActionRequiredConfiguration(
 )
 
 @Composable
-private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
+private fun ActionRequired(hasLogin: Boolean, onLoginClicked: () -> Unit) {
     val configuration = if (hasLogin) {
         ActionRequiredConfiguration(
             text = stringResource(R.string.errorLoginFailed, 0),
@@ -292,7 +292,7 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
         }
 
         if (hasLogin) ContactSupportButton()
-        LogInAgainButton(hasLogin, logIn = logIn)
+        LogInAgainButton(hasLogin, logIn = onLoginClicked)
     }
 }
 
