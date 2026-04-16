@@ -22,6 +22,7 @@ import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
+import com.infomaniak.auth.lib.internal.utils.raceOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -46,24 +47,7 @@ class DummyAuthenticatorFacade internal constructor(
 
     private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
         accounts = accountsRepository.getAccounts().map {
-            val legacyAccount = Account(
-                id = 42,
-                fullName = "John",
-                initials = "Smith",
-                email = "john.smith@example.com",
-                avatarUrl = "https://avatars.githubusercontent.com/u/1788629?v=4",
-                status = Account.Status.NotConnected(null)
-            )
-            it.map {
-                it.toAccount(
-                    action = NotConnectedAction.ReLogin(
-                        legacyAccount = legacyAccount,
-                        sendCredentials = {
-                            next.trySend(Unit)
-                        }
-                    )
-                )
-            }
+            it.map { it.toAccount(action = null) }
         }
     }::value
 
@@ -71,9 +55,7 @@ class DummyAuthenticatorFacade internal constructor(
 
     override val appStatus: SharedFlow<AppStatus> = flow {
         var i = 0
-        var isMigratingFromLegacyKAuth = false
-        emit(AppStatus.SetupComplete(addAnAccount = { next.trySend(Unit) }))
-        return@flow
+        var isMigratingFromLegacyKAuth = true
         while (true) {
             val loginRequiredStatus: AppStatus.LoginRequired = when {
                 isMigratingFromLegacyKAuth -> AppStatus.LoginRequired.MigratingFromLegacyKAuth(proceed = { next.trySend(Unit) })
@@ -103,43 +85,21 @@ class DummyAuthenticatorFacade internal constructor(
                 )
                 emit(AppStatus.LoggingIn)
                 next.receive()
-            } else {
-                val legacyAccount = Account(
-                    id = 0,
-                    fullName = "John",
-                    initials = "Smith",
-                    email = "john.smith@example.com",
-                    avatarUrl = "https://avatars.githubusercontent.com/u/1788629?v=4",
-                    status = Account.Status.NotConnected(null)
-                )
-                _accounts += legacyAccount.copy(
-                    id = 42,
-                    fullName = "Relogin",
-                    status = Account.Status.NotConnected(
-                        action = NotConnectedAction.ReLogin(
-                            legacyAccount = legacyAccount,
-                            sendCredentials = { next.trySend(Unit) }
-                        )
-                    )
-                )
-                accountsRepository.upsertAccounts(_accounts.map { it.toEntity(AccountEntity.Status.FirstPasskeyAuthenticationPending) })
-                emit(AppStatus.EverythingReady(proceed = { next.trySend(Unit) }))
-                next.receive()
             }
-            // emit(AppStatus.EverythingReady(proceed = { next.trySend(Unit) }))
-            // next.receive()
-            // do {
-            //     emit(AppStatus.SetupComplete(addAnAccount = { next.trySend(Unit) }))
-            //     val addAnAccount = raceOf(
-            //         { next.receive(); true },
-            //         { delay(resetAfter); false },
-            //     )
-            //     if (addAnAccount) {
-            //         emit(AppStatus.AddingAnAccount(cancel = { next.trySend(Unit) }))
-            //         next.receive()
-            //     }
-            // } while (addAnAccount)
-            // i++
+            emit(AppStatus.EverythingReady(proceed = { next.trySend(Unit) }))
+            next.receive()
+            do {
+                emit(AppStatus.SetupComplete(addAnAccount = { next.trySend(Unit) }))
+                val addAnAccount = raceOf(
+                    { next.receive(); true },
+                    { delay(resetAfter); false },
+                )
+                if (addAnAccount) {
+                    emit(AppStatus.AddingAnAccount(cancel = { next.trySend(Unit) }))
+                    next.receive()
+                }
+            } while (addAnAccount)
+            i++
         }
     }.distinctUntilChanged().shareIn(scope, SharingStarted.Lazily, replay = 1)
 
@@ -147,7 +107,7 @@ class DummyAuthenticatorFacade internal constructor(
         _accounts += connectedAccounts
         if (connectedAccounts.isNotEmpty()) next.trySend(Unit)
         val accountWithNoError = connectedAccounts.first()
-        val accountInError = accountWithNoError.copy(id = 123).toEntity(AccountEntity.Status.FirstPasskeyAuthenticationPending)
+        val accountInError = accountWithNoError.copy(id = 123).toEntity(AccountEntity.Status.PasskeyRegistrationPending)
         accountsRepository.upsertAccounts(connectedAccounts.map { it.toEntity(AccountEntity.Status.LoggedIn) })
         accountsRepository.upsertAccounts(listOf(accountInError))
     }
