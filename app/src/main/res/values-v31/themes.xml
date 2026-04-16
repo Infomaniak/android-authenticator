@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~ Infomaniak Authenticator - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -16,8 +16,13 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <color name="loginToolbarBackground">#F4F6FD</color>
-    <color name="loginToolbarOnBackground">@color/orca</color>
 
-    <color name="splashscreenBackground">#2B39A8</color>
+    <style name="AppTheme.LauncherBase.v31">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenBackground">@color/splashscreenBackground</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/splashscreen_branding_image</item>
+    </style>
+
+    <style name="AppThemeLauncher" parent="AppTheme.LauncherBase.v31" />
+
 </resources>

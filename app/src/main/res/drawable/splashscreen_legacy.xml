@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~ Infomaniak Authenticator - Android
   ~ Copyright (C) 2026 Infomaniak Network SA
   ~
@@ -15,9 +15,21 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
-    <color name="loginToolbarBackground">#F4F6FD</color>
-    <color name="loginToolbarOnBackground">@color/orca</color>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <color name="splashscreenBackground">#2B39A8</color>
-</resources>
+    <item android:drawable="@drawable/splashscreen_gradient_legacy" />
+
+    <item
+        android:gravity="center"
+        android:width="@dimen/splashscreen_icon_size"
+        android:height="@dimen/splashscreen_icon_size"
+        android:drawable="@drawable/ic_launcher_foreground">
+    </item>
+
+    <item android:bottom="60dp">
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/splashscreen_branding_image_legacy" />
+    </item>
+
+</layer-list>

@@ -18,6 +18,14 @@
 <resources>
     <style name="Theme.AndroidAuthenticator" parent="android:Theme.Material.Light.NoActionBar" />
 
+    <style name="AppTheme.LauncherBase" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+        <item name="android:windowBackground">@drawable/splashscreen_legacy</item>
+        <item name="postSplashScreenTheme">@style/Theme.AndroidAuthenticator</item>
+    </style>
+
+    <style name="AppThemeLauncher" parent="AppTheme.LauncherBase" />
+
     <!-- Login -->
 
     <style name="LoginWebViewTheme" parent="Theme.Material3.DayNight.NoActionBar">
