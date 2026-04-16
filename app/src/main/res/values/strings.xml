@@ -108,7 +108,7 @@
     <string name="passwordChangedDescription">The login password for your Infomaniak account %s has been updated.</string>
     <string name="passwordChangedNotification">Login password changed</string>
     <string name="passwordChangedTitle">Login password changed</string>
-    <string name="passwordForgottenButton">Forgotten password?</string>
+    <string name="passwordForgottenButton">Forgot password?</string>
     <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Refresh pending logins</string>
     <string name="removeAccountDescription">You will no longer be able to verify your login to this account with Authenticator.</string>
@@ -131,7 +131,6 @@
     <string name="understandConfirmButton">I understand</string>
     <string name="unlockWithBiometrics">Unlock with Biometrics</string>
     <string name="unlockingWithFaceId">Unlock with Face ID</string>
-    <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Verify my security</string>
     <string name="viewGuidesButton">Browse the guides</string>
     <string name="whenLoginTitle">When</string>

@@ -108,7 +108,7 @@
     <string name="passwordChangedDescription">Das Anmeldekennwort des Infomaniak-Kontos %s wurde aktualisiert.</string>
     <string name="passwordChangedNotification">Anmeldekennwort geändert</string>
     <string name="passwordChangedTitle">Anmeldekennwort geändert</string>
-    <string name="passwordForgottenButton">Haben Sie Ihr Passwort vergessen?</string>
+    <string name="passwordForgottenButton">Passwort vergessen?</string>
     <string name="passwordLabel">Passwort</string>
     <string name="refreshPendingLoginsButton">Ausstehende Anmeldungen aktualisieren</string>
     <string name="removeAccountDescription">Sie können sich nicht mehr mit Authenticator bei diesem Konto anmelden.</string>
@@ -131,7 +131,6 @@
     <string name="understandConfirmButton">Ich verstehe</string>
     <string name="unlockWithBiometrics">Entsperren mit Biometrie</string>
     <string name="unlockingWithFaceId">Mit Face ID entsperren</string>
-    <string name="urlUserReport">https://feedback.userreport.com/d8bbb6b0-dab0-4c3f-a2a0-6438a683ec95/</string>
     <string name="verifySecurityButton">Meine Sicherheit überprüfen</string>
     <string name="viewGuidesButton">Durchsuchen Sie die Anleitungen</string>
     <string name="whenLoginTitle">Wann</string>
