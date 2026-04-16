@@ -128,6 +128,7 @@
     <string name="understandConfirmButton">Entiendo</string>
     <string name="unlockWithBiometrics">Desbloqueo biométrico</string>
     <string name="unlockingWithFaceId">Desbloquear con Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/55f0cfb4-9f53-431f-aae5-413925a4aaad/</string>
     <string name="verifySecurityButton">Verificar mi seguridad</string>
     <string name="viewGuidesButton">Explorar las guías</string>
     <string name="whenLoginTitle">Cuándo</string>

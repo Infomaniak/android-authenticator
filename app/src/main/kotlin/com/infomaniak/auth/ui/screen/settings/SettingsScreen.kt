@@ -123,7 +123,9 @@ private fun SettingsScreen(
         OptionItemType.WithRightIcon(
             stringResId = R.string.feedbackTitle,
             rightIconResId = R.drawable.square_arrow_up,
-            onClick = {},
+            onClick = {
+                fragmentActivity?.getString(R.string.urlUserReport)?.let { fragmentActivity.openUrl(it) }
+            },
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.contactSupportTitle,

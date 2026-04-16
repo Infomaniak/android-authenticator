@@ -127,6 +127,7 @@
     <string name="understandConfirmButton">Κατάλαβα</string>
     <string name="unlockWithBiometrics">Ξεκλείδωμα με βιομετρικά στοιχεία</string>
     <string name="unlockingWithFaceId">Ξεκλείδωμα με Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Επαλήθευση της ασφάλειάς μου</string>
     <string name="viewGuidesButton">Περιήγηση στους οδηγούς</string>
     <string name="whenLoginTitle">Πότε</string>
