@@ -169,10 +169,12 @@ private fun AccountDetailsContent(
             ActionRequired(
                 onLoginClicked,
                 logIn = {
-                    val status = account.status as Account.Status.NotConnected
-                    val legacyAccount = (status.action as NotConnectedAction.ReLogin).legacyAccount
-                    onLoginPressed(legacyAccount.id)
-                    onLoginClicked = true
+                    val status = account.status as? Account.Status.NotConnected
+                    val legacyAccount = (status?.action as? NotConnectedAction.ReLogin)?.legacyAccount
+                    legacyAccount?.id?.let {
+                        onLoginPressed(it)
+                        onLoginClicked = true
+                    }
                 }
             )
         }
