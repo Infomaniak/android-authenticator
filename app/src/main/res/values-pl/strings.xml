@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="accountLoggedOut">Konto wylogowane</string>
+    <string name="accountLossRiskBackupVerificationDescription">Upewnij się, że inna metoda weryfikacji dwuetapowej jest skonfigurowana i działa.</string>
+    <string name="accountLossRiskLastDoubleAuthDescription">Jeśli Authenticator to Twoja ostatnia metoda weryfikacji dwuetapowej, możesz zostać zablokowany przy następnym logowaniu.</string>
+    <string name="accountLossRiskTitle">Możesz stracić dostęp do tego konta</string>
+    <string name="accountNotConnectedWarningTitle">Zaloguj się ponownie, aby zabezpieczyć swoje konto.</string>
+    <string name="accountPartiallyProtectedDescription">Zaktualizuj ustawienia bezpieczeństwa, aby chronić swoje konto.</string>
+    <string name="accountPartiallyProtectedTitle">Konto częściowo chronione</string>
+    <string name="accountPasswordTitle">Hasło do konta</string>
+    <string name="accountProtected">Konto chronione</string>
+    <string name="accountProtectionDisabledWarningDescription">To urządzenie jest jedynym używanym do zatwierdzania logowań do Twojego konta Infomaniak.\n\nZalecamy dodanie innego urządzenia lub metody weryfikacji przed kontynuowaniem.</string>
+    <string name="accountProtectionDisabledWarningTitle">Uwaga: Twoje konto przestanie być chronione</string>
+    <string name="accountRemovedAuthenticatorDescription">Nie będziesz już otrzymywał zatwierdzeń logowania na tym urządzeniu dla konta %s</string>
+    <string name="accountRemovedAuthenticatorTitle">Konto odłączone od Authenticatora</string>
+    <string name="accountSecurityLevelContentDescription">Poziom bezpieczeństwa konta</string>
+    <string name="accountSecurityVerificationDescription">Jeśli nie wykonywałeś tej akcji, zalecamy zmianę hasła i sprawdzenie ustawień bezpieczeństwa.</string>
+    <string name="accountSecurityVerificationTitle">Sprawdź bezpieczeństwo swojego konta</string>
+    <string name="accountSettingsButton">Ustawienia konta</string>
+    <string name="accountTitle">Konto</string>
+    <string name="accountsTitle">Konta</string>
+    <string name="actionRequiredDescription">Wymagana akcja w celu zabezpieczenia jednego z Twoich kont.</string>
+    <string name="activityHistoryButton">Historia aktywności</string>
+    <string name="addAccountContentDescription">Dodaj konto</string>
+    <string name="appAccessIsSecure">Dostęp do Authenticatora\njest zabezpieczony</string>
+    <string name="authorizationCodeTitle">Twój kod autoryzacyjny</string>
+    <string name="autoCloseTitle">Te informacje zamkną się automatycznie za 15 sekund.</string>
+    <string name="avatarContentDescription">Awatar konta</string>
+    <string name="callButton">Zadzwoń</string>
+    <string name="cancelButton">Anuluj</string>
+    <string name="changePasswordButton">Zmień hasło</string>
+    <string name="checkMyMethodsButton">Sprawdź moje metody</string>
+    <string name="closeButton">Zamknij</string>
+    <string name="confirmActionCompleteButton">Zrobiłem to, co trzeba</string>
+    <string name="confirmButton">Potwierdź</string>
+    <string name="confirmLoginNotificationTitle">Potwierdź logowanie</string>
+    <string name="contactSupportDescription">Skontaktuj się z naszymi zespołami telefonicznie lub e-mailem, aby uzyskać pomoc w rozwiązaniu problemu.</string>
+    <string name="contactSupportTitle">Kontakt z pomocą techniczną</string>
+    <string name="continueButton">Kontynuuj</string>
+    <string name="copyPassword">Kopiuj hasło</string>
+    <string name="dataManagementTitle">Zarządzanie danymi</string>
+    <string name="deletePreventionDescription">Usunięcie aplikacji może zagrozić bezpieczeństwu Twojego konta.</string>
+    <string name="deletePreventionTitle">Potrzebujesz pomocy?</string>
+    <string name="denyButton">Odmów</string>
+    <string name="descriptionPlaceholder">Opis</string>
+    <string name="deviceLoginTitle">Urządzenie</string>
+    <string name="disconnectAccountDescription">Twoje konto nie będzie już chronione przez weryfikację dwuetapową i stanie się podatne na nieautoryzowany dostęp.</string>
+    <string name="disconnectAccountOnThisDeviceDescription">Nie będziesz już mógł zatwierdzać logowań na tym urządzeniu za pomocą Authenticatora.</string>
+    <string name="disconnectAccountTitle">Odłącz to konto</string>
+    <string name="disconnectAccountWarningDescription">Upewnij się, że Twoje metody weryfikacji i odzyskiwania są nadal aktualne, aby nie stracić dostępu do konta.</string>
+    <string name="disconnectAccountWarningTitle">Odłączenie tego konta może osłabić jego bezpieczeństwo</string>
+    <string name="disconnectButton">Wyloguj się</string>
+    <string name="disconnectSuccess">Konto odłączone</string>
+    <string name="doneButton">Gotowe</string>
+    <string name="emailPlaceholder">E-mail</string>
+    <string name="enableButton">Włącz</string>
+    <string name="errorLoginFailed">Logowanie do konta nie powiodło się. Spróbuj ponownie lub skontaktuj się z pomocą techniczną. (kod błędu: %d)</string>
+    <string name="errorOccuredTitle">Wystąpił błąd</string>
+    <string name="estimatedWait">Szacowany czas oczekiwania: %s</string>
+    <string name="feedbackTitle">Opinie</string>
+    <string name="laterButton">Później</string>
+    <string name="locationLoginTitle">Lokalizacja</string>
+    <string name="logInButton">Zaloguj się</string>
+    <string name="loginAttemptQuery">Czy próbujesz się zalogować?</string>
+    <string name="loginAuthorizationWarning">Potwierdzenie tego logowania uprawni to urządzenie do dostępu do Twojego konta Infomaniak.</string>
+    <string name="loginDeniedSuccessDescription">Odmówiłeś próby logowania. Aby zabezpieczyć swoje konto, zmień hasło.\n\nJeśli zainicjowałeś to żądanie, spróbuj zalogować się ponownie.</string>
+    <string name="loginDeniedSuccessTitle">Logowanie odrzucone pomyślnie</string>
+    <string name="loginRequestAlreadyProcessedDescription">Nie jesteś osobą, która to zrobiła? Sprawdź swoje aktywne urządzenia i wyloguj się z tych, których nie rozpoznajesz.</string>
+    <string name="loginRequestAlreadyProcessedTitle">To żądanie zostało już przetworzone</string>
+    <string name="loginRequestExpiredTitle">To żądanie logowania wygasło</string>
+    <string name="manageNotifications">Zarządzaj powiadomieniami</string>
+    <string name="noInternetTitle">Brak połączenia z internetem</string>
+    <string name="notMeButton">To nie ja</string>
+    <string name="notificationsDescription">Włącz powiadomienia, aby otrzymywać informacje o bezpieczeństwie swoich kont Infomaniak.</string>
+    <string name="onBoardingFaceIdDescription">Włączenie Face ID zabezpiecza dostęp do aplikacji.</string>
+    <string name="onBoardingFaceIdTitle">Czy chcesz włączyć Face ID?</string>
+    <string name="onBoardingLoginDescription">Zaloguj się, aby bezpiecznie zatwierdzać swoje połączenia i chronić dostęp.</string>
+    <string name="onBoardingLoginTitle">Zabezpiecz swoje konto Infomaniak za pomocą Authenticatora</string>
+    <string name="onBoardingMigrationDescription">Ciesz się nowym zmodernizowanym interfejsem, zaprojektowanym z myślą o Twoim bezpieczeństwie.</string>
+    <string name="onBoardingMigrationTitle">kAuth przechodzi metamorfozę i staje się Authenticatorem</string>
+    <string name="onBoardingSecuringAccount">Zabezpieczanie konta…</string>
+    <string name="onBoardingSuccessDescription">Możesz teraz zatwierdzać swoje logowania za pomocą Authenticatora.</string>
+    <string name="onBoardingSuccessTitle">Wszystko gotowe</string>
+    <string name="openSupportStatus">Otwarte</string>
+    <string name="passwordAskingWarning">Infomaniak nigdy nie poprosi Cię o hasło niespodziewanie.\n\nUpewnij się, że zainicjowałeś tę akcję przed kontynuowaniem.</string>
+    <string name="passwordChangedDescription">Hasło logowania do Twojego konta Infomaniak %s zostało zaktualizowane.</string>
+    <string name="passwordChangedNotification">Hasło logowania zmienione</string>
+    <string name="passwordChangedTitle">Hasło logowania zmienione</string>
+    <string name="refreshPendingLoginsButton">Odśwież oczekujące logowania</string>
+    <string name="removeAccountDescription">Nie będziesz już mógł weryfikować logowania do tego konta za pomocą Authenticatora.</string>
+    <string name="removeAccountSuccess">Konto usunięte</string>
+    <string name="removeAccountTitle">Usuń konto</string>
+    <string name="removeButton">Usuń</string>
+    <string name="settingsTitle">Ustawienia</string>
+    <string name="showAccountPasswordButton">Pokaż hasło do konta</string>
+    <string name="startButton">Rozpocznij</string>
+    <string name="subjectPlaceholder">Temat</string>
+    <string name="submitTicketDescription">Abyśmy mogli Ci efektywnie pomóc, podaj jak najwięcej szczegółów dotyczących Twojego problemu.</string>
+    <string name="submitTicketTitle">Wyślij ticket</string>
+    <string name="supportResponseDelay">Odpowiemy w ciągu najbliższych 24 godzin roboczych.</string>
+    <string name="themeDark">Ciemny</string>
+    <string name="themeLight">Jasny</string>
+    <string name="themeSystem">Systemowy</string>
+    <string name="themeTitle">Motyw</string>
+    <string name="ticketSentSuccessDescription">Robimy wszystko, co w naszej mocy, aby nasz agent odpowiedział Ci jak najszybciej.</string>
+    <string name="ticketSentSuccessTitle">Twój ticket został wysłany do naszych zespołów!</string>
+    <string name="understandConfirmButton">Rozumiem</string>
+    <string name="unlockWithBiometrics">Odblokuj za pomocą biometrii</string>
+    <string name="unlockingWithFaceId">Odblokuj za pomocą Face ID</string>
+    <string name="verifySecurityButton">Zweryfikuj moje bezpieczeństwo</string>
+    <string name="viewGuidesButton">Przeglądaj przewodniki</string>
+    <string name="whenLoginTitle">Kiedy</string>
+</resources>

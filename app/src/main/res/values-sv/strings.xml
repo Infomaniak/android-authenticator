@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="accountLoggedOut">Konto utloggat</string>
+    <string name="accountLossRiskBackupVerificationDescription">Se till att en annan tvåstegsverifieringsmetod är inställd och fungerar.</string>
+    <string name="accountLossRiskLastDoubleAuthDescription">Om Authenticator är din sista tvåstegsverifieringsmetod kan du bli utelåst nästa gång du loggar in.</string>
+    <string name="accountLossRiskTitle">Du kan komma att förlora åtkomst till detta konto</string>
+    <string name="accountNotConnectedWarningTitle">Logga in igen för att säkra ditt konto.</string>
+    <string name="accountPartiallyProtectedDescription">Uppdatera dina säkerhetsinställningar för att skydda ditt konto.</string>
+    <string name="accountPartiallyProtectedTitle">Delvis skyddat konto</string>
+    <string name="accountPasswordTitle">Kontolösenord</string>
+    <string name="accountProtected">Konto skyddat</string>
+    <string name="accountProtectionDisabledWarningDescription">Denna enhet är den enda som används för att validera inloggningar till ditt Infomaniak-konto.\n\nVi rekommenderar att du lägger till en annan enhet eller verifieringsmetod innan du fortsätter.</string>
+    <string name="accountProtectionDisabledWarningTitle">Varning: ditt konto kommer inte längre att skyddas</string>
+    <string name="accountRemovedAuthenticatorDescription">Du kommer inte längre att ta emot inloggningsgodkännanden på denna enhet för kontot %s</string>
+    <string name="accountRemovedAuthenticatorTitle">Konto frånkopplat från Authenticator</string>
+    <string name="accountSecurityLevelContentDescription">Kontosäkerhetsnivå</string>
+    <string name="accountSecurityVerificationDescription">Om du inte utförde denna åtgärd rekommenderar vi att du byter lösenord och granskar dina säkerhetsinställningar.</string>
+    <string name="accountSecurityVerificationTitle">Verifiera din kontosäkerhet</string>
+    <string name="accountSettingsButton">Kontoinställningar</string>
+    <string name="accountTitle">Konto</string>
+    <string name="accountsTitle">Konton</string>
+    <string name="actionRequiredDescription">Åtgärd krävs för att säkra ett av dina konton.</string>
+    <string name="activityHistoryButton">Aktivitetshistorik</string>
+    <string name="addAccountContentDescription">Lägg till konto</string>
+    <string name="appAccessIsSecure">Åtkomst till Authenticator\när säker</string>
+    <string name="authorizationCodeTitle">Din auktoriseringskod</string>
+    <string name="autoCloseTitle">Denna information stängs automatiskt om 15 sekunder.</string>
+    <string name="avatarContentDescription">Kontoavatar</string>
+    <string name="callButton">Ring</string>
+    <string name="cancelButton">Avbryt</string>
+    <string name="changePasswordButton">Byt lösenord</string>
+    <string name="checkMyMethodsButton">Kontrollera mina metoder</string>
+    <string name="closeButton">Stäng</string>
+    <string name="confirmActionCompleteButton">Jag har gjort det som behövs</string>
+    <string name="confirmButton">Bekräfta</string>
+    <string name="confirmLoginNotificationTitle">Bekräfta inloggning</string>
+    <string name="contactSupportDescription">Kontakta våra team via telefon eller e-post för hjälp med att lösa ditt problem.</string>
+    <string name="contactSupportTitle">Kontakta support</string>
+    <string name="continueButton">Fortsätt</string>
+    <string name="copyPassword">Kopiera lösenord</string>
+    <string name="dataManagementTitle">Datahantering</string>
+    <string name="deletePreventionDescription">Att ta bort appen kan kompromissa säkerheten för ditt konto.</string>
+    <string name="deletePreventionTitle">Behöver du hjälp?</string>
+    <string name="denyButton">Neka</string>
+    <string name="descriptionPlaceholder">Beskrivning</string>
+    <string name="deviceLoginTitle">Enhet</string>
+    <string name="disconnectAccountDescription">Ditt konto kommer inte längre att skyddas av tvåstegsverifiering och blir sårbart för obehörig åtkomst.</string>
+    <string name="disconnectAccountOnThisDeviceDescription">Du kommer inte längre att kunna godkänna inloggningar på denna enhet med Authenticator.</string>
+    <string name="disconnectAccountTitle">Koppla från detta konto\u0020</string>
+    <string name="disconnectAccountWarningDescription">Se till att dina verifierings- och återställningsmetoder fortfarande är uppdaterade för att undvika att förlora åtkomst till ditt konto.</string>
+    <string name="disconnectAccountWarningTitle">Att koppla från detta konto kan försvaga dess säkerhet</string>
+    <string name="disconnectButton">Logga ut</string>
+    <string name="disconnectSuccess">Konto frånkopplat</string>
+    <string name="doneButton">Klar</string>
+    <string name="emailPlaceholder">E-post</string>
+    <string name="enableButton">Aktivera</string>
+    <string name="errorLoginFailed">Kontoinloggning misslyckades. Försök igen eller kontakta support. (felkod: %d)</string>
+    <string name="errorOccuredTitle">Ett fel uppstod</string>
+    <string name="estimatedWait">Beräknad väntetid: %s</string>
+    <string name="feedbackTitle">Feedback</string>
+    <string name="laterButton">Senare</string>
+    <string name="locationLoginTitle">Plats</string>
+    <string name="logInButton">Logga in</string>
+    <string name="loginAttemptQuery">Försöker du\nlogga in?</string>
+    <string name="loginAuthorizationWarning">Att bekräfta denna inloggning kommer att auktorisera denna enhet att komma åt ditt Infomaniak-konto</string>
+    <string name="loginDeniedSuccessDescription">Du avvisade ett inloggningsförsök. För att säkra ditt konto, byt ditt lösenord.\n\nOm du gjorde denna förfrågan, försök logga in igen.</string>
+    <string name="loginDeniedSuccessTitle">Inloggning nekades framgångsrikt</string>
+    <string name="loginRequestAlreadyProcessedDescription">Är det inte du som gjorde detta? Kontrollera dina aktiva enheter och logga ut från de du inte känner igen.</string>
+    <string name="loginRequestAlreadyProcessedTitle">Denna förfrågan har redan behandlats</string>
+    <string name="loginRequestExpiredTitle">Denna inloggningsförfrågan har löpt ut</string>
+    <string name="manageNotifications">Hantera notifikationer</string>
+    <string name="noInternetTitle">Ingen internetanslutning</string>
+    <string name="notMeButton">Det var inte jag</string>
+    <string name="notificationsDescription">Aktivera notifikationer för att ta emot säkerhetsinformation om dina Infomaniak-konton.</string>
+    <string name="onBoardingFaceIdDescription">Att aktivera Face ID säkrar åtkomsten till appen.</string>
+    <string name="onBoardingFaceIdTitle">Vill du aktivera Face ID?</string>
+    <string name="onBoardingLoginDescription">Logga in för att säkert godkänna dina anslutningar och skydda din åtkomst.</string>
+    <string name="onBoardingLoginTitle">Säkra ditt Infomaniak-konto med Authenticator</string>
+    <string name="onBoardingMigrationDescription">Njut av ett nytt moderniserat gränssnitt, designat för din säkerhet.</string>
+    <string name="onBoardingMigrationTitle">kAuth får en makeover och blir Authenticator</string>
+    <string name="onBoardingSecuringAccount">Säkrar kontot…</string>
+    <string name="onBoardingSuccessDescription">Du kan nu validera dina inloggningar med Authenticator.</string>
+    <string name="onBoardingSuccessTitle">Allt är klart</string>
+    <string name="openSupportStatus">Öppet</string>
+    <string name="passwordAskingWarning">Infomaniak kommer aldrig att fråga dig om ditt lösenord oväntat.\n\nSe till att du gjorde denna åtgärd innan du fortsätter.</string>
+    <string name="passwordChangedDescription">Inloggningslösenordet för ditt Infomaniak-konto %s har uppdaterats.</string>
+    <string name="passwordChangedNotification">Inloggningslösenord ändrat</string>
+    <string name="passwordChangedTitle">Inloggningslösenord ändrat</string>
+    <string name="refreshPendingLoginsButton">Uppdatera väntande inloggningar</string>
+    <string name="removeAccountDescription">Du kommer inte längre att kunna verifiera din inloggning till detta konto med Authenticator.</string>
+    <string name="removeAccountSuccess">Konto borttaget</string>
+    <string name="removeAccountTitle">Ta bort konto</string>
+    <string name="removeButton">Ta bort</string>
+    <string name="settingsTitle">Inställningar</string>
+    <string name="showAccountPasswordButton">Visa kontolösenord</string>
+    <string name="startButton">Starta</string>
+    <string name="subjectPlaceholder">Ämne</string>
+    <string name="submitTicketDescription">För att hjälpa oss att bistå dig effektivt, vänligen ange så många detaljer som möjligt angående ditt problem.</string>
+    <string name="submitTicketTitle">Skicka in en biljett</string>
+    <string name="supportResponseDelay">Vi svarar inom de närmaste 24 arbetsdagarna.</string>
+    <string name="themeDark">Mörkt</string>
+    <string name="themeLight">Ljust</string>
+    <string name="themeSystem">System</string>
+    <string name="themeTitle">Tema</string>
+    <string name="ticketSentSuccessDescription">Vi gör vårt bästa för att en agent ska besvara dig så snart som möjligt.</string>
+    <string name="ticketSentSuccessTitle">Din biljett har skickats till våra team!</string>
+    <string name="understandConfirmButton">Jag förstår</string>
+    <string name="unlockWithBiometrics">Lås upp med biometri</string>
+    <string name="unlockingWithFaceId">Lås upp med Face ID</string>
+    <string name="verifySecurityButton">Verifiera min säkerhet</string>
+    <string name="viewGuidesButton">Bläddra i guiderna</string>
+    <string name="whenLoginTitle">När</string>
+</resources>
