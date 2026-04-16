@@ -164,14 +164,15 @@ private fun AccountDetailsContent(
         Header(account, user)
         SecurityCheck(account.status.toAccountStatus())
         if (account.status != Account.Status.LoggedIn) {
-            var hasLogin by remember { mutableStateOf(false) }
+            // TODO: Manager better this state with better status handler
+            var onLoginClicked by remember { mutableStateOf(false) }
             ActionRequired(
-                hasLogin,
+                onLoginClicked,
                 logIn = {
                     val status = account.status as Account.Status.NotConnected
                     val legacyAccount = (status.action as NotConnectedAction.ReLogin).legacyAccount
                     onLoginPressed(legacyAccount.id)
-                    hasLogin = true
+                    onLoginClicked = true
                 }
             )
         }
