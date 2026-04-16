@@ -45,12 +45,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import network.exceptions.ApiException
 import network.exceptions.NetworkException
-import network.utils.ApiEnvironment
 import kotlin.time.Duration.Companion.seconds
 
 internal class ApiClientProvider(
     private val userAgent: String,
-    private val environment: ApiEnvironment,
+    private val apiHost: String,
     private val crashReport: CrashReportInterface? = null,
 ) {
 
@@ -96,7 +95,7 @@ internal class ApiClientProvider(
         }
 
         defaultRequest {
-            url(ApiRoutes.apiBaseUrl(environment))
+            url(ApiRoutes.apiBaseUrl(apiHost))
             contentType(ContentType.Application.Json)
         }
 
