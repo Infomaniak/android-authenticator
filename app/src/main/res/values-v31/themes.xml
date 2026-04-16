@@ -17,12 +17,12 @@
   -->
 <resources>
 
-    <style name="AppTheme.LauncherBase31" parent="AppTheme.LauncherBase">
+    <style name="AppTheme.LauncherBase.v31">
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="android:windowSplashScreenBackground">@color/splashscreenBackground</item>
         <item name="android:windowSplashScreenBrandingImage">@drawable/splashscreen_branding_image</item>
     </style>
 
-    <style name="AppThemeLauncher" parent="AppTheme.LauncherBase31" />
+    <style name="AppThemeLauncher" parent="AppTheme.LauncherBase.v31" />
 
 </resources>
