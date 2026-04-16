@@ -78,20 +78,12 @@ fun MigrationScreen(
             InfomaniakAuthenticatorTopAppBar()
         },
         bottomButton = { bottomModifier ->
-            Column(
+            BottomButton(
                 modifier = bottomModifier,
-                verticalArrangement = Arrangement.spacedBy(Margin.Medium)
-            ) {
-                MigrationSelectAccounts(
-                    accounts = accounts,
-                    onClick = { showAccountsBottomSheet = true },
-                )
-                LargeButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.continueButton),
-                    onClick = onContinue
-                )
-            }
+                accounts = accounts,
+                onClick = { showAccountsBottomSheet = true },
+                onContinue = onContinue
+            )
         }
     ) {
         Column(
@@ -112,6 +104,29 @@ fun MigrationScreen(
         if (showAccountsBottomSheet) {
             AccountsBottomSheetDialog(accounts = accounts, close = { showAccountsBottomSheet = false })
         }
+    }
+}
+
+@Composable
+private fun BottomButton(
+    accounts: () -> List<Account>,
+    onClick: () -> Unit,
+    onContinue: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(Margin.Medium)
+    ) {
+        MigrationSelectAccounts(
+            accounts = accounts,
+            onClick = onClick,
+        )
+        LargeButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.continueButton),
+            onClick = onContinue
+        )
     }
 }
 

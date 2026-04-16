@@ -79,6 +79,8 @@
     <string name="laterButton">Más tarde</string>
     <string name="locationLoginTitle">Ubicación</string>
     <string name="logInButton">Iniciar sesión</string>
+    <string name="logInDescription">Introduce tu contraseña.</string>
+    <string name="logInTitle">Iniciar sesión</string>
     <string name="loginAttemptQuery">¿Está intentando iniciar sesión?</string>
     <string name="loginAuthorizationWarning">Confirmar este inicio de sesión autorizará a este dispositivo a acceder a su cuenta de Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Ha rechazado un intento de inicio de sesión. Para proteger su cuenta, cambie su contraseña.\n\nSi usted inició esta solicitud, intente iniciar sesión nuevamente.</string>
@@ -106,6 +108,8 @@
     <string name="passwordChangedDescription">La contraseña de inicio de sesión de la cuenta Infomaniak %s ha sido actualizada.</string>
     <string name="passwordChangedNotification">Contraseña de inicio de sesión modificada</string>
     <string name="passwordChangedTitle">Contraseña de inicio de sesión modificada</string>
+    <string name="passwordForgottenButton">¿Olvidaste tu contraseña?</string>
+    <string name="passwordLabel">Contraseña</string>
     <string name="refreshPendingLoginsButton">Actualizar inicios de sesión pendientes</string>
     <string name="removeAccountDescription">Ya no podrá verificar su inicio de sesión en esta cuenta con Authenticator.</string>
     <string name="removeAccountSuccess">Cuenta eliminada</string>

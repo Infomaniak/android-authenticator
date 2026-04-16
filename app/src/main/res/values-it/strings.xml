@@ -79,6 +79,8 @@
     <string name="laterButton">Più tardi</string>
     <string name="locationLoginTitle">Posizione</string>
     <string name="logInButton">Accedi</string>
+    <string name="logInDescription">Inserire la password.</string>
+    <string name="logInTitle">Accedi</string>
     <string name="loginAttemptQuery">Stai cercando di accedere?</string>
     <string name="loginAuthorizationWarning">Confermando questo accesso, autorizzerai questo dispositivo ad accedere al tuo account Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Hai rifiutato un tentativo di accesso. Per proteggere il tuo account, cambia la tua password.\n\nSe hai avviato tu questa richiesta, prova ad accedere nuovamente.</string>
@@ -106,6 +108,8 @@
     <string name="passwordChangedDescription">La password di accesso dell’account Infomaniak %s è stata aggiornata.</string>
     <string name="passwordChangedNotification">Password di accesso modificata</string>
     <string name="passwordChangedTitle">Password di accesso modificata</string>
+    <string name="passwordForgottenButton">Hai dimenticato la password?</string>
+    <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Aggiorna accessi in sospeso</string>
     <string name="removeAccountDescription">Non potrai più verificare l’accesso a questo account con Authenticator.</string>
     <string name="removeAccountSuccess">Account rimosso</string>

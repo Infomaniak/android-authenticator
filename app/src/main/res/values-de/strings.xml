@@ -79,6 +79,8 @@
     <string name="laterButton">Später</string>
     <string name="locationLoginTitle">Ort</string>
     <string name="logInButton">Anmelden</string>
+    <string name="logInDescription">Geben Sie Ihr Passwort ein.</string>
+    <string name="logInTitle">Anmelden</string>
     <string name="loginAttemptQuery">Versuchen Sie sich anzumelden?</string>
     <string name="loginAuthorizationWarning">Durch die Bestätigung dieser Anmeldung wird dieses Gerät zur Zugriffsberechtigung auf Ihr Infomaniak-Konto autorisiert.</string>
     <string name="loginDeniedSuccessDescription">Sie haben einen Anmeldeversuch abgelehnt. Ändern Sie Ihr Passwort, um Ihr Konto zu schützen.\n\nWenn Sie diese Anfrage gestartet haben, versuchen Sie erneut, sich anzumelden.</string>
@@ -106,6 +108,8 @@
     <string name="passwordChangedDescription">Das Anmeldekennwort des Infomaniak-Kontos %s wurde aktualisiert.</string>
     <string name="passwordChangedNotification">Anmeldekennwort geändert</string>
     <string name="passwordChangedTitle">Anmeldekennwort geändert</string>
+    <string name="passwordForgottenButton">Passwort vergessen?</string>
+    <string name="passwordLabel">Passwort</string>
     <string name="refreshPendingLoginsButton">Ausstehende Anmeldungen aktualisieren</string>
     <string name="removeAccountDescription">Sie können sich nicht mehr mit Authenticator bei diesem Konto anmelden.</string>
     <string name="removeAccountSuccess">Konto entfernt</string>

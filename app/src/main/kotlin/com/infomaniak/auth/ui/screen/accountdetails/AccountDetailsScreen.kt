@@ -86,6 +86,7 @@ import kotlinx.coroutines.delay
 fun AccountDetailsScreen(
     accountId: Long,
     onBackPressed: () -> Unit,
+    onLoginPressed: (Long) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,6 +102,7 @@ fun AccountDetailsScreen(
 
     AccountDetailsScreen(
         uiState = { uiState },
+        onLoginPressed = onLoginPressed,
         onBackPressed = onBackPressed,
         onChallengesRefreshClicked = {
             viewModel.refreshChallenges(accountId)
@@ -114,6 +116,7 @@ fun AccountDetailsScreen(
 @Composable
 fun AccountDetailsScreen(
     uiState: () -> AccountDetailsUiState,
+    onLoginPressed: (Long) -> Unit,
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
@@ -135,6 +138,7 @@ fun AccountDetailsScreen(
                     paddingValues = paddingValues,
                     account = uiState.account,
                     user = uiState.user,
+                    onLoginPressed = onLoginPressed,
                     onChallengesRefreshClicked = onChallengesRefreshClicked,
                     onRemoveAccountClicked = onRemoveAccountClicked
                 )
@@ -150,6 +154,7 @@ private fun AccountDetailsContent(
     paddingValues: PaddingValues,
     account: Account,
     user: User?,
+    onLoginPressed: (Long) -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
 ) {
@@ -159,11 +164,17 @@ private fun AccountDetailsContent(
         Header(account, user)
         SecurityCheck(account.status.toAccountStatus())
         if (account.status != Account.Status.LoggedIn) {
+            // TODO: Manager better this state with better status handler
             var hasLogin by remember { mutableStateOf(false) }
             ActionRequired(
                 hasLogin,
-                logIn = {
-                    hasLogin = true
+                onLoginClicked = {
+                    val status = account.status as? Account.Status.NotConnected
+                    val legacyAccount = (status?.action as? NotConnectedAction.ReLogin)?.legacyAccount
+                    legacyAccount?.id?.let {
+                        onLoginPressed(it)
+                        hasLogin = true
+                    }
                 }
             )
         }
@@ -243,7 +254,7 @@ private data class ActionRequiredConfiguration(
 )
 
 @Composable
-private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
+private fun ActionRequired(hasLogin: Boolean, onLoginClicked: () -> Unit) {
     val configuration = if (hasLogin) {
         ActionRequiredConfiguration(
             text = stringResource(R.string.errorLoginFailed, 0),
@@ -281,7 +292,7 @@ private fun ActionRequired(hasLogin: Boolean, logIn: () -> Unit) {
         }
 
         if (hasLogin) ContactSupportButton()
-        LogInAgainButton(hasLogin, logIn = logIn)
+        LogInAgainButton(hasLogin, logIn = onLoginClicked)
     }
 }
 
@@ -435,6 +446,7 @@ private fun AccountDetailsScreenPreview(
     AuthenticatorTheme {
         AccountDetailsScreen(
             uiState = { AccountDetailsUiState.Success(accountPairs.first, accountPairs.second) },
+            onLoginPressed = {},
             onBackPressed = {},
             onChallengesRefreshClicked = {},
             onRemoveAccountClicked = {},

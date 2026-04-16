@@ -79,6 +79,8 @@
     <string name="laterButton">Plus tard</string>
     <string name="locationLoginTitle">Lieu</string>
     <string name="logInButton">Se connecter</string>
+    <string name="logInDescription">Saisissez votre mot de passe.</string>
+    <string name="logInTitle">Se connecter</string>
     <string name="loginAttemptQuery">Êtes-vous en train d’essayer\nde vous connecter ?</string>
     <string name="loginAuthorizationWarning">Confirmer cette connexion autorisera cet appareil à accéder à votre compte Infomaniak</string>
     <string name="loginDeniedSuccessDescription">Vous avez refusé une tentative de connexion. Pour sécuriser votre compte, changez votre mot de passe.\n\nSi vous êtes à l’origine de cette demande, réessayez de vous connecter.</string>
@@ -106,6 +108,8 @@
     <string name="passwordChangedDescription">Le mot de passe de connexion du compte Infomaniak %s a été mis à jour.</string>
     <string name="passwordChangedNotification">Mot de passe de connexion modifié</string>
     <string name="passwordChangedTitle">Mot de passe de connexion modifié</string>
+    <string name="passwordForgottenButton">Mot de passe oublié ?</string>
+    <string name="passwordLabel">Mot de passe</string>
     <string name="refreshPendingLoginsButton">Actualiser les connexions en attente</string>
     <string name="removeAccountDescription">Vous ne pourrez plus valider la connexion à ce compte avec Authenticator.</string>
     <string name="removeAccountSuccess">Compte retiré</string>
