@@ -108,6 +108,7 @@
     <string name="passwordChangedDescription">La password di accesso dell’account Infomaniak %s è stata aggiornata.</string>
     <string name="passwordChangedNotification">Password di accesso modificata</string>
     <string name="passwordChangedTitle">Password di accesso modificata</string>
+    <string name="passwordForgottenButton">Hai dimenticato la password?</string>
     <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Aggiorna accessi in sospeso</string>
     <string name="removeAccountDescription">Non potrai più verificare l’accesso a questo account con Authenticator.</string>
@@ -130,7 +131,6 @@
     <string name="understandConfirmButton">Capito</string>
     <string name="unlockWithBiometrics">Sblocco con la biometria</string>
     <string name="unlockingWithFaceId">Sblocca con Face ID</string>
-    <string name="updateButton">Aggiorna</string>
     <string name="verifySecurityButton">Verifica la mia sicurezza</string>
     <string name="viewGuidesButton">Sfoglia le guide</string>
     <string name="whenLoginTitle">Quando</string>
