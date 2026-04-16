@@ -29,6 +29,7 @@ import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
+import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.lib.login.ApiToken
@@ -47,7 +48,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
-import network.utils.ApiEnvironment
 import javax.inject.Singleton
 
 @Module
@@ -88,7 +88,7 @@ object ApplicationModule {
         crossAppLoginFacade: CrossAppLoginFacade,
     ): AuthenticatorFacade {
         return AuthenticatorFacade.create(
-            environment = ApiEnvironment.Prod,
+            apiHost = ApiEnvironment.current.host,
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),

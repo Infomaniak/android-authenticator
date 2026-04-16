@@ -17,11 +17,9 @@
  */
 package com.infomaniak.auth.lib.internal.network
 
-import network.utils.ApiEnvironment
-
 internal object ApiRoutes {
 
-    fun apiBaseUrl(environment: ApiEnvironment) = "${environment.baseUrl}/api/"
+    fun apiBaseUrl(apiHost: String) = "https://login.${apiHost}/api/"
 
     fun passkeysOptions() = "users/me/passkeys/options"
     fun registerPasskey() = "users/me/passkeys"
