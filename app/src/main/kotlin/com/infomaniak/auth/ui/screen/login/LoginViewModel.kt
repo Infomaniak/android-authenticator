@@ -19,18 +19,12 @@ package com.infomaniak.auth.ui.screen.login
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,22 +32,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
-    private val legacyAccountIdFlow = MutableSharedFlow<Long>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-
-    val uiState: StateFlow<LoginUiState> = legacyAccountIdFlow
-        .flatMapLatest { id ->
-            authenticatorFacade.accounts.mapNotNull { accounts ->
-                accounts.firstOrNull { it.id == id }?.let { LoginUiState.Ready(it) }
-            }
+    fun uiStateForAccount(legacyAccountId: Long): Flow<LoginUiState> {
+        return authenticatorFacade.accounts.mapNotNull { accounts ->
+            accounts.firstOrNull { it.id == legacyAccountId }?.let { LoginUiState.Ready(it) }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = LoginUiState.Loading
-        )
-
-    fun fetchLegacyAccount(accountId: Long) {
-        legacyAccountIdFlow.tryEmit(accountId)
     }
 }
 
