@@ -31,7 +31,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
-import network.utils.ApiEnvironment
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -65,7 +64,7 @@ abstract class AuthenticatorFacade internal constructor() {
     companion object {
 
         fun create(
-            environment: ApiEnvironment,
+            apiHost: String,
             userAgent: String,
             clientId: String,
             databaseNameOrPath: String? = null,
@@ -77,7 +76,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
                         userAgent = userAgent,
-                        environment = environment,
+                        apiHost = apiHost,
                         crashReport = crashReport,
                     ).httpClient
                 )
@@ -107,7 +106,7 @@ abstract class AuthenticatorFacade internal constructor() {
 
         fun dummyInstance(
             userAgent: String,
-            environment: ApiEnvironment,
+            apiHost: String,
             crashReport: CrashReportInterface?,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
@@ -117,7 +116,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
                         userAgent = userAgent,
-                        environment = environment,
+                        apiHost = apiHost,
                         crashReport = crashReport,
                     ).httpClient
                 )
