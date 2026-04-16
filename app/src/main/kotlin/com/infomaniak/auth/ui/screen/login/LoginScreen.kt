@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -31,8 +33,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,9 +47,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
@@ -101,6 +100,7 @@ private fun LoginScreen(
     onLoginPressed: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val passwordState = rememberTextFieldState(initialText = "")
     var password by rememberSaveable { mutableStateOf("") }
 
     BottomStickyButtonScaffold(
@@ -134,11 +134,7 @@ private fun LoginScreen(
                     text = stringResource(R.string.logInDescription),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                LoginForm(
-                    legacyAccount = legacyAccount,
-                    password = password,
-                    onPasswordChange = { password = it },
-                )
+                LoginForm(passwordState, legacyAccount)
             }
             OpenUrlButton(
                 text = stringResource(R.string.passwordForgottenButton),
@@ -156,9 +152,8 @@ private fun LoginScreen(
 
 @Composable
 private fun LoginForm(
+    passwordState: TextFieldState,
     legacyAccount: () -> Account,
-    password: String,
-    onPasswordChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -180,19 +175,16 @@ private fun LoginForm(
             HorizontalDivider(
                 color = AuthenticatorTheme.materialColors.outlineVariant,
             )
-            TextField(
-                value = password,
-                onValueChange = onPasswordChange,
+            SecureTextField(
+                state = passwordState,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                     disabledBorderColor = Color.Transparent,
                     errorBorderColor = Color.Transparent,
                 ),
-                singleLine = true,
                 label = { Text(stringResource(R.string.passwordLabel)) },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                textObfuscationMode = if (passwordVisible) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
                 trailingIcon = {
                     IconButton(onClick = {
                         passwordVisible = !passwordVisible
