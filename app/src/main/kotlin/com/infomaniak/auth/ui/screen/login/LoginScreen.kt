@@ -101,7 +101,6 @@ private fun LoginScreen(
     modifier: Modifier = Modifier,
 ) {
     val passwordState = rememberTextFieldState(initialText = "")
-    var password by rememberSaveable { mutableStateOf("") }
 
     BottomStickyButtonScaffold(
         modifier = modifier.imePadding(),
@@ -118,7 +117,7 @@ private fun LoginScreen(
                 modifier = topModifier.fillMaxWidth(),
                 title = stringResource(R.string.logInButton),
                 onClick = {
-                    onLoginPressed(legacyAccount().email, password)
+                    onLoginPressed(legacyAccount().email, passwordState.text.toString())
                 }
             )
         },
