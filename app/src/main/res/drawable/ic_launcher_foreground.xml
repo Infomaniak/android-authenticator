@@ -1,34 +1,51 @@
+<!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#ffffff"
-        android:fillType="evenOdd"
-        android:pathData="M52.03,49.32V58.79H55.98V49.32H52.03Z" />
-    <path
-        android:fillAlpha="0.4"
-        android:fillColor="#ffffff"
-        android:pathData="M65.84,50.97C65.84,44.38 60.53,39.06 54,39.06V35.11C62.73,35.11 69.79,42.22 69.79,50.97V57.21H65.84V50.97Z" />
-    <path
-        android:fillAlpha="0.4"
-        android:fillColor="#ffffff"
-        android:pathData="M50.49,35.5C43.47,37.1 38.21,43.34 38.21,50.9H42.16C42.16,45.24 46.09,40.56 51.37,39.35L50.49,35.5Z" />
-    <path
-        android:fillAlpha="0.4"
-        android:fillColor="#ffffff"
-        android:pathData="M42.16,57.14V54.05H38.21V57.14C38.21,65.89 45.27,73 54,73C61.53,73 67.81,67.72 69.4,60.66L65.55,59.79C64.35,65.1 59.63,69.05 54,69.05C47.47,69.05 42.16,63.73 42.16,57.14Z" />
-    <path
-        android:fillAlpha="0.8"
-        android:fillColor="#ffffff"
-        android:pathData="M54.01,42.06C50.51,42.06 47.5,44.09 46.05,47.01L49.59,48.76C50.4,47.12 52.08,46.01 54.01,46.01C56.72,46.01 58.94,48.22 58.94,50.98H62.89C62.89,46.06 58.92,42.06 54.01,42.06Z" />
-    <path
-        android:fillAlpha="0.8"
-        android:fillColor="#ffffff"
-        android:pathData="M58.94,57.15V54.06H62.89V57.15C62.89,62.06 58.92,66.06 54.01,66.06V62.12C56.72,62.12 58.94,59.9 58.94,57.15Z" />
-    <path
-        android:fillAlpha="0.8"
-        android:fillColor="#ffffff"
-        android:pathData="M49.07,57.15V50.9H45.13V57.15C45.13,60.64 47.13,63.67 50.05,65.13L51.82,61.6C50.19,60.79 49.07,59.1 49.07,57.15Z" />
+  <path
+      android:pathData="M52.03,49.32V58.79H55.98V49.32H52.03Z"
+      android:fillColor="#ffffff"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M65.84,50.97C65.84,44.38 60.53,39.06 54,39.06V35.11C62.73,35.11 69.79,42.22 69.79,50.97V57.21H65.84V50.97Z"
+      android:fillColor="#ffffff"
+      android:fillAlpha="0.5"/>
+  <path
+      android:pathData="M50.49,35.5C43.47,37.1 38.21,43.34 38.21,50.9H42.16C42.16,45.24 46.09,40.56 51.37,39.35L50.49,35.5Z"
+      android:fillColor="#ffffff"
+      android:fillAlpha="0.5"/>
+  <path
+      android:pathData="M42.16,57.14V54.05H38.21V57.14C38.21,65.89 45.27,73 54,73C61.53,73 67.81,67.72 69.4,60.66L65.55,59.79C64.35,65.1 59.63,69.05 54,69.05C47.47,69.05 42.16,63.73 42.16,57.14Z"
+      android:fillColor="#ffffff"
+      android:fillAlpha="0.5"/>
+  <path
+      android:pathData="M54.01,42.06C50.51,42.06 47.5,44.09 46.05,47.01L49.59,48.76C50.4,47.12 52.08,46.01 54.01,46.01C56.72,46.01 58.94,48.22 58.94,50.98H62.89C62.89,46.06 58.92,42.06 54.01,42.06Z"
+      android:fillColor="#ffffff"
+      android:fillAlpha="0.9"/>
+  <path
+      android:pathData="M58.94,57.15V54.06H62.89V57.15C62.89,62.06 58.92,66.06 54.01,66.06V62.12C56.72,62.12 58.94,59.9 58.94,57.15Z"
+      android:fillColor="#ffffff"
+      android:fillAlpha="0.9"/>
+  <path
+      android:pathData="M49.07,57.15V50.9H45.13V57.15C45.13,60.64 47.13,63.67 50.05,65.13L51.82,61.6C50.19,60.79 49.07,59.1 49.07,57.15Z"
+      android:fillColor="#ffffff"
+      android:fillAlpha="0.9"/>
 </vector>
