@@ -88,7 +88,7 @@
     <string name="noInternetTitle">Geen internetverbinding</string>
     <string name="notMeButton">Ik was het niet</string>
     <string name="notificationsDescription">Schakel meldingen in om beveiligingsinformatie over uw Infomaniak accounts te ontvangen.</string>
-    <string name="onBoardingFaceIdDescription">Het inschakelen van Face ID beveiligd de toegang tot de app.</string>
+    <string name="onBoardingFaceIdDescription">Het inschakelen van Face ID beveiligt de toegang tot de app.</string>
     <string name="onBoardingFaceIdTitle">Wilt u Face ID inschakelen?</string>
     <string name="onBoardingLoginDescription">Log in om uw verbindingen veilig goed te keuren en uw toegang te beveiligen.</string>
     <string name="onBoardingLoginTitle">Beveilig uw Infomaniak account met Authenticator</string>

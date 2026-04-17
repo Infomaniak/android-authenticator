@@ -26,7 +26,7 @@
     <string name="accountPartiallyProtectedTitle">Compte partiellement protégé</string>
     <string name="accountPasswordTitle">Mot de passe du compte</string>
     <string name="accountProtected">Compte protégé</string>
-    <string name="accountProtectionDisabledWarningDescription">Cet appareil est le seul à valider vos connexions à votre compte Infomaniak.\n\n Nous vous recommandons d’ajouter un autre appareil ou une autre méthode de vérification avant de continuer.</string>
+    <string name="accountProtectionDisabledWarningDescription">Cet appareil est le seul à valider vos connexions à votre compte Infomaniak.\n\nNous vous recommandons d’ajouter un autre appareil ou une autre méthode de vérification avant de continuer.</string>
     <string name="accountProtectionDisabledWarningTitle">Attention, votre compte ne sera plus protégé</string>
     <string name="accountRemovedAuthenticatorDescription">Vous ne recevrez plus les connexions à approuver sur cet appareil pour le compte %s</string>
     <string name="accountRemovedAuthenticatorTitle">Compte déconnecté d’Authenticator</string>
@@ -63,7 +63,7 @@
     <string name="deviceLoginTitle">Appareil</string>
     <string name="disconnectAccountDescription">Votre compte ne sera plus protégé par la validation en deux étapes et deviendra vulnérable aux accès non autorisés.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Vous ne pourrez plus valider la connexion sur cet appareil avec Authenticator.</string>
-    <string name="disconnectAccountTitle">Déconnecter ce compte\u0020</string>
+    <string name="disconnectAccountTitle">Déconnecter ce compte</string>
     <string name="disconnectAccountWarningDescription">Vérifiez que vos méthodes de validation et de récupération soient toujours à jour pour ne pas perdre l’accès à votre compte.</string>
     <string name="disconnectAccountWarningTitle">Déconnecter ce compte peut affaiblir sa sécurité</string>
     <string name="disconnectButton">Se déconnecter</string>

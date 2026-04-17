@@ -62,7 +62,7 @@
     <string name="deviceLoginTitle">Enhet</string>
     <string name="disconnectAccountDescription">Kontoen din vil ikke lenger være beskyttet av totrinnsverifisering og vil bli sårbar for uautorisert tilgang.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Du vil ikke lenger kunne godkjenne pålogginger på denne enheten med Authenticator.</string>
-    <string name="disconnectAccountTitle">Koble fra denne kontoen\u0020</string>
+    <string name="disconnectAccountTitle">Koble fra denne kontoen</string>
     <string name="disconnectAccountWarningDescription">Sørg for at verifiserings- og gjenopprettingsmetodene dine fortsatt er oppdaterte for å unngå å miste tilgangen til kontoen din.</string>
     <string name="disconnectAccountWarningTitle">Å koble fra denne kontoen kan svekke sikkerheten</string>
     <string name="disconnectButton">Logg ut</string>

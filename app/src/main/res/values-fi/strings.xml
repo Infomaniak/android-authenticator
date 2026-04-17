@@ -25,7 +25,7 @@
     <string name="accountPartiallyProtectedTitle">Osittain suojattu tili</string>
     <string name="accountPasswordTitle">Tilin salasana</string>
     <string name="accountProtected">Tili suojattu</string>
-    <string name="accountProtectionDisabledWarningDescription">Tämä laite on ainoa, jota käytetään Infomaniak-tilisi kirjautumisten vahvistamiseen.\n\n Suosittelemme lisäämään toisen laitteen tai vahvistusmenetelmän ennen jatkamista.</string>
+    <string name="accountProtectionDisabledWarningDescription">Tämä laite on ainoa, jota käytetään Infomaniak-tilisi kirjautumisten vahvistamiseen.\n\nSuosittelemme lisäämään toisen laitteen tai vahvistusmenetelmän ennen jatkamista.</string>
     <string name="accountProtectionDisabledWarningTitle">Varoitus: tilisi ei ole enää suojattu</string>
     <string name="accountRemovedAuthenticatorDescription">Et enää vastaanota kirjautumishyväksyntöjä tällä laitteella tilille %s</string>
     <string name="accountRemovedAuthenticatorTitle">Tili irrotettu Authenticatorista</string>
@@ -79,7 +79,7 @@
     <string name="logInButton">Kirjaudu sisään</string>
     <string name="loginAttemptQuery">Yritätkö kirjautua?</string>
     <string name="loginAuthorizationWarning">Tämän kirjautumisen vahvistaminen antaa tälle laitteelle pääsyn Infomaniak-tiliisi.</string>
-    <string name="loginDeniedSuccessDescription">Hylkäsit kirjautumisyrityksen. Suojataksesi tilisi, vaihda salasanasi.\n\n Jos aloitit tämän pyynnön, yritä kirjautua uudelleen.</string>
+    <string name="loginDeniedSuccessDescription">Hylkäsit kirjautumisyrityksen. Suojataksesi tilisi, vaihda salasanasi.\n\nJos aloitit tämän pyynnön, yritä kirjautua uudelleen.</string>
     <string name="loginDeniedSuccessTitle">Kirjautuminen hylätty onnistuneesti</string>
     <string name="loginRequestAlreadyProcessedDescription">Et tehnyt tätä? Tarkista aktiiviset laitteesi ja kirjaudu ulos niistä, joita et tunnista.</string>
     <string name="loginRequestAlreadyProcessedTitle">Tämä pyyntö on jo käsitelty</string>
@@ -98,7 +98,7 @@
     <string name="onBoardingSuccessDescription">Voit nyt vahvistaa kirjautumisesi Authenticatorilla.</string>
     <string name="onBoardingSuccessTitle">Kaikki on valmista</string>
     <string name="openSupportStatus">Avoinna</string>
-    <string name="passwordAskingWarning">Infomaniak ei koskaan pyydä salasanaasi odottamatta.\n\n Varmista, että aloitit tämän toiminnon ennen jatkamista.</string>
+    <string name="passwordAskingWarning">Infomaniak ei koskaan pyydä salasanaasi odottamatta.\n\nVarmista, että aloitit tämän toiminnon ennen jatkamista.</string>
     <string name="passwordChangedDescription">Infomaniak-tilisi %s kirjautumissalasana on päivitetty.</string>
     <string name="passwordChangedNotification">Kirjautumissalasana vaihdettu</string>
     <string name="passwordChangedTitle">Kirjautumissalasana vaihdettu</string>
