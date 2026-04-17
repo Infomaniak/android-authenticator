@@ -81,7 +81,7 @@
     <string name="loginAuthorizationWarning">Het bevestigen van dit inloggen geeft dit apparaat toegang tot uw Infomaniak account.</string>
     <string name="loginDeniedSuccessDescription">U heeft een inlogpoging geweigerd. Om uw account te beveiligen, wijzigt u uw wachtwoord.\n\nAls u dit verzoek heeft geïnitieerd, probeer dan opnieuw in te loggen.</string>
     <string name="loginDeniedSuccessTitle">Inloggen succesvol geweigerd</string>
-    <string name="loginRequestAlreadyProcessedDescription">Bent u degene die dit heeft gedaan? Controleer uw actieve apparaten en log uit van apparaten die u niet herkent.</string>
+    <string name="loginRequestAlreadyProcessedDescription">Bent u niet degene die dit heeft gedaan? Controleer uw actieve apparaten en log uit van apparaten die u niet herkent.</string>
     <string name="loginRequestAlreadyProcessedTitle">Dit verzoek is al verwerkt</string>
     <string name="loginRequestExpiredTitle">Dit inlogverzoek is verlopen</string>
     <string name="manageNotifications">Meldingen beheren</string>

@@ -113,7 +113,7 @@
     <string name="subjectPlaceholder">Ämne</string>
     <string name="submitTicketDescription">För att hjälpa oss att bistå dig effektivt, vänligen ange så många detaljer som möjligt angående ditt problem.</string>
     <string name="submitTicketTitle">Skicka in en biljett</string>
-    <string name="supportResponseDelay">Vi svarar inom de närmaste 24 arbetsdagarna.</string>
+    <string name="supportResponseDelay">Vi svarar inom de närmaste 24 arbetstimmarna.</string>
     <string name="themeDark">Mörkt</string>
     <string name="themeLight">Ljust</string>
     <string name="themeSystem">System</string>
