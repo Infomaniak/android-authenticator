@@ -77,6 +77,8 @@
     <string name="laterButton">Senere</string>
     <string name="locationLoginTitle">Sted</string>
     <string name="logInButton">Log ind</string>
+    <string name="logInDescription">Indtast din adgangskode.</string>
+    <string name="logInTitle">Log ind</string>
     <string name="loginAttemptQuery">Forsøger du at logge ind?</string>
     <string name="loginAuthorizationWarning">Bekræftelse af dette login vil give denne enhed adgang til din Infomaniak konto.</string>
     <string name="loginDeniedSuccessDescription">Du har afvist et loginforsøg. For at sikre din konto skal du ændre din adgangskode.\n\nHvis du har startet denne anmodning, skal du prøve at logge ind igen.</string>
@@ -102,6 +104,8 @@
     <string name="passwordChangedDescription">Loginadgangskoden for din Infomaniak konto %s er blevet opdateret.</string>
     <string name="passwordChangedNotification">Loginadgangskode ændret</string>
     <string name="passwordChangedTitle">Loginadgangskode ændret</string>
+    <string name="passwordForgottenButton">Glemt adgangskode?</string>
+    <string name="passwordLabel">Adgangskode</string>
     <string name="refreshPendingLoginsButton">Opdater afventende login</string>
     <string name="removeAccountDescription">Du vil ikke længere kunne bekræfte dit login til denne konto med Authenticator.</string>
     <string name="removeAccountSuccess">Konto fjernet</string>

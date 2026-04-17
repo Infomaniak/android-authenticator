@@ -77,6 +77,8 @@
     <string name="laterButton">Później</string>
     <string name="locationLoginTitle">Lokalizacja</string>
     <string name="logInButton">Zaloguj się</string>
+    <string name="logInDescription">Wpisz hasło.</string>
+    <string name="logInTitle">Zaloguj się</string>
     <string name="loginAttemptQuery">Czy próbujesz się zalogować?</string>
     <string name="loginAuthorizationWarning">Potwierdzenie tego logowania uprawni to urządzenie do dostępu do Twojego konta Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Odmówiłeś próby logowania. Aby zabezpieczyć swoje konto, zmień hasło.\n\nJeśli zainicjowałeś to żądanie, spróbuj zalogować się ponownie.</string>
@@ -102,6 +104,8 @@
     <string name="passwordChangedDescription">Hasło logowania do Twojego konta Infomaniak %s zostało zaktualizowane.</string>
     <string name="passwordChangedNotification">Hasło logowania zmienione</string>
     <string name="passwordChangedTitle">Hasło logowania zmienione</string>
+    <string name="passwordForgottenButton">Nie pamiętasz hasła?</string>
+    <string name="passwordLabel">Hasło</string>
     <string name="refreshPendingLoginsButton">Odśwież oczekujące logowania</string>
     <string name="removeAccountDescription">Nie będziesz już mógł weryfikować logowania do tego konta za pomocą Authenticatora.</string>
     <string name="removeAccountSuccess">Konto usunięte</string>

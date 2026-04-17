@@ -77,6 +77,8 @@
     <string name="laterButton">Senare</string>
     <string name="locationLoginTitle">Plats</string>
     <string name="logInButton">Logga in</string>
+    <string name="logInDescription">Ange ditt lösenord.</string>
+    <string name="logInTitle">Logga in</string>
     <string name="loginAttemptQuery">Försöker du\nlogga in?</string>
     <string name="loginAuthorizationWarning">Att bekräfta denna inloggning kommer att auktorisera denna enhet att komma åt ditt Infomaniak-konto</string>
     <string name="loginDeniedSuccessDescription">Du avvisade ett inloggningsförsök. För att säkra ditt konto, byt ditt lösenord.\n\nOm du gjorde denna förfrågan, försök logga in igen.</string>
@@ -102,6 +104,8 @@
     <string name="passwordChangedDescription">Inloggningslösenordet för ditt Infomaniak-konto %s har uppdaterats.</string>
     <string name="passwordChangedNotification">Inloggningslösenord ändrat</string>
     <string name="passwordChangedTitle">Inloggningslösenord ändrat</string>
+    <string name="passwordForgottenButton">Glömt lösenordet?</string>
+    <string name="passwordLabel">Lösenord</string>
     <string name="refreshPendingLoginsButton">Uppdatera väntande inloggningar</string>
     <string name="removeAccountDescription">Du kommer inte längre att kunna verifiera din inloggning till detta konto med Authenticator.</string>
     <string name="removeAccountSuccess">Konto borttaget</string>

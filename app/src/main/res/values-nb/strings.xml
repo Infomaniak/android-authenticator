@@ -77,6 +77,8 @@
     <string name="laterButton">Senere</string>
     <string name="locationLoginTitle">Sted</string>
     <string name="logInButton">Logg inn</string>
+    <string name="logInDescription">Skriv inn passordet ditt.</string>
+    <string name="logInTitle">Logg inn</string>
     <string name="loginAttemptQuery">Prøver du å logge inn?</string>
     <string name="loginAuthorizationWarning">Å bekrefte denne påloggingen vil autorisere denne enheten til å få tilgang til din Infomaniak-konto.</string>
     <string name="loginDeniedSuccessDescription">Du avviste et påloggingsforsøk. For å sikre kontoen din, endre passordet ditt.\n\nHvis du startet denne forespørselen, prøv å logge inn igjen.</string>
@@ -102,6 +104,8 @@
     <string name="passwordChangedDescription">Påloggingspassordet for din Infomaniak-konto %s er oppdatert.</string>
     <string name="passwordChangedNotification">Påloggingspassord endret</string>
     <string name="passwordChangedTitle">Påloggingspassord endret</string>
+    <string name="passwordForgottenButton">Glemt passord?</string>
+    <string name="passwordLabel">Passord</string>
     <string name="refreshPendingLoginsButton">Oppdater ventende pålogginger</string>
     <string name="removeAccountDescription">Du vil ikke lenger kunne verifisere påloggingen din til denne kontoen med Authenticator.</string>
     <string name="removeAccountSuccess">Konto fjernet</string>

@@ -77,6 +77,8 @@
     <string name="laterButton">Later</string>
     <string name="locationLoginTitle">Locatie</string>
     <string name="logInButton">Inloggen</string>
+    <string name="logInDescription">Voer je wachtwoord in.</string>
+    <string name="logInTitle">Inloggen</string>
     <string name="loginAttemptQuery">Probeert u in te loggen?</string>
     <string name="loginAuthorizationWarning">Het bevestigen van dit inloggen geeft dit apparaat toegang tot uw Infomaniak account.</string>
     <string name="loginDeniedSuccessDescription">U heeft een inlogpoging geweigerd. Om uw account te beveiligen, wijzigt u uw wachtwoord.\n\nAls u dit verzoek heeft geïnitieerd, probeer dan opnieuw in te loggen.</string>
@@ -102,6 +104,8 @@
     <string name="passwordChangedDescription">Het inlogwachtwoord voor uw Infomaniak account %s is bijgewerkt.</string>
     <string name="passwordChangedNotification">Inlogwachtwoord gewijzigd</string>
     <string name="passwordChangedTitle">Inlogwachtwoord gewijzigd</string>
+    <string name="passwordForgottenButton">Wachtwoord vergeten?</string>
+    <string name="passwordLabel">Wachtwoord</string>
     <string name="refreshPendingLoginsButton">In afwachting zijnde inloggen vernieuwen</string>
     <string name="removeAccountDescription">U kunt uw inloggen naar dit account niet langer verifiëren met Authenticator.</string>
     <string name="removeAccountSuccess">Account verwijderd</string>

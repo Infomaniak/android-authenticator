@@ -77,6 +77,8 @@
     <string name="laterButton">Αργότερα</string>
     <string name="locationLoginTitle">Τοποθεσία</string>
     <string name="logInButton">Σύνδεση</string>
+    <string name="logInDescription">Εισαγάγετε τον κωδικό πρόσβασής σας.</string>
+    <string name="logInTitle">Σύνδεση</string>
     <string name="loginAttemptQuery">Προσπαθείτε να\nσυνδεθείτε;</string>
     <string name="loginAuthorizationWarning">Η επιβεβαίωση αυτής της σύνδεσης θα εξουσιοδοτήσει αυτή τη συσκευή να έχει πρόσβαση στον λογαριασμό σας Infomaniak</string>
     <string name="loginDeniedSuccessDescription">Αρνηθήκατε μια προσπάθεια σύνδεσης. Για την ασφάλεια του λογαριασμού σας, αλλάξτε τον κωδικό πρόσβασής σας.\n\nΑν ξεκινήσατε αυτό το αίτημα, δοκιμάστε να συνδεθείτε ξανά.</string>
@@ -102,6 +104,8 @@
     <string name="passwordChangedDescription">Ο κωδικός πρόσβασης σύνδεσης για τον λογαριασμό Infomaniak %s έχει ενημερωθεί.</string>
     <string name="passwordChangedNotification">Ο κωδικός πρόσβασης σύνδεσης άλλαξε</string>
     <string name="passwordChangedTitle">Ο κωδικός πρόσβασης σύνδεσης άλλαξε</string>
+    <string name="passwordForgottenButton">Ξεχάσατε τον κωδικό πρόσβασης;</string>
+    <string name="passwordLabel">Κωδικός πρόσβασης</string>
     <string name="refreshPendingLoginsButton">Ανανέωση εκκρεμών συνδέσεων</string>
     <string name="removeAccountDescription">Δεν θα μπορείτε πλέον να επαληθεύετε τη σύνδεσή σας σε αυτόν τον λογαριασμό με το Authenticator.</string>
     <string name="removeAccountSuccess">Ο λογαριασμός αφαιρέθηκε</string>
