@@ -94,6 +94,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 accountsDatabase = accountsDatabase,
                 authenticatorManager = authenticatorManager,
                 webAuthnRepository = webAuthnRepository,
+                tokenBridge = tokenBridge,
                 clientId = clientId,
             )
             return AuthenticatorFacadeImpl(

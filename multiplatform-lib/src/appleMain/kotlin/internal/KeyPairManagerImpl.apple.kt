@@ -126,26 +126,26 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(BetaInteropApi::class)
-    actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> = memScoped {
-        //TODO[ik-auth]: Test this code somehow.
-        val userIdPrefix = "$userId-"
-        val (resultsArray, count) = getAllPrivateKeysQuery()
+    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): Xor<String, Failure.KeyManagement.KeyNotFound> =
+        memScoped {
+            //TODO[ik-auth]: Test this code somehow.
+            val (resultsArray, count) = getAllPrivateKeysQuery()
 
-        if (resultsArray == null || count == 0) {
-            return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
-        }
-
-        for (i in 0 until count) {
-            val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
-
-            if (tag?.startsWith(userIdPrefix) == true) {
-                val keyId = tag.removePrefix(userIdPrefix)
-                return@memScoped Xor.First(keyId)
+            if (resultsArray == null || count == 0) {
+                return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
             }
-        }
 
-        Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for userId $userId"))
-    }
+            for (i in 0 until count) {
+                val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
+
+                if (tag != null && predicate(tag)) {
+                    val keyId = tag.substring(tag.indexOfFirst { it == '-' } + 1, tag.indexOfLast { it == '-' })
+                    return@memScoped Xor.First(keyId)
+                }
+            }
+
+            Xor.Second(Failure.KeyManagement.KeyNotFound("No key found matching $predicate"))
+        }
 
     actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> =
         memScoped {

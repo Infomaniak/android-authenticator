@@ -83,8 +83,10 @@ internal class AuthenticatorFacadeImpl(
     private val dao = accountsDatabase.getDao()
 
     private val accountEntities = flow {
+        val accountsFlow = dao.getAsFlow()
+        migrationManager.handleBackedUpAccounts(accountsFlow.first())
         migrationManager.addLegacyAccountsToDB()
-        emitAll(dao.getAsFlow())
+        emitAll(accountsFlow)
     }.shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     private val atLeastOneConnectedAccount: Flow<Boolean> = accountEntities.map { entities ->
@@ -118,7 +120,12 @@ internal class AuthenticatorFacadeImpl(
         .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
-        val entities = connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) }
+        createFolder(name = "accountsInitialization")
+
+        val entities = connectedAccounts.map {
+            createFileIn(folder = "accountsInitialization", name = it.id.toString())
+            it.toEntity(AccountEntity.Status.PasskeyRegistrationPending)
+        }
         dao.upsert(entities)
     }
 
@@ -241,9 +248,9 @@ internal class AuthenticatorFacadeImpl(
         withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
-                // TODO do that only if we don't need to use the backed up files
+                // Just in case orphans passkeys are lying around, we want to make sure to start from a clean state.
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
-                authenticatorManager.registerPasskey(token, userId)
+                val _ = authenticatorManager.registerPasskey(token, userId)
                 dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.FirstPasskeyAuthenticationPending))
             }
             val token = authenticatorManager.getToken(
