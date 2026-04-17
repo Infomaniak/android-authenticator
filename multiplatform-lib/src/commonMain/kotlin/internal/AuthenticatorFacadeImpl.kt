@@ -84,7 +84,12 @@ internal class AuthenticatorFacadeImpl(
 
     private val accountEntities = flow {
         val accountsFlow = dao.getAsFlow()
-        migrationManager.handleBackedUpAccounts(accountsFlow.first())
+        migrationManager.handleBackedUpAccounts(
+            accounts = accountsFlow.first(),
+            persistToken = { userId, token ->
+                tokenBridge.persistTokenForAccount(userId, token)
+            }
+        )
         migrationManager.addLegacyAccountsToDB()
         emitAll(accountsFlow)
     }.shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)

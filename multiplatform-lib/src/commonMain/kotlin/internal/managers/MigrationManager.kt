@@ -45,13 +45,15 @@ internal class MigrationManager(
     private val accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
     private val webAuthnRepository: WebAuthnRepository,
-    private val tokenBridge: TokenBridge,
     private val clientId: String,
 ) {
 
     private val dao = accountsDatabase.getDao()
 
-    suspend fun handleBackedUpAccounts(accounts: List<AccountEntity>) {
+    suspend fun handleBackedUpAccounts(
+        accounts: List<AccountEntity>,
+        persistToken: suspend (userId: Long, token: String) -> Unit,
+    ) {
         if (!checkFolderExists(folder = "accountsInitialization")) createFolder(name = "accountsInitialization")
         accounts.filter {
             checkFileExists(folder = "accountsInitialization", name = it.id.toString()).not()
@@ -71,7 +73,7 @@ internal class MigrationManager(
                 userId = account.id,
                 keyIdFromOldPasskey = newKeyId,
             ).firstOrNull()!!
-            tokenBridge.persistTokenForAccount(account.id, tokenWithNewPassKey)
+            persistToken(account.id, tokenWithNewPassKey)
             dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
             // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
             authenticatorManager.deleteKeysFor(account.id)
