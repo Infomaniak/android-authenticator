@@ -64,11 +64,17 @@ internal class AuthenticatorManager(
         )
 
         webAuthnRepository.registerPasskey(token, registerPasskey)
+
+        return keyIdAsString
     }
 
-    suspend fun getToken(clientId: String, userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
-        val keyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
+    suspend fun getToken(
+        clientId: String,
+        userId: Long,
+        keyIdFromOldPasskey: String? = null,
+    ): Xor<String, Failure.KeyManagement.KeyNotFound> {
+        val keyId = keyIdFromOldPasskey ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrNull()
+        ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
         val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
@@ -110,7 +116,7 @@ internal class AuthenticatorManager(
     }
 
     suspend fun removeAccount(token: String, userId: Long) {
-        val passkeyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
+        val passkeyId = keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrNull()
 
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
@@ -123,5 +129,9 @@ internal class AuthenticatorManager(
 
     suspend fun deleteKeysFor(userId: Long) {
         val _ = keyPairManager.deleteKeysMatching { it.startsWith("$userId-") }
+    }
+
+    suspend fun getKeyIdFor(userId: Long): String? {
+        return keyPairManager.findKeyIdFor({ it.startsWith("$userId-") }).firstOrNull()
     }
 }

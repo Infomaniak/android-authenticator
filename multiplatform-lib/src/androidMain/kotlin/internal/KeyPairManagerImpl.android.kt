@@ -32,8 +32,8 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
 
-        saveKeyToFilesDir("$userId-$keyId-private.key", keyPair.private.encoded)
-        saveKeyToFilesDir("$userId-$keyId-public.key", keyPair.public.encoded)
+        saveFileToFilesDir("$userId-$keyId-private.key", keyPair.private.encoded)
+        saveFileToFilesDir("$userId-$keyId-public.key", keyPair.public.encoded)
         return null
     }
 
@@ -57,15 +57,16 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
-    actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
-        val fileNamePrefix = "$userId-"
+    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): Xor<String, Failure.KeyManagement.KeyNotFound> {
         val userPassKey: File = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.find {
-            it.name.startsWith(fileNamePrefix)
+            predicate(it.name)
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
-        val keyId = userPassKey.name.substringAfter(fileNamePrefix).substringBefore('-')
+        val keyId =
+            userPassKey.name.substring(userPassKey.name.indexOfFirst { it == '-' } + 1,
+                userPassKey.name.indexOfLast { it == '-' })
         return Xor.First(keyId)
     }
 
@@ -81,7 +82,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         return Xor.First(Unit)
     }
 
-    private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
+    private suspend fun saveFileToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
         val file = File(appCtx.filesDir, fileName)
         file.writeBytes(key)
     }

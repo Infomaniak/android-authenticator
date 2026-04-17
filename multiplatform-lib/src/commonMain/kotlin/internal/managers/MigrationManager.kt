@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib.internal.managers
 
 import com.infomaniak.auth.lib.internal.MigrationAuthentication
+import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
@@ -44,8 +45,43 @@ internal class MigrationManager(
     private val accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
     private val webAuthnRepository: WebAuthnRepository,
+    private val tokenBridge: TokenBridge,
     private val clientId: String,
 ) {
+
+    private val dao = accountsDatabase.getDao()
+
+    suspend fun handleBackedUpAccounts(accounts: List<AccountEntity>) {
+        delay(10_000)
+        println("Vincent => folder exists: ${checkFolderExists(folder = "accountsInitialization")}")
+        if (!checkFolderExists(folder = "accountsInitialization")) createFolder(name = "accountsInitialization")
+        accounts.filter {
+            checkFileExists(folder = "accountsInitialization", name = it.id.toString()).not()
+        }.forEach { account ->
+            println("Vincent => try to migrate account ${account.id}")
+            val keyId = authenticatorManager.getKeyIdFor(account.id) ?: return
+            // Get token with previous passkey
+            val token = authenticatorManager.getToken(
+                clientId = clientId,
+                userId = account.id,
+                keyIdFromOldPasskey = keyId,
+            ).firstOrNull()!!
+            // Register a new passkey
+            val newKeyId = authenticatorManager.registerPasskey(token, account.id)
+            // Getting a new token with the new passkey
+            val tokenWithNewPassKey = authenticatorManager.getToken(
+                clientId = clientId,
+                userId = account.id,
+                keyIdFromOldPasskey = newKeyId,
+            ).firstOrNull()!!
+            tokenBridge.persistTokenForAccount(account.id, tokenWithNewPassKey)
+            dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+            // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
+            authenticatorManager.deleteKeysFor(account.id)
+            createFileIn(folder = "accountsInitialization", name = account.id.toString())
+            println("Vincent => end migration ${account.id}")
+        }
+    }
 
     suspend fun addLegacyAccountsToDB() {
         if (!needMigration()) return
