@@ -55,7 +55,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.lib.models.UrlConstants.ACTIVITY_MANAGER_URL
 import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_MANAGER_URL
@@ -169,8 +168,8 @@ private fun AccountDetailsContent(
             ActionRequired(
                 hasLogin,
                 onLoginClicked = {
-                    val status = account.status as? Account.Status.NotConnected
-                    val legacyAccount = (status?.action as? NotConnectedAction.ReLogin)?.legacyAccount
+                    val status = account.status as? Account.Status.NotConnected.ReLogin
+                    val legacyAccount = status?.legacyAccount
                     legacyAccount?.id?.let {
                         onLoginPressed(it)
                         hasLogin = true
@@ -432,7 +431,7 @@ private enum class AccountStatus(
     companion object {
         fun Account.Status.toAccountStatus() = when (this) {
             Account.Status.LoggedIn -> Secured
-            is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> PartiallyProtected
+            is Account.Status.NotConnected.ReLogin -> PartiallyProtected // TODO: Isn't the state closer to disconnected?
             else -> Disconnected
         }
     }

@@ -20,10 +20,11 @@
 package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.Account.Status.NotConnected.ReLogin
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.CredentialsForMigration
-import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.lib.Issue
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
@@ -62,7 +63,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
@@ -131,7 +134,7 @@ internal class AuthenticatorFacadeImpl(
 
     private fun accountsFlow(
         entities: List<AccountEntity>,
-        accountsToLogin: Map<Long, Flow<NotConnectedAction?>>
+        accountsToLogin: Map<Long, Flow<Account.Status.NotConnected?>>
     ): Flow<List<Account>> {
         val flows = entities.map { accountsToLogin[it.id] ?: flowOfNull }
         return combine(flows) { notConnectedActions ->
@@ -160,8 +163,17 @@ internal class AuthenticatorFacadeImpl(
                     }
                     emit(AppStatus.LoggingIn)
                     /** Continue towards [AppStatus.SetupComplete] once all accounts are waiting for an action (no loading). */
-                    accounts.first { list ->
-                        list.all { account -> (account.status as? Account.Status.NotConnected)?.action != null }
+                    val accountToReloginOrSkip: Account? = accounts.transform { list ->
+                        if (list.size == 1 && list.single().status is ReLogin) {
+                            return@transform emit(list.single())
+                        }
+                        val stillTryingToConnect = list.any { account ->
+                            account.status is Account.Status.NotConnected.AttemptingToConnect
+                        }
+                        if (!stillTryingToConnect) emit(null) // Emit to skip
+                    }.first()
+                    accountToReloginOrSkip?.let { accountToRelogin ->
+                        emit(AppStatus.LoginRequired.MustReLogin(accountToRelogin.id))
                     }
                 }
             } else if (needsToShowEverythingReady) {
@@ -184,7 +196,7 @@ internal class AuthenticatorFacadeImpl(
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
 
-    private fun loginAttemptsFlow(userId: Long): Flow<NotConnectedAction?> = dao.get(userId).transformLatest { entity ->
+    private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> = dao.get(userId).transformLatest { entity ->
         emit(null)
         when (entity?.status) {
             AccountEntity.Status.ToBeMigrated -> migrationAttempts(entity)
@@ -206,7 +218,7 @@ internal class AuthenticatorFacadeImpl(
         },
     ) || proceedMigration.isCompleted // In case it finished after a connected account was added.
 
-    private suspend fun FlowCollector<NotConnectedAction?>.registrationAttempts(notRegisteredAccount: AccountEntity) {
+    private suspend fun FlowCollector<Account.Status.NotConnected>.registrationAttempts(notRegisteredAccount: AccountEntity) {
         val passKeyAlreadyRegistered = when (val accountStatus = notRegisteredAccount.status) {
             AccountEntity.Status.PasskeyRegistrationPending -> false
             AccountEntity.Status.FirstPasskeyAuthenticationPending -> true
@@ -215,7 +227,7 @@ internal class AuthenticatorFacadeImpl(
         val userId = notRegisteredAccount.id
         val token = tokenBridge.getTokenFromDatabase(userId) ?: return
         withRetries {
-            emit(null)
+            emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
                 // TODO do that only if we don't need to use the backed up files
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
@@ -233,41 +245,30 @@ internal class AuthenticatorFacadeImpl(
 
     /**
      * Tries to migrate the given account from kAuth to Infomaniak Authenticator, with retries,
-     * and emits the relevant [NotConnectedAction] as needed.
+     * and emits the relevant [Account.Status.NotConnected] as needed.
      *
      * 1. Tries to perform a login (3 different ways)
      * 2. Starts a migration session against the backend
      * 3. Registers a passkey
      * 4. Authenticate with it, getting a new access token
      */
-    private suspend fun FlowCollector<NotConnectedAction?>.migrationAttempts(accountToMigrate: AccountEntity) {
+    private suspend fun FlowCollector<Account.Status.NotConnected>.migrationAttempts(accountToMigrate: AccountEntity) {
         require(accountToMigrate.status == AccountEntity.Status.ToBeMigrated)
 
         if (shouldTryImmediateLogin()) {
             tryCrossAppLogin(accountToMigrate) { return }
             tryToMigrateViaOngoingLogin(accountToMigrate) { return }
         }
-        withRetries {
-            val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
-            val reLogin = NotConnectedAction.ReLogin(
-                legacyAccount = accountToMigrate.toAccount(null),
-                sendCredentials = credentialsAsync::complete,
-            )
-            emit(reLogin)
-            val credentialsForMigration = credentialsAsync.await()
-            emit(null)
-            val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
-            attemptMigration(accountToMigrate, authentication)
-        }
+        tryMigratingWithReLogin(accountToMigrate)
     }
 
-    private suspend inline fun FlowCollector<NotConnectedAction?>.tryCrossAppLogin(
+    private suspend inline fun FlowCollector<Account.Status.NotConnected>.tryCrossAppLogin(
         notConnectedAccount: AccountEntity,
         onLoginSuccess: () -> Nothing
     ) {
         val userId = notConnectedAccount.id
         withRetries(onGiveUp = { return }) {
-            emit(null)
+            emit(Account.Status.NotConnected.AttemptingToConnect)
             val temporaryToken = withTimeoutOrNull(
                 waitForTimeout = {
                     delay(8.seconds)
@@ -282,12 +283,12 @@ internal class AuthenticatorFacadeImpl(
         }
     }
 
-    private suspend inline fun FlowCollector<NotConnectedAction?>.tryToMigrateViaOngoingLogin(
+    private suspend inline fun FlowCollector<Account.Status.NotConnected>.tryToMigrateViaOngoingLogin(
         notConnectedAccount: AccountEntity,
         onLoginSuccess: () -> Nothing
     ) {
         withRetries(onGiveUp = { return }) {
-            emit(null)
+            emit(Account.Status.NotConnected.AttemptingToConnect)
             val authentication = MigrationAuthentication.OngoingLogin
             if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
         }
@@ -313,7 +314,53 @@ internal class AuthenticatorFacadeImpl(
         return true
     }
 
-    private suspend inline fun <R> FlowCollector<NotConnectedAction?>.withRetries(
+    private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(
+        accountToMigrate: AccountEntity
+    ) {
+        val reLoggingIn = ReLogin(
+            legacyAccount = accountToMigrate.toAccount(null),
+            state = ReLogin.State.SendingCredentials,
+        )
+        var wrongPassword = false
+        while (true) {
+            runCatching {
+                val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
+                val reLogin = reLoggingIn.copy(
+                    state = ReLogin.State.CredentialsRequired(
+                        hadIncorrectPassword = wrongPassword,
+                        proceed = credentialsAsync::complete,
+                    )
+                )
+                emit(reLogin)
+                val credentialsForMigration = credentialsAsync.await()
+                emit(reLoggingIn)
+                val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
+                check(attemptMigration(accountToMigrate, authentication))
+            }.cancellable().onFailure {
+                if (it is NullPointerException || it is IllegalStateException) { // Local errors, no recourse.
+                    emit(reLoggingIn.copy(state = ReLogin.State.Failure(Issue.NonRetriable("Ooops…"))))
+                    awaitCancellation()
+                }
+                val shouldRetryAsync = CompletableDeferred<Boolean>()
+                val issue = Issue.Retriable(
+                    reason = when (it) {
+                        is IOException -> Issue.Retriable.Reason.NetworkIssue
+                        //TODO: Check it's actually a credentials issue, and support http errors, including backend unavailability
+                        else -> {
+                            wrongPassword = true
+                            continue
+                        }
+                    },
+                    proceed = shouldRetryAsync::complete
+                )
+                emit(reLoggingIn.copy(state = ReLogin.State.Failure(issue)))
+                val shouldRetry = shouldRetryAsync.await()
+                if (shouldRetry) continue else return
+            }
+        }
+    }
+
+    private suspend inline fun <R> FlowCollector<Account.Status.NotConnected>.withRetries(
         onGiveUp: () -> Unit = {},
         block: () -> R
     ): R {
@@ -323,12 +370,19 @@ internal class AuthenticatorFacadeImpl(
             }.cancellable().onFailure {
                 crashReport.capture("Operation failed", it)
                 if (it is NullPointerException || it is IllegalStateException) { // Local errors, no recourse.
-                    emit(NotConnectedAction.Issue.NonRetriable("Ooops…"))
+                    emit(Account.Status.NotConnected.LoginFailed(Issue.NonRetriable("Ooops…")))
                     awaitCancellation()
                 }
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
-                val issue = NotConnectedAction.Issue.Retriable(shouldRetryAsync::complete)
-                emit(issue)
+                val issue = Issue.Retriable(
+                    reason = when (it) {
+                        is IOException -> Issue.Retriable.Reason.NetworkIssue
+                        //TODO: Support http errors, including backend unavailability.
+                        else -> Issue.Retriable.Reason.Other(it.message ?: it.toString())
+                    },
+                    proceed = shouldRetryAsync::complete
+                )
+                emit(Account.Status.NotConnected.LoginFailed(issue))
                 val shouldRetry = shouldRetryAsync.await()
                 if (!shouldRetry) onGiveUp()
             }

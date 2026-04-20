@@ -31,6 +31,8 @@ sealed interface AppStatus {
          * [LoggingIn] after [AuthenticatorFacade.addAccounts] is called.
          */
         data object NotMigrating : LoginRequired
+
+        data class MustReLogin(val accountId: Long) : AppStatus
     }
 
     /**
