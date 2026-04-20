@@ -73,14 +73,15 @@ class DummyAuthenticatorFacade internal constructor(
                     initials = "Smith",
                     email = "john.smith@example.com",
                     avatarUrl = "https://avatars.githubusercontent.com/u/1788629?v=4",
-                    status = Account.Status.NotConnected(null)
+                    status = Account.Status.NotConnected.AttemptingToConnect
                 )
                 _accounts += legacyAccount.copy(
-                    status = Account.Status.NotConnected(
-                        action = NotConnectedAction.ReLogin(
-                            legacyAccount = legacyAccount,
-                            sendCredentials = { next.trySend(Unit) }
-                        )
+                    status = Account.Status.NotConnected.ReLogin(
+                        legacyAccount = legacyAccount,
+                        state = Account.Status.NotConnected.ReLogin.State.CredentialsRequired(
+                            hadIncorrectPassword = false,
+                            proceed = { next.trySend(Unit) }
+                        ),
                     )
                 )
                 emit(AppStatus.LoggingIn)

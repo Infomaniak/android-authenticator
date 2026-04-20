@@ -92,6 +92,7 @@ private fun handleAppStatus(
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
+        is AppStatus.LoginRequired.MustReLogin -> TODO("Create the missing NavDestination")
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> NavDestination.Root.Home

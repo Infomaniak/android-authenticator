@@ -51,7 +51,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.CredentialsForMigration
-import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -82,10 +81,10 @@ fun LoginScreen(
                 legacyAccount = { state.legacyAccount },
                 onBackPressed = onBackPressed,
                 onLoginPressed = { email, password ->
-                    val status = state.legacyAccount.status as? Account.Status.NotConnected
-                    val action = status?.action as? NotConnectedAction.ReLogin
+                    val status = state.legacyAccount.status as? Account.Status.NotConnected.ReLogin
+                    val action = status?.state as? Account.Status.NotConnected.ReLogin.State.CredentialsRequired
                     if (password.isNotEmpty()) {
-                        action?.sendCredentials(CredentialsForMigration(email, password))
+                        action?.proceed(CredentialsForMigration(email, password))
                     }
                 }
             )
