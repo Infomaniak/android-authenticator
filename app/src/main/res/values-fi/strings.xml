@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="accountLoggedOut">Tililtä kirjauduttu ulos</string>
+    <string name="accountLossRiskBackupVerificationDescription">Varmista, että toinen kaksivaiheisen todennuksen menetelmä on määritetty ja toimii.</string>
+    <string name="accountLossRiskLastDoubleAuthDescription">Jos Authenticator on viimeinen kaksivaiheisen todennuksen menetelmäsi, saatat jäädä ulos seuraavalla kirjautumiskerralla.</string>
+    <string name="accountLossRiskTitle">Saatat menettää pääsyn tähän tiliin</string>
+    <string name="accountNotConnectedWarningTitle">Kirjaudu uudelleen suojataksesi tilisi.</string>
+    <string name="accountPartiallyProtectedDescription">Päivitä turvallisuusasetuksesi suojataksesi tilisi.</string>
+    <string name="accountPartiallyProtectedTitle">Osittain suojattu tili</string>
+    <string name="accountPasswordTitle">Tilin salasana</string>
+    <string name="accountProtected">Tili suojattu</string>
+    <string name="accountProtectionDisabledWarningDescription">Tämä laite on ainoa, jota käytetään Infomaniak-tilisi kirjautumisten vahvistamiseen.\n\nSuosittelemme lisäämään toisen laitteen tai vahvistusmenetelmän ennen jatkamista.</string>
+    <string name="accountProtectionDisabledWarningTitle">Varoitus: tilisi ei ole enää suojattu</string>
+    <string name="accountRemovedAuthenticatorDescription">Et enää vastaanota kirjautumishyväksyntöjä tällä laitteella tilille %s</string>
+    <string name="accountRemovedAuthenticatorTitle">Tili irrotettu Authenticatorista</string>
+    <string name="accountSecurityLevelContentDescription">Tilin turvallisuustaso</string>
+    <string name="accountSecurityVerificationDescription">Jos et suorittanut tätä toimintoa, suosittelemme salasanasi vaihtamista ja turvallisuusasetustesi tarkistamista.</string>
+    <string name="accountSecurityVerificationTitle">Vahvista tilisi turvallisuus</string>
+    <string name="accountSettingsButton">Tilin asetukset</string>
+    <string name="accountTitle">Tili</string>
+    <string name="accountsTitle">Tilit</string>
+    <string name="actionRequiredDescription">Toimenpide vaaditaan yhden tilisi suojaamiseksi.</string>
+    <string name="activityHistoryButton">Toimintahistoria</string>
+    <string name="addAccountContentDescription">Lisää tili</string>
+    <string name="appAccessIsSecure">Pääsy Authenticatoriin on suojattu</string>
+    <string name="authorizationCodeTitle">Vahvistuskoodisi</string>
+    <string name="autoCloseTitle">Tämä tieto sulkeutuu automaattisesti 15 sekunnin kuluttua.</string>
+    <string name="avatarContentDescription">Tilin avatar</string>
+    <string name="callButton">Soita</string>
+    <string name="cancelButton">Peruuta</string>
+    <string name="changePasswordButton">Vaihda salasana</string>
+    <string name="checkMyMethodsButton">Tarkista menetelmäni</string>
+    <string name="closeButton">Sulje</string>
+    <string name="confirmActionCompleteButton">Olen tehnyt tarvittavan</string>
+    <string name="confirmButton">Vahvista</string>
+    <string name="confirmLoginNotificationTitle">Vahvista kirjautuminen</string>
+    <string name="contactSupportDescription">Ota yhteyttä tiimeihimme puhelimitse tai sähköpostitse ongelman ratkaisemiseksi.</string>
+    <string name="contactSupportTitle">Ota yhteyttä tukeen</string>
+    <string name="continueButton">Jatka</string>
+    <string name="copyPassword">Kopioi salasana</string>
+    <string name="dataManagementTitle">Tietojen hallinta</string>
+    <string name="deletePreventionDescription">Sovelluksen poistaminen voi vaarantaa tilisi turvallisuuden.</string>
+    <string name="deletePreventionTitle">Tarvitsetko apua?</string>
+    <string name="denyButton">Hylkää</string>
+    <string name="descriptionPlaceholder">Kuvaus</string>
+    <string name="deviceLoginTitle">Laite</string>
+    <string name="disconnectAccountDescription">Tilisi ei ole enää suojattu kaksivaiheisella todennuksella ja se on altis luvattomalle käytölle.</string>
+    <string name="disconnectAccountOnThisDeviceDescription">Et voi enää hyväksyä kirjautumisia tällä laitteella Authenticatorilla.</string>
+    <string name="disconnectAccountTitle">Katkaise tämän tilin yhteys</string>
+    <string name="disconnectAccountWarningDescription">Varmista että vahvistus- ja palautusmenetelmäsi ovat edelleen ajan tasalla, jotta et menetä pääsyä tiliisi.</string>
+    <string name="disconnectAccountWarningTitle">Tämän tilin yhteyden katkaiseminen voi heikentää sen turvallisuutta</string>
+    <string name="disconnectButton">Kirjaudu ulos</string>
+    <string name="disconnectSuccess">Tilin yhteys katkaistu</string>
+    <string name="doneButton">Valmis</string>
+    <string name="emailPlaceholder">Sähköposti</string>
+    <string name="enableButton">Ota käyttöön</string>
+    <string name="errorLoginFailed">Tilille kirjautuminen epäonnistui. Yritä uudelleen tai ota yhteyttä tukeen. (virhekoodi: %d)</string>
+    <string name="errorOccuredTitle">Tapahtui virhe</string>
+    <string name="estimatedWait">Arvioitu odotusaika: %s</string>
+    <string name="feedbackTitle">Palaute</string>
+    <string name="laterButton">Myöhemmin</string>
+    <string name="locationLoginTitle">Sijainti</string>
+    <string name="logInButton">Kirjaudu sisään</string>
+    <string name="logInDescription">Anna salasanasi.</string>
+    <string name="logInTitle">Kirjaudu sisään</string>
+    <string name="loginAttemptQuery">Yritätkö kirjautua?</string>
+    <string name="loginAuthorizationWarning">Tämän kirjautumisen vahvistaminen antaa tälle laitteelle pääsyn Infomaniak-tiliisi.</string>
+    <string name="loginDeniedSuccessDescription">Hylkäsit kirjautumisyrityksen. Suojataksesi tilisi, vaihda salasanasi.\n\nJos aloitit tämän pyynnön, yritä kirjautua uudelleen.</string>
+    <string name="loginDeniedSuccessTitle">Kirjautuminen hylätty onnistuneesti</string>
+    <string name="loginRequestAlreadyProcessedDescription">Et tehnyt tätä? Tarkista aktiiviset laitteesi ja kirjaudu ulos niistä, joita et tunnista.</string>
+    <string name="loginRequestAlreadyProcessedTitle">Tämä pyyntö on jo käsitelty</string>
+    <string name="loginRequestExpiredTitle">Tämä kirjautumispyyntö on vanhentunut</string>
+    <string name="manageNotifications">Hallitse ilmoituksia</string>
+    <string name="noInternetTitle">Ei Internet-yhteyttä</string>
+    <string name="notMeButton">En ollut minä</string>
+    <string name="notificationsDescription">Ota ilmoitukset käyttöön saadaksesi turvallisuustietoja Infomaniak-tileistäsi.</string>
+    <string name="onBoardingFaceIdDescription">Face ID:n käyttöönotto suojaa sovelluksen käyttöä.</string>
+    <string name="onBoardingFaceIdTitle">Haluatko ottaa Face ID:n käyttöön?</string>
+    <string name="onBoardingLoginDescription">Kirjaudu sisään hyväksyäksesi yhteydet turvallisesti ja suojataksesi pääsysi.</string>
+    <string name="onBoardingLoginTitle">Suojaa Infomaniak-tilisi Authenticatorilla</string>
+    <string name="onBoardingMigrationDescription">Nauti uudesta modernisoidusta käyttöliittymästä, joka on suunniteltu turvallisuuttasi varten.</string>
+    <string name="onBoardingMigrationTitle">kAuth saa uuden ilmeen ja muuttuu Authenticatoriksi</string>
+    <string name="onBoardingSecuringAccount">Turvataan tiliä…</string>
+    <string name="onBoardingSuccessDescription">Voit nyt vahvistaa kirjautumisesi Authenticatorilla.</string>
+    <string name="onBoardingSuccessTitle">Kaikki on valmista</string>
+    <string name="openSupportStatus">Avoinna</string>
+    <string name="passwordAskingWarning">Infomaniak ei koskaan pyydä salasanaasi odottamatta.\n\nVarmista, että aloitit tämän toiminnon ennen jatkamista.</string>
+    <string name="passwordChangedDescription">Infomaniak-tilisi %s kirjautumissalasana on päivitetty.</string>
+    <string name="passwordChangedNotification">Kirjautumissalasana vaihdettu</string>
+    <string name="passwordChangedTitle">Kirjautumissalasana vaihdettu</string>
+    <string name="passwordForgottenButton">Unohditko salasanan?</string>
+    <string name="passwordLabel">Salasana</string>
+    <string name="refreshPendingLoginsButton">Päivitä odottavat kirjautumiset</string>
+    <string name="removeAccountDescription">Et voi enää vahvistaa kirjautumistasi tälle tilille Authenticatorilla.</string>
+    <string name="removeAccountSuccess">Tili poistettu</string>
+    <string name="removeAccountTitle">Poista tili</string>
+    <string name="removeButton">Poista</string>
+    <string name="settingsTitle">Asetukset</string>
+    <string name="showAccountPasswordButton">Näytä tilin salasana</string>
+    <string name="startButton">Aloita</string>
+    <string name="subjectPlaceholder">Aihe</string>
+    <string name="submitTicketDescription">Auttaaksemme sinua tehokkaasti, toimita mahdollisimman monta yksityiskohtaa ongelmastasi.</string>
+    <string name="submitTicketTitle">Lähetä tukipyyntö</string>
+    <string name="supportResponseDelay">Vastaamme seuraavien 24 työtunnin sisällä.</string>
+    <string name="themeDark">Tumma</string>
+    <string name="themeLight">Vaalea</string>
+    <string name="themeSystem">Järjestelmä</string>
+    <string name="themeTitle">Teema</string>
+    <string name="ticketSentSuccessDescription">Teemme parhaamme varmistaaksemme, että agentti vastaa sinulle mahdollisimman pian.</string>
+    <string name="ticketSentSuccessTitle">Tukipyyntösi on lähetetty tiimeillemme!</string>
+    <string name="understandConfirmButton">Ymmärsin</string>
+    <string name="unlockWithBiometrics">Avaa biometrialla</string>
+    <string name="unlockingWithFaceId">Avaa Face ID:llä</string>
+    <string name="verifySecurityButton">Vahvista turvallisuuteni</string>
+    <string name="viewGuidesButton">Selaa oppaita</string>
+    <string name="whenLoginTitle">Milloin</string>
+</resources>

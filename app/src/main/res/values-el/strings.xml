@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="accountLoggedOut">Ο λογαριασμός αποσυνδέθηκε</string>
+    <string name="accountLossRiskBackupVerificationDescription">Βεβαιωθείτε ότι έχει ρυθμιστεί και λειτουργεί μια άλλη μέθοδος επαλήθευσης σε δύο βήματα.</string>
+    <string name="accountLossRiskLastDoubleAuthDescription">Αν το Authenticator είναι η τελευταία σας μέθοδος επαλήθευσης σε δύο βήματα, μπορεί να κλειδωθείτε την επόμενη φορά που θα συνδεθείτε.</string>
+    <string name="accountLossRiskTitle">Μπορεί να χάσετε την πρόσβαση σε αυτόν τον λογαριασμό</string>
+    <string name="accountNotConnectedWarningTitle">Συνδεθείτε ξανά για να ασφαλίσετε τον λογαριασμό σας.</string>
+    <string name="accountPartiallyProtectedDescription">Ενημερώστε τις ρυθμίσεις ασφαλείας για να προστατεύσετε τον λογαριασμό σας.</string>
+    <string name="accountPartiallyProtectedTitle">Μερικώς προστατευμένος λογαριασμός</string>
+    <string name="accountPasswordTitle">Κωδικός πρόσβασης λογαριασμού</string>
+    <string name="accountProtected">Προστατευμένος λογαριασμός</string>
+    <string name="accountProtectionDisabledWarningDescription">Αυτή η συσκευή είναι η μόνη που χρησιμοποιείται για την επικύρωση των συνδέσεών σας στον λογαριασμό Infomaniak.\n\nΣας συνιστούμε να προσθέσετε μια άλλη συσκευή ή μέθοδο επαλήθευσης πριν συνεχίσετε.</string>
+    <string name="accountProtectionDisabledWarningTitle">Προσοχή: ο λογαριασμός σας δεν θα προστατεύεται πλέον</string>
+    <string name="accountRemovedAuthenticatorDescription">Δεν θα λαμβάνετε πλέον εγκρίσεις σύνδεσης σε αυτή τη συσκευή για τον λογαριασμό %s</string>
+    <string name="accountRemovedAuthenticatorTitle">Ο λογαριασμός αποσυνδέθηκε από το Authenticator</string>
+    <string name="accountSecurityLevelContentDescription">Επίπεδο ασφαλείας λογαριασμού</string>
+    <string name="accountSecurityVerificationDescription">Αν δεν πραγματοποιήσατε αυτήν την ενέργεια, σας συνιστούμε να αλλάξετε τον κωδικό πρόσβασής σας και να ελέγξετε τις ρυθμίσεις ασφαλείας σας.</string>
+    <string name="accountSecurityVerificationTitle">Επαληθεύστε την ασφάλεια του λογαριασμού σας</string>
+    <string name="accountSettingsButton">Ρυθμίσεις λογαριασμού</string>
+    <string name="accountTitle">Λογαριασμός</string>
+    <string name="accountsTitle">Λογαριασμοί</string>
+    <string name="actionRequiredDescription">Απαιτείται ενέργεια για την ασφάλεια ενός από τους λογαριασμούς σας.</string>
+    <string name="activityHistoryButton">Ιστορικό δραστηριοτήτων</string>
+    <string name="addAccountContentDescription">Προσθήκη λογαριασμού</string>
+    <string name="appAccessIsSecure">Η πρόσβαση στο Authenticator\nείναι ασφαλής</string>
+    <string name="authorizationCodeTitle">Ο κωδικός εξουσιοδότησής σας</string>
+    <string name="autoCloseTitle">Αυτή η πληροφορία κλείνει αυτόματα σε 15 δευτερόλεπτα.</string>
+    <string name="avatarContentDescription">Avatar λογαριασμού</string>
+    <string name="callButton">Κλήση</string>
+    <string name="cancelButton">Ακύρωση</string>
+    <string name="changePasswordButton">Αλλαγή κωδικού πρόσβασης</string>
+    <string name="checkMyMethodsButton">Έλεγχος των μεθόδων μου</string>
+    <string name="closeButton">Κλείσιμο</string>
+    <string name="confirmActionCompleteButton">Το έκανα το απαραίτητο</string>
+    <string name="confirmButton">Επιβεβαίωση</string>
+    <string name="confirmLoginNotificationTitle">Επιβεβαίωση σύνδεσης</string>
+    <string name="contactSupportDescription">Επικοινωνήστε με τις ομάδες μας τηλεφωνικά ή μέσω email για βοήθεια στην επίλυση του προβλήματός σας.</string>
+    <string name="contactSupportTitle">Επικοινωνία με την υποστήριξη</string>
+    <string name="continueButton">Συνέχεια</string>
+    <string name="copyPassword">Αντιγραφή κωδικού πρόσβασης</string>
+    <string name="dataManagementTitle">Διαχείριση δεδομένων</string>
+    <string name="deletePreventionDescription">Η διαγραφή της εφαρμογής μπορεί να θέσει σε κίνδυνο την ασφάλεια του λογαριασμού σας.</string>
+    <string name="deletePreventionTitle">Χρειάζεστε βοήθεια;</string>
+    <string name="denyButton">Άρνηση</string>
+    <string name="descriptionPlaceholder">Περιγραφή</string>
+    <string name="deviceLoginTitle">Συσκευή</string>
+    <string name="disconnectAccountDescription">Ο λογαριασμός σας δεν θα προστατεύεται πλέον από επαλήθευση σε δύο βήματα και θα γίνει ευάλωτος σε μη εξουσιοδοτημένη πρόσβαση.</string>
+    <string name="disconnectAccountOnThisDeviceDescription">Δεν θα μπορείτε πλέον να εγκρίνετε συνδέσεις σε αυτή τη συσκευή με το Authenticator.</string>
+    <string name="disconnectAccountTitle">Αποσύνδεση αυτού του λογαριασμού</string>
+    <string name="disconnectAccountWarningDescription">Βεβαιωθείτε ότι οι μέθοδοι επαλήθευσης και ανάκτησής σας είναι ενημερωμένοι για να αποφύγετε την απώλεια πρόσβασης στον λογαριασμό σας.</string>
+    <string name="disconnectAccountWarningTitle">Η αποσύνδεση αυτού του λογαριασμού μπορεί να εξασθενήσει την ασφάλειά του</string>
+    <string name="disconnectButton">Αποσύνδεση</string>
+    <string name="disconnectSuccess">Ο λογαριασμός αποσυνδέθηκε</string>
+    <string name="doneButton">Τέλος</string>
+    <string name="emailPlaceholder">Email</string>
+    <string name="enableButton">Ενεργοποίηση</string>
+    <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. (κωδικός σφάλματος: %d)</string>
+    <string name="errorOccuredTitle">Παρουσιάστηκε σφάλμα</string>
+    <string name="estimatedWait">Εκτιμώμενη αναμονή: %s</string>
+    <string name="feedbackTitle">Σχόλια</string>
+    <string name="laterButton">Αργότερα</string>
+    <string name="locationLoginTitle">Τοποθεσία</string>
+    <string name="logInButton">Σύνδεση</string>
+    <string name="logInDescription">Εισαγάγετε τον κωδικό πρόσβασής σας.</string>
+    <string name="logInTitle">Σύνδεση</string>
+    <string name="loginAttemptQuery">Προσπαθείτε να\nσυνδεθείτε;</string>
+    <string name="loginAuthorizationWarning">Η επιβεβαίωση αυτής της σύνδεσης θα εξουσιοδοτήσει αυτή τη συσκευή να έχει πρόσβαση στον λογαριασμό σας Infomaniak</string>
+    <string name="loginDeniedSuccessDescription">Αρνηθήκατε μια προσπάθεια σύνδεσης. Για την ασφάλεια του λογαριασμού σας, αλλάξτε τον κωδικό πρόσβασής σας.\n\nΑν ξεκινήσατε αυτό το αίτημα, δοκιμάστε να συνδεθείτε ξανά.</string>
+    <string name="loginDeniedSuccessTitle">Η σύνδεση απορρίφθηκε επιτυχώς</string>
+    <string name="loginRequestAlreadyProcessedDescription">Δεν είστε εσείς που το κάνατε αυτό; Ελέγξτε τις ενεργές συσκευές σας και αποσυνδεθείτε από αυτές που δεν αναγνωρίζετε.</string>
+    <string name="loginRequestAlreadyProcessedTitle">Αυτό το αίτημα έχει ήδη υποβληθεί σε επεξεργασία</string>
+    <string name="loginRequestExpiredTitle">Αυτό το αίτημα σύνδεσης έχει λήξει</string>
+    <string name="manageNotifications">Διαχείριση ειδοποιήσεων</string>
+    <string name="noInternetTitle">Χωρίς σύνδεση στο διαδίκτυο</string>
+    <string name="notMeButton">Δεν ήμουν εγώ</string>
+    <string name="notificationsDescription">Ενεργοποιήστε τις ειδοποιήσεις για να λαμβάνετε πληροφορίες ασφαλείας σχετικά με τους λογαριασμούς σας Infomaniak.</string>
+    <string name="onBoardingFaceIdDescription">Η ενεργοποίηση του Face ID εξασφαλίζει την πρόσβαση στην εφαρμογή.</string>
+    <string name="onBoardingFaceIdTitle">Θέλετε να ενεργοποιήσετε το Face ID;</string>
+    <string name="onBoardingLoginDescription">Συνδεθείτε για να εγκρίνετε με ασφάλεια τις συνδέσεις σας και να προστατεύσετε την πρόσβασή σας.</string>
+    <string name="onBoardingLoginTitle">Ασφαλίστε τον λογαριασμό σας Infomaniak με το Authenticator</string>
+    <string name="onBoardingMigrationDescription">Απολαύστε ένα νέο εκσυγχρονισμένο περιβάλλον, σχεδιασμένο για την ασφάλειά σας.</string>
+    <string name="onBoardingMigrationTitle">Το kAuth ανανεώνεται και γίνεται Authenticator</string>
+    <string name="onBoardingSecuringAccount">Ασφάλιση λογαριασμού…</string>
+    <string name="onBoardingSuccessDescription">Μπορείτε πλέον να επαληθεύετε τις συνδέσεις σας με το Authenticator.</string>
+    <string name="onBoardingSuccessTitle">Όλα είναι έτοιμα</string>
+    <string name="openSupportStatus">Ανοικτό</string>
+    <string name="passwordAskingWarning">Η Infomaniak ποτέ δεν θα ζητήσει τον κωδικό πρόσβασής σας απροσδόκητα.\n\nΒεβαιωθείτε ότι ξεκινήσατε αυτήν την ενέργεια πριν συνεχίσετε.</string>
+    <string name="passwordChangedDescription">Ο κωδικός πρόσβασης σύνδεσης για τον λογαριασμό Infomaniak %s έχει ενημερωθεί.</string>
+    <string name="passwordChangedNotification">Ο κωδικός πρόσβασης σύνδεσης άλλαξε</string>
+    <string name="passwordChangedTitle">Ο κωδικός πρόσβασης σύνδεσης άλλαξε</string>
+    <string name="passwordForgottenButton">Ξεχάσατε τον κωδικό πρόσβασης;</string>
+    <string name="passwordLabel">Κωδικός πρόσβασης</string>
+    <string name="refreshPendingLoginsButton">Ανανέωση εκκρεμών συνδέσεων</string>
+    <string name="removeAccountDescription">Δεν θα μπορείτε πλέον να επαληθεύετε τη σύνδεσή σας σε αυτόν τον λογαριασμό με το Authenticator.</string>
+    <string name="removeAccountSuccess">Ο λογαριασμός αφαιρέθηκε</string>
+    <string name="removeAccountTitle">Αφαίρεση λογαριασμού</string>
+    <string name="removeButton">Αφαίρεση</string>
+    <string name="settingsTitle">Ρυθμίσεις</string>
+    <string name="showAccountPasswordButton">Εμφάνιση κωδικού πρόσβασης λογαριασμού</string>
+    <string name="startButton">Έναρξη</string>
+    <string name="subjectPlaceholder">Θέμα</string>
+    <string name="submitTicketDescription">Για να σας βοηθήσουμε αποτελεσματικά, παρακαλούμε δώστε μας όσο το δυνατόν περισσότερες λεπτομέρειες σχετικά με το πρόβλημά σας.</string>
+    <string name="submitTicketTitle">Υποβολή αιτήματος</string>
+    <string name="supportResponseDelay">Θα απαντήσουμε εντός των επόμενων 24 ωρών εργασίας.</string>
+    <string name="themeDark">Σκοτεινό</string>
+    <string name="themeLight">Φωτεινό</string>
+    <string name="themeSystem">Σύστημα</string>
+    <string name="themeTitle">Θέμα</string>
+    <string name="ticketSentSuccessDescription">Κάνουμε το καλύτερο δυνατό για να διασφαλίσουμε ότι ένας πράκτορας θα σας απαντήσει το συντομότερο δυνατόν.</string>
+    <string name="ticketSentSuccessTitle">Το αίτημά σας στάλθηκε στις ομάδες μας!</string>
+    <string name="understandConfirmButton">Κατάλαβα</string>
+    <string name="unlockWithBiometrics">Ξεκλείδωμα με βιομετρικά στοιχεία</string>
+    <string name="unlockingWithFaceId">Ξεκλείδωμα με Face ID</string>
+    <string name="verifySecurityButton">Επαλήθευση της ασφάλειάς μου</string>
+    <string name="viewGuidesButton">Περιήγηση στους οδηγούς</string>
+    <string name="whenLoginTitle">Πότε</string>
+</resources>
