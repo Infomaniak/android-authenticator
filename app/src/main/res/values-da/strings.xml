@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="accountLoggedOut">Konto logget ud</string>
+    <string name="accountLossRiskBackupVerificationDescription">Sørg for, at en anden totrinsbekræftelsesmetode er konfigureret og fungerer.</string>
+    <string name="accountLossRiskLastDoubleAuthDescription">Hvis Authenticator er din sidste totrinsbekræftelsesmetode, kan du blive udelukket næste gang du logger ind.</string>
+    <string name="accountLossRiskTitle">Du risikerer at miste adgangen til denne konto</string>
+    <string name="accountNotConnectedWarningTitle">Log ind igen for at sikre din konto.</string>
+    <string name="accountPartiallyProtectedDescription">Opdater dine sikkerhedsindstillinger for at beskytte din konto.</string>
+    <string name="accountPartiallyProtectedTitle">Delvist beskyttet konto</string>
+    <string name="accountPasswordTitle">Konto adgangskode</string>
+    <string name="accountProtected">Konto beskyttet</string>
+    <string name="accountProtectionDisabledWarningDescription">Denne enhed er den eneste, der bruges til at validere login til din Infomaniak konto.\n\nVi anbefaler, at du tilføjer en anden enhed eller bekræftelsesmetode, før du fortsætter.</string>
+    <string name="accountProtectionDisabledWarningTitle">Advarsel: din konto vil ikke længere være beskyttet</string>
+    <string name="accountRemovedAuthenticatorDescription">Du vil ikke længere modtage login-godkendelser på denne enhed for konto %s</string>
+    <string name="accountRemovedAuthenticatorTitle">Konto afbrudt fra Authenticator</string>
+    <string name="accountSecurityLevelContentDescription">Kontoens sikkerhedsniveau</string>
+    <string name="accountSecurityVerificationDescription">Hvis du ikke har udført denne handling, anbefaler vi, at du ændrer din adgangskode og gennemgår dine sikkerhedsindstillinger.</string>
+    <string name="accountSecurityVerificationTitle">Bekræft din kontos sikkerhed</string>
+    <string name="accountSettingsButton">Kontoindstillinger</string>
+    <string name="accountTitle">Konto</string>
+    <string name="accountsTitle">Konti</string>
+    <string name="actionRequiredDescription">En handling er påkrævet for at sikre en af dine konti.</string>
+    <string name="activityHistoryButton">Aktivitetshistorik</string>
+    <string name="addAccountContentDescription">Tilføj en konto</string>
+    <string name="appAccessIsSecure">Adgang til Authenticator er sikret</string>
+    <string name="authorizationCodeTitle">Din autoriseringskode</string>
+    <string name="autoCloseTitle">Disse informationer lukker automatisk om 15 sekunder.</string>
+    <string name="avatarContentDescription">Konto avatar</string>
+    <string name="callButton">Ring</string>
+    <string name="cancelButton">Annuller</string>
+    <string name="changePasswordButton">Skift adgangskode</string>
+    <string name="checkMyMethodsButton">Tjek mine metoder</string>
+    <string name="closeButton">Luk</string>
+    <string name="confirmActionCompleteButton">Jeg har gjort det nødvendige</string>
+    <string name="confirmButton">Bekræft</string>
+    <string name="confirmLoginNotificationTitle">Bekræft login</string>
+    <string name="contactSupportDescription">Kontakt vores teams via telefon eller e-mail for at få hjælp til at løse dit problem.</string>
+    <string name="contactSupportTitle">Kontakt support</string>
+    <string name="continueButton">Fortsæt</string>
+    <string name="copyPassword">Kopier adgangskode</string>
+    <string name="dataManagementTitle">Datahåndtering</string>
+    <string name="deletePreventionDescription">Sletning af app’en kan kompromittere sikkerheden på din konto.</string>
+    <string name="deletePreventionTitle">Brug for hjælp?</string>
+    <string name="denyButton">Afvis</string>
+    <string name="descriptionPlaceholder">Beskrivelse</string>
+    <string name="deviceLoginTitle">Enhed</string>
+    <string name="disconnectAccountDescription">Din konto vil ikke længere være beskyttet af totrinsbekræftelse og vil blive sårbar over for uautoriseret adgang.</string>
+    <string name="disconnectAccountOnThisDeviceDescription">Du vil ikke længere kunne godkende login på denne enhed med Authenticator.</string>
+    <string name="disconnectAccountTitle">Afbryd denne konto</string>
+    <string name="disconnectAccountWarningDescription">Sørg for, at dine bekræftelses- og gendannelsesmetoder stadig er opdaterede for ikke at miste adgangen til din konto.</string>
+    <string name="disconnectAccountWarningTitle">Afbrydelse af denne konto kan svække dens sikkerhed</string>
+    <string name="disconnectButton">Log ud</string>
+    <string name="disconnectSuccess">Konto afbrudt</string>
+    <string name="doneButton">Færdig</string>
+    <string name="emailPlaceholder">E-mail</string>
+    <string name="enableButton">Aktivér</string>
+    <string name="errorLoginFailed">Kontologin mislykkedes. Prøv igen, eller kontakt support. (fejlkode: %d)</string>
+    <string name="errorOccuredTitle">Der opstod en fejl</string>
+    <string name="estimatedWait">Anslået ventetid: %s</string>
+    <string name="feedbackTitle">Feedback</string>
+    <string name="laterButton">Senere</string>
+    <string name="locationLoginTitle">Sted</string>
+    <string name="logInButton">Log ind</string>
+    <string name="logInDescription">Indtast din adgangskode.</string>
+    <string name="logInTitle">Log ind</string>
+    <string name="loginAttemptQuery">Forsøger du at logge ind?</string>
+    <string name="loginAuthorizationWarning">Bekræftelse af dette login vil give denne enhed adgang til din Infomaniak konto.</string>
+    <string name="loginDeniedSuccessDescription">Du har afvist et loginforsøg. For at sikre din konto skal du ændre din adgangskode.\n\nHvis du har startet denne anmodning, skal du prøve at logge ind igen.</string>
+    <string name="loginDeniedSuccessTitle">Login afvist</string>
+    <string name="loginRequestAlreadyProcessedDescription">Var du ikke den, der gjorde dette? Tjek dine aktive enheder og log ud af dem, du ikke genkender.</string>
+    <string name="loginRequestAlreadyProcessedTitle">Denne anmodning er allerede behandlet</string>
+    <string name="loginRequestExpiredTitle">Denne loginanmodning er udløbet</string>
+    <string name="manageNotifications">Administrer notifikationer</string>
+    <string name="noInternetTitle">Ingen internetforbindelse</string>
+    <string name="notMeButton">Det var ikke mig</string>
+    <string name="notificationsDescription">Aktiver notifikationer for at modtage sikkerhedsoplysninger om dine Infomaniak konti.</string>
+    <string name="onBoardingFaceIdDescription">Aktivering af Face ID sikrer adgangen til app’en.</string>
+    <string name="onBoardingFaceIdTitle">Vil du aktivere Face ID?</string>
+    <string name="onBoardingLoginDescription">Log ind for sikkert at godkende dine forbindelser og beskytte din adgang.</string>
+    <string name="onBoardingLoginTitle">Sikr din Infomaniak konto med Authenticator</string>
+    <string name="onBoardingMigrationDescription">Nyd en ny moderniseret grænseflade, designet til din sikkerhed.</string>
+    <string name="onBoardingMigrationTitle">kAuth får et nyt look og bliver til Authenticator</string>
+    <string name="onBoardingSecuringAccount">Sikrer kontoen…</string>
+    <string name="onBoardingSuccessDescription">Du kan nu validere dine login med Authenticator.</string>
+    <string name="onBoardingSuccessTitle">Alt er klar</string>
+    <string name="openSupportStatus">Åben</string>
+    <string name="passwordAskingWarning">Infomaniak vil aldrig spørge om din adgangskode uventet.\n\nSørg for, at du har startet denne handling, før du fortsætter.</string>
+    <string name="passwordChangedDescription">Loginadgangskoden for din Infomaniak konto %s er blevet opdateret.</string>
+    <string name="passwordChangedNotification">Loginadgangskode ændret</string>
+    <string name="passwordChangedTitle">Loginadgangskode ændret</string>
+    <string name="passwordForgottenButton">Glemt adgangskode?</string>
+    <string name="passwordLabel">Adgangskode</string>
+    <string name="refreshPendingLoginsButton">Opdater afventende login</string>
+    <string name="removeAccountDescription">Du vil ikke længere kunne bekræfte dit login til denne konto med Authenticator.</string>
+    <string name="removeAccountSuccess">Konto fjernet</string>
+    <string name="removeAccountTitle">Fjern konto</string>
+    <string name="removeButton">Fjern</string>
+    <string name="settingsTitle">Indstillinger</string>
+    <string name="showAccountPasswordButton">Vis konto adgangskode</string>
+    <string name="startButton">Start</string>
+    <string name="subjectPlaceholder">Emne</string>
+    <string name="submitTicketDescription">For at hjælpe os med at assistere dig effektivt, bedes du give så mange detaljer som muligt om dit problem.</string>
+    <string name="submitTicketTitle">Send en sag</string>
+    <string name="supportResponseDelay">Vi vil svare inden for de næste 24 arbejdstimer.</string>
+    <string name="themeDark">Mørk</string>
+    <string name="themeLight">Lys</string>
+    <string name="themeSystem">System</string>
+    <string name="themeTitle">Tema</string>
+    <string name="ticketSentSuccessDescription">Vi gør vores bedste for at sikre, at en agent svarer dig så hurtigt som muligt.</string>
+    <string name="ticketSentSuccessTitle">Din sag er blevet sendt til vores teams!</string>
+    <string name="understandConfirmButton">Forstået</string>
+    <string name="unlockWithBiometrics">Lås op med biometri</string>
+    <string name="unlockingWithFaceId">Lås op med Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
+    <string name="verifySecurityButton">Bekræft min sikkerhed</string>
+    <string name="viewGuidesButton">Gennemse vejledningerne</string>
+    <string name="whenLoginTitle">Hvornår</string>
+</resources>

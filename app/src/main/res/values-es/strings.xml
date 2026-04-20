@@ -72,7 +72,6 @@
     <string name="emailPlaceholder">Correo electrónico</string>
     <string name="enableButton">Habilitar</string>
     <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte. (código de error: %d)</string>
-    <string name="errorOccuredDescription">No se pudo completar la operación. Por favor, inténtelo de nuevo.</string>
     <string name="errorOccuredTitle">Se produjo un error</string>
     <string name="estimatedWait">Tiempo estimado de espera: %s</string>
     <string name="feedbackTitle">Comentarios</string>
@@ -87,10 +86,8 @@
     <string name="loginDeniedSuccessTitle">Inicio de sesión denegado con éxito</string>
     <string name="loginRequestAlreadyProcessedDescription">¿No fue usted quien hizo esto? Verifique sus dispositivos activos y cierre sesión en aquellos que no reconozca.</string>
     <string name="loginRequestAlreadyProcessedTitle">Esta solicitud ya ha sido procesada</string>
-    <string name="loginRequestExpiredDescription">El tiempo de verificación ha expirado. Por favor, inténtelo de nuevo.</string>
     <string name="loginRequestExpiredTitle">Esta solicitud de inicio de sesión ha expirado</string>
     <string name="manageNotifications">Gestionar notificaciones</string>
-    <string name="noInternetDescription">No se pudo completar la operación. Verifique su configuración e inténtelo de nuevo.</string>
     <string name="noInternetTitle">Sin conexión a internet</string>
     <string name="notMeButton">No fui yo</string>
     <string name="notificationsDescription">Active las notificaciones para recibir información relacionada con la seguridad de sus cuentas Infomaniak.</string>
@@ -131,6 +128,7 @@
     <string name="understandConfirmButton">Entiendo</string>
     <string name="unlockWithBiometrics">Desbloqueo biométrico</string>
     <string name="unlockingWithFaceId">Desbloquear con Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/55f0cfb4-9f53-431f-aae5-413925a4aaad/</string>
     <string name="verifySecurityButton">Verificar mi seguridad</string>
     <string name="viewGuidesButton">Explorar las guías</string>
     <string name="whenLoginTitle">Cuándo</string>

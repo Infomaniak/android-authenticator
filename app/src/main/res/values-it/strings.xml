@@ -72,7 +72,6 @@
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Attiva</string>
     <string name="errorLoginFailed">Accesso all’account fallito. Riprova o contatta l’assistenza. (codice errore: %d)</string>
-    <string name="errorOccuredDescription">Impossibile completare l’operazione. Riprova.</string>
     <string name="errorOccuredTitle">Si è verificato un errore</string>
     <string name="estimatedWait">Attesa stimata: %s</string>
     <string name="feedbackTitle">Feedback</string>
@@ -87,10 +86,8 @@
     <string name="loginDeniedSuccessTitle">Accesso negato con successo</string>
     <string name="loginRequestAlreadyProcessedDescription">Non sei stato tu? Controlla i tuoi dispositivi attivi e disconnettiti da quelli che non riconosci.</string>
     <string name="loginRequestAlreadyProcessedTitle">Questa richiesta è già stata elaborata</string>
-    <string name="loginRequestExpiredDescription">Il tempo di verifica è scaduto. Riprova.</string>
     <string name="loginRequestExpiredTitle">Questa richiesta di accesso è scaduta</string>
     <string name="manageNotifications">Gestisci le notifiche</string>
-    <string name="noInternetDescription">Impossibile completare l’operazione. Controlla le impostazioni e riprova.</string>
     <string name="noInternetTitle">Nessuna connessione Internet</string>
     <string name="notMeButton">Non sono stato io</string>
     <string name="notificationsDescription">Attiva le notifiche per ricevere informazioni sulla sicurezza dei tuoi account Infomaniak.</string>
@@ -131,6 +128,7 @@
     <string name="understandConfirmButton">Capito</string>
     <string name="unlockWithBiometrics">Sblocco con la biometria</string>
     <string name="unlockingWithFaceId">Sblocca con Face ID</string>
+    <string name="urlUserReport">https://feedback.userreport.com/2d80b656-2a33-4550-9f4c-e78adc37e331/</string>
     <string name="verifySecurityButton">Verifica la mia sicurezza</string>
     <string name="viewGuidesButton">Sfoglia le guide</string>
     <string name="whenLoginTitle">Quando</string>
