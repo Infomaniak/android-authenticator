@@ -127,6 +127,7 @@
     <string name="understandConfirmButton">Ymmärsin</string>
     <string name="unlockWithBiometrics">Avaa biometrialla</string>
     <string name="unlockingWithFaceId">Avaa Face ID:llä</string>
+    <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Vahvista turvallisuuteni</string>
     <string name="viewGuidesButton">Selaa oppaita</string>
     <string name="whenLoginTitle">Milloin</string>
