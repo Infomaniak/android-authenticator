@@ -80,7 +80,6 @@
     <string name="logInDescription">Ange ditt lösenord.</string>
     <string name="logInTitle">Logga in</string>
     <string name="loginAttemptQuery">Försöker du\nlogga in?</string>
-    <string name="loginAuthorizationWarning">Att bekräfta denna inloggning kommer att auktorisera denna enhet att komma åt ditt Infomaniak-konto</string>
     <string name="loginDeniedSuccessDescription">Du avvisade ett inloggningsförsök. För att säkra ditt konto, byt ditt lösenord.\n\nOm du gjorde denna förfrågan, försök logga in igen.</string>
     <string name="loginDeniedSuccessTitle">Inloggning nekades framgångsrikt</string>
     <string name="loginRequestAlreadyProcessedDescription">Är det inte du som gjorde detta? Kontrollera dina aktiva enheter och logga ut från de du inte känner igen.</string>
