@@ -100,6 +100,10 @@ private fun LoginScreen(
     modifier: Modifier = Modifier,
 ) {
     val passwordState = rememberTextFieldState(initialText = "")
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+    val state = (legacyAccount().status as? Account.Status.NotConnected.ReLogin)?.state
+    val passwordError = state is Account.Status.NotConnected.ReLogin.State.Failure
 
     BottomStickyButtonScaffold(
         modifier = modifier.imePadding(),
@@ -115,15 +119,18 @@ private fun LoginScreen(
             LargeButton(
                 modifier = topModifier.fillMaxWidth(),
                 title = stringResource(R.string.logInButton),
+                enabled = { passwordState.text.isNotEmpty()},
                 onClick = {
                     onLoginPressed(legacyAccount().email, passwordState.text.toString())
                 }
             )
         },
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(Margin.Mini)) {
+        Column(
+            modifier = Modifier.padding(horizontal = Margin.Medium),
+            verticalArrangement = Arrangement.spacedBy(Margin.Mini)
+        ) {
             Column(
-                modifier = Modifier.padding(horizontal = Margin.Medium),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Margin.Medium),
             ) {
@@ -132,8 +139,24 @@ private fun LoginScreen(
                     text = stringResource(R.string.logInDescription),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                LoginForm(passwordState, legacyAccount)
+                LoginForm(
+                    passwordState = passwordState,
+                    passwordVisible = passwordVisible,
+                    onPasswordVisibilityChanged = { passwordVisible = !passwordVisible },
+                    legacyAccount = legacyAccount,
+                    isError = passwordError
+                )
             }
+            Text(
+                modifier = Modifier.padding(start = Margin.Medium),
+                text = stringResource(if (passwordError) {
+                    R.string.wrongPasswordLabel
+                } else {
+                    R.string.requiredLabel
+                }),
+                color = if (passwordError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodySmall,
+            )
             OpenUrlButton(
                 text = stringResource(R.string.passwordForgottenButton),
                 sourceUrl = RECOVER_PASSWORD_URL,
@@ -150,15 +173,17 @@ private fun LoginScreen(
 
 @Composable
 private fun LoginForm(
-    passwordState: TextFieldState,
     legacyAccount: () -> Account,
+    passwordState: TextFieldState,
+    passwordVisible: Boolean,
+    isError: Boolean,
+    onPasswordVisibilityChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Margin.Medium),
     ) {
-        var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
         Card(
             modifier = Modifier
@@ -171,7 +196,7 @@ private fun LoginForm(
                 account = legacyAccount()
             )
             HorizontalDivider(
-                color = AuthenticatorTheme.materialColors.outlineVariant,
+                color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outlineVariant,
             )
             SecureTextField(
                 state = passwordState,
@@ -184,15 +209,18 @@ private fun LoginForm(
                 label = { Text(stringResource(R.string.passwordLabel)) },
                 textObfuscationMode = if (passwordVisible) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        passwordVisible = !passwordVisible
-                    }) {
-                        Icon(painterResource(R.drawable.ic_eye_crossed), contentDescription = null)
+                    IconButton(onClick = onPasswordVisibilityChanged) {
+                        if (passwordVisible) {
+                            Icon(painterResource(R.drawable.ic_eye), contentDescription = null)
+                        } else {
+                            Icon(painterResource(R.drawable.ic_eye_crossed), contentDescription = null)
+                        }
                     }
                 },
+                isError = isError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Margin.Micro),
+                    .padding(Margin.Micro)
             )
         }
     }
