@@ -111,6 +111,7 @@
     <string name="removeAccountSuccess">Ο λογαριασμός αφαιρέθηκε</string>
     <string name="removeAccountTitle">Αφαίρεση λογαριασμού</string>
     <string name="removeButton">Αφαίρεση</string>
+    <string name="requiredLabel">Απαιτούμενο</string>
     <string name="settingsTitle">Ρυθμίσεις</string>
     <string name="showAccountPasswordButton">Εμφάνιση κωδικού πρόσβασης λογαριασμού</string>
     <string name="startButton">Έναρξη</string>
@@ -131,4 +132,5 @@
     <string name="verifySecurityButton">Επαλήθευση της ασφάλειάς μου</string>
     <string name="viewGuidesButton">Περιήγηση στους οδηγούς</string>
     <string name="whenLoginTitle">Πότε</string>
+    <string name="wrongPasswordLabel">Ο κωδικός πρόσβασης είναι λανθασμένος</string>
 </resources>

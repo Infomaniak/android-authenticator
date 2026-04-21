@@ -112,6 +112,7 @@
     <string name="removeAccountSuccess">Konto entfernt</string>
     <string name="removeAccountTitle">Konto entfernen</string>
     <string name="removeButton">Entfernen</string>
+    <string name="requiredLabel">Erforderlich</string>
     <string name="settingsTitle">Einstellungen</string>
     <string name="showAccountPasswordButton">Kontopasswort anzeigen</string>
     <string name="startButton">Starten</string>
@@ -132,4 +133,5 @@
     <string name="verifySecurityButton">Meine Sicherheit überprüfen</string>
     <string name="viewGuidesButton">Durchsuchen Sie die Anleitungen</string>
     <string name="whenLoginTitle">Wann</string>
+    <string name="wrongPasswordLabel">Das Passwort ist falsch</string>
 </resources>

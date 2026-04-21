@@ -112,6 +112,7 @@
     <string name="removeAccountSuccess">Account rimosso</string>
     <string name="removeAccountTitle">Rimuovi account</string>
     <string name="removeButton">Rimuovi</string>
+    <string name="requiredLabel">Richiesto</string>
     <string name="settingsTitle">Impostazioni</string>
     <string name="showAccountPasswordButton">Mostra password account</string>
     <string name="startButton">Inizia</string>
@@ -132,4 +133,5 @@
     <string name="verifySecurityButton">Verifica la mia sicurezza</string>
     <string name="viewGuidesButton">Sfoglia le guide</string>
     <string name="whenLoginTitle">Quando</string>
+    <string name="wrongPasswordLabel">La password non è corretta</string>
 </resources>

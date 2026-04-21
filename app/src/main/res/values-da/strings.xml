@@ -111,6 +111,7 @@
     <string name="removeAccountSuccess">Konto fjernet</string>
     <string name="removeAccountTitle">Fjern konto</string>
     <string name="removeButton">Fjern</string>
+    <string name="requiredLabel">Påkrævet</string>
     <string name="settingsTitle">Indstillinger</string>
     <string name="showAccountPasswordButton">Vis konto adgangskode</string>
     <string name="startButton">Start</string>
@@ -131,4 +132,5 @@
     <string name="verifySecurityButton">Bekræft min sikkerhed</string>
     <string name="viewGuidesButton">Gennemse vejledningerne</string>
     <string name="whenLoginTitle">Hvornår</string>
+    <string name="wrongPasswordLabel">Adgangskoden er forkert</string>
 </resources>

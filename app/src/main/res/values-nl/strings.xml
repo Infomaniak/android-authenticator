@@ -111,6 +111,7 @@
     <string name="removeAccountSuccess">Account verwijderd</string>
     <string name="removeAccountTitle">Account verwijderen</string>
     <string name="removeButton">Verwijderen</string>
+    <string name="requiredLabel">Vereist</string>
     <string name="settingsTitle">Instellingen</string>
     <string name="showAccountPasswordButton">Accountwachtwoord weergeven</string>
     <string name="startButton">Starten</string>
@@ -131,4 +132,5 @@
     <string name="verifySecurityButton">Mijn beveiliging controleren</string>
     <string name="viewGuidesButton">Handleidingen bekijken</string>
     <string name="whenLoginTitle">Wanneer</string>
+    <string name="wrongPasswordLabel">Het wachtwoord is onjuist</string>
 </resources>
