@@ -80,7 +80,6 @@
     <string name="logInDescription">Voer je wachtwoord in.</string>
     <string name="logInTitle">Inloggen</string>
     <string name="loginAttemptQuery">Probeert u in te loggen?</string>
-    <string name="loginAuthorizationWarning">Het bevestigen van dit inloggen geeft dit apparaat toegang tot uw Infomaniak account.</string>
     <string name="loginDeniedSuccessDescription">U heeft een inlogpoging geweigerd. Om uw account te beveiligen, wijzigt u uw wachtwoord.\n\nAls u dit verzoek heeft geïnitieerd, probeer dan opnieuw in te loggen.</string>
     <string name="loginDeniedSuccessTitle">Inloggen succesvol geweigerd</string>
     <string name="loginRequestAlreadyProcessedDescription">Bent u niet degene die dit heeft gedaan? Controleer uw actieve apparaten en log uit van apparaten die u niet herkent.</string>
