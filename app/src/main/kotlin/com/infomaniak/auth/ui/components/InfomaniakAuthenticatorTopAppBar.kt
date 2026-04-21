@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,7 +42,8 @@ fun InfomaniakAuthenticatorTopAppBar(
     onBackPressed: (() -> Unit)? = null,
     withTitle: Boolean = true,
     isCentered: Boolean = true,
-    isBackgroundTransparent: Boolean = false
+    isBackgroundTransparent: Boolean = false,
+    @DrawableRes navigationIconId: Int = R.drawable.arrow_left
 ) {
     val colors = TopAppBarDefaults.topAppBarColors(
         containerColor = if (isBackgroundTransparent) Color.Transparent else MaterialTheme.colorScheme.background,
@@ -59,7 +61,7 @@ fun InfomaniakAuthenticatorTopAppBar(
     val navigationIcon = @Composable {
         if (onBackPressed != null)
             IconButton(onClick = onBackPressed) {
-                Icon(painterResource(R.drawable.arrow_left), contentDescription = null)
+                Icon(painterResource(navigationIconId), contentDescription = null)
             }
     }
 

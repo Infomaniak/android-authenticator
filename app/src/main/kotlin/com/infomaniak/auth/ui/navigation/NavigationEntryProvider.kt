@@ -85,7 +85,7 @@ fun baseEntryProvider(
         AccountDetailsScreen(
             accountId = it.accountId,
             onLoginPressed = { legacyAccount ->
-                backStack.add(NavDestination.LoginInApp(legacyAccount))
+                backStack.add(NavDestination.LoginInApp(legacyAccount, isOnboarding = false))
             },
             onBackPressed = backStack::tryPopLast
         )
@@ -105,7 +105,14 @@ fun baseEntryProvider(
     entry<NavDestination.LoginInApp> {
         LoginScreen(
             legacyAccountId = it.legacyAccountId,
-            onBackPressed = backStack::tryPopLast
+            onBackPressed = {
+                if (it.isOnboarding) {
+                    backStack.clearAndAdd(NavDestination.Root.Home)
+                } else {
+                    backStack.tryPopLast()
+                }
+            },
+            isOnboarding = it.isOnboarding
         )
     }
 }
@@ -113,4 +120,9 @@ fun baseEntryProvider(
 fun NavBackStack<NavKey>.tryPopLast() {
     if (lastIndex == 0) return
     removeAt(lastIndex)
+}
+
+fun NavBackStack<NavKey>.clearAndAdd(destination: NavKey) {
+    add(destination)
+    removeAll { it != destination }
 }

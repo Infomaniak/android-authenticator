@@ -68,6 +68,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 fun LoginScreen(
     legacyAccountId: Long,
     onBackPressed: () -> Unit,
+    isOnboarding: Boolean,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by remember(legacyAccountId) {
@@ -86,7 +87,8 @@ fun LoginScreen(
                     if (password.isNotEmpty()) {
                         action?.proceed(CredentialsForMigration(email, password))
                     }
-                }
+                },
+                isOnboarding = isOnboarding,
             )
         }
     }
@@ -97,13 +99,14 @@ private fun LoginScreen(
     legacyAccount: () -> Account,
     onBackPressed: () -> Unit,
     onLoginPressed: (String, String) -> Unit,
+    isOnboarding: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val passwordState = rememberTextFieldState(initialText = "")
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     val state = (legacyAccount().status as? Account.Status.NotConnected.ReLogin)?.state
-    val passwordError = state is Account.Status.NotConnected.ReLogin.State.Failure
+    val passwordError = (state as? Account.Status.NotConnected.ReLogin.State.CredentialsRequired)?.hadIncorrectPassword ?: false
 
     BottomStickyButtonScaffold(
         modifier = modifier.imePadding(),
@@ -112,7 +115,8 @@ private fun LoginScreen(
                 withTitle = false,
                 isCentered = true,
                 isBackgroundTransparent = true,
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
+                navigationIconId = if (isOnboarding) R.drawable.ic_cross else R.drawable.arrow_left
             )
         },
         topButton = { topModifier ->
@@ -234,6 +238,7 @@ private fun LoginScreenPreview() {
             legacyAccount = { fakeAccounts.first() },
             onBackPressed = {},
             onLoginPressed = { _, _ -> },
+            isOnboarding = false,
         )
     }
 }
