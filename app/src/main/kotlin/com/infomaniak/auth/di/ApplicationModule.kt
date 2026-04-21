@@ -172,7 +172,9 @@ object ApplicationModule {
                     AccountsCheckingStatus.Error.Network -> null // TODO[Authenticator]: Consider auto-retrying on network change.
                     AccountsCheckingStatus.Error.Unknown -> null // Give up.
                 }
-            emit(matchingAccount?.tokens?.first())
+            if (matchingAccount == null) return@transform emit(null)
+            val result = crossAppLoginFacade.attemptLogin(listOf(matchingAccount))
+            emit(result.tokens.singleOrNull()?.accessToken)
 
         }.first()
 
