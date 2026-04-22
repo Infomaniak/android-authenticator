@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Włącz</string>
     <string name="errorLoginFailed">Logowanie do konta nie powiodło się. Spróbuj ponownie lub skontaktuj się z pomocą techniczną. (kod błędu: %d)</string>
+    <string name="errorMigrationFailed">Migracja została przerwana.\nProsimy o kontakt z naszym zespołem pomocy technicznej.</string>
     <string name="errorOccuredTitle">Wystąpił błąd</string>
     <string name="estimatedWait">Szacowany czas oczekiwania: %s</string>
     <string name="feedbackTitle">Opinie</string>

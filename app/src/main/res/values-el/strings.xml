@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Ενεργοποίηση</string>
     <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. (κωδικός σφάλματος: %d)</string>
+    <string name="errorMigrationFailed">Η μετανάστευση έχει διακοπεί.\nΠαρακαλούμε επικοινωνήστε με την ομάδα τεχνικής υποστήριξης.</string>
     <string name="errorOccuredTitle">Παρουσιάστηκε σφάλμα</string>
     <string name="estimatedWait">Εκτιμώμενη αναμονή: %s</string>
     <string name="feedbackTitle">Σχόλια</string>

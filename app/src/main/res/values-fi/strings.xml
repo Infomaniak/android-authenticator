@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">Sähköposti</string>
     <string name="enableButton">Ota käyttöön</string>
     <string name="errorLoginFailed">Tilille kirjautuminen epäonnistui. Yritä uudelleen tai ota yhteyttä tukeen. (virhekoodi: %d)</string>
+    <string name="errorMigrationFailed">Siirtyminen on keskeytetty.\nOta yhteyttä tekniseen tukitiimiimme.</string>
     <string name="errorOccuredTitle">Tapahtui virhe</string>
     <string name="estimatedWait">Arvioitu odotusaika: %s</string>
     <string name="feedbackTitle">Palaute</string>

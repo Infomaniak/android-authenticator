@@ -72,6 +72,7 @@
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Activer</string>
     <string name="errorLoginFailed">La connexion au compte a échoué.\nVeuillez réessayer ou contacter le support. (code erreur : %d)</string>
+    <string name="errorMigrationFailed">La migration a été interrompue.\nVeuillez contacter notre équipe de support technique.</string>
     <string name="errorOccuredTitle">Une erreur est survenue</string>
     <string name="estimatedWait">Attente estimée %s</string>
     <string name="feedbackTitle">Feedback</string>

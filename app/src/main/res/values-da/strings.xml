@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Aktivér</string>
     <string name="errorLoginFailed">Kontologin mislykkedes. Prøv igen, eller kontakt support. (fejlkode: %d)</string>
+    <string name="errorMigrationFailed">Migreringen er blevet afbrudt.\nKontakt venligst vores tekniske supportteam.</string>
     <string name="errorOccuredTitle">Der opstod en fejl</string>
     <string name="estimatedWait">Anslået ventetid: %s</string>
     <string name="feedbackTitle">Feedback</string>
