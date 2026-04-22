@@ -398,28 +398,30 @@ internal class AuthenticatorFacadeImpl(
                     emit(issueToStatus(issue))
                     awaitCancellation()
                 }
-                val issueReason = when (it) {
-                    is IOException -> Reason.NetworkIssue
-                    is ApiException if (it.statusCode == 503) -> Reason.ServerUnavailable
-                    is ApiException.ApiErrorException -> {
-                        crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(12_000 + it.statusCode, "http ${it.statusCode} ${it.errorCode} ${it.errorMessage}")
-                    }
-                    is ApiException.UnexpectedApiErrorFormatException -> {
-                        crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(22_000 + it.statusCode, "http ${it.statusCode} ${it.bodyResponse}")
-                    }
-                    else -> {
-                        crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(11_000, it.message ?: it::class.simpleName ?: "$it")
-                    }
-                }
+                val issueReason = it.toIssueReason()
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
                 val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
                 emit(issueToStatus(issue))
                 val shouldRetry = shouldRetryAsync.await()
                 if (shouldRetry) continue else onGiveUp()
             }
+        }
+    }
+
+    private fun Throwable.toIssueReason(): Reason = when (this) {
+        is IOException -> Reason.NetworkIssue
+        is ApiException if (statusCode == 503) -> Reason.ServerUnavailable
+        is ApiException.ApiErrorException -> {
+            crashReport.capture("re-login migration attempt failed", this)
+            Reason.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
+        }
+        is ApiException.UnexpectedApiErrorFormatException -> {
+            crashReport.capture("re-login migration attempt failed", this)
+            Reason.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
+        }
+        else -> {
+            crashReport.capture("re-login migration attempt failed", this)
+            Reason.Other(11_000, message ?: this::class.simpleName ?: "$this")
         }
     }
 }
