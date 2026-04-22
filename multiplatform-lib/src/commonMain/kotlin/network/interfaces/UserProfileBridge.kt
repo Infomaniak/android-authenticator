@@ -19,6 +19,6 @@ package com.infomaniak.auth.lib.network.interfaces
 
 import com.infomaniak.auth.lib.models.migration.user.UserProfile
 
-interface UserProfileBridge {
+fun interface UserProfileBridge {
     suspend fun persistUserProfile(userProfile: UserProfile)
 }
