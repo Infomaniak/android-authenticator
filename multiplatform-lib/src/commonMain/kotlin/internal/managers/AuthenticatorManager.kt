@@ -20,6 +20,7 @@ package com.infomaniak.auth.lib.internal.managers
 import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.Failure
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.models.VerifyResponse
@@ -46,10 +47,12 @@ internal class AuthenticatorManager(
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
         val keyIdAsString = keyIds.second
-        keyPairManager.generateNewKey(userId, keyIdAsString)?.let {
-            throw Exception("Couldn't generate new key: ${it.details}")
+        keyPairManager.generateNewKey(userId, keyIdAsString)?.let { failure ->
+            error("Couldn't generate new key: ${failure.details}")
         }
-        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrNull()!!
+        val publicKeyAsByteArray = keyPairManager.retrievePublicKey(userId, keyIdAsString).firstOrElse {
+            error("Couldn't retrieve public key (registerPasskey): ${it.details}")
+        }
 
         val registerPasskey = cryptoObjectsBuilder.buildRegisterPasskey(
             publicKey = publicKeyAsByteArray,

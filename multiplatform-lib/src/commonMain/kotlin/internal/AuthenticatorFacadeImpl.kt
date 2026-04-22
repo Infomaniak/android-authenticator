@@ -25,6 +25,7 @@ import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.CredentialsForMigration
 import com.infomaniak.auth.lib.Issue
+import com.infomaniak.auth.lib.Issue.Retriable.Reason
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
@@ -66,6 +67,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.io.IOException
+import network.exceptions.ApiException
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
@@ -247,7 +249,7 @@ internal class AuthenticatorFacadeImpl(
             val token = authenticatorManager.getToken(
                 clientId = clientId,
                 userId = userId,
-            ).firstOrNull()!!
+            ).firstOrElse { error("Key not found: ${it.details}") }
             tokenBridge.persistTokenForAccount(userId, token)
             dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.LoggedIn))
         }
@@ -324,77 +326,99 @@ internal class AuthenticatorFacadeImpl(
         return true
     }
 
-    private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(
-        accountToMigrate: AccountEntity
-    ) {
+    private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(accountToMigrate: AccountEntity) {
         val reLoggingIn = ReLogin(
             legacyAccount = accountToMigrate.toAccount(null),
             state = ReLogin.State.SendingCredentials,
         )
         var wrongPassword = false
-        while (true) {
-            runCatching {
-                val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
-                val reLogin = reLoggingIn.copy(
-                    state = ReLogin.State.CredentialsRequired(
-                        hadIncorrectPassword = wrongPassword,
-                        proceed = credentialsAsync::complete,
-                    )
+        withRetries(
+            onGiveUp = { return },
+            baseStatus = reLoggingIn
+        ) {
+            val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
+            val reLogin = reLoggingIn.copy(
+                state = ReLogin.State.CredentialsRequired(
+                    hadIncorrectPassword = wrongPassword,
+                    proceed = credentialsAsync::complete,
                 )
-                emit(reLogin)
-                val credentialsForMigration = credentialsAsync.await()
-                emit(reLoggingIn)
-                val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
-                check(attemptMigration(accountToMigrate, authentication))
-            }.cancellable().onFailure {
-                if (it is NullPointerException || it is IllegalStateException) { // Local errors, no recourse.
-                    emit(reLoggingIn.copy(state = ReLogin.State.Failure(Issue.NonRetriable("Ooops…"))))
-                    awaitCancellation()
-                }
-                val shouldRetryAsync = CompletableDeferred<Boolean>()
-                val issue = Issue.Retriable(
-                    reason = when (it) {
-                        is IOException -> Issue.Retriable.Reason.NetworkIssue
-                        //TODO: Check it's actually a credentials issue, and support http errors, including backend unavailability
-                        else -> {
-                            wrongPassword = true
-                            continue
-                        }
-                    },
-                    proceed = shouldRetryAsync::complete
-                )
-                emit(reLoggingIn.copy(state = ReLogin.State.Failure(issue)))
-                val shouldRetry = shouldRetryAsync.await()
-                if (shouldRetry) continue else return
+            )
+            emit(reLogin)
+            val credentialsForMigration = credentialsAsync.await()
+            wrongPassword = false
+            emit(reLoggingIn)
+            val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
+            val succeeded = attemptMigration(accountToMigrate, authentication)
+            when {
+                succeeded -> AttemptResult.Success(Unit)
+                else -> AttemptResult.Retry.also { wrongPassword = true }
             }
         }
     }
 
+    private suspend inline fun <R> FlowCollector<ReLogin>.withRetries(
+        onGiveUp: () -> Unit = {},
+        baseStatus: ReLogin,
+        block: () -> AttemptResult<R>
+    ): R = withRetriesRaw(
+        onGiveUp = onGiveUp,
+        issueToStatus = { baseStatus.copy(state = ReLogin.State.Failure(it)) },
+        block = block
+    )
+
     private suspend inline fun <R> FlowCollector<Account.Status.NotConnected>.withRetries(
         onGiveUp: () -> Unit = {},
         block: () -> R
+    ): R = withRetriesRaw(
+        onGiveUp = onGiveUp,
+        issueToStatus = { Account.Status.NotConnected.LoginFailed(it) },
+        block = { AttemptResult.Success(block()) }
+    )
+
+    private sealed interface AttemptResult<out T> {
+        data object Retry : AttemptResult<Nothing>
+        data class Success<T>(val value: T) : AttemptResult<T>
+    }
+
+    private suspend inline fun <T, R> FlowCollector<T>.withRetriesRaw(
+        onGiveUp: () -> Unit = {},
+        crossinline issueToStatus: (Issue) -> T,
+        block: () -> AttemptResult<R>
     ): R {
-        while (true) {
+        loop@ while (true) {
             runCatching {
-                return block()
+                return when (val result = block()) {
+                    AttemptResult.Retry -> continue@loop
+                    is AttemptResult.Success -> result.value
+                }
             }.cancellable().onFailure {
-                crashReport.capture("Operation failed", it)
-                if (it is NullPointerException || it is IllegalStateException) { // Local errors, no recourse.
-                    emit(Account.Status.NotConnected.LoginFailed(Issue.NonRetriable("Ooops…")))
+                it.printStackTrace()
+                if (it is IllegalStateException || it is IllegalArgumentException) { // Local errors, no recourse.
+                    val issue = Issue.NonRetriable(it.message ?: it::class.simpleName ?: "$it")
+                    emit(issueToStatus(issue))
                     awaitCancellation()
                 }
+                val issueReason = when (it) {
+                    is IOException -> Reason.NetworkIssue
+                    is ApiException if (it.statusCode == 503) -> Reason.ServerUnavailable
+                    is ApiException.ApiErrorException -> {
+                        crashReport.capture("re-login migration attempt failed", it)
+                        Reason.Other("http ${it.statusCode} ${it.errorCode} ${it.errorMessage}")
+                    }
+                    is ApiException.UnexpectedApiErrorFormatException -> {
+                        crashReport.capture("re-login migration attempt failed", it)
+                        Reason.Other("http ${it.statusCode} ${it.bodyResponse}")
+                    }
+                    else -> {
+                        crashReport.capture("re-login migration attempt failed", it)
+                        Reason.Other(it.message ?: it::class.simpleName ?: "$it")
+                    }
+                }
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
-                val issue = Issue.Retriable(
-                    reason = when (it) {
-                        is IOException -> Issue.Retriable.Reason.NetworkIssue
-                        //TODO: Support http errors, including backend unavailability.
-                        else -> Issue.Retriable.Reason.Other(it.message ?: it.toString())
-                    },
-                    proceed = shouldRetryAsync::complete
-                )
-                emit(Account.Status.NotConnected.LoginFailed(issue))
+                val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
+                emit(issueToStatus(issue))
                 val shouldRetry = shouldRetryAsync.await()
-                if (!shouldRetry) onGiveUp()
+                if (shouldRetry) continue else onGiveUp()
             }
         }
     }
