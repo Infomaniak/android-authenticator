@@ -403,15 +403,15 @@ internal class AuthenticatorFacadeImpl(
                     is ApiException if (it.statusCode == 503) -> Reason.ServerUnavailable
                     is ApiException.ApiErrorException -> {
                         crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other("http ${it.statusCode} ${it.errorCode} ${it.errorMessage}")
+                        Reason.Other(12_000 + it.statusCode, "http ${it.statusCode} ${it.errorCode} ${it.errorMessage}")
                     }
                     is ApiException.UnexpectedApiErrorFormatException -> {
                         crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other("http ${it.statusCode} ${it.bodyResponse}")
+                        Reason.Other(22_000 + it.statusCode, "http ${it.statusCode} ${it.bodyResponse}")
                     }
                     else -> {
                         crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(it.message ?: it::class.simpleName ?: "$it")
+                        Reason.Other(11_000, it.message ?: it::class.simpleName ?: "$it")
                     }
                 }
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
