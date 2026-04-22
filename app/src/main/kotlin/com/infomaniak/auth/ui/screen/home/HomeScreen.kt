@@ -277,8 +277,8 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
     companion object {
         fun Account.Status.toAccountSecurityLevel() = when (this) {
             Account.Status.LoggedIn -> Secured
-            is Account.Status.NotConnected.ReLogin -> Warning //TODO: Shouldn't this show the exclamation mark too?
-            else -> Danger
+            is Account.Status.NotConnected -> Danger //TODO: Shouldn't this show the exclamation mark too?
+            else -> Warning // TODO: Use secure level to determine the status more precisely
         }
     }
 }
