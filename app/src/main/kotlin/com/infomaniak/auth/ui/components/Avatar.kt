@@ -65,16 +65,14 @@ private fun computeAvatarType(
             containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
             contentColor = localAvatarColors.contentColor,
         )
-        val initials = account.fullName
-            .split(" ")
-            .filter { it.isNotEmpty() }
-            .take(2)
-            .map { it.first() }
-            .joinToString("")
-            .uppercase()
+        val avatarUrlData = account.avatarUrl
+            ?.takeIf { it.isNotBlank() }
+            ?.let { avatarUrl ->
+                AvatarUrlData(avatarUrl, SingletonImageLoader.get(LocalContext.current))
+            }
         getUrlOrInitials(
-            avatarUrlData = AvatarUrlData(account.avatarUrl ?: "", SingletonImageLoader.get(LocalContext.current)),
-            initials = initials,
+            avatarUrlData = avatarUrlData,
+            initials = account.initials,
             colors = avatarColors
         )
     } else {
