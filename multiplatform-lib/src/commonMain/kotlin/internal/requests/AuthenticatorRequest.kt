@@ -143,14 +143,19 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
         withPhones: Boolean = false,
         withSecurity: Boolean = false,
     ): SuccessfulApiResponse<UserProfile> {
+
+        val withOptions = buildList {
+            if (withEmails) add("emails")
+            if (withPhones) add("phones")
+            if (withSecurity) add("security")
+        }
+
         val url = buildString {
             append(ApiRoutes.userProfile())
-
-            if (withEmails || withPhones || withSecurity) append("&with=")
-
-            if (withEmails) append("emails")
-            if (withPhones) append("phones")
-            if (withSecurity) append("security")
+            if (withOptions.isNotEmpty()) {
+                append("&with=")
+                append(withOptions.joinToString(","))
+            }
         }
 
         return httpClient.get(url) {

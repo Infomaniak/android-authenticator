@@ -208,8 +208,8 @@ object ApplicationModule {
 
     private fun createUserProfileBridge(accountUtils: AccountUtils): UserProfileBridge = object : UserProfileBridge {
         override suspend fun persistUserProfile(userProfile: UserProfile) {
-            val userProfile = userProfile.toUser()
-            accountUtils.addUser(userProfile)
+            val user = userProfile.toUser()
+            accountUtils.addUser(user)
         }
     }
 }
