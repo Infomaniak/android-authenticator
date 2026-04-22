@@ -53,6 +53,10 @@ internal class ApiClientProvider(
     private val crashReport: CrashReportInterface? = null,
 ) {
 
+    init {
+        ApiRoutes.setApiHost(apiHost)
+    }
+
     private val jsonConfig = Json {
         /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
         encodeDefaults = true
@@ -95,7 +99,7 @@ internal class ApiClientProvider(
         }
 
         defaultRequest {
-            url(ApiRoutes.apiBaseUrl(apiHost))
+            url(ApiRoutes.apiBaseUrl())
             contentType(ContentType.Application.Json)
         }
 

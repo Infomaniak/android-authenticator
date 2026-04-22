@@ -20,11 +20,14 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.models.migration.user.UserProfile
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
+import com.infomaniak.auth.lib.network.interfaces.UserProfileBridge
 import com.infomaniak.auth.utils.AccountUtils
+import com.infomaniak.auth.utils.toUser
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
@@ -62,7 +65,7 @@ object ApplicationModule {
     fun providesInfomaniakLogin(@ApplicationContext appContext: Context): InfomaniakLogin {
         return InfomaniakLogin(
             context = appContext,
-            loginUrl =  "${LOGIN_ENDPOINT_URL}/",
+            loginUrl = "${LOGIN_ENDPOINT_URL}/",
             appUID = BuildConfig.APPLICATION_ID,
             clientID = BuildConfig.CLIENT_ID,
             accessType = null,
@@ -94,6 +97,7 @@ object ApplicationModule {
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),
             tokenBridge = createTokenBridge(accountUtils, crossAppLoginFacade),
+            userProfileBridge = createUserProfileBridge(accountUtils),
         )
     }
 
@@ -199,6 +203,13 @@ object ApplicationModule {
                     )
                 )
             )
+        }
+    }
+
+    private fun createUserProfileBridge(accountUtils: AccountUtils): UserProfileBridge = object : UserProfileBridge {
+        override suspend fun persistUserProfile(userProfile: UserProfile) {
+            val userProfile = userProfile.toUser()
+            accountUtils.addUser(userProfile)
         }
     }
 }

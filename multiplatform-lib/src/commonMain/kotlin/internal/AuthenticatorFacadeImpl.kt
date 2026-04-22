@@ -41,6 +41,7 @@ import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
+import com.infomaniak.auth.lib.network.interfaces.UserProfileBridge
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope
@@ -76,6 +77,7 @@ internal class AuthenticatorFacadeImpl(
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
     private val tokenBridge: TokenBridge,
+    private val userProfileBridge: UserProfileBridge,
     private val crashReport: CrashReportInterface,
     private val coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
@@ -316,7 +318,10 @@ internal class AuthenticatorFacadeImpl(
             authentication = authentication,
             persistToken = { token ->
                 tokenBridge.persistTokenForAccount(userId, token)
-            }
+            },
+            persistUser = { token ->
+                userProfileBridge.persistUserProfile(authenticatorManager.getUserProfile(token))
+            },
         )
 
         if (succeeded.not()) return false

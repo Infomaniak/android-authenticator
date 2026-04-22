@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
+import com.infomaniak.auth.lib.network.interfaces.UserProfileBridge
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -70,6 +71,7 @@ abstract class AuthenticatorFacade internal constructor() {
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
             tokenBridge: TokenBridge,
+            userProfileBridge: UserProfileBridge,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
             val webAuthnRepository = WebAuthnRepository(
@@ -99,6 +101,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 authenticatorManager = authenticatorManager,
                 migrationManager = migrationManager,
                 tokenBridge = tokenBridge,
+                userProfileBridge = userProfileBridge,
                 crashReport = crashReport,
                 coroutineScope = scope,
             )

@@ -62,6 +62,7 @@ internal class MigrationManager(
     suspend fun tryMigrating(
         userId: Long,
         persistToken: suspend (token: String) -> Unit,
+        persistUser: suspend (token: String) -> Unit,
         authentication: MigrationAuthentication,
     ): Boolean {
         @OptIn(ExperimentalUuidApi::class)
@@ -113,6 +114,7 @@ internal class MigrationManager(
             clientId = clientId,
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
+        persistUser(token)
         persistToken(token)
         webAuthnRepository.completeMigration(token = token, sessionId = migrationOptions.session, deviceId = deviceId)
         deleteLegacyAccount(userId.toString())

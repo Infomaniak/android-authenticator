@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.network.utils.decode
+import com.infomaniak.auth.lib.models.migration.user.UserProfile
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
@@ -134,6 +135,27 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
             addAuthenticationHeader(token)
             setBody(mapOf("device" to deviceId))
         }
+    }
+
+    suspend fun getUserProfile(
+        token: String,
+        withEmails: Boolean = false,
+        withPhones: Boolean = false,
+        withSecurity: Boolean = false,
+    ): SuccessfulApiResponse<UserProfile> {
+        val url = buildString {
+            append(ApiRoutes.userProfile())
+
+            if (withEmails || withPhones || withSecurity) append("&with=")
+
+            if (withEmails) append("emails")
+            if (withPhones) append("phones")
+            if (withSecurity) append("security")
+        }
+
+        return httpClient.get(url) {
+            addAuthenticationHeader(token)
+        }.decode()
     }
 
     private fun HttpRequestBuilder.addAuthenticationHeader(token: String) {
