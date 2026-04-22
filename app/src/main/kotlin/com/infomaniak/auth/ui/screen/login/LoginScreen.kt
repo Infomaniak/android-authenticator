@@ -82,9 +82,8 @@ fun LoginScreen(
                 onBackPressed = onBackPressed,
                 onLoginPressed = { email, password ->
                     val status = state.legacyAccount.status as? Account.Status.NotConnected.ReLogin
-                    val action = status?.state as? Account.Status.NotConnected.ReLogin.State.CredentialsRequired
                     if (password.isNotEmpty()) {
-                        action?.proceed(CredentialsForMigration(email, password))
+                        status?.sendCredentials?.invoke(CredentialsForMigration(email, password))
                     }
                 }
             )

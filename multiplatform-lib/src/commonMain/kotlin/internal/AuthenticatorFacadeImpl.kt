@@ -327,81 +327,52 @@ internal class AuthenticatorFacadeImpl(
     }
 
     private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(accountToMigrate: AccountEntity) {
-        val reLoggingIn = ReLogin(
+        var status = ReLogin(
             legacyAccount = accountToMigrate.toAccount(null),
-            state = ReLogin.State.SendingCredentials,
+            hadIncorrectPassword = false,
+            lastIssue = null,
+            sendCredentials = null
         )
-        var wrongPassword = false
-        withRetries(
-            onGiveUp = { return },
-            baseStatus = reLoggingIn
-        ) {
-            val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
-            val reLogin = reLoggingIn.copy(
-                state = ReLogin.State.CredentialsRequired(
-                    hadIncorrectPassword = wrongPassword,
-                    proceed = credentialsAsync::complete,
-                )
-            )
-            emit(reLogin)
-            val credentialsForMigration = credentialsAsync.await()
-            wrongPassword = false
-            emit(reLoggingIn)
-            val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
-            val succeeded = attemptMigration(accountToMigrate, authentication)
-            when {
-                succeeded -> AttemptResult.Success(Unit)
-                else -> AttemptResult.Retry.also { wrongPassword = true }
+        loop@ while (true) {
+            status = runCatching {
+                val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
+                status = status.copy(sendCredentials = credentialsAsync::complete)
+                emit(status)
+                val credentialsForMigration = credentialsAsync.await()
+                status = status.copy(hadIncorrectPassword = false, lastIssue = null, sendCredentials = null)
+                emit(status)
+                val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
+                val succeeded = attemptMigration(accountToMigrate, authentication)
+                when {
+                    succeeded -> return
+                    else -> status.copy(hadIncorrectPassword = true)
+                }
+            }.cancellable().getOrElse {
+                it.printStackTrace()
+                status.copy(lastIssue = it.toIssueReason())
             }
         }
     }
 
-    private suspend inline fun <R> FlowCollector<ReLogin>.withRetries(
-        onGiveUp: () -> Unit = {},
-        baseStatus: ReLogin,
-        block: () -> AttemptResult<R>
-    ): R = withRetriesRaw(
-        onGiveUp = onGiveUp,
-        issueToStatus = { baseStatus.copy(state = ReLogin.State.Failure(it)) },
-        block = block
-    )
 
     private suspend inline fun <R> FlowCollector<Account.Status.NotConnected>.withRetries(
         onGiveUp: () -> Unit = {},
         block: () -> R
-    ): R = withRetriesRaw(
-        onGiveUp = onGiveUp,
-        issueToStatus = { Account.Status.NotConnected.LoginFailed(it) },
-        block = { AttemptResult.Success(block()) }
-    )
-
-    private sealed interface AttemptResult<out T> {
-        data object Retry : AttemptResult<Nothing>
-        data class Success<T>(val value: T) : AttemptResult<T>
-    }
-
-    private suspend inline fun <T, R> FlowCollector<T>.withRetriesRaw(
-        onGiveUp: () -> Unit = {},
-        crossinline issueToStatus: (Issue) -> T,
-        block: () -> AttemptResult<R>
     ): R {
-        loop@ while (true) {
+        while (true) {
             runCatching {
-                return when (val result = block()) {
-                    AttemptResult.Retry -> continue@loop
-                    is AttemptResult.Success -> result.value
-                }
+                return block()
             }.cancellable().onFailure {
                 it.printStackTrace()
                 if (it is IllegalStateException || it is IllegalArgumentException) { // Local errors, no recourse.
                     val issue = Issue.NonRetriable(it.message ?: it::class.simpleName ?: "$it")
-                    emit(issueToStatus(issue))
+                    emit(Account.Status.NotConnected.LoginFailed(issue))
                     awaitCancellation()
                 }
                 val issueReason = it.toIssueReason()
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
                 val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
-                emit(issueToStatus(issue))
+                emit(Account.Status.NotConnected.LoginFailed(issue))
                 val shouldRetry = shouldRetryAsync.await()
                 if (shouldRetry) continue else onGiveUp()
             }

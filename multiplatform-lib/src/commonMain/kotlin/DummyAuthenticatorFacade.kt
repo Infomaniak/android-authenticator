@@ -78,10 +78,8 @@ class DummyAuthenticatorFacade internal constructor(
                 _accounts += legacyAccount.copy(
                     status = Account.Status.NotConnected.ReLogin(
                         legacyAccount = legacyAccount,
-                        state = Account.Status.NotConnected.ReLogin.State.CredentialsRequired(
-                            hadIncorrectPassword = false,
-                            proceed = { next.trySend(Unit) }
-                        ),
+                        lastIssue = null,
+                        sendCredentials = { next.trySend(Unit) },
                     )
                 )
                 emit(AppStatus.LoggingIn)
