@@ -119,8 +119,8 @@ fun ActionRequiredCard(
                     configuration = ActionRequiredConfiguration(
                         text = stringResource(R.string.errorMigrationFailed),
                         iconRes = R.drawable.triangle_alert,
-                        iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-                        statusCardVariant = StatusCardVariant.Warning
+                        iconColor = AuthenticatorTheme.customColors.iconTintError,
+                        statusCardVariant = StatusCardVariant.Error
                     ),
                     bottomButton = {
                         ActionRequiredButton(
