@@ -28,6 +28,7 @@ package network.exceptions
  * @property requestContextId The request context id used to track what happened during calls session by the backend
  */
 sealed class ApiException(
+    val statusCode: Int,
     errorMessage: String,
     cause: Throwable?,
     val requestContextId: String,
@@ -44,10 +45,16 @@ sealed class ApiException(
      * @param requestContextId The request context id send by the backend to track the call
      */
     open class ApiErrorException(
+        statusCode: Int,
         val errorCode: String,
         val errorMessage: String,
         requestContextId: String,
-    ) : ApiException(errorMessage, null, requestContextId)
+    ) : ApiException(
+        statusCode = statusCode,
+        errorMessage = errorMessage,
+        cause = null,
+        requestContextId = requestContextId,
+    )
 
     /**
      * Thrown when an API call returns an error in an unexpected format that cannot be parsed.
@@ -61,9 +68,14 @@ sealed class ApiException(
      * @param requestContextId The request context id send by the backend to track the call
      */
     class UnexpectedApiErrorFormatException(
-        val statusCode: Int,
+        statusCode: Int,
         val bodyResponse: String,
         cause: Throwable?,
         requestContextId: String,
-    ) : ApiException(bodyResponse, cause, requestContextId)
+    ) : ApiException(
+        statusCode = statusCode,
+        errorMessage = bodyResponse,
+        cause = cause,
+        requestContextId = requestContextId,
+    )
 }

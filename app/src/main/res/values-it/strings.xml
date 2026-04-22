@@ -82,7 +82,6 @@
     <string name="logInDescription">Inserire la password.</string>
     <string name="logInTitle">Accedi</string>
     <string name="loginAttemptQuery">Stai cercando di accedere?</string>
-    <string name="loginAuthorizationWarning">Confermando questo accesso, autorizzerai questo dispositivo ad accedere al tuo account Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Hai rifiutato un tentativo di accesso. Per proteggere il tuo account, cambia la tua password.\n\nSe hai avviato tu questa richiesta, prova ad accedere nuovamente.</string>
     <string name="loginDeniedSuccessTitle">Accesso negato con successo</string>
     <string name="loginRequestAlreadyProcessedDescription">Non sei stato tu? Controlla i tuoi dispositivi attivi e disconnettiti da quelli che non riconosci.</string>

@@ -81,7 +81,6 @@
     <string name="logInDescription">Skriv inn passordet ditt.</string>
     <string name="logInTitle">Logg inn</string>
     <string name="loginAttemptQuery">Prøver du å logge inn?</string>
-    <string name="loginAuthorizationWarning">Å bekrefte denne påloggingen vil autorisere denne enheten til å få tilgang til din Infomaniak-konto.</string>
     <string name="loginDeniedSuccessDescription">Du avviste et påloggingsforsøk. For å sikre kontoen din, endre passordet ditt.\n\nHvis du startet denne forespørselen, prøv å logge inn igjen.</string>
     <string name="loginDeniedSuccessTitle">Pålogging avvist</string>
     <string name="loginRequestAlreadyProcessedDescription">Ikke den som gjorde dette? Sjekk aktive enheter og logg ut av de du ikke gjenkjenner.</string>

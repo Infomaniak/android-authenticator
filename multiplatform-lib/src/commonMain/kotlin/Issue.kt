@@ -30,7 +30,7 @@ sealed interface Issue {
         sealed interface Reason {
             data object NetworkIssue : Reason
             data object ServerUnavailable : Reason
-            data class Other(val message: String) : Reason
+            data class Other(val errorCode: Int, val message: String) : Reason
         }
     }
 

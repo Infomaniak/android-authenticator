@@ -81,7 +81,6 @@
     <string name="logInDescription">Εισαγάγετε τον κωδικό πρόσβασής σας.</string>
     <string name="logInTitle">Σύνδεση</string>
     <string name="loginAttemptQuery">Προσπαθείτε να\nσυνδεθείτε;</string>
-    <string name="loginAuthorizationWarning">Η επιβεβαίωση αυτής της σύνδεσης θα εξουσιοδοτήσει αυτή τη συσκευή να έχει πρόσβαση στον λογαριασμό σας Infomaniak</string>
     <string name="loginDeniedSuccessDescription">Αρνηθήκατε μια προσπάθεια σύνδεσης. Για την ασφάλεια του λογαριασμού σας, αλλάξτε τον κωδικό πρόσβασής σας.\n\nΑν ξεκινήσατε αυτό το αίτημα, δοκιμάστε να συνδεθείτε ξανά.</string>
     <string name="loginDeniedSuccessTitle">Η σύνδεση απορρίφθηκε επιτυχώς</string>
     <string name="loginRequestAlreadyProcessedDescription">Δεν είστε εσείς που το κάνατε αυτό; Ελέγξτε τις ενεργές συσκευές σας και αποσυνδεθείτε από αυτές που δεν αναγνωρίζετε.</string>

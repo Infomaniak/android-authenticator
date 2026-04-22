@@ -81,7 +81,6 @@
     <string name="logInDescription">Anna salasanasi.</string>
     <string name="logInTitle">Kirjaudu sisään</string>
     <string name="loginAttemptQuery">Yritätkö kirjautua?</string>
-    <string name="loginAuthorizationWarning">Tämän kirjautumisen vahvistaminen antaa tälle laitteelle pääsyn Infomaniak-tiliisi.</string>
     <string name="loginDeniedSuccessDescription">Hylkäsit kirjautumisyrityksen. Suojataksesi tilisi, vaihda salasanasi.\n\nJos aloitit tämän pyynnön, yritä kirjautua uudelleen.</string>
     <string name="loginDeniedSuccessTitle">Kirjautuminen hylätty onnistuneesti</string>
     <string name="loginRequestAlreadyProcessedDescription">Et tehnyt tätä? Tarkista aktiiviset laitteesi ja kirjaudu ulos niistä, joita et tunnista.</string>

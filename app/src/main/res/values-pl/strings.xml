@@ -81,7 +81,6 @@
     <string name="logInDescription">Wpisz hasło.</string>
     <string name="logInTitle">Zaloguj się</string>
     <string name="loginAttemptQuery">Czy próbujesz się zalogować?</string>
-    <string name="loginAuthorizationWarning">Potwierdzenie tego logowania uprawni to urządzenie do dostępu do Twojego konta Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Odmówiłeś próby logowania. Aby zabezpieczyć swoje konto, zmień hasło.\n\nJeśli zainicjowałeś to żądanie, spróbuj zalogować się ponownie.</string>
     <string name="loginDeniedSuccessTitle">Logowanie odrzucone pomyślnie</string>
     <string name="loginRequestAlreadyProcessedDescription">Nie jesteś osobą, która to zrobiła? Sprawdź swoje aktywne urządzenia i wyloguj się z tych, których nie rozpoznajesz.</string>

@@ -118,7 +118,7 @@ internal class ApiClientProvider(
             }.getOrElse {
                 throw ApiException.UnexpectedApiErrorFormatException(statusCode, bodyResponse, null, requestContextId)
             }
-            throw ApiException.ApiErrorException(apiError.error.code, apiError.error.description, requestContextId)
+            throw ApiException.ApiErrorException(statusCode, apiError.error.code, apiError.error.description, requestContextId)
         }
     }
 

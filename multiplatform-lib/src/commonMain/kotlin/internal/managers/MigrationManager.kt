@@ -32,6 +32,7 @@ import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
+import kotlinx.io.IOException
 import network.exceptions.ApiException
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
@@ -51,6 +52,13 @@ internal class MigrationManager(
         accountsDatabase.getDao().upsert(legacyAccounts.map { it.toEntity() })
     }
 
+    /**
+     * @return false if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
+     *
+     * @throws IOException in case of networking or I/O issues
+     * @throws ApiException in case the backend returns a non-successful response (except for "access_denied")
+     * @throws IllegalStateException in case of local issues (not supposed to happen & not recoverable)
+     */
     suspend fun tryMigrating(
         userId: Long,
         persistToken: suspend (token: String) -> Unit,
@@ -58,7 +66,7 @@ internal class MigrationManager(
     ): Boolean {
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
-        val secret = getSecretFor(userId) ?: return false
+        val secret = checkNotNull(getSecretFor(userId)) { "Couldn't find the secret for user $userId" }
         val migrationOptions = webAuthnRepository.getMigrationOptions(
             deviceId = deviceId,
             userId = userId,

@@ -81,7 +81,6 @@
     <string name="logInDescription">Introduza a sua palavra-passe.</string>
     <string name="logInTitle">Iniciar sessão</string>
     <string name="loginAttemptQuery">Você está tentando fazer login?</string>
-    <string name="loginAuthorizationWarning">Confirmar este login autorizará este dispositivo a acessar sua conta Infomaniak.</string>
     <string name="loginDeniedSuccessDescription">Recusou uma tentativa de início de sessão. Para proteger a sua conta, altere a sua palavra-passe.\n\nSe foi você que iniciou este pedido, tente iniciar sessão novamente.</string>
     <string name="loginDeniedSuccessTitle">Início de sessão recusado com sucesso</string>
     <string name="loginRequestAlreadyProcessedDescription">Não foi você? Verifique seus dispositivos ativos e encerre a sessão dos que você não reconhece.</string>
