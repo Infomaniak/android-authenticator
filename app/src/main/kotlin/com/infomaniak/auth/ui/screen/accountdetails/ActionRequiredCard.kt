@@ -83,9 +83,15 @@ fun ActionRequiredCard(
         }
         is Account.Status.NotConnected.LoginFailed -> {
             if (status.cause is Issue.Retriable) {
+                val code = when (val reason = (status.cause as Issue.Retriable).reason) {
+                    Issue.Retriable.Reason.NetworkIssue -> -1
+                    Issue.Retriable.Reason.ServerUnavailable -> 503
+                    is Issue.Retriable.Reason.Other -> reason.errorCode
+                }
+
                 ActionRequiredCard(
                     configuration = ActionRequiredConfiguration(
-                        text = stringResource(R.string.errorMigrationFailed),
+                        text = stringResource(R.string.errorLoginFailed, code),
                         iconRes = R.drawable.alert,
                         iconColor = AuthenticatorTheme.customColors.iconTintWarning,
                         statusCardVariant = StatusCardVariant.Warning
@@ -111,7 +117,7 @@ fun ActionRequiredCard(
             } else {
                 ActionRequiredCard(
                     configuration = ActionRequiredConfiguration(
-                        text = stringResource(R.string.errorLoginFailed, 0),
+                        text = stringResource(R.string.errorMigrationFailed),
                         iconRes = R.drawable.triangle_alert,
                         iconColor = AuthenticatorTheme.customColors.iconTintWarning,
                         statusCardVariant = StatusCardVariant.Warning
