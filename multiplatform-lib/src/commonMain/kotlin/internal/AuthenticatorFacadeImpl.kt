@@ -238,7 +238,7 @@ internal class AuthenticatorFacadeImpl(
         }
         val userId = notRegisteredAccount.id
         val token = tokenBridge.getTokenFromDatabase(userId) ?: return
-        withRetries {
+        withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
                 // TODO do that only if we don't need to use the backed up files
@@ -279,14 +279,14 @@ internal class AuthenticatorFacadeImpl(
         onLoginSuccess: () -> Nothing
     ) {
         val userId = notConnectedAccount.id
-        withRetries(onGiveUp = { return }) {
+        withRetries(userId, onGiveUp = { return }) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             val temporaryToken = withTimeoutOrNull(
                 waitForTimeout = {
                     delay(8.seconds)
                     "getTokenFromCrossAppLogin timed out"
                 },
-                crashReportInterface = crashReport
+                onTimeout = { message -> crashReport.capture(userId, message) }
             ) {
                 tokenBridge.getTokenFromCrossAppLogin(userId)
             } ?: return
@@ -299,7 +299,7 @@ internal class AuthenticatorFacadeImpl(
         notConnectedAccount: AccountEntity,
         onLoginSuccess: () -> Nothing
     ) {
-        withRetries(onGiveUp = { return }) {
+        withRetries(notConnectedAccount.id, onGiveUp = { return }) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             val authentication = MigrationAuthentication.OngoingLogin
             if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
@@ -349,13 +349,14 @@ internal class AuthenticatorFacadeImpl(
                 }
             }.cancellable().getOrElse {
                 it.printStackTrace()
-                status.copy(lastIssue = it.toIssueReason())
+                status.copy(lastIssue = it.toIssueReason(accountToMigrate.id))
             }
         }
     }
 
 
     private suspend inline fun <R> FlowCollector<Account.Status.NotConnected>.withRetries(
+        userId: Long,
         onGiveUp: () -> Unit = {},
         block: () -> R
     ): R {
@@ -369,7 +370,7 @@ internal class AuthenticatorFacadeImpl(
                     emit(Account.Status.NotConnected.LoginFailed(issue))
                     awaitCancellation()
                 }
-                val issueReason = it.toIssueReason()
+                val issueReason = it.toIssueReason(userId)
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
                 val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
                 emit(Account.Status.NotConnected.LoginFailed(issue))
@@ -379,19 +380,19 @@ internal class AuthenticatorFacadeImpl(
         }
     }
 
-    private fun Throwable.toIssueReason(): Reason = when (this) {
+    private fun Throwable.toIssueReason(userId: Long): Reason = when (this) {
         is IOException -> Reason.NetworkIssue
         is ApiException if (statusCode == 503) -> Reason.ServerUnavailable
         is ApiException.ApiErrorException -> {
-            crashReport.capture("re-login migration attempt failed", this)
+            crashReport.capture(userId, "re-login migration attempt failed", this)
             Reason.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
         }
         is ApiException.UnexpectedApiErrorFormatException -> {
-            crashReport.capture("re-login migration attempt failed", this)
+            crashReport.capture(userId, "re-login migration attempt failed", this)
             Reason.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
         }
         else -> {
-            crashReport.capture("re-login migration attempt failed", this)
+            crashReport.capture(userId, "re-login migration attempt failed", this)
             Reason.Other(11_000, message ?: this::class.simpleName ?: "$this")
         }
     }
