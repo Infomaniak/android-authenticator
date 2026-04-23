@@ -74,7 +74,7 @@ internal class MigrationManager(
             userId = userId,
         )
         val temporaryToken = when (authentication) {
-            is MigrationAuthentication.CrossAppLogin -> authentication.apiToken
+            is MigrationAuthentication.CrossAppLogin -> authentication.derivedToken
             else -> {
                 val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
                 val assertion = HmacSHA256(secret.toByteArray())
