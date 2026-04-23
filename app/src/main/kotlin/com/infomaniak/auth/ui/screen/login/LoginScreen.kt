@@ -68,7 +68,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 @Composable
 fun LoginScreen(
     legacyAccountId: Long,
-    onBackPressed: () -> Unit,
+    closeLoginScreen: () -> Unit,
     isOnboarding: Boolean,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -81,13 +81,19 @@ fun LoginScreen(
         is LoginUiState.Ready -> {
             LaunchedEffect(state.legacyAccount.status::class) {
                 if (state.legacyAccount.status is Account.Status.LoggedIn && !isOnboarding) {
-                    onBackPressed()
+                    closeLoginScreen()
                 }
             }
 
             LoginScreen(
                 legacyAccount = { state.legacyAccount },
-                onBackPressed = onBackPressed,
+                onBackPressed = {
+                    if (isOnboarding) {
+                        viewModel.onCancelMigration()
+                    } else {
+                        closeLoginScreen()
+                    }
+                },
                 onLoginPressed = { email, password ->
                     val status = state.legacyAccount.status as? Account.Status.NotConnected.ReLogin
                     if (password.isNotEmpty()) {

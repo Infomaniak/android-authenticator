@@ -105,13 +105,7 @@ fun baseEntryProvider(
     entry<NavDestination.LoginInApp> {
         LoginScreen(
             legacyAccountId = it.legacyAccountId,
-            onBackPressed = {
-                if (it.isOnboarding) {
-                    backStack.clearAndAdd(NavDestination.Root.Home)
-                } else {
-                    backStack.tryPopLast()
-                }
-            },
+            closeLoginScreen = backStack::tryPopLast,
             isOnboarding = it.isOnboarding
         )
     }
@@ -122,7 +116,7 @@ fun NavBackStack<NavKey>.tryPopLast() {
     removeAt(lastIndex)
 }
 
-fun NavBackStack<NavKey>.clearAndAdd(destination: NavKey) {
+fun NavBackStack<NavKey>.replaceAllWith(destination: NavKey) {
     add(destination)
     removeAll { it != destination }
 }
