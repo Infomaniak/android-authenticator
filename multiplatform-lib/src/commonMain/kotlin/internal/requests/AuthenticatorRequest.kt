@@ -110,7 +110,7 @@ internal class AuthenticatorRequest(
     /**
      * Starts the passkey migration process from kAuth.
      *
-     * Requires a call to [getMigrationOptions] to get the time data that will be used to generate the [otp],
+     * Requires a call to [getMigrationOptions] to get the time data that will be used to generate the OTP to put in [otpPayload],
      * and the [sessionId].
      *
      * The returned [AuthResult] contains an access token, to be used to register a passkey with [registerPasskey].
