@@ -26,7 +26,6 @@ import com.infomaniak.auth.lib.models.migration.user.preferences.TimeZone
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.AuthDevices
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.Security
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.auth.lib.models.migration.ApiToken as MigrationApiToken
 import com.infomaniak.core.auth.models.user.preferences.Country as CoreCountry
 import com.infomaniak.core.auth.models.user.preferences.Language as CoreLanguage
@@ -35,6 +34,15 @@ import com.infomaniak.core.auth.models.user.preferences.Preferences as CorePrefe
 import com.infomaniak.core.auth.models.user.preferences.TimeZone as CoreTimeZone
 import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices as CoreAuthDevices
 import com.infomaniak.core.auth.models.user.preferences.security.Security as CoreSecurity
+import com.infomaniak.lib.login.ApiToken as LoginApiToken
+
+fun LoginApiToken.toMigrationApiToken(): MigrationApiToken {
+    return MigrationApiToken(
+        accessToken = accessToken,
+        tokenType = tokenType,
+        userId = userId,
+    )
+}
 
 fun UserProfile.toUser(): User {
     return User(
@@ -47,7 +55,7 @@ fun UserProfile.toUser(): User {
         login = login,
         isStaff = isStaff,
         preferences = preferences.toCorePreferences(),
-        apiToken = apiToken.toCoreApiToken(),
+        apiToken = apiToken.toLoginApiToken(),
     )
 }
 
@@ -109,7 +117,7 @@ private fun AuthDevices.toCoreAuthDevices() = CoreAuthDevices(
     deletedAt = deletedAt,
 )
 
-private fun MigrationApiToken.toCoreApiToken() = ApiToken(
+private fun MigrationApiToken.toLoginApiToken() = LoginApiToken(
     accessToken = accessToken,
     tokenType = tokenType,
     userId = userId,

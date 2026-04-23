@@ -17,8 +17,10 @@
  */
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.models.migration.ApiToken
+
 internal sealed interface MigrationAuthentication {
-    data class CrossAppLogin(val derivedToken: String) : MigrationAuthentication
+    data class CrossAppLogin(val apiToken: ApiToken) : MigrationAuthentication
     data class NoOngoingLogin(val password: String) : MigrationAuthentication
     data object OngoingLogin : MigrationAuthentication
 }

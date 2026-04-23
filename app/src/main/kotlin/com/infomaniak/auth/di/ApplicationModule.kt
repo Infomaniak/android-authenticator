@@ -26,6 +26,7 @@ import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import com.infomaniak.auth.lib.network.interfaces.UserProfileBridge
 import com.infomaniak.auth.utils.AccountUtils
+import com.infomaniak.auth.utils.toMigrationApiToken
 import com.infomaniak.auth.utils.toUser
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
@@ -34,7 +35,6 @@ import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsChecki
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
-import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
 import dagger.Provides
@@ -52,6 +52,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import javax.inject.Singleton
+import com.infomaniak.auth.lib.models.migration.ApiToken as MigrationApiToken
+import com.infomaniak.lib.login.ApiToken as LoginApiToken
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -172,7 +174,7 @@ object ApplicationModule {
 
         override suspend fun getTokenFromCrossAppLogin(
             userId: Long
-        ): String? = crossAppLoginFacade.accountsCheckingState.transform { state ->
+        ): MigrationApiToken? = crossAppLoginFacade.accountsCheckingState.transform { state ->
             val matchingAccount = state.checkedAccounts.find { it.id == userId }
                 ?: when (state.status) {
                     AccountsCheckingStatus.Checking -> return@transform // Wait for next emission.
@@ -182,8 +184,7 @@ object ApplicationModule {
                 }
             if (matchingAccount == null) return@transform emit(null)
             val result = crossAppLoginFacade.attemptLogin(listOf(matchingAccount))
-            emit(result.tokens.singleOrNull()?.accessToken)
-
+            emit(result.tokens.singleOrNull()?.toMigrationApiToken())
         }.first()
 
         override suspend fun getTokenFromDatabase(userId: Long): String? {
@@ -195,7 +196,7 @@ object ApplicationModule {
             val user = accountUtils.getUserById(userId.toInt()) ?: return
             dao.update(
                 user.copy(
-                    apiToken = ApiToken(
+                    apiToken = LoginApiToken(
                         accessToken = token,
                         tokenType = user.apiToken.tokenType,
                         userId = userId.toInt()

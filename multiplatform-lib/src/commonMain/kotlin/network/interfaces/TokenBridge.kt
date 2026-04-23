@@ -17,8 +17,10 @@
  */
 package com.infomaniak.auth.lib.network.interfaces
 
+import com.infomaniak.auth.lib.models.migration.ApiToken
+
 interface TokenBridge {
-    suspend fun getTokenFromCrossAppLogin(userId: Long): String?
+    suspend fun getTokenFromCrossAppLogin(userId: Long): ApiToken?
     suspend fun getTokenFromDatabase(userId: Long): String?
     suspend fun persistTokenForAccount(userId: Long, token: String)
 }

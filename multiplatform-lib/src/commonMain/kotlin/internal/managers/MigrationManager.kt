@@ -22,6 +22,7 @@ import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toEntity
+import com.infomaniak.auth.lib.internal.models.AuthResult
 import com.infomaniak.auth.lib.internal.models.OtpPayload
 import com.infomaniak.auth.lib.internal.otp.TotpGenerator
 import com.infomaniak.auth.lib.internal.otp.deleteLegacyAccount
@@ -30,6 +31,7 @@ import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.models.migration.ApiToken
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.io.IOException
@@ -61,7 +63,7 @@ internal class MigrationManager(
      */
     suspend fun tryMigrating(
         userId: Long,
-        persistUser: suspend (token: String) -> Unit,
+        persistUser: suspend (apiToken: ApiToken) -> Unit,
         authentication: MigrationAuthentication,
     ): Boolean {
         @OptIn(ExperimentalUuidApi::class)
@@ -71,8 +73,8 @@ internal class MigrationManager(
             deviceId = deviceId,
             userId = userId,
         )
-        val tokenToUse = when (authentication) {
-            is MigrationAuthentication.CrossAppLogin -> authentication.derivedToken
+        val apiToken = when (authentication) {
+            is MigrationAuthentication.CrossAppLogin -> authentication.apiToken
             else -> {
                 val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
                 val assertion = HmacSHA256(secret.toByteArray())
@@ -92,8 +94,8 @@ internal class MigrationManager(
                             code = otp,
                             assertion = assertion,
                             password = password,
-                        ),
-                    ).accessToken
+                        )
+                    ).toApiToken()
                 }.cancellable().getOrElse {
                     if (it !is ApiException.ApiErrorException) throw it
                     when (it.errorCode) {
@@ -106,14 +108,14 @@ internal class MigrationManager(
 
         authenticatorManager.deleteKeysFor(userId)
         authenticatorManager.registerPasskey(
-            token = tokenToUse,
+            token = apiToken.accessToken,
             userId = userId
         )
         val token = authenticatorManager.getToken(
             clientId = clientId,
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
-        persistUser(token)
+        persistUser(apiToken)
         webAuthnRepository.completeMigration(token = token, sessionId = migrationOptions.session, deviceId = deviceId)
         deleteLegacyAccount(userId.toString())
 
@@ -129,5 +131,14 @@ internal class MigrationManager(
             algorithm = TotpGenerator.Algorithm.SHA1,
         )
         return generator.generate(timestampSeconds)
+    }
+
+    private fun AuthResult.toApiToken(): ApiToken {
+        return ApiToken(
+            accessToken = this.accessToken,
+            tokenType = this.tokenType,
+            userId = this.userId.toInt(),
+            scope = this.scope,
+        )
     }
 }
