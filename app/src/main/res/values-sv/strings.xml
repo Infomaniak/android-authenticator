@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">E-post</string>
     <string name="enableButton">Aktivera</string>
     <string name="errorLoginFailed">Kontoinloggning misslyckades. Försök igen eller kontakta support. (felkod: %d)</string>
+    <string name="errorMigrationFailed">Migreringen har avbrutits.\nVänligen kontakta vårt tekniska supportteam.</string>
     <string name="errorOccuredTitle">Ett fel uppstod</string>
     <string name="estimatedWait">Beräknad väntetid: %s</string>
     <string name="feedbackTitle">Feedback</string>
@@ -110,6 +111,7 @@
     <string name="removeAccountSuccess">Konto borttaget</string>
     <string name="removeAccountTitle">Ta bort konto</string>
     <string name="removeButton">Ta bort</string>
+    <string name="requiredLabel">Krävs</string>
     <string name="settingsTitle">Inställningar</string>
     <string name="showAccountPasswordButton">Visa kontolösenord</string>
     <string name="startButton">Starta</string>
@@ -130,4 +132,5 @@
     <string name="verifySecurityButton">Verifiera min säkerhet</string>
     <string name="viewGuidesButton">Bläddra i guiderna</string>
     <string name="whenLoginTitle">När</string>
+    <string name="wrongPasswordLabel">Lösenordet är felaktigt</string>
 </resources>

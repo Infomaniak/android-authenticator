@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">Sähköposti</string>
     <string name="enableButton">Ota käyttöön</string>
     <string name="errorLoginFailed">Tilille kirjautuminen epäonnistui. Yritä uudelleen tai ota yhteyttä tukeen. (virhekoodi: %d)</string>
+    <string name="errorMigrationFailed">Siirtyminen on keskeytetty.\nOta yhteyttä tekniseen tukitiimiimme.</string>
     <string name="errorOccuredTitle">Tapahtui virhe</string>
     <string name="estimatedWait">Arvioitu odotusaika: %s</string>
     <string name="feedbackTitle">Palaute</string>
@@ -110,6 +111,7 @@
     <string name="removeAccountSuccess">Tili poistettu</string>
     <string name="removeAccountTitle">Poista tili</string>
     <string name="removeButton">Poista</string>
+    <string name="requiredLabel">Vaadittu</string>
     <string name="settingsTitle">Asetukset</string>
     <string name="showAccountPasswordButton">Näytä tilin salasana</string>
     <string name="startButton">Aloita</string>
@@ -130,4 +132,5 @@
     <string name="verifySecurityButton">Vahvista turvallisuuteni</string>
     <string name="viewGuidesButton">Selaa oppaita</string>
     <string name="whenLoginTitle">Milloin</string>
+    <string name="wrongPasswordLabel">Salasana on väärä</string>
 </resources>

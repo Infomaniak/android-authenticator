@@ -59,15 +59,11 @@ import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.lib.models.UrlConstants.ACTIVITY_MANAGER_URL
 import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_MANAGER_URL
 import com.infomaniak.auth.ui.components.Avatar
-import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
-import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
-import com.infomaniak.auth.ui.components.StatusCard
-import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
-import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
+import com.infomaniak.auth.ui.screen.accountdetails.AccountSecurityConfiguration.Companion.toSecurityConfiguration
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.user.User
@@ -161,22 +157,8 @@ private fun AccountDetailsContent(
         modifier = Modifier.padding(paddingValues)
     ) {
         Header(account, user)
-        SecurityCheck(account.status.toAccountStatus())
-        if (account.status != Account.Status.LoggedIn) {
-            // TODO: Manager better this state with better status handler
-            var hasLogin by remember { mutableStateOf(false) }
-            ActionRequired(
-                hasLogin,
-                onLoginClicked = {
-                    val status = account.status as? Account.Status.NotConnected.ReLogin
-                    val legacyAccount = status?.legacyAccount
-                    legacyAccount?.id?.let {
-                        onLoginPressed(it)
-                        hasLogin = true
-                    }
-                }
-            )
-        }
+        AccountSecurityCheck(account.status.toSecurityConfiguration())
+        ActionRequiredCard(account.status, onLoginPressed)
         SettingsSections(
             accountStatus = account.status,
             user = user,
@@ -209,7 +191,7 @@ private fun Header(account: Account, user: User?) {
 }
 
 @Composable
-private fun SecurityCheck(accountStatus: AccountStatus) {
+private fun AccountSecurityCheck(configuration: AccountSecurityConfiguration) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -228,100 +210,21 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(accountStatus.titleResId),
-                    style = if (accountStatus.descriptionResId != null) Typography.h2 else LocalTextStyle.current
+                    text = stringResource(configuration.titleResId),
+                    style = if (configuration.descriptionResId != null) Typography.h2 else LocalTextStyle.current
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    painter = painterResource(accountStatus.iconResId),
+                    painter = painterResource(configuration.iconResId),
                     contentDescription = null,
-                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
+                    tint = configuration.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
                 )
             }
-            accountStatus.descriptionResId?.let {
-                Text(text = stringResource(accountStatus.descriptionResId))
+            configuration.descriptionResId?.let {
+                Text(text = stringResource(configuration.descriptionResId))
             }
         }
     }
-}
-
-private data class ActionRequiredConfiguration(
-    val text: String,
-    val iconColor: Color,
-    val iconRes: Int,
-    val statusCardVariant: StatusCardVariant
-)
-
-@Composable
-private fun ActionRequired(hasLogin: Boolean, onLoginClicked: () -> Unit) {
-    val configuration = if (hasLogin) {
-        ActionRequiredConfiguration(
-            text = stringResource(R.string.errorLoginFailed, 0),
-            iconRes = R.drawable.triangle_alert,
-            iconColor = AuthenticatorTheme.customColors.iconTintError,
-            statusCardVariant = StatusCardVariant.Error
-        )
-    } else {
-        ActionRequiredConfiguration(
-            text = stringResource(R.string.accountNotConnectedWarningTitle),
-            iconRes = R.drawable.alert,
-            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-            statusCardVariant = StatusCardVariant.Warning
-        )
-    }
-
-    StatusCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium)
-            .padding(top = Margin.Large),
-        shape = RoundedCornerShape(DefaultCornerRadius),
-        variant = configuration.statusCardVariant,
-    ) {
-        Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(configuration.iconRes),
-                contentDescription = null,
-                tint = configuration.iconColor
-            )
-            Text(
-                modifier = Modifier.padding(start = Margin.Small),
-                text = configuration.text,
-            )
-        }
-
-        if (hasLogin) ContactSupportButton()
-        LogInAgainButton(hasLogin, logIn = onLoginClicked)
-    }
-}
-
-@Composable
-private fun ContactSupportButton() {
-    LargeButton(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium)
-            .padding(bottom = Margin.Medium),
-        title = stringResource(R.string.contactSupportTitle),
-        style = ButtonStyle.Primary,
-        onClick = {}
-    )
-}
-
-@Composable
-private fun LogInAgainButton(hasLoggedInWithError: Boolean, logIn: () -> Unit) {
-    LargeButton(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium)
-            .padding(bottom = Margin.Medium),
-        title = stringResource(R.string.logInButton),
-        style = if (hasLoggedInWithError) ButtonStyle.Tertiary else ButtonStyle.Primary,
-        onClick = {
-            // TODO An error appear if we already tried to log in on figma so for now, we're doing like this
-            logIn()
-        }
-    )
 }
 
 @Composable
@@ -405,7 +308,7 @@ private fun SettingsSections(
     )
 }
 
-private enum class AccountStatus(
+private enum class AccountSecurityConfiguration(
     val titleResId: Int,
     val descriptionResId: Int? = null,
     val iconResId: Int,
@@ -429,10 +332,10 @@ private enum class AccountStatus(
     );
 
     companion object {
-        fun Account.Status.toAccountStatus() = when (this) {
+        fun Account.Status.toSecurityConfiguration(): AccountSecurityConfiguration = when (this) {
             Account.Status.LoggedIn -> Secured
-            is Account.Status.NotConnected.ReLogin -> PartiallyProtected // TODO: Isn't the state closer to disconnected?
-            else -> Disconnected
+            is Account.Status.NotConnected -> Disconnected
+            else -> PartiallyProtected // TODO: Use secure level to determine the status more precisely
         }
     }
 }

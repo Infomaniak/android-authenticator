@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">E-post</string>
     <string name="enableButton">Aktiver</string>
     <string name="errorLoginFailed">Pålogging til kontoen mislyktes. Prøv igjen eller kontakt brukerstøtte. (feilkode: %d)</string>
+    <string name="errorMigrationFailed">Migreringen har blitt avbrutt.\nTa kontakt med vårt tekniske supportteam.</string>
     <string name="errorOccuredTitle">En feil oppstod</string>
     <string name="estimatedWait">Estimert ventetid: %s</string>
     <string name="feedbackTitle">Tilbakemelding</string>
@@ -110,6 +111,7 @@
     <string name="removeAccountSuccess">Konto fjernet</string>
     <string name="removeAccountTitle">Fjern konto</string>
     <string name="removeButton">Fjern</string>
+    <string name="requiredLabel">Nødvendig</string>
     <string name="settingsTitle">Innstillinger</string>
     <string name="showAccountPasswordButton">Vis kontopassord</string>
     <string name="startButton">Start</string>
@@ -130,4 +132,5 @@
     <string name="verifySecurityButton">Verifiser sikkerheten min</string>
     <string name="viewGuidesButton">Se gjennom veiledningene</string>
     <string name="whenLoginTitle">Når</string>
+    <string name="wrongPasswordLabel">Passordet er feil</string>
 </resources>

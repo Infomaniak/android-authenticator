@@ -48,12 +48,12 @@ import com.infomaniak.core.ui.compose.margin.Margin
 @Composable
 fun LargeButton(
     title: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: ButtonStyle = ButtonStyle.Primary,
     enabled: () -> Boolean = { true },
     showIndeterminateProgress: () -> Boolean = { false },
     progress: (() -> Float)? = null,
-    onClick: () -> Unit,
     imageVector: ImageVector? = null,
 ) {
     BasicButton(

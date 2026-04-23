@@ -18,15 +18,14 @@
 package com.infomaniak.auth.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.infomaniak.auth.ui.theme.AppShapes.MediumButtonShape
 import com.infomaniak.core.common.extensions.openUrl
 import com.infomaniak.core.ui.compose.margin.Margin
 
@@ -40,17 +39,12 @@ fun OpenUrlButton(
     val context = LocalContext.current
 
     TextButton(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 48.dp),
+        modifier = modifier.heightIn(min = 48.dp),
         onClick = { context.openUrl(sourceUrl) },
         contentPadding = PaddingValues(horizontal = Margin.Medium),
-        shape = RectangleShape,
+        shape = MediumButtonShape,
     ) {
         leadingIcon?.invoke()
-        Text(
-            text = text,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Text(text = text)
     }
 }

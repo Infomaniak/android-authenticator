@@ -47,6 +47,24 @@ val fakeAccounts = persistentListOf(
         status = Account.Status.NotConnected.AttemptingToConnect,
     ),
     Account(
+        id = 2,
+        fullName = "John Issue ReLogin",
+        initials = "JS",
+        email = "john.smith.relogin@ik.me",
+        avatarUrl = null,
+        status = Account.Status.NotConnected.ReLogin(
+            legacyAccount = Account(
+                id = 2,
+                fullName = "John Issue ReLogin",
+                initials = "JS",
+                email = "john.smith.relogin@ik.me",
+                status = Account.Status.NotConnected.AttemptingToConnect,
+            ),
+            lastIssue = Issue.Retriable.Reason.NetworkIssue,
+            sendCredentials = { _ -> },
+        ),
+    ),
+    Account(
         id = 3,
         fullName = "John Relogin",
         initials = "JS",
