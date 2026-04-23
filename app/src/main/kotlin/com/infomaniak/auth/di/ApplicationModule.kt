@@ -20,11 +20,11 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.models.migration.user.UserProfile
+import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
-import com.infomaniak.auth.lib.network.interfaces.TokenBridge
-import com.infomaniak.auth.lib.network.interfaces.UserProfileBridge
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.toMigrationApiToken
 import com.infomaniak.auth.utils.toUser
@@ -97,8 +97,7 @@ object ApplicationModule {
             userAgent = userAgent,
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),
-            tokenBridge = createTokenBridge(accountUtils, crossAppLoginFacade),
-            userProfileBridge = createUserProfileBridge(accountUtils),
+            authenticatorBridge = createAuthenticatorBridge(accountUtils, crossAppLoginFacade),
         )
     }
 
@@ -170,44 +169,44 @@ object ApplicationModule {
             }
     }
 
-    private fun createTokenBridge(accountUtils: AccountUtils, crossAppLoginFacade: CrossAppLoginFacade) = object : TokenBridge {
+    private fun createAuthenticatorBridge(accountUtils: AccountUtils, crossAppLoginFacade: CrossAppLoginFacade) =
+        object : AuthenticatorBridge {
 
-        override suspend fun getTokenFromCrossAppLogin(
-            userId: Long
-        ): MigrationApiToken? = crossAppLoginFacade.accountsCheckingState.transform { state ->
-            val matchingAccount = state.checkedAccounts.find { it.id == userId }
-                ?: when (state.status) {
-                    AccountsCheckingStatus.Checking -> return@transform // Wait for next emission.
-                    AccountsCheckingStatus.UpToDate -> null // Not found.
-                    AccountsCheckingStatus.Error.Network -> null // TODO[Authenticator]: Consider auto-retrying on network change.
-                    AccountsCheckingStatus.Error.Unknown -> null // Give up.
-                }
-            if (matchingAccount == null) return@transform emit(null)
-            val result = crossAppLoginFacade.attemptLogin(listOf(matchingAccount))
-            emit(result.tokens.singleOrNull()?.toMigrationApiToken())
-        }.first()
+            override suspend fun getTokenFromCrossAppLogin(
+                userId: Long
+            ): MigrationApiToken? = crossAppLoginFacade.accountsCheckingState.transform { state ->
+                val matchingAccount = state.checkedAccounts.find { it.id == userId }
+                    ?: when (state.status) {
+                        AccountsCheckingStatus.Checking -> return@transform // Wait for next emission.
+                        AccountsCheckingStatus.UpToDate -> null // Not found.
+                        AccountsCheckingStatus.Error.Network -> null // TODO[Authenticator]: Consider auto-retrying on network change.
+                        AccountsCheckingStatus.Error.Unknown -> null // Give up.
+                    }
+                if (matchingAccount == null) return@transform emit(null)
+                val result = crossAppLoginFacade.attemptLogin(listOf(matchingAccount))
+                emit(result.tokens.singleOrNull()?.toMigrationApiToken())
+            }.first()
 
-        override suspend fun getTokenFromDatabase(userId: Long): String? {
-            return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
-        }
+            override suspend fun getTokenFromDatabase(userId: Long): String? {
+                return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
+            }
 
-        override suspend fun persistTokenForAccount(userId: Long, token: String) {
-            val dao = UserDatabase.getDatabase().userDao()
-            val user = accountUtils.getUserById(userId.toInt()) ?: return
-            dao.update(
-                user.copy(
-                    apiToken = LoginApiToken(
-                        accessToken = token,
-                        tokenType = user.apiToken.tokenType,
-                        userId = userId.toInt()
+            override suspend fun persistTokenForAccount(userId: Long, token: String) {
+                val dao = UserDatabase.getDatabase().userDao()
+                val user = accountUtils.getUserById(userId.toInt()) ?: return
+                dao.update(
+                    user.copy(
+                        apiToken = LoginApiToken(
+                            accessToken = token,
+                            tokenType = user.apiToken.tokenType,
+                            userId = userId.toInt()
+                        )
                     )
                 )
-            )
-        }
-    }
+            }
 
-    private fun createUserProfileBridge(accountUtils: AccountUtils): UserProfileBridge = UserProfileBridge { userProfile ->
-        val user = userProfile.toUser()
-        accountUtils.addUser(user)
-    }
+            override suspend fun persistUserProfile(userProfile: UserProfile) {
+                accountUtils.addUser(userProfile.toUser())
+            }
+        }
 }
