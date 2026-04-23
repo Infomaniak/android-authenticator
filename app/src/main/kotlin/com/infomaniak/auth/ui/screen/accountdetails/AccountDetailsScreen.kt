@@ -63,7 +63,7 @@ import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
-import com.infomaniak.auth.ui.screen.accountdetails.AccountStatus.Companion.toAccountStatus
+import com.infomaniak.auth.ui.screen.accountdetails.AccountSecurityConfiguration.Companion.toSecurityConfiguration
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.user.User
@@ -157,7 +157,7 @@ private fun AccountDetailsContent(
         modifier = Modifier.padding(paddingValues)
     ) {
         Header(account, user)
-        SecurityCheck(account.status.toAccountStatus())
+        AccountSecurityCheck(account.status.toSecurityConfiguration())
         ActionRequiredCard(account.status, onLoginPressed)
         SettingsSections(
             accountStatus = account.status,
@@ -191,7 +191,7 @@ private fun Header(account: Account, user: User?) {
 }
 
 @Composable
-private fun SecurityCheck(accountStatus: AccountStatus) {
+private fun AccountSecurityCheck(configuration: AccountSecurityConfiguration) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -210,18 +210,18 @@ private fun SecurityCheck(accountStatus: AccountStatus) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(accountStatus.titleResId),
-                    style = if (accountStatus.descriptionResId != null) Typography.h2 else LocalTextStyle.current
+                    text = stringResource(configuration.titleResId),
+                    style = if (configuration.descriptionResId != null) Typography.h2 else LocalTextStyle.current
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    painter = painterResource(accountStatus.iconResId),
+                    painter = painterResource(configuration.iconResId),
                     contentDescription = null,
-                    tint = accountStatus.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
+                    tint = configuration.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
                 )
             }
-            accountStatus.descriptionResId?.let {
-                Text(text = stringResource(accountStatus.descriptionResId))
+            configuration.descriptionResId?.let {
+                Text(text = stringResource(configuration.descriptionResId))
             }
         }
     }
@@ -308,7 +308,7 @@ private fun SettingsSections(
     )
 }
 
-private enum class AccountStatus(
+private enum class AccountSecurityConfiguration(
     val titleResId: Int,
     val descriptionResId: Int? = null,
     val iconResId: Int,
@@ -332,7 +332,7 @@ private enum class AccountStatus(
     );
 
     companion object {
-        fun Account.Status.toAccountStatus() = when (this) {
+        fun Account.Status.toSecurityConfiguration(): AccountSecurityConfiguration = when (this) {
             Account.Status.LoggedIn -> Secured
             is Account.Status.NotConnected -> Disconnected
             else -> PartiallyProtected // TODO: Use secure level to determine the status more precisely

@@ -82,57 +82,59 @@ fun ActionRequiredCard(
             )
         }
         is Account.Status.NotConnected.LoginFailed -> {
-            if (status.cause is Issue.Retriable) {
-                val code = when (val reason = (status.cause as Issue.Retriable).reason) {
-                    Issue.Retriable.Reason.NetworkIssue -> -1
-                    Issue.Retriable.Reason.ServerUnavailable -> 503
-                    is Issue.Retriable.Reason.Other -> reason.errorCode
+            when (status.cause) {
+                is Issue.Retriable -> {
+                    val code = when (val reason = (status.cause as Issue.Retriable).reason) {
+                        Issue.Retriable.Reason.NetworkIssue -> -1
+                        Issue.Retriable.Reason.ServerUnavailable -> 503
+                        is Issue.Retriable.Reason.Other -> reason.errorCode
+                    }
+                    ActionRequiredCard(
+                        configuration = ActionRequiredConfiguration(
+                            text = stringResource(R.string.errorLoginFailed, code),
+                            iconRes = R.drawable.alert,
+                            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
+                            statusCardVariant = StatusCardVariant.Warning
+                        ),
+                        bottomButton = {
+                            ActionRequiredButton(
+                                title = stringResource(R.string.contactSupportTitle),
+                                style = ButtonStyle.Primary,
+                                onClick = {
+                                    context.openUrl(HELP_SUPPORT_URL)
+                                }
+                            )
+                            ActionRequiredButton(
+                                title = stringResource(RCore.string.buttonRetry),
+                                style = ButtonStyle.Tertiary,
+                                onClick = {
+                                    val cause = status.cause as? Issue.Retriable
+                                    cause?.proceed?.invoke(true)
+                                }
+                            )
+                        }
+                    )
                 }
-
-                ActionRequiredCard(
-                    configuration = ActionRequiredConfiguration(
-                        text = stringResource(R.string.errorLoginFailed, code),
-                        iconRes = R.drawable.alert,
-                        iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-                        statusCardVariant = StatusCardVariant.Warning
-                    ),
-                    bottomButton = {
-                        ActionRequiredButton(
-                            title = stringResource(R.string.contactSupportTitle),
-                            style = ButtonStyle.Primary,
-                            onClick = {
-                                context.openUrl(HELP_SUPPORT_URL)
-                            }
-                        )
-                        ActionRequiredButton(
-                            title = stringResource(RCore.string.buttonRetry),
-                            style = ButtonStyle.Tertiary,
-                            onClick = {
-                                val cause = status.cause as? Issue.Retriable
-                                cause?.proceed?.invoke(true)
-                            }
-                        )
-                    }
-                )
-            } else {
-                ActionRequiredCard(
-                    configuration = ActionRequiredConfiguration(
-                        text = stringResource(R.string.errorMigrationFailed),
-                        iconRes = R.drawable.triangle_alert,
-                        iconColor = AuthenticatorTheme.customColors.iconTintError,
-                        statusCardVariant = StatusCardVariant.Error
-                    ),
-                    bottomButton = {
-                        ActionRequiredButton(
-                            title = stringResource(R.string.contactSupportTitle),
-                            style = ButtonStyle.Primary,
-                            onClick = { context.openUrl(HELP_SUPPORT_URL) }
-                        )
-                    }
-                )
+                is Issue.NonRetriable -> {
+                    ActionRequiredCard(
+                        configuration = ActionRequiredConfiguration(
+                            text = stringResource(R.string.errorMigrationFailed),
+                            iconRes = R.drawable.triangle_alert,
+                            iconColor = AuthenticatorTheme.customColors.iconTintError,
+                            statusCardVariant = StatusCardVariant.Error
+                        ),
+                        bottomButton = {
+                            ActionRequiredButton(
+                                title = stringResource(R.string.contactSupportTitle),
+                                style = ButtonStyle.Primary,
+                                onClick = { context.openUrl(HELP_SUPPORT_URL) }
+                            )
+                        }
+                    )
+                }
             }
         }
-        else -> Unit
+        is Account.Status.LoggedIn, is Account.Status.NotConnected.AttemptingToConnect -> Unit
     }
 }
 

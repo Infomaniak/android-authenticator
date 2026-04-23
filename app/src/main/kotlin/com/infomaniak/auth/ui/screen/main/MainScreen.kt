@@ -56,7 +56,7 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
-import com.infomaniak.auth.ui.navigation.clearAndAdd
+import com.infomaniak.auth.ui.navigation.replaceAllWith
 import com.infomaniak.auth.ui.navigation.tryPopLast
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -101,7 +101,7 @@ private fun handleAppStatus(
     }
 
     if (currentDestination != targetDestination) {
-        backStack.clearAndAdd(targetDestination)
+        backStack.replaceAllWith(targetDestination)
     }
 }
 

@@ -219,11 +219,8 @@ private fun LoginForm(
                 textObfuscationMode = if (passwordVisible) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
                 trailingIcon = {
                     IconButton(onClick = onPasswordVisibilityChanged) {
-                        if (passwordVisible) {
-                            Icon(painterResource(R.drawable.ic_eye), contentDescription = null)
-                        } else {
-                            Icon(painterResource(R.drawable.ic_eye_crossed), contentDescription = null)
-                        }
+                        val iconId = if (passwordVisible) R.drawable.ic_eye else R.drawable.ic_eye_crossed
+                        Icon(painterResource(iconId), contentDescription = null)
                     }
                 },
                 isError = isError,
