@@ -56,6 +56,7 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
+import com.infomaniak.auth.ui.navigation.replaceAllWith
 import com.infomaniak.auth.ui.navigation.tryPopLast
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -92,6 +93,7 @@ private fun handleAppStatus(
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
+        is AppStatus.LoginRequired.MustReLogin -> NavDestination.LoginInApp(legacyAccountId = appStatus.accountId, isOnboarding = true)
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> NavDestination.Root.Home
@@ -99,8 +101,7 @@ private fun handleAppStatus(
     }
 
     if (currentDestination != targetDestination) {
-        backStack.add(targetDestination)
-        backStack.removeAll { it != targetDestination }
+        backStack.replaceAllWith(targetDestination)
     }
 }
 

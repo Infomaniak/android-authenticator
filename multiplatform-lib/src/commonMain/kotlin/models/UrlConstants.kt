@@ -30,4 +30,5 @@ object UrlConstants {
     const val SETTINGS_2FA_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security-2fa"
 
     const val RECOVER_PASSWORD_URL = "https://login.infomaniak.com/recover"
+    const val HELP_SUPPORT_URL = "https://www.infomaniak.com/gtl/help"
 }

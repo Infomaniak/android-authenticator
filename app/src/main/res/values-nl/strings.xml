@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Inschakelen</string>
     <string name="errorLoginFailed">Inloggen op account mislukt. Probeer het opnieuw of neem contact op met ondersteuning. (foutcode: %d)</string>
+    <string name="errorMigrationFailed">De migratie is onderbroken.\nNeem contact op met onze technische ondersteuning.</string>
     <string name="errorOccuredTitle">Er is een fout opgetreden</string>
     <string name="estimatedWait">Geschatte wachttijd: %s</string>
     <string name="feedbackTitle">Feedback</string>
@@ -110,6 +111,7 @@
     <string name="removeAccountSuccess">Account verwijderd</string>
     <string name="removeAccountTitle">Account verwijderen</string>
     <string name="removeButton">Verwijderen</string>
+    <string name="requiredLabel">Vereist</string>
     <string name="settingsTitle">Instellingen</string>
     <string name="showAccountPasswordButton">Accountwachtwoord weergeven</string>
     <string name="startButton">Starten</string>
@@ -130,4 +132,5 @@
     <string name="verifySecurityButton">Mijn beveiliging controleren</string>
     <string name="viewGuidesButton">Handleidingen bekijken</string>
     <string name="whenLoginTitle">Wanneer</string>
+    <string name="wrongPasswordLabel">Het wachtwoord is onjuist</string>
 </resources>

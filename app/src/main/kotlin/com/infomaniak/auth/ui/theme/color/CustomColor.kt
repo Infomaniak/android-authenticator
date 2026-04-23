@@ -41,7 +41,7 @@ val LightCustomScheme = CustomColorScheme(
 val DarkCustomScheme = CustomColorScheme(
     iconTintSuccess = green80,
     iconTintWarning = orange80,
-    iconTintError = red20,
+    iconTintError = red80,
     iconTintDisconnected = neutral80,
     sectionBackground = neutral15
 )

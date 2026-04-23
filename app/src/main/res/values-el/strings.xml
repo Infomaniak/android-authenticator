@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Ενεργοποίηση</string>
     <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. (κωδικός σφάλματος: %d)</string>
+    <string name="errorMigrationFailed">Η μετανάστευση έχει διακοπεί.\nΠαρακαλούμε επικοινωνήστε με την ομάδα τεχνικής υποστήριξης.</string>
     <string name="errorOccuredTitle">Παρουσιάστηκε σφάλμα</string>
     <string name="estimatedWait">Εκτιμώμενη αναμονή: %s</string>
     <string name="feedbackTitle">Σχόλια</string>
@@ -110,6 +111,7 @@
     <string name="removeAccountSuccess">Ο λογαριασμός αφαιρέθηκε</string>
     <string name="removeAccountTitle">Αφαίρεση λογαριασμού</string>
     <string name="removeButton">Αφαίρεση</string>
+    <string name="requiredLabel">Απαιτούμενο</string>
     <string name="settingsTitle">Ρυθμίσεις</string>
     <string name="showAccountPasswordButton">Εμφάνιση κωδικού πρόσβασης λογαριασμού</string>
     <string name="startButton">Έναρξη</string>
@@ -130,4 +132,5 @@
     <string name="verifySecurityButton">Επαλήθευση της ασφάλειάς μου</string>
     <string name="viewGuidesButton">Περιήγηση στους οδηγούς</string>
     <string name="whenLoginTitle">Πότε</string>
+    <string name="wrongPasswordLabel">Ο κωδικός πρόσβασης είναι λανθασμένος</string>
 </resources>

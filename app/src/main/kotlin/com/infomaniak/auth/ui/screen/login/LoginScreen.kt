@@ -36,6 +36,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,7 +52,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.CredentialsForMigration
-import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -68,7 +68,8 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 @Composable
 fun LoginScreen(
     legacyAccountId: Long,
-    onBackPressed: () -> Unit,
+    closeLoginScreen: () -> Unit,
+    isOnboarding: Boolean,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by remember(legacyAccountId) {
@@ -78,16 +79,28 @@ fun LoginScreen(
     when (val state = uiState) {
         is LoginUiState.Loading -> Unit
         is LoginUiState.Ready -> {
+            LaunchedEffect(state.legacyAccount.status::class) {
+                if (state.legacyAccount.status is Account.Status.LoggedIn && !isOnboarding) {
+                    closeLoginScreen()
+                }
+            }
+
             LoginScreen(
                 legacyAccount = { state.legacyAccount },
-                onBackPressed = onBackPressed,
-                onLoginPressed = { email, password ->
-                    val status = state.legacyAccount.status as? Account.Status.NotConnected
-                    val action = status?.action as? NotConnectedAction.ReLogin
-                    if (password.isNotEmpty()) {
-                        action?.sendCredentials(CredentialsForMigration(email, password))
+                onBackPressed = {
+                    if (isOnboarding) {
+                        viewModel.skipMigration()
+                    } else {
+                        closeLoginScreen()
                     }
-                }
+                },
+                onLoginPressed = { email, password ->
+                    val status = state.legacyAccount.status as? Account.Status.NotConnected.ReLogin
+                    if (password.isNotEmpty()) {
+                        status?.sendCredentials?.invoke(CredentialsForMigration(email, password))
+                    }
+                },
+                isOnboarding = isOnboarding,
             )
         }
     }
@@ -98,9 +111,13 @@ private fun LoginScreen(
     legacyAccount: () -> Account,
     onBackPressed: () -> Unit,
     onLoginPressed: (String, String) -> Unit,
+    isOnboarding: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val passwordState = rememberTextFieldState(initialText = "")
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+    val passwordError = (legacyAccount().status as? Account.Status.NotConnected.ReLogin)?.hadIncorrectPassword ?: false
 
     BottomStickyButtonScaffold(
         modifier = modifier.imePadding(),
@@ -109,22 +126,26 @@ private fun LoginScreen(
                 withTitle = false,
                 isCentered = true,
                 isBackgroundTransparent = true,
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
+                navigationIconId = if (isOnboarding) R.drawable.ic_cross else R.drawable.arrow_left
             )
         },
         topButton = { topModifier ->
             LargeButton(
                 modifier = topModifier.fillMaxWidth(),
                 title = stringResource(R.string.logInButton),
+                enabled = { passwordState.text.isNotEmpty()},
                 onClick = {
                     onLoginPressed(legacyAccount().email, passwordState.text.toString())
                 }
             )
         },
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(Margin.Mini)) {
+        Column(
+            modifier = Modifier.padding(horizontal = Margin.Medium),
+            verticalArrangement = Arrangement.spacedBy(Margin.Mini)
+        ) {
             Column(
-                modifier = Modifier.padding(horizontal = Margin.Medium),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Margin.Medium),
             ) {
@@ -133,8 +154,24 @@ private fun LoginScreen(
                     text = stringResource(R.string.logInDescription),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                LoginForm(passwordState, legacyAccount)
+                LoginForm(
+                    passwordState = passwordState,
+                    passwordVisible = passwordVisible,
+                    onPasswordVisibilityChanged = { passwordVisible = !passwordVisible },
+                    legacyAccount = legacyAccount,
+                    isError = passwordError
+                )
             }
+            Text(
+                modifier = Modifier.padding(start = Margin.Medium),
+                text = stringResource(if (passwordError) {
+                    R.string.wrongPasswordLabel
+                } else {
+                    R.string.requiredLabel
+                }),
+                color = if (passwordError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodySmall,
+            )
             OpenUrlButton(
                 text = stringResource(R.string.passwordForgottenButton),
                 sourceUrl = RECOVER_PASSWORD_URL,
@@ -151,15 +188,17 @@ private fun LoginScreen(
 
 @Composable
 private fun LoginForm(
-    passwordState: TextFieldState,
     legacyAccount: () -> Account,
+    passwordState: TextFieldState,
+    passwordVisible: Boolean,
+    isError: Boolean,
+    onPasswordVisibilityChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Margin.Medium),
     ) {
-        var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
         Card(
             modifier = Modifier
@@ -172,7 +211,7 @@ private fun LoginForm(
                 account = legacyAccount()
             )
             HorizontalDivider(
-                color = AuthenticatorTheme.materialColors.outlineVariant,
+                color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outlineVariant,
             )
             SecureTextField(
                 state = passwordState,
@@ -185,15 +224,15 @@ private fun LoginForm(
                 label = { Text(stringResource(R.string.passwordLabel)) },
                 textObfuscationMode = if (passwordVisible) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        passwordVisible = !passwordVisible
-                    }) {
-                        Icon(painterResource(R.drawable.ic_eye_crossed), contentDescription = null)
+                    IconButton(onClick = onPasswordVisibilityChanged) {
+                        val iconId = if (passwordVisible) R.drawable.ic_eye else R.drawable.ic_eye_crossed
+                        Icon(painterResource(iconId), contentDescription = null)
                     }
                 },
+                isError = isError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Margin.Micro),
+                    .padding(Margin.Micro)
             )
         }
     }
@@ -207,6 +246,7 @@ private fun LoginScreenPreview() {
             legacyAccount = { fakeAccounts.first() },
             onBackPressed = {},
             onLoginPressed = { _, _ -> },
+            isOnboarding = false,
         )
     }
 }

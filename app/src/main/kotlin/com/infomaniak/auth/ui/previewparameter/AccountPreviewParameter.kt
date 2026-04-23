@@ -19,7 +19,7 @@ package com.infomaniak.auth.ui.previewparameter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.NotConnectedAction
+import com.infomaniak.auth.lib.Issue
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.ui.compose.preview.previewparameter.dummyUserOf
 import kotlinx.collections.immutable.persistentListOf
@@ -44,7 +44,25 @@ val fakeAccounts = persistentListOf(
         initials = "JS",
         email = "john.smith.apple.lol.infomaniak@ik.me",
         avatarUrl = null,
-        status = Account.Status.NotConnected(action = null),
+        status = Account.Status.NotConnected.AttemptingToConnect,
+    ),
+    Account(
+        id = 2,
+        fullName = "John Issue ReLogin",
+        initials = "JS",
+        email = "john.smith.relogin@ik.me",
+        avatarUrl = null,
+        status = Account.Status.NotConnected.ReLogin(
+            legacyAccount = Account(
+                id = 2,
+                fullName = "John Issue ReLogin",
+                initials = "JS",
+                email = "john.smith.relogin@ik.me",
+                status = Account.Status.NotConnected.AttemptingToConnect,
+            ),
+            lastIssue = Issue.Retriable.Reason.NetworkIssue,
+            sendCredentials = { _ -> },
+        ),
     ),
     Account(
         id = 3,
@@ -52,7 +70,7 @@ val fakeAccounts = persistentListOf(
         initials = "JS",
         email = "john.smith@ik.me",
         avatarUrl = null,
-        status = Account.Status.NotConnected(action = NotConnectedAction.Issue.NonRetriable("Preview error")),
+        status = Account.Status.NotConnected.LoginFailed(Issue.NonRetriable("Preview error")),
     )
 )
 

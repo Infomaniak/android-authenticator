@@ -17,15 +17,13 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
-
 /**
- * Tries to execute [block], but if [waitForTimeout] finishes first, cancels [block], and reports the timeout
- * over [crashReportInterface], using the message returned by [waitForTimeout].
+ * Tries to execute [block], but if [waitForTimeout] finishes first, cancels [block],
+ * and reports the timeout via [onTimeout], using the message returned by [waitForTimeout].
  */
 internal suspend fun <R> withTimeoutOrNull(
     waitForTimeout: suspend () -> String,
-    crashReportInterface: CrashReportInterface,
+    onTimeout: (message: String) -> Unit,
     block: suspend () -> R
 ): R? {
     val result: TimeoutResult<R> = raceOf(
@@ -35,7 +33,7 @@ internal suspend fun <R> withTimeoutOrNull(
     return when (result) {
         is TimeoutResult.Returned -> result.value
         is TimeoutResult.TimedOut -> {
-            crashReportInterface.capture(result.message)
+            onTimeout(result.message)
             null
         }
     }

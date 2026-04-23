@@ -65,7 +65,6 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.NotConnectedAction
 import com.infomaniak.auth.ui.components.AuthenticatorFab
 import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -278,8 +277,8 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
     companion object {
         fun Account.Status.toAccountSecurityLevel() = when (this) {
             Account.Status.LoggedIn -> Secured
-            is Account.Status.NotConnected if this.action is NotConnectedAction.ReLogin -> Warning
-            else -> Danger
+            is Account.Status.NotConnected -> Danger //TODO: Shouldn't this show the exclamation mark too?
+            else -> Warning // TODO: Use secure level to determine the status more precisely
         }
     }
 }

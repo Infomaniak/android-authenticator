@@ -71,6 +71,7 @@
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Włącz</string>
     <string name="errorLoginFailed">Logowanie do konta nie powiodło się. Spróbuj ponownie lub skontaktuj się z pomocą techniczną. (kod błędu: %d)</string>
+    <string name="errorMigrationFailed">Migracja została przerwana.\nProsimy o kontakt z naszym zespołem pomocy technicznej.</string>
     <string name="errorOccuredTitle">Wystąpił błąd</string>
     <string name="estimatedWait">Szacowany czas oczekiwania: %s</string>
     <string name="feedbackTitle">Opinie</string>
@@ -110,6 +111,7 @@
     <string name="removeAccountSuccess">Konto usunięte</string>
     <string name="removeAccountTitle">Usuń konto</string>
     <string name="removeButton">Usuń</string>
+    <string name="requiredLabel">Wymagane</string>
     <string name="settingsTitle">Ustawienia</string>
     <string name="showAccountPasswordButton">Pokaż hasło do konta</string>
     <string name="startButton">Rozpocznij</string>
@@ -130,4 +132,5 @@
     <string name="verifySecurityButton">Zweryfikuj moje bezpieczeństwo</string>
     <string name="viewGuidesButton">Przeglądaj przewodniki</string>
     <string name="whenLoginTitle">Kiedy</string>
+    <string name="wrongPasswordLabel">Hasło jest nieprawidłowe</string>
 </resources>

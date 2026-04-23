@@ -64,6 +64,7 @@ interface CrashReportInterface {
      * @param data Optional contextual data to provide more insight into the environment or state when the error occurred.
      */
     fun capture(
+        userId: Long,
         message: String,
         error: Throwable,
         data: Map<String, String>? = null,
@@ -79,6 +80,7 @@ interface CrashReportInterface {
      * @param level The severity level of the message (e.g., `info`, `warning`, `error`).
      */
     fun capture(
+        userId: Long,
         message: String,
         data: Map<String, String>? = null,
         level: CrashReportLevel? = null

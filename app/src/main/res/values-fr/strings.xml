@@ -72,6 +72,7 @@
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Activer</string>
     <string name="errorLoginFailed">La connexion au compte a échoué.\nVeuillez réessayer ou contacter le support. (code erreur : %d)</string>
+    <string name="errorMigrationFailed">La migration a été interrompue.\nVeuillez contacter notre équipe de support technique.</string>
     <string name="errorOccuredTitle">Une erreur est survenue</string>
     <string name="estimatedWait">Attente estimée %s</string>
     <string name="feedbackTitle">Feedback</string>
@@ -111,6 +112,7 @@
     <string name="removeAccountSuccess">Compte retiré</string>
     <string name="removeAccountTitle">Retirer le compte</string>
     <string name="removeButton">Retirer</string>
+    <string name="requiredLabel">Requis</string>
     <string name="settingsTitle">Paramètres</string>
     <string name="showAccountPasswordButton">Afficher le mot de passe du compte</string>
     <string name="startButton">Commencer</string>
@@ -131,4 +133,5 @@
     <string name="verifySecurityButton">Vérifier ma sécurité</string>
     <string name="viewGuidesButton">Consulter les guides</string>
     <string name="whenLoginTitle">Quand</string>
+    <string name="wrongPasswordLabel">Le mot de passe est incorrect</string>
 </resources>

@@ -44,6 +44,7 @@ import io.sentry.Sentry
 import io.sentry.SentryEvent
 import io.sentry.SentryLevel
 import io.sentry.protocol.Message
+import io.sentry.protocol.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -129,11 +130,13 @@ object ApplicationModule {
         }
 
         override fun capture(
+            userId: Long,
             message: String,
             error: Throwable,
             data: Map<String, String>?
         ) {
             val sentryEvent = SentryEvent(error).apply {
+                this.user = User().also { it.id = userId.toString() }
                 data?.forEach { (key, value) -> setExtra(key, value) }
                 this.message = Message().apply { this.message = message }
             }
@@ -141,11 +144,13 @@ object ApplicationModule {
         }
 
         override fun capture(
+            userId: Long,
             message: String,
             data: Map<String, String>?,
             level: CrashReportLevel?
         ) {
             Sentry.captureMessage(message, level?.sentryLevel ?: SentryLevel.INFO) { scope ->
+                scope.user = User().also { it.id = userId.toString() }
                 data?.forEach { (key, value) -> scope.setExtra(key, value) }
             }
         }

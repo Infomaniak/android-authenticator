@@ -47,7 +47,7 @@ sealed interface NavDestination : NavKey {
     }
 
     @Serializable
-    data class LoginInApp(val legacyAccountId: Long) : NavDestination
+    data class LoginInApp(val legacyAccountId: Long, val isOnboarding: Boolean) : NavDestination
 
     @Serializable
     data object Theme : NavDestination

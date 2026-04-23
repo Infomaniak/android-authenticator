@@ -20,6 +20,7 @@ package com.infomaniak.auth.ui.screen.login
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,6 +37,11 @@ class LoginViewModel @Inject constructor(
         return authenticatorFacade.accounts.mapNotNull { accounts ->
             accounts.firstOrNull { it.id == legacyAccountId }?.let { LoginUiState.Ready(it) }
         }
+    }
+
+    fun skipMigration() {
+        val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.LoginRequired.MustReLogin>() ?: return
+        appStatus.skip()
     }
 }
 

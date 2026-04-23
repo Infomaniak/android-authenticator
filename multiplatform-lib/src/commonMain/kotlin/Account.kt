@@ -25,9 +25,30 @@ data class Account(
     val avatarUrl: String? = null,
     val status: Status,
 ) {
-
     sealed interface Status {
-        data class NotConnected(val action: NotConnectedAction?) : Status
+
         data object LoggedIn : Status
+
+        sealed interface NotConnected : Status {
+
+            data object AttemptingToConnect : NotConnected
+
+            /**
+             * The actual email of the account might have changed since then, and we can't know about it.
+             * So, the UI is supposed to pre-fill it with the one in [legacyAccount], and prompt the user to check it's
+             * correct, letting them replace it if needed (editable text field).
+             */
+            data class ReLogin(
+                val legacyAccount: Account,
+                val hadIncorrectPassword: Boolean = false,
+                val lastIssue: Issue.Retriable.Reason?,
+                val sendCredentials: ((CredentialsForMigration) -> Unit)?,
+            ) : NotConnected {
+
+                val isSendingCredentials: Boolean get() = sendCredentials == null
+            }
+
+            data class LoginFailed(val cause: Issue) : NotConnected
+        }
     }
 }
