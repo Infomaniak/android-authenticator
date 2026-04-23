@@ -281,7 +281,7 @@ internal class AuthenticatorFacadeImpl(
         val userId = notConnectedAccount.id
         withRetries(userId, onGiveUp = { return }) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
-            val apiToken = withTimeoutOrNull(
+            val temporaryToken = withTimeoutOrNull(
                 waitForTimeout = {
                     delay(8.seconds)
                     "getTokenFromCrossAppLogin timed out"
@@ -290,7 +290,7 @@ internal class AuthenticatorFacadeImpl(
             ) {
                 authenticatorBridge.getTokenFromCrossAppLogin(userId)
             } ?: return
-            val authentication = MigrationAuthentication.CrossAppLogin(apiToken)
+            val authentication = MigrationAuthentication.CrossAppLogin(temporaryToken)
             if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
         }
     }
