@@ -77,5 +77,7 @@ internal class WebAuthnRepository(
         return authenticatorRequest.completeMigration(token, sessionId, deviceId)
     }
 
+    suspend fun getUserProfile(token: String) = authenticatorRequest.getUserProfile(token = token).data
+
     //endregion
 }

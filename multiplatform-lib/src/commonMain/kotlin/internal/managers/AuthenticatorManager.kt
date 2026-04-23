@@ -42,6 +42,8 @@ internal class AuthenticatorManager(
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
+    suspend fun getUserProfile(token: String) = webAuthnRepository.getUserProfile(token)
+
     suspend fun registerPasskey(token: String, userId: Long) {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()

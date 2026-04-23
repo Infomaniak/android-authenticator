@@ -39,8 +39,8 @@ import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
+import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
-import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope
@@ -75,7 +75,7 @@ internal class AuthenticatorFacadeImpl(
     private val clientId: String,
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
-    private val tokenBridge: TokenBridge,
+    private val authenticatorBridge: AuthenticatorBridge,
     private val crashReport: CrashReportInterface,
     private val coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
@@ -131,7 +131,7 @@ internal class AuthenticatorFacadeImpl(
         val token = authenticatorManager.getToken(clientId, userId).firstOrElse {
             error("Could not get the key for user $userId from the storage: $it")
         }
-        tokenBridge.persistTokenForAccount(userId, token)
+        authenticatorBridge.persistTokenForAccount(userId, token)
     }
 
     private fun accountsFlow(
@@ -237,7 +237,7 @@ internal class AuthenticatorFacadeImpl(
             else -> throw IllegalArgumentException("registrationAttempts doesn't support $accountStatus")
         }
         val userId = notRegisteredAccount.id
-        val token = tokenBridge.getTokenFromDatabase(userId) ?: return
+        val token = authenticatorBridge.getTokenFromDatabase(userId) ?: return
         withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
@@ -250,7 +250,7 @@ internal class AuthenticatorFacadeImpl(
                 clientId = clientId,
                 userId = userId,
             ).firstOrElse { error("Key not found: ${it.details}") }
-            tokenBridge.persistTokenForAccount(userId, token)
+            authenticatorBridge.persistTokenForAccount(userId, token)
             dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.LoggedIn))
         }
     }
@@ -288,7 +288,7 @@ internal class AuthenticatorFacadeImpl(
                 },
                 onTimeout = { message -> crashReport.capture(userId, message) }
             ) {
-                tokenBridge.getTokenFromCrossAppLogin(userId)
+                authenticatorBridge.getTokenFromCrossAppLogin(userId)
             } ?: return
             val authentication = MigrationAuthentication.CrossAppLogin(temporaryToken)
             if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
@@ -314,9 +314,11 @@ internal class AuthenticatorFacadeImpl(
         val succeeded = migrationManager.tryMigrating(
             userId = userId,
             authentication = authentication,
-            persistToken = { token ->
-                tokenBridge.persistTokenForAccount(userId, token)
-            }
+            persistUser = { apiToken ->
+                val userProfile = authenticatorManager.getUserProfile(apiToken.accessToken)
+                userProfile.apiToken = apiToken
+                authenticatorBridge.persistUserProfile(userProfile)
+            },
         )
 
         if (succeeded.not()) return false
