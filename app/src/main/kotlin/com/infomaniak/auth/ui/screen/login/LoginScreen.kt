@@ -111,8 +111,7 @@ private fun LoginScreen(
     val passwordState = rememberTextFieldState(initialText = "")
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-    val state = (legacyAccount().status as? Account.Status.NotConnected.ReLogin)?.state
-    val passwordError = (state as? Account.Status.NotConnected.ReLogin.State.CredentialsRequired)?.hadIncorrectPassword ?: false
+    val passwordError = (legacyAccount().status as? Account.Status.NotConnected.ReLogin)?.hadIncorrectPassword ?: false
 
     BottomStickyButtonScaffold(
         modifier = modifier.imePadding(),

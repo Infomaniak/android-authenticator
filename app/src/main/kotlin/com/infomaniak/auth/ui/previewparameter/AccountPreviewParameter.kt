@@ -60,7 +60,8 @@ val fakeAccounts = persistentListOf(
                 email = "john.smith.relogin@ik.me",
                 status = Account.Status.NotConnected.AttemptingToConnect,
             ),
-            state = Account.Status.NotConnected.ReLogin.State.SendingCredentials
+            lastIssue = Issue.Retriable.Reason.NetworkIssue,
+            sendCredentials = { _ -> },
         ),
     ),
     Account(
