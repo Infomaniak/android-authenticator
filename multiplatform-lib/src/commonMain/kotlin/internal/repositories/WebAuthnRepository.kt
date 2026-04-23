@@ -26,7 +26,6 @@ import com.infomaniak.auth.lib.internal.models.RegisterPasskey
 import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
-import com.infomaniak.auth.lib.models.migration.user.UserProfile
 
 internal class WebAuthnRepository(
     private val authenticatorRequest: AuthenticatorRequest,
@@ -78,14 +77,7 @@ internal class WebAuthnRepository(
         return authenticatorRequest.completeMigration(token, sessionId, deviceId)
     }
 
-    suspend fun getUserProfile(token: String): UserProfile {
-        return authenticatorRequest.getUserProfile(
-            token = token,
-            withEmails = false,
-            withPhones = false,
-            withSecurity = true
-        ).data
-    }
+    suspend fun getUserProfile(token: String) = authenticatorRequest.getUserProfile(token = token).data
 
     //endregion
 }

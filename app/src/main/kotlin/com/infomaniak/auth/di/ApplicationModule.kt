@@ -20,7 +20,6 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.models.migration.user.UserProfile
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
@@ -206,10 +205,8 @@ object ApplicationModule {
         }
     }
 
-    private fun createUserProfileBridge(accountUtils: AccountUtils): UserProfileBridge = object : UserProfileBridge {
-        override suspend fun persistUserProfile(userProfile: UserProfile) {
-            val user = userProfile.toUser()
-            accountUtils.addUser(user)
-        }
+    private fun createUserProfileBridge(accountUtils: AccountUtils): UserProfileBridge = UserProfileBridge { userProfile ->
+        val user = userProfile.toUser()
+        accountUtils.addUser(user)
     }
 }
