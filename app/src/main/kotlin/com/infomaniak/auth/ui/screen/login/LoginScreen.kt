@@ -36,6 +36,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -78,6 +79,12 @@ fun LoginScreen(
     when (val state = uiState) {
         is LoginUiState.Loading -> Unit
         is LoginUiState.Ready -> {
+            LaunchedEffect(state.legacyAccount.status::class) {
+                if (state.legacyAccount.status is Account.Status.LoggedIn && !isOnboarding) {
+                    onBackPressed()
+                }
+            }
+
             LoginScreen(
                 legacyAccount = { state.legacyAccount },
                 onBackPressed = onBackPressed,
