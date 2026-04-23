@@ -22,6 +22,7 @@ import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.network.ApiClientProvider
+import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
@@ -74,13 +75,15 @@ abstract class AuthenticatorFacade internal constructor() {
             userProfileBridge: UserProfileBridge,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
+            val routes = ApiRoutes(apiHost)
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
                         userAgent = userAgent,
-                        apiHost = apiHost,
+                        routes = routes,
                         crashReport = crashReport,
-                    ).httpClient
+                    ).httpClient,
+                    routes = routes,
                 )
             )
             val accountsDatabase = getAccountsRoomDatabase(databaseNameOrPath)
@@ -115,13 +118,15 @@ abstract class AuthenticatorFacade internal constructor() {
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
         ): AuthenticatorFacade {
+            val routes = ApiRoutes(apiHost)
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
                         userAgent = userAgent,
-                        apiHost = apiHost,
+                        routes = routes,
                         crashReport = crashReport,
-                    ).httpClient
+                    ).httpClient,
+                    routes = routes,
                 )
             )
             val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))

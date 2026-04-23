@@ -17,13 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.network
 
-internal object ApiRoutes {
-
-    var host = ""
-
-    fun setApiHost(apiHost: String) {
-        host = apiHost
-    }
+internal class ApiRoutes(val host: String) {
 
     fun apiBaseUrl(): String {
         return "https://login.${host}/api/"

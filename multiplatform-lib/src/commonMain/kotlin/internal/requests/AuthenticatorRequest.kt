@@ -36,13 +36,16 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
-internal class AuthenticatorRequest(private val httpClient: HttpClient) {
+internal class AuthenticatorRequest(
+    private val httpClient: HttpClient,
+    private val routes: ApiRoutes,
+) {
 
     /**
      * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
      */
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
-        return httpClient.get(ApiRoutes.passkeysOptions()) {
+        return httpClient.get(routes.passkeysOptions()) {
             addAuthenticationHeader(token)
         }.decode()
     }
@@ -52,7 +55,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * after [getPasskeysOptions] is done.
      */
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
-        httpClient.post(ApiRoutes.registerPasskey()) {
+        httpClient.post(routes.registerPasskey()) {
             addAuthenticationHeader(token)
             setBody(registerPasskey)
         }
@@ -62,7 +65,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * Retrieves the backend-generated challenge, prior to authenticating with [verify].
      */
     suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
-        return httpClient.post(ApiRoutes.challenge()) {
+        return httpClient.post(routes.challenge()) {
             setBody(mapOf("client_id" to clientId))
         }.decode()
     }
@@ -75,7 +78,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @return An [AuthResult] that includes an access token.
      */
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
-        return httpClient.post(ApiRoutes.verify()) {
+        return httpClient.post(routes.verify()) {
             setBody(verifyAuthenticationData)
         }.decode()
     }
@@ -87,7 +90,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param passkeyId The id of the passkey to delete.
      */
     suspend fun deletePasskey(token: String, passkeyId: String) {
-        httpClient.delete(ApiRoutes.delete(passkeyId)) {
+        httpClient.delete(routes.delete(passkeyId)) {
             addAuthenticationHeader(token)
         }
     }
@@ -99,7 +102,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param userId The id of the user.
      */
     suspend fun getMigrationOptions(deviceId: String, userId: Long): SuccessfulApiResponse<MigrationOptions> {
-        return httpClient.post(ApiRoutes.migrationsOptions()) {
+        return httpClient.post(routes.migrationsOptions()) {
             setBody(mapOf("device" to deviceId, "id" to userId.toString()))
         }.decode()
     }
@@ -119,7 +122,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
         sessionId: String,
         otpPayload: OtpPayload,
     ): SuccessfulApiResponse<AuthResult> {
-        return httpClient.post(ApiRoutes.verifyMigration(sessionId)) {
+        return httpClient.post(routes.verifyMigration(sessionId)) {
             setBody(otpPayload)
         }.decode()
     }
@@ -131,7 +134,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
      * @param deviceId ID of the device.
      */
     suspend fun completeMigration(token: String, sessionId: String, deviceId: String) {
-        httpClient.delete(ApiRoutes.finishMigration(sessionId)) {
+        httpClient.delete(routes.finishMigration(sessionId)) {
             addAuthenticationHeader(token)
             setBody(mapOf("device" to deviceId))
         }
@@ -140,7 +143,7 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
     suspend fun getUserProfile(
         token: String,
     ): SuccessfulApiResponse<UserProfile> {
-        val url = "${ApiRoutes.userProfile()}&with=security"
+        val url = "${routes.userProfile()}&with=security"
 
         return httpClient.get(url) {
             addAuthenticationHeader(token)

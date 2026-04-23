@@ -49,13 +49,9 @@ import kotlin.time.Duration.Companion.seconds
 
 internal class ApiClientProvider(
     private val userAgent: String,
-    private val apiHost: String,
+    private val routes: ApiRoutes,
     private val crashReport: CrashReportInterface? = null,
 ) {
-
-    init {
-        ApiRoutes.setApiHost(apiHost)
-    }
 
     private val jsonConfig = Json {
         /** From [io.ktor.serialization.kotlinx.json.DefaultJson] */
@@ -99,7 +95,7 @@ internal class ApiClientProvider(
         }
 
         defaultRequest {
-            url(ApiRoutes.apiBaseUrl())
+            url(routes.apiBaseUrl())
             contentType(ContentType.Application.Json)
         }
 
