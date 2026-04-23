@@ -316,11 +316,9 @@ internal class AuthenticatorFacadeImpl(
         val succeeded = migrationManager.tryMigrating(
             userId = userId,
             authentication = authentication,
-            persistToken = { token ->
-                tokenBridge.persistTokenForAccount(userId, token)
-            },
             persistUser = { token ->
                 userProfileBridge.persistUserProfile(authenticatorManager.getUserProfile(token))
+                tokenBridge.persistTokenForAccount(userId, token)
             },
         )
 
