@@ -27,7 +27,7 @@ import platform.Foundation.numberWithBool
 
 
 @OptIn(ExperimentalForeignApi::class)
-actual suspend fun createFolder(name: String) {
+internal actual suspend fun createFolder(name: String) {
     val basePath = getApplicationSupportDirectory()
     val folderPath = "$basePath/$name"
 
@@ -49,7 +49,7 @@ actual suspend fun createFolder(name: String) {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-actual suspend fun createFileIn(folder: String, name: String) {
+internal actual suspend fun createFileIn(folder: String, name: String) {
     val basePath = getApplicationSupportDirectory()
     val folderPath = "$basePath/$folder"
 
@@ -68,7 +68,7 @@ actual suspend fun createFileIn(folder: String, name: String) {
     )
 }
 
-actual suspend fun checkFileExists(folder: String, name: String): Boolean {
+internal actual suspend fun checkFileExists(folder: String, name: String): Boolean {
     val basePath = getApplicationSupportDirectory()
     val filePath = "$basePath/$folder/$name"
 
@@ -76,7 +76,7 @@ actual suspend fun checkFileExists(folder: String, name: String): Boolean {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-actual suspend fun checkFolderExists(folder: String): Boolean {
+internal actual suspend fun checkFolderExists(folder: String): Boolean {
     val basePath = getApplicationSupportDirectory()
     val filePath = "$basePath/$folder"
 
