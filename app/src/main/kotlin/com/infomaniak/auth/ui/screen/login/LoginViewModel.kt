@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onCancelMigration() {
+    fun skipMigration() {
         val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.LoginRequired.MustReLogin>() ?: return
         appStatus.skip()
     }

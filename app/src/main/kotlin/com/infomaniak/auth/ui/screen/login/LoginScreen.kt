@@ -89,7 +89,7 @@ fun LoginScreen(
                 legacyAccount = { state.legacyAccount },
                 onBackPressed = {
                     if (isOnboarding) {
-                        viewModel.onCancelMigration()
+                        viewModel.skipMigration()
                     } else {
                         closeLoginScreen()
                     }
