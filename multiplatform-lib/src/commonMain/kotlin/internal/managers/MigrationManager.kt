@@ -73,7 +73,7 @@ internal class MigrationManager(
             deviceId = deviceId,
             userId = userId,
         )
-        val apiToken = when (authentication) {
+        val temporaryToken = when (authentication) {
             is MigrationAuthentication.CrossAppLogin -> authentication.apiToken
             else -> {
                 val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
@@ -108,14 +108,14 @@ internal class MigrationManager(
 
         authenticatorManager.deleteKeysFor(userId)
         authenticatorManager.registerPasskey(
-            token = apiToken.accessToken,
+            token = temporaryToken.accessToken,
             userId = userId
         )
         val token = authenticatorManager.getToken(
             clientId = clientId,
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
-        persistUser(apiToken)
+        persistUser(temporaryToken)
         webAuthnRepository.completeMigration(token = token, sessionId = migrationOptions.session, deviceId = deviceId)
         deleteLegacyAccount(userId.toString())
 
