@@ -19,6 +19,8 @@ package com.infomaniak.auth.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import coil3.SingletonImageLoader
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.LocalAvatarColors
@@ -26,7 +28,8 @@ import com.infomaniak.core.avatar.components.Avatar
 import com.infomaniak.core.avatar.getBackgroundColorResBasedOnId
 import com.infomaniak.core.avatar.models.AvatarColors
 import com.infomaniak.core.avatar.models.AvatarType
-import com.infomaniak.core.avatar.models.AvatarType.WithInitials
+import com.infomaniak.core.avatar.models.AvatarType.Companion.getUrlOrInitials
+import com.infomaniak.core.avatar.models.AvatarUrlData
 
 @Composable
 fun Avatar(
@@ -51,7 +54,6 @@ fun Avatar(
     )
 }
 
-
 @Composable
 private fun computeAvatarType(
     account: Account,
@@ -63,14 +65,16 @@ private fun computeAvatarType(
             containerColor = getBackgroundColorResBasedOnId(account.id.toInt(), localAvatarColors.containerColors),
             contentColor = localAvatarColors.contentColor,
         )
-        val initials = account.fullName
-            .split(" ")
-            .filter { it.isNotEmpty() }
-            .take(2)
-            .map { it.first() }
-            .joinToString("")
-            .uppercase()
-        WithInitials.Initials(initials, avatarColors)
+        val avatarUrlData = account.avatarUrl
+            ?.takeIf { it.isNotBlank() }
+            ?.let { avatarUrl ->
+                AvatarUrlData(avatarUrl, SingletonImageLoader.get(LocalContext.current))
+            }
+        getUrlOrInitials(
+            avatarUrlData = avatarUrlData,
+            initials = account.initials,
+            colors = avatarColors
+        )
     } else {
         AvatarType.fromUser(user)
     }
