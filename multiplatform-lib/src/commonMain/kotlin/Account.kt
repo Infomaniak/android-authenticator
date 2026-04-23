@@ -40,20 +40,12 @@ data class Account(
              */
             data class ReLogin(
                 val legacyAccount: Account,
-                val state: State,
+                val hadIncorrectPassword: Boolean = false,
+                val lastIssue: Issue.Retriable.Reason?,
+                val sendCredentials: ((CredentialsForMigration) -> Unit)?,
             ) : NotConnected {
 
-                sealed interface State {
-
-                    data class CredentialsRequired(
-                        val hadIncorrectPassword: Boolean = false,
-                        val proceed: (CredentialsForMigration) -> Unit,
-                    ) : State
-
-                    data object SendingCredentials : State
-
-                    data class Failure(val cause: Issue) : State
-                }
+                val isSendingCredentials: Boolean get() = sendCredentials == null
             }
 
             data class LoginFailed(val cause: Issue) : NotConnected

@@ -238,7 +238,7 @@ internal class AuthenticatorFacadeImpl(
         }
         val userId = notRegisteredAccount.id
         val token = tokenBridge.getTokenFromDatabase(userId) ?: return
-        withRetries {
+        withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
                 // TODO do that only if we don't need to use the backed up files
@@ -279,14 +279,14 @@ internal class AuthenticatorFacadeImpl(
         onLoginSuccess: () -> Nothing
     ) {
         val userId = notConnectedAccount.id
-        withRetries(onGiveUp = { return }) {
+        withRetries(userId, onGiveUp = { return }) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             val temporaryToken = withTimeoutOrNull(
                 waitForTimeout = {
                     delay(8.seconds)
                     "getTokenFromCrossAppLogin timed out"
                 },
-                crashReportInterface = crashReport
+                onTimeout = { message -> crashReport.capture(userId, message) }
             ) {
                 tokenBridge.getTokenFromCrossAppLogin(userId)
             } ?: return
@@ -299,7 +299,7 @@ internal class AuthenticatorFacadeImpl(
         notConnectedAccount: AccountEntity,
         onLoginSuccess: () -> Nothing
     ) {
-        withRetries(onGiveUp = { return }) {
+        withRetries(notConnectedAccount.id, onGiveUp = { return }) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             val authentication = MigrationAuthentication.OngoingLogin
             if (attemptMigration(notConnectedAccount, authentication)) onLoginSuccess() else return
@@ -327,99 +327,73 @@ internal class AuthenticatorFacadeImpl(
     }
 
     private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(accountToMigrate: AccountEntity) {
-        val reLoggingIn = ReLogin(
+        var status = ReLogin(
             legacyAccount = accountToMigrate.toAccount(null),
-            state = ReLogin.State.SendingCredentials,
+            hadIncorrectPassword = false,
+            lastIssue = null,
+            sendCredentials = null
         )
-        var wrongPassword = false
-        withRetries(
-            onGiveUp = { return },
-            baseStatus = reLoggingIn
-        ) {
-            val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
-            val reLogin = reLoggingIn.copy(
-                state = ReLogin.State.CredentialsRequired(
-                    hadIncorrectPassword = wrongPassword,
-                    proceed = credentialsAsync::complete,
-                )
-            )
-            emit(reLogin)
-            val credentialsForMigration = credentialsAsync.await()
-            wrongPassword = false
-            emit(reLoggingIn)
-            val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
-            val succeeded = attemptMigration(accountToMigrate, authentication)
-            when {
-                succeeded -> AttemptResult.Success(Unit)
-                else -> AttemptResult.Retry.also { wrongPassword = true }
+        loop@ while (true) {
+            status = runCatching {
+                val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
+                status = status.copy(sendCredentials = credentialsAsync::complete)
+                emit(status)
+                val credentialsForMigration = credentialsAsync.await()
+                status = status.copy(hadIncorrectPassword = false, lastIssue = null, sendCredentials = null)
+                emit(status)
+                val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
+                val succeeded = attemptMigration(accountToMigrate, authentication)
+                when {
+                    succeeded -> return
+                    else -> status.copy(hadIncorrectPassword = true)
+                }
+            }.cancellable().getOrElse {
+                it.printStackTrace()
+                status.copy(lastIssue = it.toIssueReason(accountToMigrate.id))
             }
         }
     }
 
-    private suspend inline fun <R> FlowCollector<ReLogin>.withRetries(
-        onGiveUp: () -> Unit = {},
-        baseStatus: ReLogin,
-        block: () -> AttemptResult<R>
-    ): R = withRetriesRaw(
-        onGiveUp = onGiveUp,
-        issueToStatus = { baseStatus.copy(state = ReLogin.State.Failure(it)) },
-        block = block
-    )
 
     private suspend inline fun <R> FlowCollector<Account.Status.NotConnected>.withRetries(
+        userId: Long,
         onGiveUp: () -> Unit = {},
         block: () -> R
-    ): R = withRetriesRaw(
-        onGiveUp = onGiveUp,
-        issueToStatus = { Account.Status.NotConnected.LoginFailed(it) },
-        block = { AttemptResult.Success(block()) }
-    )
-
-    private sealed interface AttemptResult<out T> {
-        data object Retry : AttemptResult<Nothing>
-        data class Success<T>(val value: T) : AttemptResult<T>
-    }
-
-    private suspend inline fun <T, R> FlowCollector<T>.withRetriesRaw(
-        onGiveUp: () -> Unit = {},
-        crossinline issueToStatus: (Issue) -> T,
-        block: () -> AttemptResult<R>
     ): R {
-        loop@ while (true) {
+        while (true) {
             runCatching {
-                return when (val result = block()) {
-                    AttemptResult.Retry -> continue@loop
-                    is AttemptResult.Success -> result.value
-                }
+                return block()
             }.cancellable().onFailure {
                 it.printStackTrace()
                 if (it is IllegalStateException || it is IllegalArgumentException) { // Local errors, no recourse.
                     val issue = Issue.NonRetriable(it.message ?: it::class.simpleName ?: "$it")
-                    emit(issueToStatus(issue))
+                    emit(Account.Status.NotConnected.LoginFailed(issue))
                     awaitCancellation()
                 }
-                val issueReason = when (it) {
-                    is IOException -> Reason.NetworkIssue
-                    is ApiException if (it.statusCode == 503) -> Reason.ServerUnavailable
-                    is ApiException.ApiErrorException -> {
-                        crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(12_000 + it.statusCode, "http ${it.statusCode} ${it.errorCode} ${it.errorMessage}")
-                    }
-                    is ApiException.UnexpectedApiErrorFormatException -> {
-                        crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(22_000 + it.statusCode, "http ${it.statusCode} ${it.bodyResponse}")
-                    }
-                    else -> {
-                        crashReport.capture("re-login migration attempt failed", it)
-                        Reason.Other(11_000, it.message ?: it::class.simpleName ?: "$it")
-                    }
-                }
+                val issueReason = it.toIssueReason(userId)
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
                 val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
-                emit(issueToStatus(issue))
+                emit(Account.Status.NotConnected.LoginFailed(issue))
                 val shouldRetry = shouldRetryAsync.await()
                 if (shouldRetry) continue else onGiveUp()
             }
+        }
+    }
+
+    private fun Throwable.toIssueReason(userId: Long): Reason = when (this) {
+        is IOException -> Reason.NetworkIssue
+        is ApiException if (statusCode == 503) -> Reason.ServerUnavailable
+        is ApiException.ApiErrorException -> {
+            crashReport.capture(userId, "re-login migration attempt failed", this)
+            Reason.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
+        }
+        is ApiException.UnexpectedApiErrorFormatException -> {
+            crashReport.capture(userId, "re-login migration attempt failed", this)
+            Reason.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
+        }
+        else -> {
+            crashReport.capture(userId, "re-login migration attempt failed", this)
+            Reason.Other(11_000, message ?: this::class.simpleName ?: "$this")
         }
     }
 }

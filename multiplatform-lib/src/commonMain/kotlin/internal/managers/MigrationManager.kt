@@ -95,10 +95,10 @@ internal class MigrationManager(
                         ),
                     ).accessToken
                 }.cancellable().getOrElse {
-                    if (it is ApiException.ApiErrorException && it.errorCode == "access_denied") {
-                        return false
-                    } else {
-                        throw it
+                    if (it !is ApiException.ApiErrorException) throw it
+                    when (it.errorCode) {
+                        "access_denied", "not_authorized" -> return false
+                        else -> throw it
                     }
                 }
             }
