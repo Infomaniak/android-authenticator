@@ -24,11 +24,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Language(
     @SerialName("short_name")
-    @ColumnInfo(defaultValue = "")
     var shortName: String,
     @ColumnInfo(defaultValue = "")
     var locale: String,
     @SerialName("short_locale")
-    @ColumnInfo(defaultValue = "")
     var shortLocale: String,
 ) : PreferenceTemplate()

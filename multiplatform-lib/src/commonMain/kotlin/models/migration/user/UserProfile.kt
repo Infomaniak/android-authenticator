@@ -17,10 +17,7 @@
  */
 package com.infomaniak.auth.lib.models.migration.user
 
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import com.infomaniak.auth.lib.models.migration.ApiToken
-import com.infomaniak.auth.lib.models.migration.OrganizationAccount
 import com.infomaniak.auth.lib.models.migration.user.preferences.Preferences
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,7 +25,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class UserProfile(
-    @PrimaryKey val id: Int,
+    val id: Int,
     @SerialName("display_name")
     val displayName: String?,
     @SerialName("first_name")
@@ -38,23 +35,16 @@ data class UserProfile(
     val email: String,
     val avatar: String?,
     val login: String,
-    @ColumnInfo(defaultValue = "false")
     @SerialName("is_staff")
     val isStaff: Boolean = false,
     val preferences: Preferences,
-    val phones: ArrayList<Phone>? = null,
-    val emails: ArrayList<Email>? = null,
 
     /**
      * Local
      */
     @Transient
     var apiToken: ApiToken = ApiToken(accessToken = "", tokenType = "", userId = 0),
-    @Transient
-    var organizations: ArrayList<OrganizationAccount> = arrayListOf(),
 
     ) {
-    fun getInitials() = "${firstname.firstOrEmpty().uppercase()}${lastname.firstOrEmpty().uppercase()}"
-
     private fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
 }

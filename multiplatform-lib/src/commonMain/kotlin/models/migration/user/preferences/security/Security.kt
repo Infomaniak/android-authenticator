@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences.security
 
-import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -27,7 +26,6 @@ data class Security(
     @SerialName("has_recovery_email")
     var hasRecoveryEmail: Boolean,
     @SerialName("has_valid_phone")
-    @ColumnInfo(defaultValue = "false")
     var hasValidPhone: Boolean,
     @SerialName("email_validated_at")
     var emailValidatedAt: Long,

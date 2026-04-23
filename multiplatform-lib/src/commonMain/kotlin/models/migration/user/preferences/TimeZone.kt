@@ -17,11 +17,9 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import androidx.room.ColumnInfo
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TimeZone(
-    @ColumnInfo(defaultValue = "")
     var gmt: String,
 ) : PreferenceTemplate()

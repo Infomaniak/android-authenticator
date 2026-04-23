@@ -17,16 +17,13 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrganizationPreference(
     @SerialName("current_account_id")
-    @ColumnInfo(defaultValue = "0")
     var currentOrganizationId: Int,
     @SerialName("last_login_at")
-    @ColumnInfo(defaultValue = "0")
     var lastLoginAt: Long,
 )

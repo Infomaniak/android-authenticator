@@ -139,24 +139,8 @@ internal class AuthenticatorRequest(private val httpClient: HttpClient) {
 
     suspend fun getUserProfile(
         token: String,
-        withEmails: Boolean = false,
-        withPhones: Boolean = false,
-        withSecurity: Boolean = false,
     ): SuccessfulApiResponse<UserProfile> {
-
-        val withOptions = buildList {
-            if (withEmails) add("emails")
-            if (withPhones) add("phones")
-            if (withSecurity) add("security")
-        }
-
-        val url = buildString {
-            append(ApiRoutes.userProfile())
-            if (withOptions.isNotEmpty()) {
-                append("&with=")
-                append(withOptions.joinToString(","))
-            }
-        }
+        val url = "${ApiRoutes.userProfile()}&with=security"
 
         return httpClient.get(url) {
             addAuthenticationHeader(token)

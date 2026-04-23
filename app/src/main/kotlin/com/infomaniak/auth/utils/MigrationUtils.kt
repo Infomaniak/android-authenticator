@@ -17,9 +17,6 @@
  */
 package com.infomaniak.auth.utils
 
-import com.infomaniak.auth.lib.models.migration.OrganizationAccount
-import com.infomaniak.auth.lib.models.migration.user.Email
-import com.infomaniak.auth.lib.models.migration.user.Phone
 import com.infomaniak.auth.lib.models.migration.user.UserProfile
 import com.infomaniak.auth.lib.models.migration.user.preferences.Country
 import com.infomaniak.auth.lib.models.migration.user.preferences.Language
@@ -31,6 +28,13 @@ import com.infomaniak.auth.lib.models.migration.user.preferences.security.Securi
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.lib.login.ApiToken
 import com.infomaniak.auth.lib.models.migration.ApiToken as MigrationApiToken
+import com.infomaniak.core.auth.models.user.preferences.Country as CoreCountry
+import com.infomaniak.core.auth.models.user.preferences.Language as CoreLanguage
+import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference as CoreOrganizationPreference
+import com.infomaniak.core.auth.models.user.preferences.Preferences as CorePreferences
+import com.infomaniak.core.auth.models.user.preferences.TimeZone as CoreTimeZone
+import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices as CoreAuthDevices
+import com.infomaniak.core.auth.models.user.preferences.security.Security as CoreSecurity
 
 fun UserProfile.toUser(): User {
     return User(
@@ -43,96 +47,70 @@ fun UserProfile.toUser(): User {
         login = login,
         isStaff = isStaff,
         preferences = preferences.toCorePreferences(),
-        phones = phones?.mapTo(ArrayList()) { it.toCorePhone() },
-        emails = emails?.mapTo(ArrayList()) { it.toCoreEmail() },
         apiToken = apiToken.toCoreApiToken(),
-        organizations = organizations.mapTo(ArrayList()) { it.toCoreOrganizationAccount() },
     )
 }
 
-private fun Preferences.toCorePreferences() =
-    com.infomaniak.core.auth.models.user.preferences.Preferences(
-        security = security?.toCoreSecurity(),
-        organizationPreference = organizationPreference.toCoreOrganizationPreference(),
-        language = language.toCoreLanguage(),
-        country = country.toCoreCountry(),
-        timezone = timezone?.toCoreTimeZone(),
-    )
+private fun Preferences.toCorePreferences() = CorePreferences(
+    security = security?.toCoreSecurity(),
+    organizationPreference = organizationPreference.toCoreOrganizationPreference(),
+    language = language.toCoreLanguage(),
+    country = country.toCoreCountry(),
+    timezone = timezone?.toCoreTimeZone(),
+)
 
-private fun Language.toCoreLanguage() =
-    com.infomaniak.core.auth.models.user.preferences.Language(
-        shortName = shortName,
-        locale = locale,
-        shortLocale = shortLocale,
-    )
+private fun Language.toCoreLanguage() = CoreLanguage(
+    shortName = shortName,
+    locale = locale,
+    shortLocale = shortLocale,
+)
 
-private fun Country.toCoreCountry() =
-    com.infomaniak.core.auth.models.user.preferences.Country(
-        shortName = shortName,
-        isEnabled = isEnabled,
-    )
+private fun Country.toCoreCountry() = CoreCountry(
+    shortName = shortName,
+    isEnabled = isEnabled,
+)
 
-private fun TimeZone.toCoreTimeZone() =
-    com.infomaniak.core.auth.models.user.preferences.TimeZone(
-        gmt = gmt,
-    )
+private fun TimeZone.toCoreTimeZone() = CoreTimeZone(
+    gmt = gmt,
+)
 
-private fun OrganizationPreference.toCoreOrganizationPreference() =
-    com.infomaniak.core.auth.models.user.preferences.OrganizationPreference(
-        currentOrganizationId = currentOrganizationId,
-        lastLoginAt = lastLoginAt,
-    )
+private fun OrganizationPreference.toCoreOrganizationPreference() = CoreOrganizationPreference(
+    currentOrganizationId = currentOrganizationId,
+    lastLoginAt = lastLoginAt,
+)
 
-private fun Security.toCoreSecurity() =
-    com.infomaniak.core.auth.models.user.preferences.security.Security(
-        score = score,
-        hasRecoveryEmail = hasRecoveryEmail,
-        hasValidPhone = hasValidPhone,
-        emailValidatedAt = emailValidatedAt,
-        otp = otp,
-        sms = sms,
-        smsPhone = smsPhone,
-        yubikey = yubikey,
-        infomaniakApplication = infomaniakApplication,
-        doubleAuth = doubleAuth,
-        remainingRescueCode = remainingRescueCode,
-        lastLoginAt = lastLoginAt,
-        dateLastChangedPassword = dateLastChangedPassword,
-        doubleAuthMethod = doubleAuthMethod,
-        authDevices = authDevices?.mapTo(ArrayList()) { it.toCoreAuthDevices() },
-    )
+private fun Security.toCoreSecurity() = CoreSecurity(
+    score = score,
+    hasRecoveryEmail = hasRecoveryEmail,
+    hasValidPhone = hasValidPhone,
+    emailValidatedAt = emailValidatedAt,
+    otp = otp,
+    sms = sms,
+    smsPhone = smsPhone,
+    yubikey = yubikey,
+    infomaniakApplication = infomaniakApplication,
+    doubleAuth = doubleAuth,
+    remainingRescueCode = remainingRescueCode,
+    lastLoginAt = lastLoginAt,
+    dateLastChangedPassword = dateLastChangedPassword,
+    doubleAuthMethod = doubleAuthMethod,
+    authDevices = authDevices?.mapTo(ArrayList()) { it.toCoreAuthDevices() },
+)
 
-private fun AuthDevices.toCoreAuthDevices() =
-    com.infomaniak.core.auth.models.user.preferences.security.AuthDevices(
-        id = id,
-        name = name,
-        lastConnexion = lastConnexion ?: 0L,
-        userAgent = userAgent,
-        userIp = userIp,
-        device = device,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt,
-    )
-
-private fun Phone.toCorePhone() = com.infomaniak.core.auth.models.user.Phone(phone = phone)
-
-private fun Email.toCoreEmail() = com.infomaniak.core.auth.models.user.Email(email = email)
+private fun AuthDevices.toCoreAuthDevices() = CoreAuthDevices(
+    id = id,
+    name = name,
+    lastConnexion = lastConnexion ?: 0L,
+    userAgent = userAgent,
+    userIp = userIp,
+    device = device,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    deletedAt = deletedAt,
+)
 
 private fun MigrationApiToken.toCoreApiToken() = ApiToken(
     accessToken = accessToken,
     tokenType = tokenType,
     userId = userId,
-)
-
-private fun OrganizationAccount.toCoreOrganizationAccount() = com.infomaniak.core.auth.models.OrganizationAccount(
-    id = id,
-    name = name,
-    type = com.infomaniak.core.auth.models.OrganizationAccount.Type.valueOf(type.name),
-    billing = billing,
-    mailing = mailing,
-    noAccess = noAccess,
-    workspaceOnly = workspaceOnly,
-    billingMailing = billingMailing,
-    legalEntityType = legalEntityType,
 )

@@ -17,16 +17,13 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import androidx.room.ColumnInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Country(
     @SerialName("short_name")
-    @ColumnInfo(defaultValue = "")
     var shortName: String,
     @SerialName("is_enabled")
-    @ColumnInfo(defaultValue = "false")
     var isEnabled: Boolean,
 ) : PreferenceTemplate()
