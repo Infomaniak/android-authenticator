@@ -23,18 +23,13 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSFileManager
 
 actual suspend fun checkFileExists(name: String): Boolean {
-    val basePath = getApplicationSupportDirectory()
-    val filePath = "$basePath/$name"
-
-    return NSFileManager.defaultManager.fileExistsAtPath(filePath)
+    return NSFileManager.defaultManager.fileExistsAtPath("${getApplicationSupportDirectory()}/$name")
 }
 
 @OptIn(ExperimentalForeignApi::class)
 actual suspend fun createFile(name: String, content: String) {
-    val basePath = getApplicationSupportDirectory()
-
     NSFileManager.defaultManager.createFileAtPath(
-        path = "$basePath/$name",
+        path = "${getApplicationSupportDirectory()}/$name",
         contents = content.toNsData(),
         attributes = null
     )
