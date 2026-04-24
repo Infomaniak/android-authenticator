@@ -22,11 +22,12 @@ import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.network.ApiClientProvider
+import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
-import com.infomaniak.auth.lib.network.interfaces.TokenBridge
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -69,16 +70,18 @@ abstract class AuthenticatorFacade internal constructor() {
             clientId: String,
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
-            tokenBridge: TokenBridge,
+            authenticatorBridge: AuthenticatorBridge,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
+            val routes = ApiRoutes(apiHost)
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
                         userAgent = userAgent,
-                        apiHost = apiHost,
+                        routes = routes,
                         crashReport = crashReport,
-                    ).httpClient
+                    ).httpClient,
+                    routes = routes,
                 )
             )
             val accountsDatabase = getAccountsRoomDatabase(databaseNameOrPath)
@@ -98,7 +101,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 clientId = clientId,
                 authenticatorManager = authenticatorManager,
                 migrationManager = migrationManager,
-                tokenBridge = tokenBridge,
+                authenticatorBridge = authenticatorBridge,
                 crashReport = crashReport,
                 coroutineScope = scope,
             )
@@ -112,13 +115,15 @@ abstract class AuthenticatorFacade internal constructor() {
             loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
             resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
         ): AuthenticatorFacade {
+            val routes = ApiRoutes(apiHost)
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
                         userAgent = userAgent,
-                        apiHost = apiHost,
+                        routes = routes,
                         crashReport = crashReport,
-                    ).httpClient
+                    ).httpClient,
+                    routes = routes,
                 )
             )
             val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))

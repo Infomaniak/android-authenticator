@@ -15,12 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal
+package com.infomaniak.auth.lib.network.interfaces
 
 import com.infomaniak.auth.lib.models.migration.ApiToken
+import com.infomaniak.auth.lib.models.migration.user.UserProfile
 
-internal sealed interface MigrationAuthentication {
-    data class CrossAppLogin(val derivedToken: ApiToken) : MigrationAuthentication
-    data class NoOngoingLogin(val password: String) : MigrationAuthentication
-    data object OngoingLogin : MigrationAuthentication
+interface AuthenticatorBridge {
+    suspend fun getTokenFromCrossAppLogin(userId: Long): ApiToken?
+    suspend fun getTokenFromDatabase(userId: Long): String?
+    suspend fun persistTokenForAccount(userId: Long, token: String)
+    suspend fun persistUserProfile(userProfile: UserProfile)
 }

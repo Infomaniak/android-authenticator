@@ -1,6 +1,6 @@
 /*
  * Infomaniak Authenticator - Android
- * Copyright (C) 2026 Infomaniak Network SA
+ * Copyright (C) 2022-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.internal
+package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import com.infomaniak.auth.lib.models.migration.ApiToken
+import kotlinx.serialization.Serializable
 
-internal sealed interface MigrationAuthentication {
-    data class CrossAppLogin(val derivedToken: ApiToken) : MigrationAuthentication
-    data class NoOngoingLogin(val password: String) : MigrationAuthentication
-    data object OngoingLogin : MigrationAuthentication
-}
+@Serializable
+abstract class PreferenceTemplate(
+    var id: Int = 0,
+    var name: String = "",
+)

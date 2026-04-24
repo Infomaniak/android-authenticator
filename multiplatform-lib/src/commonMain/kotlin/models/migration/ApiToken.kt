@@ -15,10 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.interfaces
+package com.infomaniak.auth.lib.models.migration
 
-interface TokenBridge {
-    suspend fun getTokenFromCrossAppLogin(userId: Long): String?
-    suspend fun getTokenFromDatabase(userId: Long): String?
-    suspend fun persistTokenForAccount(userId: Long, token: String)
-}
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+
+@Serializable
+data class ApiToken(
+    @SerialName("access_token") val accessToken: String,
+    @SerialName("refresh_token") val refreshToken: String? = null,
+    @SerialName("token_type") val tokenType: String,
+    @SerialName("expires_in") val expiresIn: Int = 7200,
+    @SerialName("user_id") val userId: Int,
+    @SerialName("scope") val scope: String? = null,
+    @Transient var expiresAt: Long? = null
+)

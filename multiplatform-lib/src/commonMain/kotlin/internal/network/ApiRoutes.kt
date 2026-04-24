@@ -17,9 +17,11 @@
  */
 package com.infomaniak.auth.lib.internal.network
 
-internal object ApiRoutes {
+internal class ApiRoutes(val host: String) {
 
-    fun apiBaseUrl(apiHost: String) = "https://login.${apiHost}/api/"
+    fun apiBaseUrl(): String {
+        return "https://login.${host}/api/"
+    }
 
     fun passkeysOptions() = "users/me/passkeys/options"
     fun registerPasskey() = "users/me/passkeys"
@@ -29,4 +31,6 @@ internal object ApiRoutes {
     fun finishMigration(sessionId: String) = "users/me/authenticator/migrations/$sessionId"
     fun challenge() = "authenticator/challenge"
     fun verify() = "authenticator/verify"
+
+    fun userProfile() = "https://api.$host/2/profile?no_avatar_default=1"
 }
