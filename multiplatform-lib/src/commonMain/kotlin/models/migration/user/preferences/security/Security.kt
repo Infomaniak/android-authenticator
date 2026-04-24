@@ -28,7 +28,7 @@ data class Security(
     @SerialName("has_valid_phone")
     var hasValidPhone: Boolean,
     @SerialName("email_validated_at")
-    var emailValidatedAt: Long,
+    var emailValidatedAt: Long?,
     var otp: Boolean,
     var sms: Boolean,
     @SerialName("sms_phone")
