@@ -44,7 +44,7 @@ internal class AuthenticatorManager(
 
     suspend fun getUserProfile(token: String) = webAuthnRepository.getUserProfile(token)
 
-    suspend fun registerPasskey(token: String, userId: Long) {
+    suspend fun registerPasskey(token: String, userId: Long): String {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first

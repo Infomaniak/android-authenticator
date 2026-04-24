@@ -17,68 +17,25 @@
  */
 package com.infomaniak.auth.lib.utils
 
+import com.infomaniak.auth.lib.internal.extensions.toNsData
 import com.infomaniak.auth.lib.internal.utils.getApplicationSupportDirectory
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSFileManager
-import platform.Foundation.NSNumber
-import platform.Foundation.NSURL
-import platform.Foundation.NSURLIsExcludedFromBackupKey
-import platform.Foundation.numberWithBool
 
-
-@OptIn(ExperimentalForeignApi::class)
-internal actual suspend fun createFolder(name: String) {
+actual suspend fun checkFileExists(name: String): Boolean {
     val basePath = getApplicationSupportDirectory()
-    val folderPath = "$basePath/$name"
+    val filePath = "$basePath/$name"
 
-    // Create the folder if it doesn't exist
-    NSFileManager.defaultManager.createDirectoryAtPath(
-        path = folderPath,
-        withIntermediateDirectories = true,
-        attributes = null,
-        error = null,
-    )
-
-    // Exclude folder from iCloud backup
-    val folderUrl = NSURL.fileURLWithPath(folderPath)
-    folderUrl.setResourceValue(
-        value = NSNumber.numberWithBool(true),
-        forKey = NSURLIsExcludedFromBackupKey,
-        error = null
-    )
+    return NSFileManager.defaultManager.fileExistsAtPath(filePath)
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual suspend fun createFileIn(folder: String, name: String) {
+actual suspend fun createFile(name: String, content: String) {
     val basePath = getApplicationSupportDirectory()
-    val folderPath = "$basePath/$folder"
 
-    NSFileManager.defaultManager.createDirectoryAtPath(
-        path = folderPath,
-        withIntermediateDirectories = true,
-        attributes = null,
-        error = null
-    )
-
-    // Create empty file
     NSFileManager.defaultManager.createFileAtPath(
-        path = "$folderPath/$name",
-        contents = null,
+        path = "$basePath/$name",
+        contents = content.toNsData(),
         attributes = null
     )
-}
-
-internal actual suspend fun checkFileExists(folder: String, name: String): Boolean {
-    val basePath = getApplicationSupportDirectory()
-    val filePath = "$basePath/$folder/$name"
-
-    return NSFileManager.defaultManager.fileExistsAtPath(filePath)
-}
-
-@OptIn(ExperimentalForeignApi::class)
-internal actual suspend fun checkFolderExists(folder: String): Boolean {
-    val basePath = getApplicationSupportDirectory()
-    val filePath = "$basePath/$folder"
-
-    return NSFileManager.defaultManager.fileExistsAtPath(filePath)
 }

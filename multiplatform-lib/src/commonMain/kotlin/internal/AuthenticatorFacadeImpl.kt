@@ -39,6 +39,7 @@ import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
+import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import kotlinx.coroutines.CompletableDeferred
@@ -67,7 +68,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.io.IOException
-import network.exceptions.ApiException
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
@@ -83,15 +83,9 @@ internal class AuthenticatorFacadeImpl(
     private val dao = accountsDatabase.getDao()
 
     private val accountEntities = flow {
-        val accountsFlow = dao.getAsFlow()
-        migrationManager.handleBackedUpAccounts(
-            accounts = accountsFlow.first(),
-            persistToken = { userId, token ->
-                tokenBridge.persistTokenForAccount(userId, token)
-            }
-        )
+        migrationManager.setBackedUpAccountsStatus()
         migrationManager.addLegacyAccountsToDB()
-        emitAll(accountsFlow)
+        emitAll(dao.getAccountsAsFlow())
     }.shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     private val atLeastOneConnectedAccount: Flow<Boolean> = accountEntities.map { entities ->
@@ -125,10 +119,7 @@ internal class AuthenticatorFacadeImpl(
         .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
-        createFolder(name = "accountsInitialization")
-
         val entities = connectedAccounts.map {
-            createFileIn(folder = "accountsInitialization", name = it.id.toString())
             it.toEntity(AccountEntity.Status.PasskeyRegistrationPending)
         }
         dao.upsert(entities)
@@ -220,16 +211,22 @@ internal class AuthenticatorFacadeImpl(
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
 
-    private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> = dao.get(userId).transformLatest { entity ->
-        emit(null)
-        when (entity?.status) {
-            AccountEntity.Status.ToBeMigrated -> migrationAttempts(entity)
-            AccountEntity.Status.PasskeyRegistrationPending, AccountEntity.Status.FirstPasskeyAuthenticationPending -> {
-                registrationAttempts(entity)
+    private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> =
+        dao.getAccountAsFlow(userId).transformLatest { entity ->
+            emit(null)
+            when (entity?.status) {
+                AccountEntity.Status.ToBeMigrated -> migrationAttempts(entity)
+                AccountEntity.Status.PasskeyRegistrationPending, AccountEntity.Status.FirstPasskeyAuthenticationPending -> {
+                    registrationAttempts(entity)
+                }
+                AccountEntity.Status.RestoringFromBackup -> {
+                    migrationManager.restore(account = entity) { userId, token ->
+                        authenticatorBridge.persistTokenForAccount(userId, token)
+                    }
+                }
+                AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
             }
-            AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
         }
-    }
 
     private suspend fun shouldTryImmediateLogin(): Boolean = raceOf(
         {

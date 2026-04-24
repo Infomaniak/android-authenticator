@@ -22,23 +22,13 @@ import kotlinx.coroutines.invoke
 import splitties.init.appCtx
 import java.io.File
 
-internal actual suspend fun createFolder(name: String) = Dispatchers.IO {
-    val folder = File(appCtx.filesDir, name)
-    if (!folder.exists()) {
-        folder.mkdirs()
+actual suspend fun checkFileExists(name: String): Boolean = Dispatchers.IO {
+    File(appCtx.filesDir, name).exists()
+}
+
+actual suspend fun createFile(name: String, content: String) {
+    File(appCtx.filesDir, name).apply {
+        createNewFile()
+        writeText(content)
     }
-}
-
-internal actual suspend fun createFileIn(folder: String, name: String): Unit = Dispatchers.IO {
-    val folder = File(appCtx.filesDir, folder)
-    File(folder, name).createNewFile()
-}
-
-internal actual suspend fun checkFileExists(folder: String, name: String): Boolean = Dispatchers.IO {
-    val folder = File(appCtx.filesDir, folder)
-    File(folder, name).exists()
-}
-
-internal actual suspend fun checkFolderExists(folder: String): Boolean = Dispatchers.IO {
-    File(appCtx.filesDir, folder).exists()
 }
