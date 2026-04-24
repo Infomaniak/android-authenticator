@@ -67,6 +67,7 @@ fun NotificationPermissionScreen(
     LaunchedEffect(notificationPermissionState?.status) {
         if (notificationPermissionState == null ||
             notificationPermissionState.status == PermissionStatus.Granted ||
+            notificationPermissionState.status == PermissionStatus.Denied(false) ||
             notificationPermissionState.status is PermissionStatus.Denied && permissionAsked) {
             navigateToHome()
         }
