@@ -109,7 +109,7 @@ private fun handleAppStatus(
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> {
-            if (status != null && status == PermissionStatus.Granted) {
+            if (status == null || status == PermissionStatus.Granted) {
                 NavDestination.Root.Home
             } else {
                 NavDestination.Permission.Notification
