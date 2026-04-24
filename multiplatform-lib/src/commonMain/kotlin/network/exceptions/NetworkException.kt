@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package network.exceptions
+package com.infomaniak.auth.lib.network.exceptions
 
 /**
  * Thrown when a network-related error occurs, such as connectivity issues or timeouts.

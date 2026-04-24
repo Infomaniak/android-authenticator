@@ -23,7 +23,7 @@ import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 internal class AccountsRepository(database: AccountsDatabase) {
     private val dao = database.getDao()
 
-    fun getAccounts() = dao.getAsFlow()
+    fun getAccounts() = dao.getAccountsAsFlow()
 
     suspend fun upsertAccount(account: AccountEntity) {
         dao.upsert(account)

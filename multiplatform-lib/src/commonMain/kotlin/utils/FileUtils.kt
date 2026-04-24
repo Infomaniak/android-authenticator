@@ -17,10 +17,6 @@
  */
 package com.infomaniak.auth.lib.utils
 
-internal expect suspend fun createFolder(name: String)
+expect suspend fun createFile(name: String, content: String)
 
-internal expect suspend fun createFileIn(folder: String, name: String)
-
-internal expect suspend fun checkFileExists(folder: String, name: String): Boolean
-
-internal expect suspend fun checkFolderExists(folder: String): Boolean
+expect suspend fun checkFileExists(name: String): Boolean

@@ -33,10 +33,12 @@ import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.models.migration.ApiToken
+import com.infomaniak.auth.lib.network.exceptions.ApiException
+import com.infomaniak.auth.lib.utils.checkFileExists
+import com.infomaniak.auth.lib.utils.createFile
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.io.IOException
-import network.exceptions.ApiException
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -50,36 +52,36 @@ internal class MigrationManager(
 
     private val dao = accountsDatabase.getDao()
 
-    suspend fun handleBackedUpAccounts(
-        accounts: List<AccountEntity>,
-        persistToken: suspend (userId: Long, token: String) -> Unit,
-    ) {
-        if (!checkFolderExists(folder = "accountsInitialization")) createFolder(name = "accountsInitialization")
-        accounts.filter {
-            checkFileExists(folder = "accountsInitialization", name = it.id.toString()).not()
-        }.forEach { account ->
-            val keyId = authenticatorManager.getKeyIdFor(account.id) ?: return
-            // Get token with previous passkey
-            val token = authenticatorManager.getToken(
-                clientId = clientId,
-                userId = account.id,
-                keyIdFromOldPasskey = keyId,
-            ).firstOrNull()!!
-            // Register a new passkey
-            val newKeyId = authenticatorManager.registerPasskey(token, account.id)
-            // Getting a new token with the new passkey
-            val tokenWithNewPassKey = authenticatorManager.getToken(
-                clientId = clientId,
-                userId = account.id,
-                keyIdFromOldPasskey = newKeyId,
-            ).firstOrNull()!!
-            persistToken(account.id, tokenWithNewPassKey)
-            dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
-            // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
-            authenticatorManager.deleteKeysFor(account.id)
-            webAuthnRepository.deletePasskey(tokenWithNewPassKey, keyId)
-            createFileIn(folder = "accountsInitialization", name = account.id.toString())
+    suspend fun setBackedUpAccountsStatus() {
+        if (!doesAccountInitializationFileExist()) {
+            dao.getAccountsWith(AccountEntity.Status.LoggedIn).forEach {
+                dao.upsert(it.copy(status = AccountEntity.Status.RestoringFromBackup))
+            }
+            createAccountInitializationFile()
         }
+    }
+
+    suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: String) -> Unit) {
+        val keyId = authenticatorManager.getKeyIdFor(account.id) ?: return
+        // Get token with previous passkey
+        val token = authenticatorManager.getToken(
+            clientId = clientId,
+            userId = account.id,
+            keyIdFromOldPasskey = keyId,
+        ).firstOrNull()!!
+        // Register a new passkey
+        val newKeyId = authenticatorManager.registerPasskey(token, account.id)
+        // Getting a new token with the new passkey
+        val tokenWithNewPassKey = authenticatorManager.getToken(
+            clientId = clientId,
+            userId = account.id,
+            keyIdFromOldPasskey = newKeyId,
+        ).firstOrNull()!!
+        persistToken(account.id, tokenWithNewPassKey)
+        dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+        // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
+        authenticatorManager.deleteKeysFor(account.id)
+        webAuthnRepository.deletePasskey(tokenWithNewPassKey, keyId)
     }
 
     suspend fun addLegacyAccountsToDB() {
@@ -175,5 +177,21 @@ internal class MigrationManager(
             userId = this.userId.toInt(),
             scope = this.scope,
         )
+    }
+
+    companion object {
+        private const val ACCOUNT_INITIALIZATION_FILE_NAME = "51756f69203f"
+        private const val ACCOUNT_INITIALIZATION_FILE_CONTENT = "466575722021"
+
+        suspend fun doesAccountInitializationFileExist(): Boolean {
+            return checkFileExists(name = ACCOUNT_INITIALIZATION_FILE_NAME.hexToByteArray().decodeToString())
+        }
+
+        suspend fun createAccountInitializationFile() {
+            createFile(
+                name = ACCOUNT_INITIALIZATION_FILE_NAME.hexToByteArray().decodeToString(),
+                content = ACCOUNT_INITIALIZATION_FILE_CONTENT.hexToByteArray().decodeToString(),
+            )
+        }
     }
 }

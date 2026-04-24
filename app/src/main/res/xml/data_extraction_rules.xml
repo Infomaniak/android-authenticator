@@ -26,7 +26,7 @@
             path="." />
         <exclude
             domain="file"
-            path="accountsInitialization" />
+            path="Quoi ?" />
     </device-transfer>
 
 </data-extraction-rules>
