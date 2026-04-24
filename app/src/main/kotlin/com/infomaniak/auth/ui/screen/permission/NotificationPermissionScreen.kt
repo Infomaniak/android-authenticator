@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.onboarding.permission
+package com.infomaniak.auth.ui.screen.permission
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,9 +27,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.EmptyElement
@@ -42,9 +49,22 @@ import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyBu
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
+@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("ComposeModifierMissing")
 @Composable
-fun NotificationPermissionScreen() {
+fun NotificationPermissionScreen(
+    navigateToHome: () -> Unit,
+) {
+    val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    } else null
+
+    LaunchedEffect(notificationPermissionState?.status) {
+        if (notificationPermissionState?.status == PermissionStatus.Granted) {
+            navigateToHome()
+        }
+    }
+
     BottomStickyButtonScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
@@ -54,13 +74,15 @@ fun NotificationPermissionScreen() {
                 LargeButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.onboardingNotificationsAuthorisationButton),
-                    onClick = { }
+                    onClick = {
+                        notificationPermissionState?.launchPermissionRequest()
+                    }
                 )
                 LargeButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.laterButton),
                     style = ButtonStyle.Tertiary,
-                    onClick = { }
+                    onClick = navigateToHome
                 )
             }
         }
@@ -87,6 +109,8 @@ fun NotificationPermissionScreen() {
 @Composable
 private fun NotificationPermissionScreenPreview() {
     AuthenticatorTheme {
-        NotificationPermissionScreen()
+        NotificationPermissionScreen(
+            navigateToHome = {},
+        )
     }
 }

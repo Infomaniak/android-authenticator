@@ -17,8 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.home
 
-import android.Manifest
-import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,8 +59,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.ui.components.AuthenticatorFab
@@ -89,20 +85,12 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-    } else null
-
     HomeScreen(
         uiState = { uiState },
         onAccountClicked = onAccountClicked,
         onAddAccountClicked = viewModel::onAddAccountClicked,
         onChallengesRefreshRequested = viewModel::refreshChallenges,
     )
-
-    LaunchedEffect(Unit) {
-        notificationPermissionState?.launchPermissionRequest()
-    }
 }
 
 @Composable
