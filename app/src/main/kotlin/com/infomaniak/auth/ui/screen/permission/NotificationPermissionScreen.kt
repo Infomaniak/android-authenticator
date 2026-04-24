@@ -28,6 +28,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -55,12 +59,14 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 fun NotificationPermissionScreen(
     navigateToHome: () -> Unit,
 ) {
+    var permissionAsked by remember { mutableStateOf(false) }
     val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else null
 
     LaunchedEffect(notificationPermissionState?.status) {
-        if (notificationPermissionState?.status == PermissionStatus.Granted) {
+        if (notificationPermissionState?.status == PermissionStatus.Granted ||
+            notificationPermissionState?.status is PermissionStatus.Denied && permissionAsked) {
             navigateToHome()
         }
     }
@@ -76,6 +82,7 @@ fun NotificationPermissionScreen(
                     title = stringResource(R.string.onboardingNotificationsAuthorisationButton),
                     onClick = {
                         notificationPermissionState?.launchPermissionRequest()
+                        permissionAsked = true
                     }
                 )
                 LargeButton(
