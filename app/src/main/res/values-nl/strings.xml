@@ -99,6 +99,9 @@
     <string name="onBoardingSecuringAccount">Account wordt beveiligd…</string>
     <string name="onBoardingSuccessDescription">U kunt nu uw inloggen valideren met Authenticator.</string>
     <string name="onBoardingSuccessTitle">Alles is klaar</string>
+    <string name="onboardingNotificationsAuthorisationButton">Meldingen toestaan</string>
+    <string name="onboardingNotificationsDescription">Schakel meldingen in om een waarschuwing te ontvangen wanneer er een inlogpoging wordt gedaan.</string>
+    <string name="onboardingNotificationsTitle">Bevestig je aanmeldingen met één klik</string>
     <string name="openSupportStatus">Open</string>
     <string name="passwordAskingWarning">Infomaniak zal nooit onverwacht om uw wachtwoord vragen.\n\nZorg ervoor dat u deze actie heeft geïnitieerd voordat u doorgaat.</string>
     <string name="passwordChangedDescription">Het inlogwachtwoord voor uw Infomaniak account %s is bijgewerkt.</string>

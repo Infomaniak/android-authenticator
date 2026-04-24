@@ -100,6 +100,9 @@
     <string name="onBoardingSecuringAccount">Konto wird gesichert…</string>
     <string name="onBoardingSuccessDescription">Sie können jetzt Ihre Anmeldedaten mit Authenticator bestätigen.</string>
     <string name="onBoardingSuccessTitle">Alles ist bereit</string>
+    <string name="onboardingNotificationsAuthorisationButton">Benachrichtigungen zulassen</string>
+    <string name="onboardingNotificationsDescription">Aktivieren Sie Benachrichtigungen, um bei jedem Anmeldeversuch eine Warnung zu erhalten.</string>
+    <string name="onboardingNotificationsTitle">Validieren Sie Ihre Verbindungen mit einem einzigen Klick</string>
     <string name="openSupportStatus">Offen</string>
     <string name="passwordAskingWarning">Infomaniak wird niemals unerwartet nach Ihrem Passwort fragen.\n\nStellen Sie sicher, dass Sie diese Aktion selbst gestartet haben, bevor Sie fortfahren.</string>
     <string name="passwordChangedDescription">Das Anmeldekennwort des Infomaniak-Kontos %s wurde aktualisiert.</string>

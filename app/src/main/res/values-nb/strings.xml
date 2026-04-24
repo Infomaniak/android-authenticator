@@ -99,6 +99,9 @@
     <string name="onBoardingSecuringAccount">Sikrer kontoen…</string>
     <string name="onBoardingSuccessDescription">Du kan nå validere påloggingene dine med Authenticator.</string>
     <string name="onBoardingSuccessTitle">Alt er klart</string>
+    <string name="onboardingNotificationsAuthorisationButton">Tillat varslinger</string>
+    <string name="onboardingNotificationsDescription">Aktiver varsler for å motta et varsel hver gang det gjøres et innloggingsforsøk.</string>
+    <string name="onboardingNotificationsTitle">Bekreft innloggingene dine med ett klikk</string>
     <string name="openSupportStatus">Åpent</string>
     <string name="passwordAskingWarning">Infomaniak vil aldri be om passordet ditt uventet.\n\nSørg for at du startet denne handlingen før du fortsetter.</string>
     <string name="passwordChangedDescription">Påloggingspassordet for din Infomaniak-konto %s er oppdatert.</string>

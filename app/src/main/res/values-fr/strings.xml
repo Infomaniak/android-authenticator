@@ -100,6 +100,9 @@
     <string name="onBoardingSecuringAccount">Sécurisation du compte en cours…</string>
     <string name="onBoardingSuccessDescription">Vous pouvez désormais valider vos connexions avec Authenticator.</string>
     <string name="onBoardingSuccessTitle">Tout est prêt</string>
+    <string name="onboardingNotificationsAuthorisationButton">Autoriser les notifications</string>
+    <string name="onboardingNotificationsDescription">Activer les notifications pour recevoir une alerte lors de toute tentative de connexion.</string>
+    <string name="onboardingNotificationsTitle">Validez vos connexions en un seul clic</string>
     <string name="openSupportStatus">Ouvert</string>
     <string name="passwordAskingWarning">Infomaniak ne vous demandera jamais votre mot de passe de manière inattendue.\n\nAssurez-vous d’être à l’origine de cette action avant de continuer.</string>
     <string name="passwordChangedDescription">Le mot de passe de connexion du compte Infomaniak %s a été mis à jour.</string>
