@@ -99,6 +99,9 @@
     <string name="onBoardingSecuringAccount">Protegendo a conta…</string>
     <string name="onBoardingSuccessDescription">Agora você pode validar seus logins com o Authenticator.</string>
     <string name="onBoardingSuccessTitle">Tudo pronto</string>
+    <string name="onboardingNotificationsAuthorisationButton">Permitir notificações</string>
+    <string name="onboardingNotificationsDescription">Ative as notificações para receber um alerta sempre que for feita uma tentativa de início de sessão.</string>
+    <string name="onboardingNotificationsTitle">Valide os seus inícios de sessão com um único clique</string>
     <string name="openSupportStatus">Aberto</string>
     <string name="passwordAskingWarning">A Infomaniak nunca lhe pedirá a sua palavra-passe de forma inesperada.\n\nCertifique-se de que foi você que iniciou esta ação antes de continuar.</string>
     <string name="passwordChangedDescription">A palavra-passe de início de sessão da sua conta Infomaniak %s foi atualizada.</string>

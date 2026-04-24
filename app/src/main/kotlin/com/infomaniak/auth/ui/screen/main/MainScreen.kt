@@ -17,6 +17,8 @@
  */
 package com.infomaniak.auth.ui.screen.main
 
+import android.Manifest
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -52,6 +54,10 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.navigation.NavDestination
@@ -65,6 +71,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreen(
     startDestination: NavDestination,
@@ -76,18 +83,23 @@ fun MainScreen(
         rememberSaveableStateHolderNavEntryDecorator(),
         rememberViewModelStoreNavEntryDecorator()
     )
+    val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    } else null
 
     LaunchedEffect(Unit) {
-        viewModel.appStatus.collect { handleAppStatus(it, backStack) }
+        viewModel.appStatus.collect { handleAppStatus(it, backStack, notificationPermissionState?.status) }
     }
 
     MainScreen(backStack, currentDestination, entryDecorators)
 }
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 private fun handleAppStatus(
     appStatus: AppStatus,
     backStack: NavBackStack<NavKey>,
+    status: PermissionStatus?,
 ) {
     val currentDestination = backStack.lastOrNull()
     val targetDestination = when (appStatus) {
@@ -96,7 +108,14 @@ private fun handleAppStatus(
         is AppStatus.LoginRequired.MustReLogin -> NavDestination.LoginInApp(legacyAccountId = appStatus.accountId, isOnboarding = true)
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
-        is AppStatus.SetupComplete -> NavDestination.Root.Home
+        is AppStatus.SetupComplete -> {
+            val isPermanentlyDenied = (status as? PermissionStatus.Denied)?.shouldShowRationale == false
+            if (status == null || status == PermissionStatus.Granted || isPermanentlyDenied) {
+                NavDestination.Root.Home
+            } else {
+                NavDestination.Permission.Notification
+            }
+        }
         is AppStatus.AddingAnAccount -> NavDestination.Onboarding.Start
     }
 

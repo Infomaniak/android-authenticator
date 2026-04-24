@@ -28,6 +28,7 @@ import com.infomaniak.auth.ui.screen.login.LoginScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
 import com.infomaniak.auth.ui.screen.onboarding.migration.MigrationScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
+import com.infomaniak.auth.ui.screen.permission.NotificationPermissionScreen
 import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
 import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementMatomoScreen
@@ -101,6 +102,13 @@ fun baseEntryProvider(
     }
     entry<NavDestination.Onboarding.Complete> {
         OnboardingCompleteScreen()
+    }
+    entry<NavDestination.Permission.Notification> {
+        NotificationPermissionScreen(
+            navigateToHome = {
+                backStack.replaceAllWith(NavDestination.Root.Home)
+            },
+        )
     }
     entry<NavDestination.LoginInApp> {
         LoginScreen(

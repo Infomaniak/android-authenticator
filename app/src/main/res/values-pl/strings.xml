@@ -99,6 +99,9 @@
     <string name="onBoardingSecuringAccount">Zabezpieczanie konta…</string>
     <string name="onBoardingSuccessDescription">Możesz teraz zatwierdzać swoje logowania za pomocą Authenticatora.</string>
     <string name="onBoardingSuccessTitle">Wszystko gotowe</string>
+    <string name="onboardingNotificationsAuthorisationButton">Zezwalaj na powiadomienia</string>
+    <string name="onboardingNotificationsDescription">Włącz powiadomienia, aby otrzymywać alert przy każdej próbie logowania.</string>
+    <string name="onboardingNotificationsTitle">Potwierdzaj logowania jednym kliknięciem</string>
     <string name="openSupportStatus">Otwarte</string>
     <string name="passwordAskingWarning">Infomaniak nigdy nie poprosi Cię o hasło niespodziewanie.\n\nUpewnij się, że zainicjowałeś tę akcję przed kontynuowaniem.</string>
     <string name="passwordChangedDescription">Hasło logowania do Twojego konta Infomaniak %s zostało zaktualizowane.</string>

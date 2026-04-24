@@ -99,6 +99,9 @@
     <string name="onBoardingSecuringAccount">Ασφάλιση λογαριασμού…</string>
     <string name="onBoardingSuccessDescription">Μπορείτε πλέον να επαληθεύετε τις συνδέσεις σας με το Authenticator.</string>
     <string name="onBoardingSuccessTitle">Όλα είναι έτοιμα</string>
+    <string name="onboardingNotificationsAuthorisationButton">Επιτρέψτε ειδοποιήσεις</string>
+    <string name="onboardingNotificationsDescription">Ενεργοποιήστε τις ειδοποιήσεις για να λαμβάνετε ειδοποίηση κάθε φορά που γίνεται προσπάθεια σύνδεσης.</string>
+    <string name="onboardingNotificationsTitle">Επιβεβαιώστε τις συνδέσεις σας με ένα μόνο κλικ</string>
     <string name="openSupportStatus">Ανοικτό</string>
     <string name="passwordAskingWarning">Η Infomaniak ποτέ δεν θα ζητήσει τον κωδικό πρόσβασής σας απροσδόκητα.\n\nΒεβαιωθείτε ότι ξεκινήσατε αυτήν την ενέργεια πριν συνεχίσετε.</string>
     <string name="passwordChangedDescription">Ο κωδικός πρόσβασης σύνδεσης για τον λογαριασμό Infomaniak %s έχει ενημερωθεί.</string>

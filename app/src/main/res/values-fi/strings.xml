@@ -99,6 +99,9 @@
     <string name="onBoardingSecuringAccount">Turvataan tiliä…</string>
     <string name="onBoardingSuccessDescription">Voit nyt vahvistaa kirjautumisesi Authenticatorilla.</string>
     <string name="onBoardingSuccessTitle">Kaikki on valmista</string>
+    <string name="onboardingNotificationsAuthorisationButton">Salli ilmoitukset</string>
+    <string name="onboardingNotificationsDescription">Ota ilmoitukset käyttöön saadaksesi hälytyksen aina, kun kirjautumisyritys tehdään.</string>
+    <string name="onboardingNotificationsTitle">Vahvista kirjautumisesi yhdellä napautuksella</string>
     <string name="openSupportStatus">Avoinna</string>
     <string name="passwordAskingWarning">Infomaniak ei koskaan pyydä salasanaasi odottamatta.\n\nVarmista, että aloitit tämän toiminnon ennen jatkamista.</string>
     <string name="passwordChangedDescription">Infomaniak-tilisi %s kirjautumissalasana on päivitetty.</string>

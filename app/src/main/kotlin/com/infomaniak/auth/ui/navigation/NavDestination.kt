@@ -35,6 +35,11 @@ sealed interface NavDestination : NavKey {
         data object Complete : Onboarding
     }
 
+    sealed interface Permission : NavDestination {
+        @Serializable
+        data object Notification : Permission
+    }
+
     @Serializable
     data object SecuringAccount : NavDestination
 
