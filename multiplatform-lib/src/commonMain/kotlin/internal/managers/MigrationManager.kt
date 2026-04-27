@@ -53,7 +53,10 @@ internal class MigrationManager(
 
     suspend fun setBackedUpAccountsStatus() {
         RestoreFromBackupDetector.runRestoreOperationIfNeeded {
-            dao.updateStatus(currentStatus = AccountEntity.Status.LoggedIn, newStatus = AccountEntity.Status.RestoringFromBackup)
+            dao.updateStatus(
+                currentStatus = AccountEntity.Status.LoggedIn,
+                newStatus = AccountEntity.Status.RestoringFromBackup
+            )
         }
     }
 
