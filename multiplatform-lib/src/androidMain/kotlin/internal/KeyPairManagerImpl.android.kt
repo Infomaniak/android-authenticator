@@ -57,18 +57,18 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
-    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): Xor<String, Failure.KeyManagement.KeyNotFound> {
+    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String? {
         val userPassKey: File = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.find {
             predicate(it.name)
-        } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+        } ?: return null
 
         val keyId = userPassKey.name.substring(
             startIndex = userPassKey.name.indexOfFirst { it == '-' } + 1,
             endIndex = userPassKey.name.indexOfLast { it == '-' }
         )
-        return Xor.First(keyId)
+        return keyId
     }
 
     actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> {

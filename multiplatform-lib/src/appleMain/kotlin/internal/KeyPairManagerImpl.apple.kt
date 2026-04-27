@@ -126,26 +126,26 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
     }
 
     @OptIn(BetaInteropApi::class)
-    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): Xor<String, Failure.KeyManagement.KeyNotFound> =
-        memScoped {
-            //TODO[ik-auth]: Test this code somehow.
-            val (resultsArray, count) = getAllPrivateKeysQuery()
+    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String? = memScoped {
+        //TODO[ik-auth]: Test this code somehow.
+        val (resultsArray, count) = getAllPrivateKeysQuery()
 
-            if (resultsArray == null || count == 0) {
-                return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
+        if (resultsArray == null || count == 0) return@memScoped null
+
+        for (i in 0 until count) {
+            val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
+
+            if (tag != null && predicate(tag)) {
+                val keyId = tag.substring(
+                    startIndex = tag.indexOfFirst { it == '-' } + 1,
+                    endIndex = tag.indexOfLast { it == '-' }
+                )
+                return@memScoped keyId
             }
-
-            for (i in 0 until count) {
-                val tag = extractTagFromItem(CFArrayGetValueAtIndex(resultsArray, i.toLong()))
-
-                if (tag != null && predicate(tag)) {
-                    val keyId = tag.substring(tag.indexOfFirst { it == '-' } + 1, tag.indexOfLast { it == '-' })
-                    return@memScoped Xor.First(keyId)
-                }
-            }
-
-            Xor.Second(Failure.KeyManagement.KeyNotFound("No key found matching $predicate"))
         }
+
+        return@memScoped null
+    }
 
     actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> =
         memScoped {
