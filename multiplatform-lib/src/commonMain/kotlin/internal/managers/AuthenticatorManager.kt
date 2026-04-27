@@ -28,6 +28,7 @@ import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.utils.SignUtils
 import com.infomaniak.auth.lib.internal.utils.Xor
+import com.infomaniak.auth.lib.models.migration.ApiToken
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
@@ -72,7 +73,7 @@ internal class AuthenticatorManager(
         clientId: String,
         userId: Long,
         keyIdFromOldPasskey: String? = null,
-    ): Xor<String, Failure.KeyManagement.KeyNotFound> {
+    ): Xor<ApiToken, Failure.KeyManagement.KeyNotFound> {
         val keyId = keyIdFromOldPasskey ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrNull()
         ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
@@ -112,7 +113,14 @@ internal class AuthenticatorManager(
             clientExtensionResults = ClientExtensionResults,
             authenticatorAttachment = "platform",
         )
-        return Xor.First(webAuthnRepository.verify(verifyAuthenticationData).accessToken)
+        val verifyAuthData = webAuthnRepository.verify(verifyAuthenticationData)
+        val apiToken = ApiToken(
+            accessToken = verifyAuthData.accessToken,
+            tokenType = verifyAuthData.tokenType,
+            userId = userId.toInt(),
+            scope = verifyAuthData.scope,
+        )
+        return Xor.First(apiToken)
     }
 
     suspend fun removeAccount(token: String, userId: Long) {

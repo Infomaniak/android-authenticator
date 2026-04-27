@@ -134,7 +134,7 @@ internal class AuthenticatorFacadeImpl(
         val token = authenticatorManager.getToken(clientId, userId).firstOrElse {
             error("Could not get the key for user $userId from the storage: $it")
         }
-        authenticatorBridge.persistTokenForAccount(userId, token)
+        authenticatorBridge.persistTokenForAccount(userId, token.accessToken)
     }
 
     private fun accountsFlow(
@@ -259,7 +259,7 @@ internal class AuthenticatorFacadeImpl(
                 clientId = clientId,
                 userId = userId,
             ).firstOrElse { error("Key not found: ${it.details}") }
-            authenticatorBridge.persistTokenForAccount(userId, token)
+            authenticatorBridge.persistTokenForAccount(userId, token.accessToken)
             dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.LoggedIn))
         }
     }
