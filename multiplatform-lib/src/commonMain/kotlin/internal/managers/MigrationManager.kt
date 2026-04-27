@@ -65,7 +65,7 @@ internal class MigrationManager(
         val token = authenticatorManager.getToken(
             clientId = clientId,
             userId = account.id,
-            keyIdFromOldPasskey = keyId,
+            keyIdOrDefault = keyId,
         ).firstOrNull()!!
         // Register a new passkey
         val newKeyId = authenticatorManager.registerPasskey(token.accessToken, account.id)
@@ -73,7 +73,7 @@ internal class MigrationManager(
         val tokenWithNewPassKey = authenticatorManager.getToken(
             clientId = clientId,
             userId = account.id,
-            keyIdFromOldPasskey = newKeyId,
+            keyIdOrDefault = newKeyId,
         ).firstOrNull()!!
         persistToken(account.id, tokenWithNewPassKey.accessToken)
         dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
