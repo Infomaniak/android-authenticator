@@ -34,8 +34,8 @@ import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.models.migration.ApiToken
 import com.infomaniak.auth.lib.network.exceptions.ApiException
-import com.infomaniak.auth.lib.utils.checkFileExists
-import com.infomaniak.auth.lib.utils.createFile
+import com.infomaniak.auth.lib.internal.utils.checkFileExists
+import com.infomaniak.auth.lib.internal.utils.createFile
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.io.IOException

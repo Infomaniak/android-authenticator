@@ -15,20 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.utils
+package com.infomaniak.auth.lib.internal.utils
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.invoke
-import splitties.init.appCtx
-import java.io.File
+internal expect suspend fun createFile(name: String, content: String)
 
-actual suspend fun checkFileExists(name: String): Boolean = Dispatchers.IO {
-    File(appCtx.filesDir, name).exists()
-}
-
-actual suspend fun createFile(name: String, content: String) {
-    File(appCtx.filesDir, name).apply {
-        createNewFile()
-        writeText(content)
-    }
-}
+internal expect suspend fun checkFileExists(name: String): Boolean
