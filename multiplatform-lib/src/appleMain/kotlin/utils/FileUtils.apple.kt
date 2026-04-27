@@ -21,6 +21,8 @@ import com.infomaniak.auth.lib.internal.extensions.toNsData
 import com.infomaniak.auth.lib.internal.utils.getApplicationSupportDirectory
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSFileManager
+import platform.Foundation.NSURL
+import platform.Foundation.NSURLIsExcludedFromBackupKey
 
 actual suspend fun checkFileExists(name: String): Boolean {
     return NSFileManager.defaultManager.fileExistsAtPath("${getApplicationSupportDirectory()}/$name")
@@ -28,9 +30,16 @@ actual suspend fun checkFileExists(name: String): Boolean {
 
 @OptIn(ExperimentalForeignApi::class)
 actual suspend fun createFile(name: String, content: String) {
+    val path = "${getApplicationSupportDirectory()}/$name"
     NSFileManager.defaultManager.createFileAtPath(
-        path = "${getApplicationSupportDirectory()}/$name",
+        path = path,
         contents = content.toNsData(),
         attributes = null
+    )
+    val url = NSURL.fileURLWithPath(path)
+    url.setResourceValue(
+        value = true,
+        forKey = NSURLIsExcludedFromBackupKey,
+        error = null
     )
 }
