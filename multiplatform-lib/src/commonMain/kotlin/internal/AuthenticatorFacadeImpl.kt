@@ -220,9 +220,7 @@ internal class AuthenticatorFacadeImpl(
                     registrationAttempts(entity)
                 }
                 AccountEntity.Status.RestoringFromBackup -> {
-                    migrationManager.restore(account = entity) { userId, token ->
-                        authenticatorBridge.persistTokenForAccount(userId, token)
-                    }
+                    restoreFromBackupAttempts(account = entity)
                 }
                 AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
             }
@@ -361,6 +359,14 @@ internal class AuthenticatorFacadeImpl(
             }.cancellable().getOrElse {
                 it.printStackTrace()
                 status.copy(lastIssue = it.toIssueReason(accountToMigrate.id))
+            }
+        }
+    }
+
+    private suspend fun FlowCollector<Account.Status.NotConnected>.restoreFromBackupAttempts(account: AccountEntity) {
+        withRetries(userId = account.id) {
+            migrationManager.restore(account = account) { userId, token ->
+                authenticatorBridge.persistTokenForAccount(userId, token)
             }
         }
     }
