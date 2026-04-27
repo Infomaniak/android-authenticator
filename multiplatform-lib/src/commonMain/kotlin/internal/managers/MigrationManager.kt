@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib.internal.managers
 
 import com.infomaniak.auth.lib.internal.MigrationAuthentication
+import com.infomaniak.auth.lib.internal.RestoreFromBackupDetector
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
@@ -32,8 +33,6 @@ import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.internal.utils.checkFileExists
-import com.infomaniak.auth.lib.internal.utils.createBackupExcludedFile
 import com.infomaniak.auth.lib.models.migration.ApiToken
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.osmerion.kotlin.io.encoding.Base32
@@ -53,9 +52,8 @@ internal class MigrationManager(
     private val dao = accountsDatabase.getDao()
 
     suspend fun setBackedUpAccountsStatus() {
-        if (!doesAccountInitializationFileExist()) {
+        RestoreFromBackupDetector.runRestoreOperationIfNeeded {
             dao.updateStatus(currentStatus = AccountEntity.Status.LoggedIn, newStatus = AccountEntity.Status.RestoringFromBackup)
-            createAccountInitializationFile()
         }
     }
 
@@ -179,21 +177,5 @@ internal class MigrationManager(
             userId = this.userId.toInt(),
             scope = this.scope,
         )
-    }
-
-    companion object {
-        private const val ACCOUNT_INITIALIZATION_FILE_NAME = "51756f69203f"
-        private const val ACCOUNT_INITIALIZATION_FILE_CONTENT = "466575722021"
-
-        suspend fun doesAccountInitializationFileExist(): Boolean {
-            return checkFileExists(name = ACCOUNT_INITIALIZATION_FILE_NAME.hexToByteArray().decodeToString())
-        }
-
-        suspend fun createAccountInitializationFile() {
-            createBackupExcludedFile(
-                name = ACCOUNT_INITIALIZATION_FILE_NAME.hexToByteArray().decodeToString(),
-                content = ACCOUNT_INITIALIZATION_FILE_CONTENT.hexToByteArray().decodeToString(),
-            )
-        }
     }
 }
