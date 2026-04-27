@@ -72,9 +72,9 @@ internal class AuthenticatorManager(
     suspend fun getToken(
         clientId: String,
         userId: Long,
-        keyIdFromOldPasskey: String? = null,
+        keyIdOrDefault: String? = null,
     ): Xor<ApiToken, Failure.KeyManagement.KeyNotFound> {
-        val keyId = keyIdFromOldPasskey ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrNull()
+        val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrNull()
         ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
