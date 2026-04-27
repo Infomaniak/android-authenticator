@@ -66,7 +66,7 @@ internal class MigrationManager(
             clientId = clientId,
             userId = account.id,
             keyIdOrDefault = keyId,
-        ).firstOrNull()!!
+        ).firstOrElse { error(it) }
         // Register a new passkey
         val newKeyId = authenticatorManager.registerPasskey(token.accessToken, account.id)
         // Getting a new token with the new passkey
@@ -74,7 +74,7 @@ internal class MigrationManager(
             clientId = clientId,
             userId = account.id,
             keyIdOrDefault = newKeyId,
-        ).firstOrNull()!!
+        ).firstOrElse { error(it) }
         persistToken(account.id, tokenWithNewPassKey.accessToken)
         dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
         // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
