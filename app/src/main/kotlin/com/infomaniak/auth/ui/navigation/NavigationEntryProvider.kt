@@ -17,12 +17,12 @@
  */
 package com.infomaniak.auth.ui.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.infomaniak.auth.ui.screen.accountdetails.AccountDetailsScreen
+import com.infomaniak.auth.ui.screen.accountlist.AccountListScreen
 import com.infomaniak.auth.ui.screen.home.HomeScreen
 import com.infomaniak.auth.ui.screen.login.LoginScreen
 import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScreen
@@ -39,24 +39,9 @@ import com.infomaniak.core.privacymanagement.tracker.Tracker
 
 fun baseEntryProvider(
     backStack: NavBackStack<NavKey>,
-    snackbarHostState: SnackbarHostState,
 ): (NavKey) -> NavEntry<NavKey> = entryProvider {
-    entry<NavDestination.Root.Home> {
-        HomeScreen(
-            onAccountClicked = { account ->
-                backStack.add(NavDestination.AccountDetails(account.id))
-            },
-        )
-    }
-    entry<NavDestination.Root.Settings> {
-        SettingsScreen(
-            onThemeClicked = {
-                backStack.add(NavDestination.Theme)
-            },
-            onPrivacyManagementClicked = {
-                backStack.add(NavDestination.PrivacyManagement)
-            }
-        )
+    entry<NavDestination.Home> {
+        HomeScreen(rootBackStack = backStack)
     }
     entry<NavDestination.Theme> {
         ThemeSettingsScreen(onBackPressed = backStack::tryPopLast)
@@ -95,7 +80,7 @@ fun baseEntryProvider(
         MigrationScreen()
     }
     entry<NavDestination.Onboarding.Start> {
-        OnboardingStartScreen(snackbarHostState = snackbarHostState)
+        OnboardingStartScreen()
     }
     entry<NavDestination.SecuringAccount> {
         SecuringAccountScreen()
@@ -106,7 +91,7 @@ fun baseEntryProvider(
     entry<NavDestination.Permission.Notification> {
         NotificationPermissionScreen(
             navigateToHome = {
-                backStack.replaceAllWith(NavDestination.Root.Home)
+                backStack.replaceAllWith(NavDestination.Home)
             },
         )
     }
@@ -115,6 +100,26 @@ fun baseEntryProvider(
             legacyAccountId = it.legacyAccountId,
             closeLoginScreen = backStack::tryPopLast,
             isOnboarding = it.isOnboarding
+        )
+    }
+}
+
+fun homeEntryProvider(rootBackStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
+    entry<NavDestination.HomeSubDestination.AccountList> {
+        AccountListScreen(
+            onAccountClicked = { account ->
+                rootBackStack.add(NavDestination.AccountDetails(account.id))
+            },
+        )
+    }
+    entry<NavDestination.HomeSubDestination.Settings> {
+        SettingsScreen(
+            onThemeClicked = {
+                rootBackStack.add(NavDestination.Theme)
+            },
+            onPrivacyManagementClicked = {
+                rootBackStack.add(NavDestination.PrivacyManagement)
+            }
         )
     }
 }

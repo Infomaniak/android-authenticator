@@ -81,7 +81,7 @@ class MainActivity : FragmentActivity() {
                     MainScreen(
                         viewModel = viewModel,
                         startDestination = if (appStatus is AppStatus.SetupComplete) {
-                            NavDestination.Root.Home
+                            NavDestination.Home
                         } else {
                             NavDestination.Onboarding.Start
                         }

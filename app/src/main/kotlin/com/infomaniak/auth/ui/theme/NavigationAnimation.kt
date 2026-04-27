@@ -15,20 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.screen.home
+package com.infomaniak.auth.ui.theme
 
-import androidx.lifecycle.ViewModel
-import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.lib.AuthenticatorFacade
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 
-@HiltViewModel
-class HomeScreenViewModel @Inject constructor(
-    private val authenticatorFacade: AuthenticatorFacade
-) : ViewModel() {
-    fun onAddAccountClicked() {
-        val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.SetupComplete>() ?: return
-        appStatus.addAnAccount()
-    }
-}
+val defaultEnterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
+        slideOutHorizontally(targetOffsetX = { -it })
+val defaultExitAnimation = slideInHorizontally(initialOffsetX = { -it }) togetherWith
+        slideOutHorizontally(targetOffsetX = { it })
