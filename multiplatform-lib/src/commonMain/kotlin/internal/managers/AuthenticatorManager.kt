@@ -74,9 +74,8 @@ internal class AuthenticatorManager(
         userId: Long,
         keyIdOrDefault: String? = null,
     ): Xor<ApiToken, Failure.KeyManagement.KeyNotFound> {
-        val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrElse {
-            return Xor.Second(it.copy(userId = userId))
-        }
+        val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
+        ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
         val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
@@ -125,7 +124,7 @@ internal class AuthenticatorManager(
     }
 
     suspend fun removeAccount(token: String, userId: Long) {
-        val passkeyId = keyPairManager.findKeyIdFor { it.startsWith("$userId-") }.firstOrNull()
+        val passkeyId = keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
 
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
@@ -141,6 +140,6 @@ internal class AuthenticatorManager(
     }
 
     suspend fun getKeyIdFor(userId: Long): String? {
-        return keyPairManager.findKeyIdFor({ it.startsWith("$userId-") }).firstOrNull()
+        return keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
     }
 }
