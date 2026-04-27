@@ -32,7 +32,7 @@ internal actual suspend fun checkFileExists(name: String): Boolean {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual suspend fun createFile(name: String, content: String) {
+internal actual suspend fun createBackupExcludedFile(name: String, content: String) {
     val path = "${getApplicationSupportDirectory()}/$name"
     NSFileManager.defaultManager.createFileAtPath(
         path = path,

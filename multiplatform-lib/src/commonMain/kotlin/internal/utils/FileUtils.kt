@@ -17,6 +17,10 @@
  */
 package com.infomaniak.auth.lib.internal.utils
 
-internal expect suspend fun createFile(name: String, content: String)
+/**
+ * **WARNING:** The backup exclusion is Apple/iOS only. On Android, you need to configure the backup rules,
+ * or implement a BackupAgent to have the backup exclusion work.
+ */
+internal expect suspend fun createBackupExcludedFile(name: String, content: String)
 
 internal expect suspend fun checkFileExists(name: String): Boolean

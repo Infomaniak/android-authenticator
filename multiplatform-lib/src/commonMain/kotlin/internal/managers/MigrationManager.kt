@@ -32,10 +32,10 @@ import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.internal.utils.checkFileExists
+import com.infomaniak.auth.lib.internal.utils.createBackupExcludedFile
 import com.infomaniak.auth.lib.models.migration.ApiToken
 import com.infomaniak.auth.lib.network.exceptions.ApiException
-import com.infomaniak.auth.lib.internal.utils.checkFileExists
-import com.infomaniak.auth.lib.internal.utils.createFile
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.io.IOException
@@ -190,7 +190,7 @@ internal class MigrationManager(
         }
 
         suspend fun createAccountInitializationFile() {
-            createFile(
+            createBackupExcludedFile(
                 name = ACCOUNT_INITIALIZATION_FILE_NAME.hexToByteArray().decodeToString(),
                 content = ACCOUNT_INITIALIZATION_FILE_CONTENT.hexToByteArray().decodeToString(),
             )

@@ -26,7 +26,11 @@ internal actual suspend fun checkFileExists(name: String): Boolean = Dispatchers
     File(appCtx.filesDir, name).exists()
 }
 
-internal actual suspend fun createFile(name: String, content: String) {
+/**
+ * **WARNING:** The backup exclusion is Apple/iOS only. On Android, you need to configure the backup rules,
+ * or implement a BackupAgent to have the backup exclusion work.
+ */
+internal actual suspend fun createBackupExcludedFile(name: String, content: String) {
     File(appCtx.filesDir, name).apply {
         createNewFile()
         writeText(content)
