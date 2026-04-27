@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.utils
+package com.infomaniak.auth.lib.internal.utils
 
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toNsData
@@ -27,12 +27,12 @@ import platform.Foundation.NSURL
 import platform.Foundation.NSURLIsExcludedFromBackupKey
 import platform.Foundation.NSUserDomainMask
 
-actual suspend fun checkFileExists(name: String): Boolean {
+internal actual suspend fun checkFileExists(name: String): Boolean {
     return NSFileManager.defaultManager.fileExistsAtPath("${getApplicationSupportDirectory()}/$name")
 }
 
 @OptIn(ExperimentalForeignApi::class)
-actual suspend fun createFile(name: String, content: String) {
+internal actual suspend fun createFile(name: String, content: String) {
     val path = "${getApplicationSupportDirectory()}/$name"
     NSFileManager.defaultManager.createFileAtPath(
         path = path,
