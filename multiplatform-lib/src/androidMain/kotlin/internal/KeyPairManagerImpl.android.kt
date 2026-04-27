@@ -64,9 +64,10 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
             predicate(it.name)
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
-        val keyId =
-            userPassKey.name.substring(userPassKey.name.indexOfFirst { it == '-' } + 1,
-                userPassKey.name.indexOfLast { it == '-' })
+        val keyId = userPassKey.name.substring(
+            startIndex = userPassKey.name.indexOfFirst { it == '-' } + 1,
+            endIndex = userPassKey.name.indexOfLast { it == '-' }
+        )
         return Xor.First(keyId)
     }
 
