@@ -54,9 +54,7 @@ internal class MigrationManager(
 
     suspend fun setBackedUpAccountsStatus() {
         if (!doesAccountInitializationFileExist()) {
-            dao.getAccountsWith(AccountEntity.Status.LoggedIn).forEach {
-                dao.upsert(it.copy(status = AccountEntity.Status.RestoringFromBackup))
-            }
+            dao.updateStatus(currentStatus = AccountEntity.Status.LoggedIn, newStatus = AccountEntity.Status.RestoringFromBackup)
             createAccountInitializationFile()
         }
     }
