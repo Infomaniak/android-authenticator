@@ -21,6 +21,6 @@ internal sealed interface Failure {
     sealed interface KeyManagement : Failure {
         data class GenerationFailed(val details: String) : KeyManagement
         data class KeyExtractionFailed(val details: String) : KeyManagement
-        data class KeyNotFound(val details: String) : KeyManagement
+        data class KeyNotFound(val details: String, val userId: Long? = null) : KeyManagement
     }
 }
