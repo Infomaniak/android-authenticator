@@ -17,7 +17,9 @@
  */
 package com.infomaniak.auth.lib.utils
 
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toNsData
+import com.infomaniak.auth.lib.internal.extensions.tryIt2
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSApplicationSupportDirectory
 import platform.Foundation.NSFileManager
@@ -38,21 +40,25 @@ actual suspend fun createFile(name: String, content: String) {
         attributes = null
     )
     val url = NSURL.fileURLWithPath(path)
-    url.setResourceValue(
-        value = true,
-        forKey = NSURLIsExcludedFromBackupKey,
-        error = null
-    )
+    val _ = tryIt2 {
+        url.setResourceValue(
+            value = true,
+            forKey = NSURLIsExcludedFromBackupKey,
+            error = it
+        )
+    }.firstOrElse { error(it) }
 }
 
 @OptIn(ExperimentalForeignApi::class)
 private fun getApplicationSupportDirectory(): String {
-    val directory = NSFileManager.defaultManager.URLForDirectory(
-        directory = NSApplicationSupportDirectory,
-        inDomain = NSUserDomainMask,
-        appropriateForURL = null,
-        create = true,
-        error = null,
-    )
-    return requireNotNull(directory?.path)
+    val directory = tryIt2 {
+        NSFileManager.defaultManager.URLForDirectory(
+            directory = NSApplicationSupportDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = true,
+            error = it,
+        )
+    }.firstOrElse { error(it) }
+    return requireNotNull(directory.path) // No reason for it to be null given the code above.
 }
