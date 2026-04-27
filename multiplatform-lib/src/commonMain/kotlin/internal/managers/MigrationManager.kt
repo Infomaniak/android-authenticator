@@ -142,7 +142,7 @@ internal class MigrationManager(
         }
 
         authenticatorManager.deleteKeysFor(userId)
-        authenticatorManager.registerPasskey(
+        val _ = authenticatorManager.registerPasskey(
             token = temporaryToken.accessToken,
             userId = userId
         )
