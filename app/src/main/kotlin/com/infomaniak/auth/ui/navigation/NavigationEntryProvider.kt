@@ -105,14 +105,14 @@ fun baseEntryProvider(
 }
 
 fun homeEntryProvider(rootBackStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
-    entry<NavDestination.HomeSubDestination.AccountList> {
+    entry<HomeSubDestination.AccountList> {
         AccountListScreen(
             onAccountClicked = { account ->
                 rootBackStack.add(NavDestination.AccountDetails(account.id))
             },
         )
     }
-    entry<NavDestination.HomeSubDestination.Settings> {
+    entry<HomeSubDestination.Settings> {
         SettingsScreen(
             onThemeClicked = {
                 rootBackStack.add(NavDestination.Theme)
