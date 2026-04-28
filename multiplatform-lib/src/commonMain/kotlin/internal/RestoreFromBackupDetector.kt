@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.internal.utils.BackupExclusionGotcha
 import com.infomaniak.auth.lib.internal.utils.checkFileExists
 import com.infomaniak.auth.lib.internal.utils.createBackupExcludedFile
 import kotlin.random.Random
@@ -37,6 +38,7 @@ internal object RestoreFromBackupDetector {
     }
 
     private suspend fun markRestorationAsHandled() {
+        @OptIn(BackupExclusionGotcha::class)
         createBackupExcludedFile(name = restorationHandledMarkerFileName, content = generateFileContent())
     }
 
