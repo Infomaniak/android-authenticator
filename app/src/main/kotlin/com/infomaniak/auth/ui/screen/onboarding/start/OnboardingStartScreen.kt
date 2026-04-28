@@ -66,7 +66,7 @@ import kotlinx.coroutines.launch
 fun OnboardingStartScreen(
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
     val crossAppLoginFacade = onboardingStartViewModel.crossAppLoginFacade
 
     val accountsCheckingState by crossAppLoginFacade.accountsCheckingState.collectAsStateWithLifecycle()
@@ -88,7 +88,7 @@ fun OnboardingStartScreen(
                 onboardingStartViewModel.loginUsersIntoTheApp(listOf(userLoginResult.user))
             }
             is UserLoginResult.Failure -> scope.launch {
-                snackBarHostState.showSnackbar(userLoginResult.errorMessage)
+                snackbarHostState.showSnackbar(userLoginResult.errorMessage)
             }
             null -> Unit
         }
@@ -101,7 +101,7 @@ fun OnboardingStartScreen(
     }
 
     OnboardingStartScreen(
-        snackBarHostState = snackBarHostState,
+        snackbarHostState = snackbarHostState,
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
         isLoginButtonLoading = { isButtonLoading },
@@ -110,7 +110,7 @@ fun OnboardingStartScreen(
             if (accounts.isEmpty()) {
                 openLoginWebView(onboardingStartViewModel, loginFlowController)
             } else {
-                scope.launch { onboardingStartViewModel.connectSelectedAccounts(accounts, snackBarHostState) }
+                scope.launch { onboardingStartViewModel.connectSelectedAccounts(accounts, snackbarHostState) }
             }
         },
         onSaveSkippedAccounts = { crossAppLoginFacade.skippedAccountIds.value = it },
@@ -121,7 +121,7 @@ fun OnboardingStartScreen(
 
 @Composable
 private fun OnboardingStartScreen(
-    snackBarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState,
     accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
     isLoginButtonLoading: () -> Boolean,
@@ -140,7 +140,7 @@ private fun OnboardingStartScreen(
     OnboardingScaffold(
         pagerState = pagerState,
         snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
+            SnackbarHost(hostState = snackbarHostState)
         },
         onboardingPages = Page.entries.mapIndexed { index, page ->
             page.toOnboardingPage(pagerState, index)
@@ -204,7 +204,7 @@ private fun OnboardingStartScreenPreview(
 ) {
     AuthenticatorTheme {
         OnboardingStartScreen(
-            snackBarHostState = SnackbarHostState(),
+            snackbarHostState = SnackbarHostState(),
             accountsCheckingState = {
                 AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
             },
