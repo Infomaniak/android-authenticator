@@ -21,10 +21,12 @@ package com.infomaniak.auth.lib.internal.extensions
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFDataRef
+import platform.CoreFoundation.CFDateRef
 import platform.CoreFoundation.CFErrorRef
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.CFBridgingRetain
 import platform.Foundation.NSData
+import platform.Foundation.NSDate
 import platform.Foundation.NSError
 
 // The casts below are fine because they involve "toll-free bridged" types.
@@ -35,5 +37,7 @@ import platform.Foundation.NSError
 internal fun NSData.toCFDataRef() = CFBridgingRetain(this) as CFDataRef
 
 internal fun CFDataRef.toNSData(): NSData = CFBridgingRelease(this) as NSData
+
+internal fun CFDateRef.toNSDate(): NSDate = CFBridgingRelease(this) as NSDate
 
 internal fun CFErrorRef.toNSError(): NSError = CFBridgingRelease(this) as NSError
