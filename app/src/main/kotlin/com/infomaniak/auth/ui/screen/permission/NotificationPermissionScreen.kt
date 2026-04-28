@@ -57,7 +57,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 @SuppressLint("ComposeModifierMissing")
 @Composable
 fun NotificationPermissionScreen(
-    navigateToHome: () -> Unit,
+    navigateToHome: () -> Unit
 ) {
     var permissionAsked by remember { mutableStateOf(false) }
     val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
