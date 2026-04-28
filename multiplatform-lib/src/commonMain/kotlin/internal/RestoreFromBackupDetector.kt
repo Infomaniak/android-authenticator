@@ -27,13 +27,12 @@ internal object RestoreFromBackupDetector {
     private val restorationHandledMarkerFileName: String = "51756f69203f".hexToByteArray().decodeToString()
 
     suspend inline fun runRestoreOperationIfNeeded(block: () -> Unit) {
-        val restorationAlreadyHandled = doesRestoreHandledFileExist()
-        if (restorationAlreadyHandled) return
+        if (restorationAlreadyHandled()) return
         block()
         markRestorationAsHandled()
     }
 
-    private suspend fun doesRestoreHandledFileExist(): Boolean {
+    private suspend fun restorationAlreadyHandled(): Boolean {
         return checkFileExists(restorationHandledMarkerFileName)
     }
 
