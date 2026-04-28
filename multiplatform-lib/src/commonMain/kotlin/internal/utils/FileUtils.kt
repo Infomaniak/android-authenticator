@@ -15,11 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.exceptions
+package com.infomaniak.auth.lib.internal.utils
+
+@RequiresOptIn(message = "Backup exclusion is supported only on Apple platforms. " +
+        "Backup rules or logic in a BackupAgent are required on Android.")
+annotation class BackupExclusionOnlyApplePlatforms
 
 /**
- * Thrown when a network-related error occurs, such as connectivity issues or timeouts.
- *
- * @param message A detailed message describing the network error.
+ * **WARNING:** The backup exclusion is Apple/iOS only. On Android, you need to configure the backup rules,
+ * or implement a BackupAgent to have the backup exclusion work.
  */
-class NetworkException(message: String) : Exception(message)
+@BackupExclusionOnlyApplePlatforms
+internal expect suspend fun createBackupExcludedFile(name: String, content: String)
+
+internal expect suspend fun checkFileExists(name: String): Boolean

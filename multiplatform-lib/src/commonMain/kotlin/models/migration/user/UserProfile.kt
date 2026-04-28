@@ -44,7 +44,4 @@ data class UserProfile(
      */
     @Transient
     var apiToken: ApiToken = ApiToken(accessToken = "", tokenType = "", userId = 0),
-
-    ) {
-    private fun String.firstOrEmpty(): String = if (isNotEmpty()) first().toString() else ""
-}
+)

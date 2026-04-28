@@ -28,6 +28,7 @@ import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.utils.SignUtils
 import com.infomaniak.auth.lib.internal.utils.Xor
+import com.infomaniak.auth.lib.models.migration.ApiToken
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
@@ -44,7 +45,7 @@ internal class AuthenticatorManager(
 
     suspend fun getUserProfile(token: String) = webAuthnRepository.getUserProfile(token)
 
-    suspend fun registerPasskey(token: String, userId: Long) {
+    suspend fun registerPasskey(token: String, userId: Long): String {
         val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
@@ -64,11 +65,17 @@ internal class AuthenticatorManager(
         )
 
         webAuthnRepository.registerPasskey(token, registerPasskey)
+
+        return keyIdAsString
     }
 
-    suspend fun getToken(clientId: String, userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
-        val keyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
-            ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
+    suspend fun getToken(
+        clientId: String,
+        userId: Long,
+        keyIdOrDefault: String? = null,
+    ): Xor<ApiToken, Failure.KeyManagement.KeyNotFound> {
+        val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
+        ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
         val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
@@ -106,11 +113,18 @@ internal class AuthenticatorManager(
             clientExtensionResults = ClientExtensionResults,
             authenticatorAttachment = "platform",
         )
-        return Xor.First(webAuthnRepository.verify(verifyAuthenticationData).accessToken)
+        val verifyAuthData = webAuthnRepository.verify(verifyAuthenticationData)
+        val apiToken = ApiToken(
+            accessToken = verifyAuthData.accessToken,
+            tokenType = verifyAuthData.tokenType,
+            userId = userId.toInt(),
+            scope = verifyAuthData.scope,
+        )
+        return Xor.First(apiToken)
     }
 
     suspend fun removeAccount(token: String, userId: Long) {
-        val passkeyId = keyPairManager.findKeyIdFor(userId).firstOrNull()
+        val passkeyId = keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
 
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
@@ -123,5 +137,9 @@ internal class AuthenticatorManager(
 
     suspend fun deleteKeysFor(userId: Long) {
         val _ = keyPairManager.deleteKeysMatching { it.startsWith("$userId-") }
+    }
+
+    suspend fun getKeyIdFor(userId: Long): String? {
+        return keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
     }
 }

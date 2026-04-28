@@ -20,6 +20,8 @@ package com.infomaniak.auth.lib.internal.network
 import com.infomaniak.auth.lib.internal.models.ApiResponseForError
 import com.infomaniak.auth.lib.internal.network.utils.getHttpClientEngine
 import com.infomaniak.auth.lib.internal.network.utils.getRequestContextId
+import com.infomaniak.auth.lib.network.exceptions.ApiException
+import com.infomaniak.auth.lib.network.exceptions.NetworkException
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
@@ -43,8 +45,6 @@ import io.ktor.utils.io.CancellationException
 import kotlinx.io.IOException
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import network.exceptions.ApiException
-import network.exceptions.NetworkException
 import kotlin.time.Duration.Companion.seconds
 
 internal class ApiClientProvider(

@@ -86,6 +86,10 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 val isRelease = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }

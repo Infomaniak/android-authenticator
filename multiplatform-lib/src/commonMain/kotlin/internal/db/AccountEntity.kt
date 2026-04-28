@@ -32,7 +32,6 @@ internal data class AccountEntity(
 ) {
     val isLoggedIn: Boolean get() = status == Status.LoggedIn
 
-
     enum class Status {
 
         /*
@@ -55,5 +54,7 @@ internal data class AccountEntity(
 
         /** Account successfully connected, with registered passkey. */
         LoggedIn,
+
+        RestoringFromBackup,
     }
 }

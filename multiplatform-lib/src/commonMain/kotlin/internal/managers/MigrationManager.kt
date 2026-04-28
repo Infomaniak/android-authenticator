@@ -18,6 +18,8 @@
 package com.infomaniak.auth.lib.internal.managers
 
 import com.infomaniak.auth.lib.internal.MigrationAuthentication
+import com.infomaniak.auth.lib.internal.RestoreFromBackupDetector
+import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
@@ -32,10 +34,10 @@ import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.models.migration.ApiToken
+import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.io.IOException
-import network.exceptions.ApiException
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -46,6 +48,40 @@ internal class MigrationManager(
     private val webAuthnRepository: WebAuthnRepository,
     private val clientId: String,
 ) {
+
+    private val dao = accountsDatabase.getDao()
+
+    suspend fun setBackedUpAccountsStatus() {
+        RestoreFromBackupDetector.runRestoreOperationIfNeeded {
+            dao.updateStatus(
+                currentStatus = AccountEntity.Status.LoggedIn,
+                newStatus = AccountEntity.Status.RestoringFromBackup
+            )
+        }
+    }
+
+    suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: String) -> Unit) {
+        val keyId = authenticatorManager.getKeyIdFor(account.id) ?: return
+        // Get token with previous passkey
+        val token = authenticatorManager.getToken(
+            clientId = clientId,
+            userId = account.id,
+            keyIdOrDefault = keyId,
+        ).firstOrElse { error(it) }
+        // Register a new passkey
+        val newKeyId = authenticatorManager.registerPasskey(token.accessToken, account.id)
+        // Getting a new token with the new passkey
+        val tokenWithNewPassKey = authenticatorManager.getToken(
+            clientId = clientId,
+            userId = account.id,
+            keyIdOrDefault = newKeyId,
+        ).firstOrElse { error(it) }
+        persistToken(account.id, tokenWithNewPassKey.accessToken)
+        dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+        // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
+        authenticatorManager.deleteKeysFor(account.id)
+        webAuthnRepository.deletePasskey(tokenWithNewPassKey.accessToken, keyId)
+    }
 
     suspend fun addLegacyAccountsToDB() {
         if (!needMigration()) return
@@ -73,7 +109,7 @@ internal class MigrationManager(
             deviceId = deviceId,
             userId = userId,
         )
-        val tokenToUse = when (authentication) {
+        val temporaryToken = when (authentication) {
             is MigrationAuthentication.CrossAppLogin -> authentication.derivedToken
             else -> {
                 val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
@@ -107,16 +143,20 @@ internal class MigrationManager(
         }
 
         authenticatorManager.deleteKeysFor(userId)
-        authenticatorManager.registerPasskey(
-            token = tokenToUse.accessToken,
+        val _ = authenticatorManager.registerPasskey(
+            token = temporaryToken.accessToken,
             userId = userId
         )
-        val token = authenticatorManager.getToken(
+        val apiTokenFromPasskey = authenticatorManager.getToken(
             clientId = clientId,
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
-        persistUser(tokenToUse)
-        webAuthnRepository.completeMigration(token = token, sessionId = migrationOptions.session, deviceId = deviceId)
+        persistUser(apiTokenFromPasskey)
+        webAuthnRepository.completeMigration(
+            token = apiTokenFromPasskey.accessToken,
+            sessionId = migrationOptions.session,
+            deviceId = deviceId
+        )
         deleteLegacyAccount(userId.toString())
 
         if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
