@@ -15,11 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.exceptions
+package com.infomaniak.auth.lib.internal.utils
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.invoke
+import splitties.init.appCtx
+import java.io.File
+
+internal actual suspend fun checkFileExists(name: String): Boolean = Dispatchers.IO {
+    File(appCtx.filesDir, name).exists()
+}
 
 /**
- * Thrown when a network-related error occurs, such as connectivity issues or timeouts.
- *
- * @param message A detailed message describing the network error.
+ * **WARNING:** The backup exclusion is Apple/iOS only. On Android, you need to configure the backup rules,
+ * or implement a BackupAgent to have the backup exclusion work.
  */
-class NetworkException(message: String) : Exception(message)
+internal actual suspend fun createBackupExcludedFile(name: String, content: String) {
+    File(appCtx.filesDir, name).apply {
+        createNewFile()
+        writeText(content)
+    }
+}

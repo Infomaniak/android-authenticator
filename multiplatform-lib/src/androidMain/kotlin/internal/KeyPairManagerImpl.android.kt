@@ -32,8 +32,8 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
 
-        saveKeyToFilesDir("$userId-$keyId-private.key", keyPair.private.encoded)
-        saveKeyToFilesDir("$userId-$keyId-public.key", keyPair.public.encoded)
+        saveFileToFilesDir("$userId-$keyId-private.key", keyPair.private.encoded)
+        saveFileToFilesDir("$userId-$keyId-public.key", keyPair.public.encoded)
         return null
     }
 
@@ -57,16 +57,18 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
-    actual override suspend fun findKeyIdFor(userId: Long): Xor<String, Failure.KeyManagement.KeyNotFound> {
-        val fileNamePrefix = "$userId-"
+    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String? {
         val userPassKey: File = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.find {
-            it.name.startsWith(fileNamePrefix)
-        } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
+            predicate(it.name)
+        } ?: return null
 
-        val keyId = userPassKey.name.substringAfter(fileNamePrefix).substringBefore('-')
-        return Xor.First(keyId)
+        val keyId = userPassKey.name.substring(
+            startIndex = userPassKey.name.indexOfFirst { it == '-' } + 1,
+            endIndex = userPassKey.name.indexOfLast { it == '-' }
+        )
+        return keyId
     }
 
     actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
@@ -81,7 +83,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         return Xor.First(Unit)
     }
 
-    private suspend fun saveKeyToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
+    private suspend fun saveFileToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
         val file = File(appCtx.filesDir, fileName)
         file.writeBytes(key)
     }

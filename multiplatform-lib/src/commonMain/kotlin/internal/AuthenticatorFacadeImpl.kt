@@ -39,6 +39,7 @@ import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
+import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import kotlinx.coroutines.CompletableDeferred
@@ -67,7 +68,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.io.IOException
-import network.exceptions.ApiException
 import kotlin.time.Duration.Companion.seconds
 
 internal class AuthenticatorFacadeImpl(
@@ -83,8 +83,9 @@ internal class AuthenticatorFacadeImpl(
     private val dao = accountsDatabase.getDao()
 
     private val accountEntities = flow {
+        migrationManager.setBackedUpAccountsStatus()
         migrationManager.addLegacyAccountsToDB()
-        emitAll(dao.getAsFlow())
+        emitAll(dao.getAccountsAsFlow())
     }.shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     private val atLeastOneConnectedAccount: Flow<Boolean> = accountEntities.map { entities ->
@@ -118,7 +119,9 @@ internal class AuthenticatorFacadeImpl(
         .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
-        val entities = connectedAccounts.map { it.toEntity(AccountEntity.Status.PasskeyRegistrationPending) }
+        val entities = connectedAccounts.map {
+            it.toEntity(AccountEntity.Status.PasskeyRegistrationPending)
+        }
         dao.upsert(entities)
     }
 
@@ -131,7 +134,7 @@ internal class AuthenticatorFacadeImpl(
         val token = authenticatorManager.getToken(clientId, userId).firstOrElse {
             error("Could not get the key for user $userId from the storage: $it")
         }
-        authenticatorBridge.persistTokenForAccount(userId, token)
+        authenticatorBridge.persistTokenForAccount(userId, token.accessToken)
     }
 
     private fun accountsFlow(
@@ -208,16 +211,20 @@ internal class AuthenticatorFacadeImpl(
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
 
-    private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> = dao.get(userId).transformLatest { entity ->
-        emit(null)
-        when (entity?.status) {
-            AccountEntity.Status.ToBeMigrated -> migrationAttempts(entity)
-            AccountEntity.Status.PasskeyRegistrationPending, AccountEntity.Status.FirstPasskeyAuthenticationPending -> {
-                registrationAttempts(entity)
+    private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> =
+        dao.getAccountAsFlow(userId).transformLatest { entity ->
+            emit(null)
+            when (entity?.status) {
+                AccountEntity.Status.ToBeMigrated -> migrationAttempts(entity)
+                AccountEntity.Status.PasskeyRegistrationPending, AccountEntity.Status.FirstPasskeyAuthenticationPending -> {
+                    registrationAttempts(entity)
+                }
+                AccountEntity.Status.RestoringFromBackup -> {
+                    restoreFromBackupAttempts(account = entity)
+                }
+                AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
             }
-            AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
         }
-    }
 
     private suspend fun shouldTryImmediateLogin(): Boolean = raceOf(
         {
@@ -241,16 +248,16 @@ internal class AuthenticatorFacadeImpl(
         withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
-                // TODO do that only if we don't need to use the backed up files
+                // Just in case orphans passkeys are lying around, we want to make sure to start from a clean state.
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
-                authenticatorManager.registerPasskey(token, userId)
+                val _ = authenticatorManager.registerPasskey(token, userId)
                 dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.FirstPasskeyAuthenticationPending))
             }
             val token = authenticatorManager.getToken(
                 clientId = clientId,
                 userId = userId,
             ).firstOrElse { error("Key not found: ${it.details}") }
-            authenticatorBridge.persistTokenForAccount(userId, token)
+            authenticatorBridge.persistTokenForAccount(userId, token.accessToken)
             dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.LoggedIn))
         }
     }
@@ -352,6 +359,14 @@ internal class AuthenticatorFacadeImpl(
             }.cancellable().getOrElse {
                 it.printStackTrace()
                 status.copy(lastIssue = it.toIssueReason(accountToMigrate.id))
+            }
+        }
+    }
+
+    private suspend fun FlowCollector<Account.Status.NotConnected>.restoreFromBackupAttempts(account: AccountEntity) {
+        withRetries(userId = account.id) {
+            migrationManager.restore(account = account) { userId, token ->
+                authenticatorBridge.persistTokenForAccount(userId, token)
             }
         }
     }

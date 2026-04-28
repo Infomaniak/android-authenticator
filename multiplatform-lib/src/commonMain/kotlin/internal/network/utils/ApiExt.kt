@@ -17,12 +17,12 @@
  */
 package com.infomaniak.auth.lib.internal.network.utils
 
+import com.infomaniak.auth.lib.network.exceptions.ApiException
+import com.infomaniak.auth.lib.network.exceptions.NetworkException
 import com.infomaniak.auth.lib.network.exceptions.UnknownException
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.utils.io.CancellationException
-import network.exceptions.ApiException
-import network.exceptions.NetworkException
 
 internal const val CONTENT_REQUEST_ID_HEADER = "x-request-id"
 

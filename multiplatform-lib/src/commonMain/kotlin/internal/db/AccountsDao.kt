@@ -27,16 +27,22 @@ import kotlinx.coroutines.flow.Flow
 internal interface AccountsDao {
 
     @Query("SELECT * FROM AccountEntity")
-    fun getAsFlow(): Flow<List<AccountEntity>>
+    fun getAccountsAsFlow(): Flow<List<AccountEntity>>
+
+    @Query("SELECT * FROM AccountEntity WHERE status = :status")
+    fun getAccountsWith(status: AccountEntity.Status): List<AccountEntity>
 
     @Query("SELECT * FROM AccountEntity WHERE id = :id")
-    fun get(id: Long): Flow<AccountEntity?>
+    fun getAccountAsFlow(id: Long): Flow<AccountEntity?>
 
     @Upsert
     suspend fun upsert(account: AccountEntity)
 
     @Upsert
     suspend fun upsert(accounts: List<AccountEntity>)
+
+    @Query("UPDATE AccountEntity SET status = :newStatus WHERE status = :currentStatus")
+    suspend fun updateStatus(currentStatus: AccountEntity.Status, newStatus: AccountEntity.Status)
 
     @Insert
     suspend fun insert(account: AccountEntity)
