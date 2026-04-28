@@ -23,6 +23,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,9 +64,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingStartScreen(
-    snackbarHostState: SnackbarHostState,
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val crossAppLoginFacade = onboardingStartViewModel.crossAppLoginFacade
 
     val accountsCheckingState by crossAppLoginFacade.accountsCheckingState.collectAsStateWithLifecycle()
@@ -100,6 +101,7 @@ fun OnboardingStartScreen(
     }
 
     OnboardingStartScreen(
+        snackbarHostState = snackbarHostState,
         accountsCheckingState = { accountsCheckingState },
         skippedIds = { skippedIds },
         isLoginButtonLoading = { isButtonLoading },
@@ -119,6 +121,7 @@ fun OnboardingStartScreen(
 
 @Composable
 private fun OnboardingStartScreen(
+    snackbarHostState: SnackbarHostState,
     accountsCheckingState: () -> AccountsCheckingState,
     skippedIds: () -> Set<Long>,
     isLoginButtonLoading: () -> Boolean,
@@ -136,6 +139,9 @@ private fun OnboardingStartScreen(
 
     OnboardingScaffold(
         pagerState = pagerState,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         onboardingPages = Page.entries.mapIndexed { index, page ->
             page.toOnboardingPage(pagerState, index)
         },
@@ -198,6 +204,7 @@ private fun OnboardingStartScreenPreview(
 ) {
     AuthenticatorTheme {
         OnboardingStartScreen(
+            snackbarHostState = SnackbarHostState(),
             accountsCheckingState = {
                 AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
             },

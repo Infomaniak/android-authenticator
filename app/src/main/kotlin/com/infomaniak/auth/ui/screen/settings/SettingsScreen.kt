@@ -20,8 +20,8 @@ package com.infomaniak.auth.ui.screen.settings
 import android.content.Intent
 import android.provider.Settings
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -32,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.MatomoAuthenticator.trackSettingsEvent
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.matomo.MatomoName
-import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
@@ -43,7 +42,6 @@ import com.infomaniak.core.applock.AppLockHelper.requestCredentials
 import com.infomaniak.core.applock.AppLockManager
 import com.infomaniak.core.common.extensions.openUrl
 import com.infomaniak.core.network.SUPPORT_URL
-import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -70,6 +68,7 @@ private fun SettingsScreen(
     onThemeClicked: () -> Unit,
     onPrivacyManagementClicked: () -> Unit,
     hasBiometrics: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val fragmentActivity = LocalActivity.current as? FragmentActivity
 
@@ -135,28 +134,24 @@ private fun SettingsScreen(
             },
         ),
     )
-    SinglePaneScaffold(
-        modifier = Modifier.background(AuthenticatorTheme.materialColors.inverseOnSurface),
-        topBar = {
-            InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
-        },
-    ) { paddingValues ->
-        OptionsSection(
-            sections = persistentListOf(firstSectionItems, secondSectionItems),
-            modifier = Modifier.padding(paddingValues),
-        )
-    }
+    OptionsSection(
+        modifier = modifier,
+        sections = persistentListOf(firstSectionItems, secondSectionItems),
+    )
 }
 
 @PreviewSmallWindow
 @Composable
 private fun SettingsScreenPreview() {
     AuthenticatorTheme {
-        SettingsScreen(
-            appLocked = GetSetCallbacks(get = { true }, set = {}),
-            onThemeClicked = {},
-            onPrivacyManagementClicked = {},
-            hasBiometrics = true,
-        )
+        Scaffold { paddingValues ->
+            SettingsScreen(
+                modifier = Modifier.padding(paddingValues),
+                appLocked = GetSetCallbacks(get = { true }, set = {}),
+                onThemeClicked = {},
+                onPrivacyManagementClicked = {},
+                hasBiometrics = true,
+            )
+        }
     }
 }

@@ -1,0 +1,79 @@
+/*
+ * Infomaniak Authenticator - Android
+ * Copyright (C) 2026 Infomaniak Network SA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.infomaniak.auth.ui.screen.accountlist
+
+import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.utils.AccountUtils
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class AccountListViewModel @Inject constructor(
+    accountUtils: AccountUtils,
+    private val authenticatorFacade: AuthenticatorFacade,
+    private val twoFactorAuthManager: TwoFactorAuthManager
+) : ViewModel() {
+    val uiState: StateFlow<AccountListUiState> = authenticatorFacade.accounts
+        .combine(accountUtils.users) { accounts, users ->
+            val usersMap = users.associateBy { it.id.toLong() }
+            accounts.map { account ->
+                account to usersMap[account.id]
+            }
+        }
+        .map { accountPairs ->
+            if (accountPairs.isEmpty()) AccountListUiState.Loading else AccountListUiState.Success(accountPairs.toPersistentList())
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            AccountListUiState.Loading
+        )
+
+    fun refreshChallenges() {
+        viewModelScope.launch {
+            authenticatorFacade.accounts.first()
+                .filter { account ->
+                    account.status == Account.Status.LoggedIn
+                }
+                .forEach { account ->
+                    twoFactorAuthManager.refreshChallengeNow(account.id)
+                }
+        }
+    }
+}
+
+@Immutable
+sealed interface AccountListUiState {
+    data object Loading : AccountListUiState
+    data class Success(val accountPairs: ImmutableList<Pair<Account, User?>>) : AccountListUiState
+}

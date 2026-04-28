@@ -19,31 +19,15 @@ package com.infomaniak.auth.ui.screen.main
 
 import android.Manifest
 import android.os.Build.VERSION.SDK_INT
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntryDecorator
@@ -58,15 +42,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
 import com.infomaniak.auth.ui.navigation.replaceAllWith
-import com.infomaniak.auth.ui.navigation.tryPopLast
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
-import com.infomaniak.core.ui.compose.margin.Margin
+import com.infomaniak.auth.ui.theme.defaultEnterAnimation
+import com.infomaniak.auth.ui.theme.defaultExitAnimation
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -87,21 +69,41 @@ fun MainScreen(
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else null
 
-    LaunchedEffect(Unit) {
-        viewModel.appStatus.collect { handleAppStatus(it, backStack, notificationPermissionState?.status) }
+    var notificationPermissionScreenShown by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel.appStatus) {
+        viewModel.appStatus.collect {
+            val permissionStatus = notificationPermissionState?.status
+            val isPermanentlyDenied = (permissionStatus as? PermissionStatus.Denied)?.shouldShowRationale == false
+            val isPermissionNotRequired = with(permissionStatus) {
+                (this == null || this == PermissionStatus.Granted || !isPermanentlyDenied)
+            }
+            val skipPermission = notificationPermissionScreenShown && isPermissionNotRequired
+
+            handleAppStatus(
+                appStatus = it,
+                currentDestination = currentDestination,
+                backStack = backStack,
+                skipPermission = skipPermission,
+                onPermissionAsked = {
+                    notificationPermissionScreenShown = true
+                }
+            )
+        }
     }
 
-    MainScreen(backStack, currentDestination, entryDecorators)
+    MainScreen(backStack, entryDecorators)
 }
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 private fun handleAppStatus(
     appStatus: AppStatus,
+    currentDestination: NavKey,
     backStack: NavBackStack<NavKey>,
-    status: PermissionStatus?,
+    skipPermission: Boolean,
+    onPermissionAsked: () -> Unit,
 ) {
-    val currentDestination = backStack.lastOrNull()
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
@@ -109,10 +111,10 @@ private fun handleAppStatus(
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> {
-            val isPermanentlyDenied = (status as? PermissionStatus.Denied)?.shouldShowRationale == false
-            if (status == null || status == PermissionStatus.Granted || isPermanentlyDenied) {
-                NavDestination.Root.Home
+            if (skipPermission) {
+                NavDestination.Home
             } else {
+                onPermissionAsked()
                 NavDestination.Permission.Notification
             }
         }
@@ -127,66 +129,16 @@ private fun handleAppStatus(
 @Composable
 fun MainScreen(
     backStack: NavBackStack<NavKey>,
-    currentDestination: NavKey,
     entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    SinglePaneScaffold(
-        bottomBar = {
-            if (currentDestination is NavDestination.Root) AuthenticatorBottomBar(
-                backStack = backStack,
-                onMyAccountsClicked = { backStack.tryPopLast() },
-                onSettingsClicked = { backStack.add(NavDestination.Root.Settings) }
-            )
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { contentPadding ->
-        val enterAnimation = slideInHorizontally(initialOffsetX = { it }) togetherWith
-                slideOutHorizontally(targetOffsetX = { -it })
-        val exitAnimation = slideInHorizontally(initialOffsetX = { -it }) togetherWith
-                slideOutHorizontally(targetOffsetX = { it })
-        NavDisplay(
-            modifier = Modifier.padding(contentPadding),
-            backStack = backStack,
-            entryDecorators = entryDecorators,
-            entryProvider = baseEntryProvider(backStack, snackbarHostState),
-            transitionSpec = { enterAnimation },
-            popTransitionSpec = { exitAnimation },
-            predictivePopTransitionSpec = { exitAnimation },
-        )
-    }
-}
-
-@Composable
-private fun AuthenticatorBottomBar(
-    backStack: NavBackStack<NavKey>,
-    onMyAccountsClicked: () -> Unit,
-    onSettingsClicked: () -> Unit
-) {
-    NavigationBar {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Margin.Micro)
-                .heightIn(min = 80.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            NavigationBarItem(
-                selected = backStack.last() is NavDestination.Root.Home,
-                onClick = onMyAccountsClicked,
-                icon = { Icon(painterResource(R.drawable.accounts), null) },
-                label = { Text(stringResource(R.string.accountsTitle)) },
-            )
-            NavigationBarItem(
-                selected = backStack.last() is NavDestination.Root.Settings,
-                onClick = onSettingsClicked,
-                icon = { Icon(painterResource(R.drawable.settings), null) },
-                label = { Text(stringResource(R.string.settingsTitle)) },
-            )
-        }
-    }
+    NavDisplay(
+        backStack = backStack,
+        entryDecorators = entryDecorators,
+        entryProvider = baseEntryProvider(backStack),
+        transitionSpec = { defaultEnterAnimation },
+        popTransitionSpec = { defaultExitAnimation },
+        predictivePopTransitionSpec = { defaultExitAnimation },
+    )
 }
 
 @PreviewSmallWindow
@@ -197,10 +149,9 @@ private fun MainScreenPreview() {
             override val navigationEventDispatcher: NavigationEventDispatcher = NavigationEventDispatcher()
         }
         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides owner) {
-            val backStack = rememberNavBackStack(NavDestination.Root.Home)
-            val currentDestination by remember(backStack) { derivedStateOf { backStack.last() } }
+            val backStack = rememberNavBackStack(NavDestination.Home)
             val entryDecorators = persistentListOf<NavEntryDecorator<NavKey>>()
-            MainScreen(backStack, currentDestination, entryDecorators)
+            MainScreen(backStack, entryDecorators)
         }
     }
 }

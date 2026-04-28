@@ -24,6 +24,8 @@ import kotlinx.serialization.Serializable
 @Immutable
 @Serializable
 sealed interface NavDestination : NavKey {
+    //region Onboarding
+
     sealed interface Onboarding : NavDestination {
         @Serializable
         data object Migration : Onboarding
@@ -43,16 +45,24 @@ sealed interface NavDestination : NavKey {
     @Serializable
     data object SecuringAccount : NavDestination
 
-    sealed interface Root : NavDestination {
-        @Serializable
-        data object Home : Root
+    //endregion
 
-        @Serializable
-        data object Settings : Root
-    }
+    //region Home
 
     @Serializable
-    data class LoginInApp(val legacyAccountId: Long, val isOnboarding: Boolean) : NavDestination
+    data object Home : NavDestination
+
+    sealed interface HomeSubDestination : NavDestination {
+        @Serializable
+        data object AccountList : HomeSubDestination
+
+        @Serializable
+        data object Settings : HomeSubDestination
+    }
+
+    //endregion
+
+    //region Settings
 
     @Serializable
     data object Theme : NavDestination
@@ -65,6 +75,11 @@ sealed interface NavDestination : NavKey {
 
     @Serializable
     data object PrivacyManagementSentry : NavDestination
+
+    //endregion
+
+    @Serializable
+    data class LoginInApp(val legacyAccountId: Long, val isOnboarding: Boolean) : NavDestination
 
     @Serializable
     data class AccountDetails(val accountId: Long) : NavDestination
