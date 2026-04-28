@@ -19,13 +19,13 @@ package com.infomaniak.auth.lib.internal.utils
 
 @RequiresOptIn(message = "Backup exclusion is supported only on Apple platforms. " +
         "Backup rules or logic in a BackupAgent are required on Android.")
-annotation class BackupExclusionGotcha
+annotation class BackupExclusionOnlyApplePlatforms
 
 /**
  * **WARNING:** The backup exclusion is Apple/iOS only. On Android, you need to configure the backup rules,
  * or implement a BackupAgent to have the backup exclusion work.
  */
-@BackupExclusionGotcha
+@BackupExclusionOnlyApplePlatforms
 internal expect suspend fun createBackupExcludedFile(name: String, content: String)
 
 internal expect suspend fun checkFileExists(name: String): Boolean
