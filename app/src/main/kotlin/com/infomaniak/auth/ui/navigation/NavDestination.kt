@@ -77,6 +77,8 @@ sealed interface NavDestination : NavKey {
     data class AccountDetails(val accountId: Long) : NavDestination
 }
 
+@Immutable
+@Serializable
 sealed interface HomeSubDestination : NavKey {
     @Serializable
     data object AccountList : HomeSubDestination
