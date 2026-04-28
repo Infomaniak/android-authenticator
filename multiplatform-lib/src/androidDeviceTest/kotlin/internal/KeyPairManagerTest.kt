@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.internal
+package com.infomaniak.auth.lib.internal
 
-import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -28,10 +27,10 @@ class KeyPairManagerTest {
 
     @Test
     fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
+        val keyPairManager = KeyPairManager()
 
         runTest {
-            val userId = 12345
+            val userId = 12345L
             val keyId = "keyId"
             val error = keyPairManager.generateNewKey(userId, keyId)
             assertNull(error)

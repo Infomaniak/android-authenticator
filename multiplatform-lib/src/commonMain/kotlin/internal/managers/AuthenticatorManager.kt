@@ -20,7 +20,6 @@ package com.infomaniak.auth.lib.internal.managers
 import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.Failure
 import com.infomaniak.auth.lib.internal.KeyPairManager
-import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
@@ -41,7 +40,7 @@ internal class AuthenticatorManager(
 ) {
 
     private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
-    val keyPairManager: KeyPairManager by lazy { KeyPairManagerImpl() }
+    val keyPairManager: KeyPairManager by lazy { KeyPairManager() }
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
@@ -130,7 +129,7 @@ internal class AuthenticatorManager(
 
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
-            webAuthnRepository.deletePasskey(token, passkeyId)
+            webAuthnRepository.deletePasskeyIfExists(token, passkeyId)
             val _ = keyPairManager.deleteKeysMatching(KeyFilters.forPasskeyId(passkeyId))
         }
 

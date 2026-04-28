@@ -19,6 +19,8 @@ package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.internal.utils.Xor
 
+internal expect fun KeyPairManager(): KeyPairManager
+
 internal interface KeyPairManager {
 
     /**
@@ -30,6 +32,9 @@ internal interface KeyPairManager {
     suspend fun retrievePublicKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
 
     suspend fun retrievePrivateKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+
+    /** Sorted by creation date. */
+    suspend fun getSortedKeyIds(predicate: (name: String) -> Boolean): List<String>
 
     suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String?
 

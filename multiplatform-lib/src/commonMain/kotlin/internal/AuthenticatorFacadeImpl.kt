@@ -219,7 +219,7 @@ internal class AuthenticatorFacadeImpl(
                 AccountEntity.Status.PasskeyRegistrationPending, AccountEntity.Status.FirstPasskeyAuthenticationPending -> {
                     registrationAttempts(entity)
                 }
-                AccountEntity.Status.RestoringFromBackup -> {
+                AccountEntity.Status.RestoringFromBackup, AccountEntity.Status.DeletingOldKeyAfterRestoration -> {
                     restoreFromBackupAttempts(account = entity)
                 }
                 AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
@@ -252,6 +252,7 @@ internal class AuthenticatorFacadeImpl(
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
                 val _ = authenticatorManager.registerPasskey(token, userId)
                 dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.FirstPasskeyAuthenticationPending))
+                // The DB update above is expected to cause the cancellation & restart of this.
             }
             val token = authenticatorManager.getToken(
                 clientId = clientId,
@@ -371,7 +372,6 @@ internal class AuthenticatorFacadeImpl(
             }
         }
     }
-
 
     private suspend inline fun <R> FlowCollector<Account.Status.NotConnected>.withRetries(
         userId: Long,
