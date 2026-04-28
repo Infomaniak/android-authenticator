@@ -39,4 +39,9 @@ internal interface KeyPairManager {
         val privateKeyPurposes = KeyPurposes.privateKeyDefaults
         val publicKeyPurposes = KeyPurposes.publicKeyDefaults
     }
+
+    object Filters {
+        fun forUserId(userId: Long): (name: String) -> Boolean = { it.startsWith("$userId-") }
+        fun forPasskeyId(passkeyId: String): (name: String) -> Boolean = { "-$passkeyId-" in it }
+    }
 }

@@ -19,6 +19,7 @@ package com.infomaniak.auth.lib.internal.managers
 
 import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
 import com.infomaniak.auth.lib.internal.Failure
+import com.infomaniak.auth.lib.internal.KeyPairManager
 import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
@@ -32,6 +33,7 @@ import com.infomaniak.auth.lib.models.migration.ApiToken
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
+import com.infomaniak.auth.lib.internal.KeyPairManager.Filters as KeyFilters
 
 internal class AuthenticatorManager(
     private val webAuthnRepository: WebAuthnRepository,
@@ -39,7 +41,7 @@ internal class AuthenticatorManager(
 ) {
 
     private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
-    private val keyPairManager by lazy { KeyPairManagerImpl() }
+    val keyPairManager: KeyPairManager by lazy { KeyPairManagerImpl() }
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
@@ -74,7 +76,7 @@ internal class AuthenticatorManager(
         userId: Long,
         keyIdOrDefault: String? = null,
     ): Xor<ApiToken, Failure.KeyManagement.KeyNotFound> {
-        val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
+        val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor(KeyFilters.forUserId(userId))
         ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
         val authenticationOptions = webAuthnRepository.challenge(clientId)
@@ -124,22 +126,22 @@ internal class AuthenticatorManager(
     }
 
     suspend fun removeAccount(token: String, userId: Long) {
-        val passkeyId = keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
+        val passkeyId = keyPairManager.findKeyIdFor(KeyFilters.forUserId(userId))
 
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
             webAuthnRepository.deletePasskey(token, passkeyId)
-            val _ = keyPairManager.deleteKeysMatching { "-$passkeyId-" in it }
+            val _ = keyPairManager.deleteKeysMatching(KeyFilters.forPasskeyId(passkeyId))
         }
 
         accountsRepository.deleteAccount(userId)
     }
 
     suspend fun deleteKeysFor(userId: Long) {
-        val _ = keyPairManager.deleteKeysMatching { it.startsWith("$userId-") }
+        val _ = keyPairManager.deleteKeysMatching(KeyFilters.forUserId(userId))
     }
 
     suspend fun getKeyIdFor(userId: Long): String? {
-        return keyPairManager.findKeyIdFor { it.startsWith("$userId-") }
+        return keyPairManager.findKeyIdFor(KeyFilters.forUserId(userId))
     }
 }
