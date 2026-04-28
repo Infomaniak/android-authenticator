@@ -365,6 +365,7 @@ internal class AuthenticatorFacadeImpl(
 
     private suspend fun FlowCollector<Account.Status.NotConnected>.restoreFromBackupAttempts(account: AccountEntity) {
         withRetries(userId = account.id) {
+            emit(Account.Status.NotConnected.AttemptingToConnect)
             migrationManager.restore(account = account) { userId, token ->
                 authenticatorBridge.persistTokenForAccount(userId, token)
             }
