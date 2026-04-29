@@ -96,10 +96,6 @@ fun OnboardingStartScreen(
         if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
     }
 
-    LaunchedEffect(crossAppLoginFacade) {
-        crossAppLoginFacade.activateUpdates(hostActivity)
-    }
-
     OnboardingStartScreen(
         snackbarHostState = snackbarHostState,
         accountsCheckingState = { accountsCheckingState },
