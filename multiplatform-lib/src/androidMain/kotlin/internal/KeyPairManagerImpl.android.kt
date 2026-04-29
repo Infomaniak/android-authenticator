@@ -74,7 +74,11 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
                     add(extractKeyIdFromFileName(fileName) to attrs.creationTime())
                 }
             }
-        }.sortedBy { (_, creationTime) -> creationTime }.map { (keyId, _) -> keyId }
+        }.sortedBy { (_, creationTime) ->
+            creationTime
+        }.map { (keyId, _) ->
+            keyId
+        }.distinct() // Private/public keys pairs have a common id, so we filter duplicates.
     }
 
     override suspend fun findKeyIdFor(matchOn: MatchOn): String? {
@@ -85,6 +89,7 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
             predicate(it.name)
         } ?: return null
 
+        //TODO 2: Put keys into a dedicated dir
         return extractKeyIdFromFileName(userPassKey.name)
     }
 

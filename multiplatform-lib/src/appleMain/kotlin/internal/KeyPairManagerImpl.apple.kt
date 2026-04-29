@@ -145,7 +145,11 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
                         add(extractKeyIdFromTag(tag) to dateRef.toNSDate())
                     }
                 }
-            }.sortedBy { (_, date) -> date.timeIntervalSince1970 }.map { (keyId, _) -> keyId }
+            }.sortedBy { (_, date) ->
+                date.timeIntervalSince1970
+            }.map { (keyId, _) ->
+                keyId
+            }.distinct() // Private/public keys pairs have a common id, so we filter duplicates.
         }
     }
 
@@ -194,7 +198,10 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
         }
     }
 
-    override fun MatchOn.PasskeyId.asFilterPredicate() = { name: String -> name.endsWith(id) }
+    override fun MatchOn.PasskeyId.asFilterPredicate(): (String) -> Boolean {
+        val publicKeyEnd = "$id.pub"
+        return { name: String -> name.endsWith(id) || name.endsWith(publicKeyEnd) }
+    }
 
     private fun extractKeyIdFromTag(tag: String): String = tag.substring(startIndex = tag.indexOfFirst { it == '-' } + 1)
 
