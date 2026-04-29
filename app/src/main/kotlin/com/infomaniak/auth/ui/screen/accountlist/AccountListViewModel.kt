@@ -28,6 +28,7 @@ import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -39,7 +40,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountListViewModel @Inject constructor(
-    accountUtils: AccountUtils,
+    private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
     private val twoFactorAuthManager: TwoFactorAuthManager
 ) : ViewModel() {
@@ -70,10 +71,19 @@ class AccountListViewModel @Inject constructor(
                 }
         }
     }
-}
 
-@Immutable
-sealed interface AccountListUiState {
-    data object Loading : AccountListUiState
-    data class Success(val accountPairs: ImmutableList<Pair<Account, User?>>) : AccountListUiState
+    fun refreshUserProfiles() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userIds = authenticatorFacade.accounts.first().map { it.id.toInt() }.toIntArray()
+            accountUtils.getUsersById(userIds).forEach { user ->
+                authenticatorFacade.refreshUserProfileFor(user.apiToken.accessToken, user.id.toLong())
+            }
+        }
+    }
+
+    @Immutable
+    sealed interface AccountListUiState {
+        data object Loading : AccountListUiState
+        data class Success(val accountPairs: ImmutableList<Pair<Account, User?>>) : AccountListUiState
+    }
 }

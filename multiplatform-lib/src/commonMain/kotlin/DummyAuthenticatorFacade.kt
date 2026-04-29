@@ -119,4 +119,8 @@ class DummyAuthenticatorFacade internal constructor(
     override suspend fun refreshTokenFor(userId: Long) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun refreshUserProfileFor(token: String, userId: Long) {
+        TODO("Not yet implemented")
+    }
 }

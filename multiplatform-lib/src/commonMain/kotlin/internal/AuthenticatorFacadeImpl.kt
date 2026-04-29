@@ -41,6 +41,7 @@ import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
+import com.infomaniak.auth.lib.models.migration.user.UserProfile
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.infomaniak.auth.lib.network.exceptions.NetworkException
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
@@ -140,6 +141,10 @@ internal class AuthenticatorFacadeImpl(
             error("Could not get the key for user $userId from the storage: $it")
         }
         authenticatorBridge.persistTokenForAccount(userId, token.accessToken)
+    }
+
+    override suspend fun refreshUserProfileFor(token: String, userId: Long) {
+        syncAccountWithUserProfile(token, userId)
     }
 
     private fun accountsFlow(
@@ -268,7 +273,14 @@ internal class AuthenticatorFacadeImpl(
                 userId = userId,
             ).firstOrElse { error("Key not found: ${it.details}") }
             authenticatorBridge.persistTokenForAccount(userId, token.accessToken)
-            dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.LoggedIn))
+            val profile = authenticatorManager.getUserProfile(token.accessToken)
+            dao.upsert(
+                notRegisteredAccount.copy(
+                    securityScore = profile.preferences.security.score,
+                    lastPasswordUpdate = profile.preferences.security.dateLastChangedPassword,
+                    status = AccountEntity.Status.LoggedIn
+                )
+            )
         }
     }
 
@@ -332,7 +344,7 @@ internal class AuthenticatorFacadeImpl(
             userId = userId,
             authentication = authentication,
             persistUser = { apiToken ->
-                val userProfile = authenticatorManager.getUserProfile(apiToken.accessToken)
+                val userProfile = syncAccountWithUserProfile(apiToken.accessToken, userId)
                 userProfile.apiToken = apiToken
                 authenticatorBridge.persistUserProfile(userProfile)
             },
@@ -343,6 +355,19 @@ internal class AuthenticatorFacadeImpl(
         dao.upsert(notConnectedAccount.copy(status = AccountEntity.Status.LoggedIn))
 
         return true
+    }
+
+    private suspend fun syncAccountWithUserProfile(token: String, userId: Long): UserProfile {
+        val userProfile = authenticatorManager.getUserProfile(token)
+        dao.getAccount(userId)?.let { account ->
+            dao.upsert(
+                account.copy(
+                    securityScore = userProfile.preferences.security.score,
+                    lastPasswordUpdate = userProfile.preferences.security.dateLastChangedPassword
+                )
+            )
+        }
+        return userProfile
     }
 
     private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(accountToMigrate: AccountEntity) {
