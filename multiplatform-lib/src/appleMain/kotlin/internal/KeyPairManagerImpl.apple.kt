@@ -66,9 +66,9 @@ import platform.Security.kSecMatchLimitAll
 import platform.Security.kSecReturnAttributes
 import platform.Security.kSecReturnRef
 
-internal actual fun KeyPairManager(): KeyPairManager = KeyPairManagerAppleImpl()
+internal actual fun createKeyPairManager(): KeyPairManager = KeyPairManagerAppleImpl()
 
-private class KeyPairManagerAppleImpl : KeyPairManager {
+private class KeyPairManagerAppleImpl : KeyPairManager() {
 
     override suspend fun generateNewKey(
         userId: Long,
@@ -77,8 +77,8 @@ private class KeyPairManagerAppleImpl : KeyPairManager {
 
         val result = generateEcPrivateKeyInTheKeychain(
             tag = "$userId-$keyId",
-            privateKeyPurposes = KeyPairManager.privateKeyPurposes,
-            publicKeyPurposes = KeyPairManager.publicKeyPurposes,
+            privateKeyPurposes = KeyPurposes.privateKeyDefaults,
+            publicKeyPurposes = KeyPurposes.publicKeyDefaults,
             keyAccessGuard = KeyAccessGuard.Unguarded,
             accessibility = KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly,
         )
@@ -129,10 +129,11 @@ private class KeyPairManagerAppleImpl : KeyPairManager {
         }
     }
 
-    override suspend fun getSortedKeyIds(predicate: (name: String) -> Boolean): List<String> = Dispatchers.IO {
+    override suspend fun getSortedKeyIds(matchOn: MatchOn): List<String> = Dispatchers.IO {
         memScoped {
             val (resultsArray, count) = getAllPrivateKeysQuery()
             if (resultsArray == null || count == 0) return@memScoped emptyList()
+            val predicate = matchOn.asFilterPredicate()
 
             buildList {
                 for (i in 0 until count) {
@@ -141,11 +142,7 @@ private class KeyPairManagerAppleImpl : KeyPairManager {
                     val dateRef: CFDateRef = item[kSecAttrCreationDate]
 
                     if (predicate(tag)) {
-                        val keyId = tag.substring(
-                            startIndex = tag.indexOfFirst { it == '-' } + 1,
-                            endIndex = tag.indexOfLast { it == '-' }
-                        )
-                        add(keyId to dateRef.toNSDate())
+                        add(extractKeyIdFromTag(tag) to dateRef.toNSDate())
                     }
                 }
             }.sortedBy { (_, date) -> date.timeIntervalSince1970 }.map { (keyId, _) -> keyId }
@@ -153,37 +150,31 @@ private class KeyPairManagerAppleImpl : KeyPairManager {
     }
 
     @OptIn(BetaInteropApi::class)
-    override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String? = Dispatchers.IO {
+    override suspend fun findKeyIdFor(matchOn: MatchOn): String? = Dispatchers.IO {
         memScoped {
             val (resultsArray, count) = getAllPrivateKeysQuery()
 
             if (resultsArray == null || count == 0) return@memScoped null
+            val predicate = matchOn.asFilterPredicate()
 
             for (i in 0 until count) {
                 val tag = extractTagFromItem(resultsArray[i.toLong()]) ?: continue
 
-                if (predicate(tag)) {
-                    val keyId = tag.substring(
-                        startIndex = tag.indexOfFirst { it == '-' } + 1,
-                        endIndex = tag.indexOfLast { it == '-' }
-                    )
-                    return@memScoped keyId
-                }
+                if (predicate(tag)) return@memScoped extractKeyIdFromTag(tag)
             }
 
             return@memScoped null
         }
     }
 
-    override suspend fun deleteKeysMatching(
-        predicate: (name: String) -> Boolean
-    ): Xor<Unit, Failure.KeyManagement.KeyNotFound> = Dispatchers.IO {
+    override suspend fun deleteKeysMatching(matchOn: MatchOn): Xor<Unit, Failure.KeyManagement.KeyNotFound> = Dispatchers.IO {
         memScoped {
             val (resultsArray, count) = getAllPrivateKeysQuery()
 
             if (resultsArray == null || count == 0) {
                 return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
             }
+            val predicate = matchOn.asFilterPredicate()
 
             var hasDeletedAtLeastOneKey = false
             for (i in 0 until count) {
@@ -202,6 +193,10 @@ private class KeyPairManagerAppleImpl : KeyPairManager {
             }
         }
     }
+
+    override fun MatchOn.PasskeyId.asFilterPredicate() = { name: String -> name.endsWith(id) }
+
+    private fun extractKeyIdFromTag(tag: String): String = tag.substring(startIndex = tag.indexOfFirst { it == '-' } + 1)
 
     @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
     private fun MemScope.getAllPrivateKeysQuery(): Pair<CFArrayRef?, Int> {
