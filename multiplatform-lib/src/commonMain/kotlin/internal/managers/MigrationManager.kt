@@ -41,7 +41,6 @@ import kotlinx.io.IOException
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import com.infomaniak.auth.lib.internal.KeyPairManager.Filters as keyFilters
 
 internal class MigrationManager(
     private val accountsDatabase: AccountsDatabase,
@@ -62,26 +61,13 @@ internal class MigrationManager(
     }
 
     suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: String) -> Unit) {
-        val oldKeyId = authenticatorManager.getKeyIdFor(account.id) ?: return //TODO: Handle multiple passkeys present.
-        // Get token with previous passkey
-        val tokenFromOldPasskey = authenticatorManager.getToken(
-            clientId = clientId,
-            userId = account.id,
-            keyIdOrDefault = oldKeyId,
-        ).firstOrElse { error(it) }
-        // Register a new passkey
-        val newKeyId = authenticatorManager.registerPasskey(tokenFromOldPasskey.accessToken, account.id)
-        // Getting a new token with the new passkey
-        val tokenWithNewPassKey = authenticatorManager.getToken(
-            clientId = clientId,
-            userId = account.id,
-            keyIdOrDefault = newKeyId,
-        ).firstOrElse { error(it) }
-        persistToken(account.id, tokenWithNewPassKey.accessToken)
-        // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
-        webAuthnRepository.deletePasskey(tokenWithNewPassKey.accessToken, oldKeyId)
-        val _ = authenticatorManager.keyPairManager.deleteKeysMatching(keyFilters.forPasskeyId(oldKeyId))
-        dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+        val restorer = AccountRestorer(
+            accountsDatabase = accountsDatabase,
+            authenticatorManager = authenticatorManager,
+            webAuthnRepository = webAuthnRepository,
+            clientId = clientId
+        )
+        restorer.restore(account, persistToken)
     }
 
     suspend fun addLegacyAccountsToDB() {

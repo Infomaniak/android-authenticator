@@ -26,6 +26,7 @@ import com.infomaniak.auth.lib.internal.models.RegisterPasskey
 import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.network.exceptions.ApiException
 
 internal class WebAuthnRepository(
     private val authenticatorRequest: AuthenticatorRequest,
@@ -44,8 +45,13 @@ internal class WebAuthnRepository(
     }
 
     // Deletion of existing passkey (authentified)
-    suspend fun deletePasskey(token: String, passkeyId: String) {
-        authenticatorRequest.deletePasskey(token, passkeyId)
+    suspend fun deletePasskeyIfExists(token: String, passkeyId: String) {
+        try {
+            authenticatorRequest.deletePasskey(token, passkeyId)
+        } catch (e: ApiException) {
+            if (e.statusCode == 404) return
+            throw e
+        }
     }
 
     // Authentification challenge (not authentified)

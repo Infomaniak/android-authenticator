@@ -21,13 +21,18 @@ import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import splitties.init.appCtx
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.attribute.BasicFileAttributes
 
-internal actual class KeyPairManagerImpl : KeyPairManager {
+internal actual fun createKeyPairManager(): KeyPairManager = KeyPairManagerAndroidImpl()
+
+private class KeyPairManagerAndroidImpl : KeyPairManager() {
 
     @Throws(Exception::class)
-    actual override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
+    override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
@@ -37,7 +42,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         return null
     }
 
-    actual override suspend fun retrievePublicKey(
+    override suspend fun retrievePublicKey(
         userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
@@ -47,7 +52,7 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
-    actual override suspend fun retrievePrivateKey(
+    override suspend fun retrievePrivateKey(
         userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
@@ -57,21 +62,46 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
     }
 
-    actual override suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String? {
+    override suspend fun getSortedKeyIds(matchOn: MatchOn): List<String> {
+        val files = withContext(Dispatchers.IO) {
+            appCtx.filesDir.listFiles()
+        } ?: return emptyList()
+        return buildList {
+            val predicate = matchOn.asFilterPredicate()
+            for (file in files) {
+                val fileName = file.name
+                if (predicate(file.name)) {
+                    val fileTimestampMillis = Dispatchers.IO {
+                        try {
+                            Files.readAttributes(file.toPath(), BasicFileAttributes::class.java).creationTime().toMillis()
+                        } catch (_: IOException) {
+                            file.lastModified()
+                        }
+                    }
+                    add(extractKeyIdFromFileName(fileName) to fileTimestampMillis)
+                }
+            }
+        }.sortedBy { (_, creationTime) ->
+            creationTime
+        }.map { (keyId, _) ->
+            keyId
+        }.distinct() // Private/public keys pairs have a common id, so we filter duplicates.
+    }
+
+    override suspend fun findKeyIdFor(matchOn: MatchOn): String? {
+        val predicate = matchOn.asFilterPredicate()
         val userPassKey: File = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.find {
             predicate(it.name)
         } ?: return null
 
-        val keyId = userPassKey.name.substring(
-            startIndex = userPassKey.name.indexOfFirst { it == '-' } + 1,
-            endIndex = userPassKey.name.indexOfLast { it == '-' }
-        )
-        return keyId
+        //TODO 2: Put keys into a dedicated dir
+        return extractKeyIdFromFileName(userPassKey.name)
     }
 
-    actual override suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
+    override suspend fun deleteKeysMatching(matchOn: MatchOn): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
+        val predicate = matchOn.asFilterPredicate()
         val keys = withContext(Dispatchers.IO) {
             appCtx.filesDir.listFiles()
         }?.filter {
@@ -82,6 +112,13 @@ internal actual class KeyPairManagerImpl : KeyPairManager {
 
         return Xor.First(Unit)
     }
+
+    override fun MatchOn.PasskeyId.asFilterPredicate() = { name: String -> "-$id-" in name }
+
+    private fun extractKeyIdFromFileName(name: String): String = name.substring(
+        startIndex = name.indexOfFirst { it == '-' } + 1,
+        endIndex = name.indexOfLast { it == '-' }
+    )
 
     private suspend fun saveFileToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
         val file = File(appCtx.filesDir, fileName)

@@ -29,9 +29,6 @@ internal interface AccountsDao {
     @Query("SELECT * FROM AccountEntity")
     fun getAccountsAsFlow(): Flow<List<AccountEntity>>
 
-    @Query("SELECT * FROM AccountEntity WHERE status = :status")
-    fun getAccountsWith(status: AccountEntity.Status): List<AccountEntity>
-
     @Query("SELECT * FROM AccountEntity WHERE id = :id")
     fun getAccountAsFlow(id: Long): Flow<AccountEntity?>
 
