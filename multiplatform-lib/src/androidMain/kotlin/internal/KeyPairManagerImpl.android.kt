@@ -21,6 +21,7 @@ import com.infomaniak.auth.lib.internal.utils.Xor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import splitties.init.appCtx
 import java.io.File
 import java.nio.file.Files
@@ -70,8 +71,14 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
             for (file in files) {
                 val fileName = file.name
                 if (predicate(file.name)) {
-                    val attrs = Dispatchers.IO { Files.readAttributes(file.toPath(), BasicFileAttributes::class.java) }
-                    add(extractKeyIdFromFileName(fileName) to attrs.creationTime())
+                    val millis = Dispatchers.IO {
+                        try {
+                            Files.readAttributes(file.toPath(), BasicFileAttributes::class.java).creationTime().toMillis()
+                        } catch (_: IOException) {
+                            file.lastModified()
+                        }
+                    }
+                    add(extractKeyIdFromFileName(fileName) to millis)
                 }
             }
         }.sortedBy { (_, creationTime) ->
