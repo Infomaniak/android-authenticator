@@ -71,14 +71,14 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
             for (file in files) {
                 val fileName = file.name
                 if (predicate(file.name)) {
-                    val millis = Dispatchers.IO {
+                    val fileTimestampMillis = Dispatchers.IO {
                         try {
                             Files.readAttributes(file.toPath(), BasicFileAttributes::class.java).creationTime().toMillis()
                         } catch (_: IOException) {
                             file.lastModified()
                         }
                     }
-                    add(extractKeyIdFromFileName(fileName) to millis)
+                    add(extractKeyIdFromFileName(fileName) to fileTimestampMillis)
                 }
             }
         }.sortedBy { (_, creationTime) ->
