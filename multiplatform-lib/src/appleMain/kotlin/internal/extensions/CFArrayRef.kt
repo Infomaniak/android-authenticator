@@ -25,7 +25,7 @@ import platform.CoreFoundation.CFArrayRef
 
 @ExperimentalForeignApi
 @Suppress("unchecked_cast")
-operator fun <T : CPointer<*>?> CFArrayRef?.get(index: Long): T = CFArrayGetValueAtIndex(this, index) as T
+internal operator fun <T : CPointer<*>?> CFArrayRef?.get(index: Long): T = CFArrayGetValueAtIndex(this, index) as T
 
 @ExperimentalForeignApi
 internal val CFArrayRef?.size: Long inline get() = CFArrayGetCount(this)
