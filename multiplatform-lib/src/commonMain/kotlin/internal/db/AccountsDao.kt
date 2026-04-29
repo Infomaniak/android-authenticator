@@ -32,6 +32,9 @@ internal interface AccountsDao {
     @Query("SELECT * FROM AccountEntity WHERE id = :id")
     fun getAccountAsFlow(id: Long): Flow<AccountEntity?>
 
+    @Query("SELECT * FROM AccountEntity WHERE id = :id")
+    suspend fun getAccount(id: Long): AccountEntity?
+
     @Upsert
     suspend fun upsert(account: AccountEntity)
 

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ab7e6c6aadc7811b61b0ffe94bc67ec1",
+    "identityHash": "9a233d24627b386b646a6f9418812e76",
     "entities": [
       {
         "tableName": "AccountEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `fullName` TEXT NOT NULL, `initials` TEXT NOT NULL, `email` TEXT NOT NULL, `avatarUrl` TEXT, `status` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `fullName` TEXT NOT NULL, `initials` TEXT NOT NULL, `email` TEXT NOT NULL, `avatarUrl` TEXT, `status` INTEGER NOT NULL, `securityScore` INTEGER NOT NULL, `lastPasswordUpdate` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -42,6 +42,17 @@
             "columnName": "status",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "securityScore",
+            "columnName": "securityScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastPasswordUpdate",
+            "columnName": "lastPasswordUpdate",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -54,7 +65,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab7e6c6aadc7811b61b0ffe94bc67ec1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9a233d24627b386b646a6f9418812e76')"
     ]
   }
 }

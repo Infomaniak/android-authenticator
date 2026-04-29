@@ -64,6 +64,7 @@ import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
+import com.infomaniak.auth.ui.screen.accountlist.AccountListViewModel.AccountListUiState
 import com.infomaniak.auth.ui.screen.accountlist.AccountSecurityLevel.Companion.toAccountSecurityLevel
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -86,6 +87,7 @@ fun AccountListScreen(
                 uiState = { state },
                 onAccountClicked = onAccountClicked,
                 onChallengesRefreshRequested = viewModel::refreshChallenges,
+                onUserProfilesRefreshRequested = viewModel::refreshUserProfiles,
             )
         }
         is AccountListUiState.Loading -> Unit
@@ -97,6 +99,7 @@ fun AccountListScreen(
     uiState: () -> AccountListUiState.Success,
     onAccountClicked: (Account) -> Unit,
     onChallengesRefreshRequested: () -> Unit,
+    onUserProfilesRefreshRequested: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = uiState()
@@ -122,6 +125,7 @@ fun AccountListScreen(
             onRefresh = {
                 isRefreshing = true
                 onChallengesRefreshRequested()
+                onUserProfilesRefreshRequested()
             },
         ) {
             Column(
@@ -247,6 +251,7 @@ private fun AccountListScreenPreview() {
                 uiState = { AccountListUiState.Success(fakeAccountPairs) },
                 onAccountClicked = {},
                 onChallengesRefreshRequested = {},
+                onUserProfilesRefreshRequested = {},
             )
         }
     }

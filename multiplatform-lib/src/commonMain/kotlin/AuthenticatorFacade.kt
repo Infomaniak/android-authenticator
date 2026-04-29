@@ -62,6 +62,8 @@ abstract class AuthenticatorFacade internal constructor() {
     @Throws(Exception::class)
     abstract suspend fun refreshTokenFor(userId: Long)
 
+    abstract suspend fun refreshUserProfileFor(token: String, userId: Long)
+
     companion object {
 
         fun create(
