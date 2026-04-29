@@ -220,6 +220,7 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
         CFRelease(query)
 
         return if (status == errSecSuccess && resultRef.value != null) {
+            defer { CFRelease(resultRef.value) }
             @Suppress("unchecked_cast")
             val resultsArray = resultRef.value as CFArrayRef
             Pair(resultsArray, resultsArray.size.toInt())
@@ -239,6 +240,7 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
             this[kSecAttrApplicationTag] = tag.toNsData()
         }
         SecItemDelete(deleteQuery)
+        CFRelease(deleteQuery)
     }
 
     @OptIn(ExperimentalForeignApi::class)
