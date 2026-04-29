@@ -31,14 +31,26 @@ internal actual fun createKeyPairManager(): KeyPairManager = KeyPairManagerAndro
 
 private class KeyPairManagerAndroidImpl : KeyPairManager() {
 
+    private val keysDir by lazy {
+        appCtx.filesDir.resolve("passkeys").also { passkeysDir ->
+            passkeysDir.mkdir()
+            //TODO[ik-auth]: Remove the code below after the next pre-release.
+            appCtx.filesDir.listFiles { it.name.endsWith(".key") }!!.forEach { keyFile ->
+                keyFile.renameTo(passkeysDir.resolve(keyFile.name))
+            }
+        }
+    }
+
     @Throws(Exception::class)
     override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
             return Failure.KeyManagement.GenerationFailed(it.toString())
         }
 
-        saveFileToFilesDir("$userId-$keyId-private.key", keyPair.private.encoded)
-        saveFileToFilesDir("$userId-$keyId-public.key", keyPair.public.encoded)
+        Dispatchers.IO {
+            keyFile(userId = userId, keyId = keyId, isPublic = false).writeBytes(keyPair.private.encoded)
+            keyFile(userId = userId, keyId = keyId, isPublic = true).writeBytes(keyPair.public.encoded)
+        }
         return null
     }
 
@@ -46,7 +58,7 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
         userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
-        val file = File(appCtx.filesDir, "$userId-$keyId-public.key")
+        val file = keyFile(userId = userId, keyId = keyId, isPublic = true)
         runCatching {
             Xor.First(file.readBytes())
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
@@ -56,7 +68,7 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
         userId: Long,
         keyId: String,
     ): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed> = Dispatchers.IO {
-        val file = File(appCtx.filesDir, "$userId-$keyId-private.key")
+        val file = keyFile(userId = userId, keyId = keyId, isPublic = false)
         runCatching {
             Xor.First(file.readBytes())
         }.getOrElse { Xor.Second(Failure.KeyManagement.KeyExtractionFailed(it.toString())) }
@@ -64,7 +76,7 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
 
     override suspend fun getSortedKeyIds(matchOn: MatchOn): List<String> {
         val files = withContext(Dispatchers.IO) {
-            appCtx.filesDir.listFiles()
+            keysDir.listFiles()
         } ?: return emptyList()
         return buildList {
             val predicate = matchOn.asFilterPredicate()
@@ -91,19 +103,18 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
     override suspend fun findKeyIdFor(matchOn: MatchOn): String? {
         val predicate = matchOn.asFilterPredicate()
         val userPassKey: File = withContext(Dispatchers.IO) {
-            appCtx.filesDir.listFiles()
+            keysDir.listFiles()
         }?.find {
             predicate(it.name)
         } ?: return null
 
-        //TODO 2: Put keys into a dedicated dir
         return extractKeyIdFromFileName(userPassKey.name)
     }
 
     override suspend fun deleteKeysMatching(matchOn: MatchOn): Xor<Unit, Failure.KeyManagement.KeyNotFound> {
         val predicate = matchOn.asFilterPredicate()
         val keys = withContext(Dispatchers.IO) {
-            appCtx.filesDir.listFiles()
+            keysDir.listFiles()
         }?.filter {
             predicate(it.name)
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
@@ -120,8 +131,8 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
         endIndex = name.indexOfLast { it == '-' }
     )
 
-    private suspend fun saveFileToFilesDir(fileName: String, key: ByteArray) = Dispatchers.IO {
-        val file = File(appCtx.filesDir, fileName)
-        file.writeBytes(key)
+    private fun keyFile(userId: Long, keyId: String, isPublic: Boolean): File {
+        val visibility = if (isPublic) "public" else "private"
+        return keysDir.resolve("$userId-$keyId-$visibility.key")
     }
 }
