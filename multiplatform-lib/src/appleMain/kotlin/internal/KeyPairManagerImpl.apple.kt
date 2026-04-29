@@ -21,6 +21,7 @@ package com.infomaniak.auth.lib.internal
 
 import com.infomaniak.auth.lib.internal.extensions.buildCFDictionary
 import com.infomaniak.auth.lib.internal.extensions.get
+import com.infomaniak.auth.lib.internal.extensions.isNullOrEmpty
 import com.infomaniak.auth.lib.internal.extensions.set
 import com.infomaniak.auth.lib.internal.extensions.size
 import com.infomaniak.auth.lib.internal.extensions.toByteArray
@@ -131,13 +132,13 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
 
     override suspend fun getSortedKeyIds(matchOn: MatchOn): List<String> = Dispatchers.IO {
         memScoped {
-            val (resultsArray, count) = getAllPrivateKeysQuery()
-            if (resultsArray == null || count == 0) return@memScoped emptyList()
+            val resultsArray = getAllPrivateKeysQuery()
+            if (resultsArray.isNullOrEmpty()) return@memScoped emptyList()
             val predicate = matchOn.asFilterPredicate()
 
             buildList {
-                for (i in 0 until count) {
-                    val item: CFDictionaryRef = resultsArray[i.toLong()]
+                for (i in 0 until resultsArray.size) {
+                    val item: CFDictionaryRef = resultsArray[i]
                     val tag = extractTagFromItem(item) ?: continue
                     val dateRef: CFDateRef = item[kSecAttrCreationDate]
 
@@ -156,13 +157,13 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
     @OptIn(BetaInteropApi::class)
     override suspend fun findKeyIdFor(matchOn: MatchOn): String? = Dispatchers.IO {
         memScoped {
-            val (resultsArray, count) = getAllPrivateKeysQuery()
+            val resultsArray = getAllPrivateKeysQuery()
 
-            if (resultsArray == null || count == 0) return@memScoped null
+            if (resultsArray.isNullOrEmpty()) return@memScoped null
             val predicate = matchOn.asFilterPredicate()
 
-            for (i in 0 until count) {
-                val tag = extractTagFromItem(resultsArray[i.toLong()]) ?: continue
+            for (i in 0 until resultsArray.size) {
+                val tag = extractTagFromItem(resultsArray[i]) ?: continue
 
                 if (predicate(tag)) return@memScoped extractKeyIdFromTag(tag)
             }
@@ -173,16 +174,16 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
 
     override suspend fun deleteKeysMatching(matchOn: MatchOn): Xor<Unit, Failure.KeyManagement.KeyNotFound> = Dispatchers.IO {
         memScoped {
-            val (resultsArray, count) = getAllPrivateKeysQuery()
+            val resultsArray = getAllPrivateKeysQuery()
 
-            if (resultsArray == null || count == 0) {
+            if (resultsArray.isNullOrEmpty()) {
                 return@memScoped Xor.Second(Failure.KeyManagement.KeyNotFound("No keys found in Keychain"))
             }
             val predicate = matchOn.asFilterPredicate()
 
             var hasDeletedAtLeastOneKey = false
-            for (i in 0 until count) {
-                val tag = extractTagFromItem(resultsArray[i.toLong()]) ?: continue
+            for (i in 0 until resultsArray.size) {
+                val tag = extractTagFromItem(resultsArray[i]) ?: continue
 
                 if (predicate(tag)) {
                     deleteKeyByTag(tag)
@@ -206,7 +207,7 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
     private fun extractKeyIdFromTag(tag: String): String = tag.substring(startIndex = tag.indexOfFirst { it == '-' } + 1)
 
     @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
-    private fun MemScope.getAllPrivateKeysQuery(): Pair<CFArrayRef?, Int> {
+    private fun MemScope.getAllPrivateKeysQuery(): CFArrayRef? {
         val query = buildCFDictionary {
             this[kSecClass] = kSecClassKey
             this[kSecAttrKeyClass] = kSecAttrKeyClassPrivate
@@ -223,9 +224,9 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
             defer { CFRelease(resultRef.value) }
             @Suppress("unchecked_cast")
             val resultsArray = resultRef.value as CFArrayRef
-            Pair(resultsArray, resultsArray.size.toInt())
+            resultsArray
         } else {
-            Pair(null, 0)
+            null
         }
     }
 

@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalContracts::class)
+
 package com.infomaniak.auth.lib.internal.extensions
 
 import kotlinx.cinterop.CPointer
@@ -22,6 +24,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFArrayGetCount
 import platform.CoreFoundation.CFArrayGetValueAtIndex
 import platform.CoreFoundation.CFArrayRef
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 @ExperimentalForeignApi
 @Suppress("unchecked_cast")
@@ -29,3 +33,9 @@ internal operator fun <T : CPointer<*>?> CFArrayRef.get(index: Long): T = CFArra
 
 @ExperimentalForeignApi
 internal val CFArrayRef.size: Long inline get() = CFArrayGetCount(this)
+
+@ExperimentalForeignApi
+internal fun CFArrayRef?.isNullOrEmpty(): Boolean {
+    contract { returns(false) implies (this@isNullOrEmpty != null) }
+    return this == null || size == 0L
+}
