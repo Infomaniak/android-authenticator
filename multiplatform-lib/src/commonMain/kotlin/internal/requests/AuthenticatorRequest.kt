@@ -27,7 +27,7 @@ import com.infomaniak.auth.lib.internal.models.SuccessfulApiResponse
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.network.utils.decode
-import com.infomaniak.auth.lib.models.migration.user.UserProfile
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
@@ -142,7 +142,7 @@ internal class AuthenticatorRequest(
 
     suspend fun getUserProfile(
         token: String,
-    ): SuccessfulApiResponse<UserProfile> {
+    ): SuccessfulApiResponse<SharedUserProfile> {
         val url = "${routes.userProfile()}&with=security"
 
         return httpClient.get(url) {

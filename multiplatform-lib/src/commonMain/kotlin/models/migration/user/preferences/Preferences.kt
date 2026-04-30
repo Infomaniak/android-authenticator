@@ -17,16 +17,16 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import com.infomaniak.auth.lib.models.migration.user.preferences.security.Security
+import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedSecurity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Preferences(
-    var security: Security? = null,
+    var security: SharedSecurity? = null,
     @SerialName("account")
-    var organizationPreference: OrganizationPreference,
-    var language: Language,
-    var country: Country,
-    var timezone: TimeZone? = null,
+    var organizationPreference: SharedOrganizationPreference,
+    var language: SharedLanguage,
+    var country: SharedCountry,
+    var timezone: SharedTimeZone? = null,
 )
