@@ -41,7 +41,7 @@ data class Account(
             data class ReLogin(
                 val legacyAccount: Account,
                 val hadIncorrectPassword: Boolean = false,
-                val lastIssue: Issue.Retriable.Reason?,
+                val lastIssue: Issue.Retriable.Cause?,
                 val sendCredentials: ((CredentialsForMigration) -> Unit)?,
             ) : NotConnected {
 

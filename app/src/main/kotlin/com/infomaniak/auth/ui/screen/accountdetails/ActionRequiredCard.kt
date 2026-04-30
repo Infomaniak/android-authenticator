@@ -84,10 +84,10 @@ fun ActionRequiredCard(
         is Account.Status.NotConnected.LoginFailed -> {
             when (status.cause) {
                 is Issue.Retriable -> {
-                    val code = when (val reason = (status.cause as Issue.Retriable).reason) {
-                        Issue.Retriable.Reason.NetworkIssue -> -1
-                        Issue.Retriable.Reason.ServerUnavailable -> 503
-                        is Issue.Retriable.Reason.Other -> reason.errorCode
+                    val code = when (val cause = (status.cause as Issue.Retriable).cause) {
+                        Issue.Retriable.Cause.NetworkIssue -> -1
+                        Issue.Retriable.Cause.ServerUnavailable -> 503
+                        is Issue.Retriable.Cause.Other -> cause.errorCode
                     }
                     ActionRequiredCard(
                         configuration = ActionRequiredConfiguration(

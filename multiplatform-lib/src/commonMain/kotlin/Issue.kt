@@ -24,13 +24,13 @@ sealed interface Issue {
      * @property proceed Typically called when the user presses a button labeled "Skip" or "Retry".
      */
     data class Retriable(
-        val reason: Reason,
+        val cause: Cause,
         val proceed: (shouldRetry: Boolean) -> Unit
     ) : Issue {
-        sealed interface Reason {
-            data object NetworkIssue : Reason
-            data object ServerUnavailable : Reason
-            data class Other(val errorCode: Int, val message: String) : Reason
+        sealed interface Cause {
+            data object NetworkIssue : Cause
+            data object ServerUnavailable : Cause
+            data class Other(val errorCode: Int, val message: String) : Cause
         }
     }
 

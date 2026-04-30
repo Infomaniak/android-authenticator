@@ -25,7 +25,7 @@ import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.CredentialsForMigration
 import com.infomaniak.auth.lib.Issue
-import com.infomaniak.auth.lib.Issue.Retriable.Reason
+import com.infomaniak.auth.lib.Issue.Retriable.Cause
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
@@ -359,7 +359,7 @@ internal class AuthenticatorFacadeImpl(
                 }
             }.cancellable().getOrElse {
                 it.printStackTrace()
-                status.copy(lastIssue = it.toIssueReason(accountToMigrate.id))
+                status.copy(lastIssue = it.toIssueCause(accountToMigrate.id))
             }
         }
     }
@@ -388,9 +388,9 @@ internal class AuthenticatorFacadeImpl(
                     emit(Account.Status.NotConnected.LoginFailed(issue))
                     awaitCancellation()
                 }
-                val issueReason = it.toIssueReason(userId)
+                val issueReason = it.toIssueCause(userId)
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
-                val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
+                val issue = Issue.Retriable(cause = issueReason, proceed = shouldRetryAsync::complete)
                 emit(Account.Status.NotConnected.LoginFailed(issue))
                 val shouldRetry = shouldRetryAsync.await()
                 if (shouldRetry) continue else onGiveUp()
@@ -398,20 +398,20 @@ internal class AuthenticatorFacadeImpl(
         }
     }
 
-    private fun Throwable.toIssueReason(userId: Long): Reason = when (this) {
-        is IOException -> Reason.NetworkIssue
-        is ApiException if (statusCode == 503) -> Reason.ServerUnavailable
+    private fun Throwable.toIssueCause(userId: Long): Cause = when (this) {
+        is IOException -> Cause.NetworkIssue
+        is ApiException if (statusCode == 503) -> Cause.ServerUnavailable
         is ApiException.ApiErrorException -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
-            Reason.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
+            Cause.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
         }
         is ApiException.UnexpectedApiErrorFormatException -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
-            Reason.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
+            Cause.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
         }
         else -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
-            Reason.Other(11_000, message ?: this::class.simpleName ?: "$this")
+            Cause.Other(11_000, message ?: this::class.simpleName ?: "$this")
         }
     }
 }
