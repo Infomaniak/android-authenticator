@@ -53,7 +53,7 @@ data class Account(
                 val isSendingCredentials: Boolean get() = sendCredentials == null
             }
 
-            data class LoginFailed(val cause: Issue) : NotConnected
+            data class LoginFailed(val issue: Issue) : NotConnected
         }
     }
 }
