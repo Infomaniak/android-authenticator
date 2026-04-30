@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SecureTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -69,6 +71,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 fun LoginScreen(
     legacyAccountId: Long,
     closeLoginScreen: () -> Unit,
+    onSendingCredentials: () -> Unit,
     isOnboarding: Boolean,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -76,12 +79,21 @@ fun LoginScreen(
         viewModel.uiStateForAccount(legacyAccountId)
     }.collectAsState(LoginUiState.Loading)
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     when (val state = uiState) {
         is LoginUiState.Loading -> Unit
         is LoginUiState.Ready -> {
-            LaunchedEffect(state.legacyAccount.status::class) {
-                if (state.legacyAccount.status is Account.Status.LoggedIn && !isOnboarding) {
-                    closeLoginScreen()
+            val resources = LocalResources.current
+            LaunchedEffect(state.legacyAccount.status, resources) {
+                when (val status = state.legacyAccount.status) {
+                    is Account.Status.NotConnected.ReLogin if status.isSendingCredentials -> {
+                        onSendingCredentials()
+                    }
+                    is Account.Status.NotConnected.ReLogin if status.lastIssue != null -> {
+                        snackbarHostState.showSnackbar(resources.getString(R.string.errorWithRetryMessage))
+                    }
+                    else -> Unit
                 }
             }
 
@@ -101,6 +113,7 @@ fun LoginScreen(
                     }
                 },
                 isOnboarding = isOnboarding,
+                snackbarHostState = snackbarHostState,
             )
         }
     }
@@ -112,6 +125,7 @@ private fun LoginScreen(
     onBackPressed: () -> Unit,
     onLoginPressed: (String, String) -> Unit,
     isOnboarding: Boolean,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     val passwordState = rememberTextFieldState(initialText = "")
@@ -121,6 +135,7 @@ private fun LoginScreen(
 
     BottomStickyButtonScaffold(
         modifier = modifier.imePadding(),
+        snackbarHostState = snackbarHostState,
         topBar = {
             InfomaniakAuthenticatorTopAppBar(
                 withTitle = false,
@@ -247,6 +262,7 @@ private fun LoginScreenPreview() {
             onBackPressed = {},
             onLoginPressed = { _, _ -> },
             isOnboarding = false,
+            snackbarHostState = SnackbarHostState(),
         )
     }
 }

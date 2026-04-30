@@ -27,10 +27,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages
@@ -39,9 +42,59 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun SecuringAccountScreen(modifier: Modifier = Modifier) {
+fun SecuringAccountFromLoginInAppScreen(
+    accountId: Long,
+    onAccountLoggedIn: () -> Unit,
+    returnToLoginScreen: () -> Unit,
+    viewModel: SecuringAccountViewModel = hiltViewModel(),
+) {
+    LaunchedEffect(accountId) {
+        handleLoginResultWithMinDelay(
+            fetchAccountStatus = viewModel.fetchAccountStatus(accountId),
+            onAccountLoggedIn = onAccountLoggedIn,
+            returnToLoginScreen = returnToLoginScreen
+        )
+    }
+
+    SecuringAccountScreen()
+}
+
+private suspend fun handleLoginResultWithMinDelay(
+    fetchAccountStatus: Flow<Account.Status>,
+    onAccountLoggedIn: () -> Unit,
+    returnToLoginScreen: () -> Unit
+) = coroutineScope {
+    launch {
+        coroutineScope {
+            launch { delay(2.seconds) } // Stay on this screen for a min duration to avoid too quick flashes of the screen.
+            fetchAccountStatus.first { it is Account.Status.LoggedIn }
+        }
+        onAccountLoggedIn()
+    }
+    launch {
+        coroutineScope {
+            launch { delay(.7.seconds) } // Stay on this screen for a min duration to avoid too quick flashes of the screen.
+            fetchAccountStatus.first { it is Account.Status.NotConnected.LoginFailed }
+        }
+        returnToLoginScreen()
+    }
+}
+
+@Composable
+fun SecuringAccountFromOnboardingScreen() {
+    SecuringAccountScreen()
+}
+
+@Composable
+private fun SecuringAccountScreen(modifier: Modifier = Modifier) {
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {

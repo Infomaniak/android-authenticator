@@ -108,7 +108,7 @@ private fun handleAppStatus(
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
         is AppStatus.LoginRequired.MustReLogin -> NavDestination.LoginInApp(legacyAccountId = appStatus.accountId, isOnboarding = true)
-        is AppStatus.LoggingIn -> NavDestination.SecuringAccount
+        is AppStatus.LoggingIn -> NavDestination.Onboarding.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> {
             if (skipPermission) {

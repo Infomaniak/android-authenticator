@@ -34,6 +34,9 @@ sealed interface NavDestination : NavKey {
         data object Start : Onboarding
 
         @Serializable
+        data object SecuringAccount : Onboarding
+
+        @Serializable
         data object Complete : Onboarding
     }
 
@@ -43,7 +46,7 @@ sealed interface NavDestination : NavKey {
     }
 
     @Serializable
-    data object SecuringAccount : NavDestination
+    data class SecuringAccount(val accountId: Long) : NavDestination
 
     //endregion
 
