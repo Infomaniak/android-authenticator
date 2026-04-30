@@ -72,7 +72,9 @@ fun MainScreen(
         viewModel.appStatus.collect {
             val permissionStatus = notificationPermissionState?.status
             val shouldShowRationale = (permissionStatus as? PermissionStatus.Denied)?.shouldShowRationale == true
-            val showNotificationPermissionScreen = permissionStatus != PermissionStatus.Granted && (!hasTriggeredNotificationPermission || shouldShowRationale)
+            val showNotificationPermissionScreen = notificationPermissionState != null &&
+                    permissionStatus != PermissionStatus.Granted &&
+                    (!hasTriggeredNotificationPermission || shouldShowRationale)
 
             handleAppStatus(
                 appStatus = it,

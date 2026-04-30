@@ -19,7 +19,6 @@ package com.infomaniak.auth.ui.screen.permission
 
 import android.Manifest
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -75,7 +74,6 @@ fun NotificationPermissionScreen(
             notificationPermissionState.status == PermissionStatus.Granted ||
             notificationPermissionState.status is PermissionStatus.Denied && permissionAsked) {
             if (!hasTriggeredNotificationPermission) {
-                Log.v("Jamy", "NotificationPermissionScreen: ici")
                 viewModel.onNotificationPermissionTriggered()
             }
             navigateToHome()
