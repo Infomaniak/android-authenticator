@@ -42,12 +42,18 @@ import io.ktor.http.contentLength
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.async
 import kotlinx.io.IOException
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.seconds
 
 internal class ApiClientProvider(
+    scope: CoroutineScope,
     private val userAgent: String,
     private val routes: ApiRoutes,
     private val crashReport: CrashReportInterface? = null,
@@ -70,7 +76,10 @@ internal class ApiClientProvider(
         useAlternativeNames = false
     }
 
-    val httpClient = HttpClient(getHttpClientEngine()) {
+    val httpClient: suspend () -> HttpClient = { httpClientAsync.await() }
+    private val httpClientAsync = scope.async(Dispatchers.IO, start = CoroutineStart.LAZY) { createHttpClient() }
+
+    private fun createHttpClient() = HttpClient(getHttpClientEngine()) {
         install(UserAgent) {
             agent = userAgent
         }
