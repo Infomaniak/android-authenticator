@@ -74,6 +74,7 @@
     <string name="errorLoginFailed">Accesso all’account fallito. Riprova o contatta l’assistenza. (codice errore: %d)</string>
     <string name="errorMigrationFailed">La migrazione è stata interrotta.\nContattare il nostro team di assistenza tecnica.</string>
     <string name="errorOccuredTitle">Si è verificato un errore</string>
+    <string name="errorWithRetryMessage">Si è verificato un errore. Riprovare più tardi.</string>
     <string name="estimatedWait">Attesa stimata: %s</string>
     <string name="feedbackTitle">Feedback</string>
     <string name="laterButton">Più tardi</string>

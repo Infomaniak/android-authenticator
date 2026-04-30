@@ -74,6 +74,7 @@
     <string name="errorLoginFailed">Account login failed. Please try again or contact support. (error code: %d)</string>
     <string name="errorMigrationFailed">The migration has been interrupted.\nPlease contact our technical support team.</string>
     <string name="errorOccuredTitle">An error occurred</string>
+    <string name="errorWithRetryMessage">An error has occurred. Please try again later.</string>
     <string name="estimatedWait">Estimated wait: %s</string>
     <string name="feedbackTitle">Feedback</string>
     <string name="laterButton">Later</string>

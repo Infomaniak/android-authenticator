@@ -74,6 +74,7 @@
     <string name="errorLoginFailed">La connexion au compte a échoué.\nVeuillez réessayer ou contacter le support. (code erreur : %d)</string>
     <string name="errorMigrationFailed">La migration a été interrompue.\nVeuillez contacter notre équipe de support technique.</string>
     <string name="errorOccuredTitle">Une erreur est survenue</string>
+    <string name="errorWithRetryMessage">Une erreur s’est produite. Veuillez réessayer plus tard.</string>
     <string name="estimatedWait">Attente estimée %s</string>
     <string name="feedbackTitle">Feedback</string>
     <string name="laterButton">Plus tard</string>
