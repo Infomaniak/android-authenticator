@@ -90,7 +90,7 @@ abstract class AuthenticatorFacade internal constructor() {
             val authenticatorManager = AuthenticatorManager(
                 webAuthnRequests = webAuthnRequests,
                 accountsRepository = accountsRepository
-            ).also { it.keyPairManager.ensureKeyPairsAreMoved() }
+            )
             val migrationManager = MigrationManager(
                 accountsDatabase = accountsDatabase,
                 authenticatorManager = authenticatorManager,
