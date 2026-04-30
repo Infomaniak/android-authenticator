@@ -15,33 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.models.migration.user
+package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import com.infomaniak.auth.lib.models.migration.ApiToken
-import com.infomaniak.auth.lib.models.migration.user.preferences.Preferences
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
-data class UserProfile(
-    val id: Int,
-    @SerialName("display_name")
-    val displayName: String?,
-    @SerialName("first_name")
-    val firstname: String,
-    @SerialName("last_name")
-    val lastname: String,
-    val email: String,
-    val avatar: String?,
-    val login: String,
-    @SerialName("is_staff")
-    val isStaff: Boolean = false,
-    val preferences: Preferences,
-
-    /**
-     * Local
-     */
-    @Transient
-    var apiToken: ApiToken = ApiToken(accessToken = "", tokenType = "", userId = 0),
-)
+data class SharedCountry(
+    @SerialName("short_name")
+    var shortName: String,
+    @SerialName("is_enabled")
+    var isEnabled: Boolean,
+) : SharedPreferenceTemplate()

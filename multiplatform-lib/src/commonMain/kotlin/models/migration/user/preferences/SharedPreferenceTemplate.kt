@@ -17,16 +17,10 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import androidx.room.ColumnInfo
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Language(
-    @SerialName("short_name")
-    var shortName: String,
-    @ColumnInfo(defaultValue = "")
-    var locale: String,
-    @SerialName("short_locale")
-    var shortLocale: String,
-) : PreferenceTemplate()
+abstract class SharedPreferenceTemplate(
+    var id: Int = 0,
+    var name: String = "",
+)

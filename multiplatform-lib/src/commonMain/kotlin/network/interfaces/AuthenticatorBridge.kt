@@ -17,12 +17,12 @@
  */
 package com.infomaniak.auth.lib.network.interfaces
 
-import com.infomaniak.auth.lib.models.migration.ApiToken
-import com.infomaniak.auth.lib.models.migration.user.UserProfile
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 
 interface AuthenticatorBridge {
-    suspend fun getTokenFromCrossAppLogin(userId: Long): ApiToken?
+    suspend fun getTokenFromCrossAppLogin(userId: Long): SharedApiToken?
     suspend fun getTokenFromDatabase(userId: Long): String?
     suspend fun persistTokenForAccount(userId: Long, token: String)
-    suspend fun persistUserProfile(userProfile: UserProfile)
+    suspend fun persistUserProfile(userProfile: SharedUserProfile)
 }

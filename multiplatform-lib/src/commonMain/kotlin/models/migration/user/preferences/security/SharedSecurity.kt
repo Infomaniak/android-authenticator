@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Security(
+data class SharedSecurity(
     var score: Int,
     @SerialName("has_recovery_email")
     var hasRecoveryEmail: Boolean,
@@ -47,5 +47,5 @@ data class Security(
     @SerialName("double_auth_method")
     var doubleAuthMethod: String,
     @SerialName("auth_devices")
-    var authDevices: ArrayList<AuthDevices>?,
+    var authDevices: ArrayList<SharedAuthDevices>?,
 )
