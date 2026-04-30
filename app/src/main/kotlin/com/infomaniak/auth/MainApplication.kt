@@ -68,14 +68,13 @@ open class MainApplication : Application(), Configuration.Provider {
             appVersionCode = BuildConfig.VERSION_CODE,
             apiEnvironment = ApiEnvironment.Prod,
         )
+        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
     }
 
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
-
-        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
         applicationScope.launch {
             configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = SentryPreferences().isSentryAuthorized)
             DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
