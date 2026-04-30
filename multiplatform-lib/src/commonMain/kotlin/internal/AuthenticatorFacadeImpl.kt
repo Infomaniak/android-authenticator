@@ -40,6 +40,7 @@ import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
 import com.infomaniak.auth.lib.network.exceptions.ApiException
+import com.infomaniak.auth.lib.network.exceptions.NetworkException
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import kotlinx.coroutines.CompletableDeferred
@@ -399,7 +400,7 @@ internal class AuthenticatorFacadeImpl(
     }
 
     private fun Throwable.toIssueCause(userId: Long): Cause = when (this) {
-        is IOException -> Cause.NetworkIssue
+        is NetworkException, is IOException -> Cause.NetworkIssue
         is ApiException if (statusCode == 503) -> Cause.ServerUnavailable
         is ApiException.ApiErrorException -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
