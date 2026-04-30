@@ -25,7 +25,7 @@ import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.CredentialsForMigration
 import com.infomaniak.auth.lib.Issue
-import com.infomaniak.auth.lib.Issue.Retriable.Reason
+import com.infomaniak.auth.lib.Issue.Retriable.Cause
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
@@ -35,11 +35,14 @@ import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
+import com.infomaniak.auth.lib.internal.utils.launchRacer
+import com.infomaniak.auth.lib.internal.utils.race
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
 import com.infomaniak.auth.lib.network.exceptions.ApiException
+import com.infomaniak.auth.lib.network.exceptions.NetworkException
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import kotlinx.coroutines.CompletableDeferred
@@ -49,6 +52,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -178,17 +183,7 @@ internal class AuthenticatorFacadeImpl(
                         if (!stillTryingToConnect) emit(null) // Emit to skip
                     }.first()
                     accountToReloginOrSkip?.let { accountToRelogin ->
-                        val skipAsync: CompletableJob = Job()
-                        emit(AppStatus.LoginRequired.MustReLogin(accountToRelogin.id, skipAsync::complete))
-                        raceOf(
-                            { skipAsync.join() },
-                            {
-                                accounts.first { list ->
-                                    val account = list.singleOrNull() ?: return@first false
-                                    account.status is Account.Status.LoggedIn
-                                }
-                            }
-                        )
+                        handleSingleAccountToReLoginOrSkip(accountToRelogin)
                     }
                 }
             } else if (needsToShowEverythingReady) {
@@ -210,6 +205,20 @@ internal class AuthenticatorFacadeImpl(
 
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
+
+    private suspend fun FlowCollector<AppStatus.LoginRequired>.handleSingleAccountToReLoginOrSkip(account: Account) {
+        val skipAsync: CompletableJob = Job()
+        emit(AppStatus.LoginRequired.MustReLogin(account.id, skipAsync::complete))
+        raceOf(
+            { skipAsync.join() },
+            {
+                val _ = accounts.first { list ->
+                    val account = list.singleOrNull() ?: return@first false
+                    account.status is Account.Status.LoggedIn
+                }
+            }
+        )
+    }
 
     private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> =
         dao.getAccountAsFlow(userId).transformLatest { entity ->
@@ -343,12 +352,21 @@ internal class AuthenticatorFacadeImpl(
             lastIssue = null,
             sendCredentials = null
         )
+        val issueDismissals = Channel<Unit>(capacity = Channel.CONFLATED)
         loop@ while (true) {
             status = runCatching {
                 val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
                 status = status.copy(sendCredentials = credentialsAsync::complete)
                 emit(status)
-                val credentialsForMigration = credentialsAsync.await()
+                val credentialsForMigration = awaitCredentialsWhileAllowingIssueDismissal(
+                    credentialsAsync = credentialsAsync,
+                    issueDismissals = issueDismissals,
+                    lastStatus = status,
+                    onStatusUpdate = { newStatus ->
+                        status = newStatus
+                        emit(status)
+                    }
+                )
                 status = status.copy(hadIncorrectPassword = false, lastIssue = null, sendCredentials = null)
                 emit(status)
                 val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
@@ -359,9 +377,29 @@ internal class AuthenticatorFacadeImpl(
                 }
             }.cancellable().getOrElse {
                 it.printStackTrace()
-                status.copy(lastIssue = it.toIssueReason(accountToMigrate.id))
+                val issue = ReLogin.DismissableIssue(
+                    dismiss = { issueDismissals.trySend(Unit) },
+                    cause = it.toIssueCause(accountToMigrate.id)
+                )
+                status.copy(lastIssue = issue)
             }
         }
+    }
+
+    private suspend inline fun awaitCredentialsWhileAllowingIssueDismissal(
+        credentialsAsync: CompletableDeferred<CredentialsForMigration>,
+        issueDismissals: ReceiveChannel<Unit>,
+        lastStatus: ReLogin,
+        onStatusUpdate: (newStatus: ReLogin) -> Unit,
+    ): CredentialsForMigration = race {
+        launchRacer { credentialsAsync.await() }
+        if (lastStatus.lastIssue != null) launchRacer {
+            issueDismissals.receive()
+            null
+        }
+    } ?: run {
+        onStatusUpdate(lastStatus.copy(lastIssue = null))
+        credentialsAsync.await()
     }
 
     private suspend fun FlowCollector<Account.Status.NotConnected>.restoreFromBackupAttempts(account: AccountEntity) {
@@ -388,9 +426,9 @@ internal class AuthenticatorFacadeImpl(
                     emit(Account.Status.NotConnected.LoginFailed(issue))
                     awaitCancellation()
                 }
-                val issueReason = it.toIssueReason(userId)
+                val issueReason = it.toIssueCause(userId)
                 val shouldRetryAsync = CompletableDeferred<Boolean>()
-                val issue = Issue.Retriable(reason = issueReason, proceed = shouldRetryAsync::complete)
+                val issue = Issue.Retriable(cause = issueReason, proceed = shouldRetryAsync::complete)
                 emit(Account.Status.NotConnected.LoginFailed(issue))
                 val shouldRetry = shouldRetryAsync.await()
                 if (shouldRetry) continue else onGiveUp()
@@ -398,20 +436,20 @@ internal class AuthenticatorFacadeImpl(
         }
     }
 
-    private fun Throwable.toIssueReason(userId: Long): Reason = when (this) {
-        is IOException -> Reason.NetworkIssue
-        is ApiException if (statusCode == 503) -> Reason.ServerUnavailable
+    private fun Throwable.toIssueCause(userId: Long): Cause = when (this) {
+        is NetworkException, is IOException -> Cause.NetworkIssue
+        is ApiException if (statusCode == 503) -> Cause.ServerUnavailable
         is ApiException.ApiErrorException -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
-            Reason.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
+            Cause.Other(12_000 + statusCode, "http $statusCode $errorCode $errorMessage")
         }
         is ApiException.UnexpectedApiErrorFormatException -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
-            Reason.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
+            Cause.Other(22_000 + statusCode, "http $statusCode $bodyResponse")
         }
         else -> {
             crashReport.capture(userId, "re-login migration attempt failed", this)
-            Reason.Other(11_000, message ?: this::class.simpleName ?: "$this")
+            Cause.Other(11_000, message ?: this::class.simpleName ?: "$this")
         }
     }
 }

@@ -124,7 +124,7 @@ internal class ApiClientProvider(
 
     private suspend fun handleResponseExceptionWithRequest(cause: Throwable, request: HttpRequest) {
         when (cause) {
-            is IOException -> throw NetworkException("Network error: ${cause.message}")
+            is IOException -> throw NetworkException("Network error: ${cause.message}", cause)
             is ApiException, is CancellationException -> throw cause
             else -> {
                 val response = runCatching { request.call.response }.getOrNull()
@@ -132,10 +132,10 @@ internal class ApiClientProvider(
                 val bodyResponse = response?.bodyAsText() ?: cause.message ?: ""
                 val statusCode = response?.status?.value ?: -1
                 throw ApiException.UnexpectedApiErrorFormatException(
-                    statusCode,
-                    bodyResponse,
-                    cause,
-                    requestContextId
+                    statusCode = statusCode,
+                    bodyResponse = bodyResponse,
+                    cause = cause,
+                    requestContextId = requestContextId
                 )
             }
         }
