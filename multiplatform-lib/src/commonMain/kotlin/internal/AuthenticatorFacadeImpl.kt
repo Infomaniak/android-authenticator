@@ -183,17 +183,7 @@ internal class AuthenticatorFacadeImpl(
                         if (!stillTryingToConnect) emit(null) // Emit to skip
                     }.first()
                     accountToReloginOrSkip?.let { accountToRelogin ->
-                        val skipAsync: CompletableJob = Job()
-                        emit(AppStatus.LoginRequired.MustReLogin(accountToRelogin.id, skipAsync::complete))
-                        raceOf(
-                            { skipAsync.join() },
-                            {
-                                accounts.first { list ->
-                                    val account = list.singleOrNull() ?: return@first false
-                                    account.status is Account.Status.LoggedIn
-                                }
-                            }
-                        )
+                        handleSingleAccountToReLoginOrSkip(accountToRelogin)
                     }
                 }
             } else if (needsToShowEverythingReady) {
@@ -215,6 +205,20 @@ internal class AuthenticatorFacadeImpl(
 
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
+
+    private suspend fun FlowCollector<AppStatus.LoginRequired>.handleSingleAccountToReLoginOrSkip(account: Account) {
+        val skipAsync: CompletableJob = Job()
+        emit(AppStatus.LoginRequired.MustReLogin(account.id, skipAsync::complete))
+        raceOf(
+            { skipAsync.join() },
+            {
+                val _ = accounts.first { list ->
+                    val account = list.singleOrNull() ?: return@first false
+                    account.status is Account.Status.LoggedIn
+                }
+            }
+        )
+    }
 
     private fun loginAttemptsFlow(userId: Long): Flow<Account.Status.NotConnected?> =
         dao.getAccountAsFlow(userId).transformLatest { entity ->
