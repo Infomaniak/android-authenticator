@@ -18,10 +18,18 @@
 package com.infomaniak.auth.ui.screen.main
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.data.preferences.PermissionPreferences
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,4 +40,13 @@ class MainViewModel @Inject constructor(
     val appStatus = authenticatorFacade.appStatus
 
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
+    val isFirstTimeNotificationPermissionAsked: StateFlow<Boolean> = flow {
+        emitAll(PermissionPreferences().isFirstTimeNotificationPermissionGrantedFlow)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    fun onFirstTimeNotificationPermissionAsked() {
+        viewModelScope.launch {
+            PermissionPreferences().isFirstTimeNotificationPermissionAsked = true
+        }
+    }
 }
