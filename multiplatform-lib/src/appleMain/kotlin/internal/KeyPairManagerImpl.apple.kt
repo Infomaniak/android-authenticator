@@ -81,7 +81,7 @@ private class KeyPairManagerAppleImpl : KeyPairManager() {
             privateKeyPurposes = KeyPurposes.privateKeyDefaults,
             publicKeyPurposes = KeyPurposes.publicKeyDefaults,
             keyAccessGuard = KeyAccessGuard.Unguarded,
-            accessibility = KeyAccessibility.AfterFirstUnlock.ThisDeviceOnly,
+            accessibility = KeyAccessibility.AfterFirstUnlock,
         )
         when (result) {
             is Xor.First -> result.value.use { null }
