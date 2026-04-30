@@ -35,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -91,7 +92,10 @@ fun LoginScreen(
                         onSendingCredentials()
                     }
                     is Account.Status.NotConnected.ReLogin if status.lastIssue != null -> {
-                        snackbarHostState.showSnackbar(resources.getString(R.string.errorWithRetryMessage))
+                        val result = snackbarHostState.showSnackbar(resources.getString(R.string.errorWithRetryMessage))
+                        if (result == SnackbarResult.Dismissed) {
+                            status.lastIssue?.dismiss()
+                        }
                     }
                     else -> Unit
                 }
