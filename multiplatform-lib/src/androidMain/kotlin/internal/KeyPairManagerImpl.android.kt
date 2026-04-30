@@ -41,6 +41,9 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
         }
     }
 
+    override fun ensureKeyPairsAreMoved() {
+        val _ = keysDir //TODO[ik-auth]: Remove this code and the super method after the next pre-release.
+    }
     @Throws(Exception::class)
     override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {
