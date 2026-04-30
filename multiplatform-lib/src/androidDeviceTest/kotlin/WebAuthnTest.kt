@@ -18,7 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.CryptoObjectsBuilder
-import com.infomaniak.auth.lib.internal.KeyPairManagerImpl
+import com.infomaniak.auth.lib.internal.KeyPairManager
 import com.infomaniak.auth.lib.internal.models.PasskeysOptions
 import com.infomaniak.auth.lib.internal.models.PubKeyCredParam
 import com.infomaniak.auth.lib.internal.models.RelyingParty
@@ -59,7 +59,7 @@ class WebAuthnTest {
 
         // Just getting the public key to generate RegisterPasskey object
         val cryptoObjectsBuilder = CryptoObjectsBuilder()
-        val keyPairManager = KeyPairManagerImpl()
+        val keyPairManager = KeyPairManager()
         val userId = 12345L
         val keyIdAsByteArray = cryptoObjectsBuilder.getKeyIds().first
         val keyIdAsString = cryptoObjectsBuilder.getKeyIds().second

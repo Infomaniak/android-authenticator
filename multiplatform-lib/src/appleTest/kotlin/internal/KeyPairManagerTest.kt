@@ -28,7 +28,7 @@ class KeyPairManagerTest {
 
     @Test
     fun testKeyPairManager() {
-        val keyPairManager = KeyPairManagerImpl()
+        val keyPairManager = KeyPairManager()
 
         runTest {
             val userId = 12345L

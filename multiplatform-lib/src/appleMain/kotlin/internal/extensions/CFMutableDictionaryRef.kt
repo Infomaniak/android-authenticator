@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.extensions
 
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.cValuesOf
@@ -25,10 +26,12 @@ import platform.CoreFoundation.CFDataRef
 import platform.CoreFoundation.CFDictionaryAddValue
 import platform.CoreFoundation.CFDictionaryCreateMutable
 import platform.CoreFoundation.CFDictionaryGetCount
+import platform.CoreFoundation.CFDictionaryGetValue
 import platform.CoreFoundation.CFDictionaryRef
 import platform.CoreFoundation.CFIndex
 import platform.CoreFoundation.CFMutableDictionaryRef
 import platform.CoreFoundation.CFNumberCreate
+import platform.CoreFoundation.CFStringRef
 import platform.CoreFoundation.kCFAllocatorDefault
 import platform.CoreFoundation.kCFBooleanFalse
 import platform.CoreFoundation.kCFBooleanTrue
@@ -77,3 +80,7 @@ internal operator fun CFMutableDictionaryRef?.set(key: CValuesRef<*>?, value: NS
 
 @ExperimentalForeignApi
 internal val CFDictionaryRef?.size: Long inline get() = CFDictionaryGetCount(this)
+
+@Suppress("unchecked_cast")
+@ExperimentalForeignApi
+internal operator fun <T : CPointer<*>?> CFDictionaryRef?.get(key: CFStringRef?): T = CFDictionaryGetValue(this, key) as T
