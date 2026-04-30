@@ -41,14 +41,19 @@ data class Account(
             data class ReLogin(
                 val legacyAccount: Account,
                 val hadIncorrectPassword: Boolean = false,
-                val lastIssue: Issue.Retriable.Reason?,
+                val lastIssue: DismissableIssue?,
                 val sendCredentials: ((CredentialsForMigration) -> Unit)?,
             ) : NotConnected {
+
+                data class DismissableIssue(
+                    val dismiss: () -> Unit,
+                    val cause: Issue.Retriable.Cause,
+                )
 
                 val isSendingCredentials: Boolean get() = sendCredentials == null
             }
 
-            data class LoginFailed(val cause: Issue) : NotConnected
+            data class LoginFailed(val issue: Issue) : NotConnected
         }
     }
 }
