@@ -132,10 +132,10 @@ internal class ApiClientProvider(
                 val bodyResponse = response?.bodyAsText() ?: cause.message ?: ""
                 val statusCode = response?.status?.value ?: -1
                 throw ApiException.UnexpectedApiErrorFormatException(
-                    statusCode,
-                    bodyResponse,
-                    cause,
-                    requestContextId
+                    statusCode = statusCode,
+                    bodyResponse = bodyResponse,
+                    cause = cause,
+                    requestContextId = requestContextId
                 )
             }
         }
