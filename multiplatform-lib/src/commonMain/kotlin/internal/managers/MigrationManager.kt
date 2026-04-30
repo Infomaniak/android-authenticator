@@ -33,7 +33,7 @@ import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.models.migration.ApiToken
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
@@ -86,7 +86,7 @@ internal class MigrationManager(
      */
     suspend fun tryMigrating(
         userId: Long,
-        persistUser: suspend (apiToken: ApiToken) -> Unit,
+        persistUser: suspend (apiToken: SharedApiToken) -> Unit,
         authentication: MigrationAuthentication,
     ): Boolean {
         @OptIn(ExperimentalUuidApi::class)
@@ -160,8 +160,8 @@ internal class MigrationManager(
         return generator.generate(timestampSeconds)
     }
 
-    private fun AuthResult.toApiToken(): ApiToken {
-        return ApiToken(
+    private fun AuthResult.toApiToken(): SharedApiToken {
+        return SharedApiToken(
             accessToken = this.accessToken,
             tokenType = this.tokenType,
             userId = this.userId.toInt(),

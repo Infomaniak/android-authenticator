@@ -29,7 +29,7 @@ import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.utils.SignUtils
 import com.infomaniak.auth.lib.internal.utils.Xor
-import com.infomaniak.auth.lib.models.migration.ApiToken
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
@@ -74,7 +74,7 @@ internal class AuthenticatorManager(
         clientId: String,
         userId: Long,
         keyIdOrDefault: String? = null,
-    ): Xor<ApiToken, Failure.KeyManagement.KeyNotFound> {
+    ): Xor<SharedApiToken, Failure.KeyManagement.KeyNotFound> {
         val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor(MatchOn.UserId(userId))
         ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
@@ -115,7 +115,7 @@ internal class AuthenticatorManager(
             authenticatorAttachment = "platform",
         )
         val verifyAuthData = webAuthnRepository.verify(verifyAuthenticationData)
-        val apiToken = ApiToken(
+        val apiToken = SharedApiToken(
             accessToken = verifyAuthData.accessToken,
             tokenType = verifyAuthData.tokenType,
             userId = userId.toInt(),

@@ -24,10 +24,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntryDecorator
@@ -68,26 +66,21 @@ fun MainScreen(
     val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else null
-
-    var notificationPermissionScreenShown by rememberSaveable { mutableStateOf(false) }
+    val hasTriggeredNotificationPermission by viewModel.hasTriggeredNotificationPermission.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.appStatus) {
         viewModel.appStatus.collect {
             val permissionStatus = notificationPermissionState?.status
-            val isPermanentlyDenied = (permissionStatus as? PermissionStatus.Denied)?.shouldShowRationale == false
-            val isPermissionNotRequired = with(permissionStatus) {
-                (this == null || this == PermissionStatus.Granted || !isPermanentlyDenied)
-            }
-            val skipPermission = notificationPermissionScreenShown && isPermissionNotRequired
+            val shouldShowRationale = (permissionStatus as? PermissionStatus.Denied)?.shouldShowRationale == true
+            val showNotificationPermissionScreen = notificationPermissionState != null &&
+                    permissionStatus != PermissionStatus.Granted &&
+                    (!hasTriggeredNotificationPermission || shouldShowRationale)
 
             handleAppStatus(
                 appStatus = it,
                 currentDestination = currentDestination,
                 backStack = backStack,
-                skipPermission = skipPermission,
-                onPermissionAsked = {
-                    notificationPermissionScreenShown = true
-                }
+                showNotificationPermissionScreen = showNotificationPermissionScreen,
             )
         }
     }
@@ -101,8 +94,7 @@ private fun handleAppStatus(
     appStatus: AppStatus,
     currentDestination: NavKey,
     backStack: NavBackStack<NavKey>,
-    skipPermission: Boolean,
-    onPermissionAsked: () -> Unit,
+    showNotificationPermissionScreen: Boolean,
 ) {
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
@@ -111,11 +103,10 @@ private fun handleAppStatus(
         is AppStatus.LoggingIn -> NavDestination.Onboarding.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> {
-            if (skipPermission) {
-                NavDestination.Home
-            } else {
-                onPermissionAsked()
+            if (showNotificationPermissionScreen) {
                 NavDestination.Permission.Notification
+            } else {
+                NavDestination.Home
             }
         }
         is AppStatus.AddingAnAccount -> NavDestination.Onboarding.Start

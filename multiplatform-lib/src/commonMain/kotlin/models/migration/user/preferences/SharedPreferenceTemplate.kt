@@ -17,13 +17,10 @@
  */
 package com.infomaniak.auth.lib.models.migration.user.preferences
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Country(
-    @SerialName("short_name")
-    var shortName: String,
-    @SerialName("is_enabled")
-    var isEnabled: Boolean,
-) : PreferenceTemplate()
+abstract class SharedPreferenceTemplate(
+    var id: Int = 0,
+    var name: String = "",
+)

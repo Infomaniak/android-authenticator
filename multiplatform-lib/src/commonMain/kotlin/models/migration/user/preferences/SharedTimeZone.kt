@@ -20,6 +20,6 @@ package com.infomaniak.auth.lib.models.migration.user.preferences
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TimeZone(
+data class SharedTimeZone(
     var gmt: String,
-) : PreferenceTemplate()
+) : SharedPreferenceTemplate()

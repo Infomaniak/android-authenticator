@@ -30,6 +30,8 @@ internal abstract class KeyPairManager protected constructor() {
         operator fun invoke(): KeyPairManager = createKeyPairManager()
     }
 
+    open fun ensureKeyPairsAreMoved() = Unit
+
     /**
      * Generates key pair for a new registration
      * (migrating from kAuth v1 or a backup, or a fresh new login)
