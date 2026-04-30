@@ -40,13 +40,13 @@ class MainViewModel @Inject constructor(
     val appStatus = authenticatorFacade.appStatus
 
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
-    val isFirstTimeNotificationPermissionAsked: StateFlow<Boolean> = flow {
-        emitAll(PermissionPreferences().isFirstTimeNotificationPermissionGrantedFlow)
+    val hasTriggeredNotificationPermission: StateFlow<Boolean> = flow {
+        emitAll(PermissionPreferences().hasTriggeredNotificationPermissionFlow)
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    fun onFirstTimeNotificationPermissionAsked() {
+    fun onNotificationPermissionTriggered() {
         viewModelScope.launch {
-            PermissionPreferences().isFirstTimeNotificationPermissionAsked = true
+            PermissionPreferences().hasTriggeredNotificationPermission = true
         }
     }
 }

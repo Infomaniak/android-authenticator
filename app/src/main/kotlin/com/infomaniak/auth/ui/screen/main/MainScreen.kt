@@ -66,24 +66,19 @@ fun MainScreen(
     val notificationPermissionState: PermissionState? = if (SDK_INT >= 33) {
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else null
-    val isFirstTimeNotificationPermissionAsked by viewModel.isFirstTimeNotificationPermissionAsked.collectAsStateWithLifecycle()
+    val hasTriggeredNotificationPermission by viewModel.hasTriggeredNotificationPermission.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.appStatus) {
         viewModel.appStatus.collect {
             val permissionStatus = notificationPermissionState?.status
             val shouldShowRationale = (permissionStatus as? PermissionStatus.Denied)?.shouldShowRationale == true
-            val askNotificationPermission = isFirstTimeNotificationPermissionAsked || shouldShowRationale
+            val showNotificationPermissionScreen = permissionStatus != PermissionStatus.Granted && (!hasTriggeredNotificationPermission || shouldShowRationale)
 
             handleAppStatus(
                 appStatus = it,
                 currentDestination = currentDestination,
                 backStack = backStack,
-                askNotificationPermission = askNotificationPermission,
-                onPermissionAsked = {
-                    if (isFirstTimeNotificationPermissionAsked) {
-                        viewModel.onFirstTimeNotificationPermissionAsked()
-                    }
-                }
+                showNotificationPermissionScreen = showNotificationPermissionScreen,
             )
         }
     }
@@ -97,8 +92,7 @@ private fun handleAppStatus(
     appStatus: AppStatus,
     currentDestination: NavKey,
     backStack: NavBackStack<NavKey>,
-    askNotificationPermission: Boolean,
-    onPermissionAsked: () -> Unit,
+    showNotificationPermissionScreen: Boolean,
 ) {
     val targetDestination = when (appStatus) {
         is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
@@ -107,8 +101,7 @@ private fun handleAppStatus(
         is AppStatus.LoggingIn -> NavDestination.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> {
-            if (askNotificationPermission) {
-                onPermissionAsked()
+            if (showNotificationPermissionScreen) {
                 NavDestination.Permission.Notification
             } else {
                 NavDestination.Home

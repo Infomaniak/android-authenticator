@@ -27,8 +27,8 @@ import splitties.preferences.SuspendPrefsAccessor
 class PermissionPreferences private constructor(): Preferences(name = "PermissionPreferences") {
     companion object : SuspendPrefsAccessor<PermissionPreferences>(::PermissionPreferences)
 
-    val isFirstTimeNotificationPermissionGrantedFlow : Flow<Boolean>
-    var isFirstTimeNotificationPermissionAsked by boolPref(key = "IsFirstTimeNotificationPermissionAsked", defaultValue = false).also {
-        isFirstTimeNotificationPermissionGrantedFlow = it.valueFlow()
+    val hasTriggeredNotificationPermissionFlow : Flow<Boolean>
+    var hasTriggeredNotificationPermission by boolPref(key = "HasTriggeredNotificationPermission", defaultValue = false).also {
+        hasTriggeredNotificationPermissionFlow = it.valueFlow()
     }
 }
