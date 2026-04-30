@@ -35,6 +35,8 @@ import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
+import com.infomaniak.auth.lib.internal.utils.launchRacer
+import com.infomaniak.auth.lib.internal.utils.race
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
@@ -50,6 +52,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -344,12 +348,21 @@ internal class AuthenticatorFacadeImpl(
             lastIssue = null,
             sendCredentials = null
         )
+        val issueDismissals = Channel<Unit>(capacity = Channel.CONFLATED)
         loop@ while (true) {
             status = runCatching {
                 val credentialsAsync = CompletableDeferred<CredentialsForMigration>()
                 status = status.copy(sendCredentials = credentialsAsync::complete)
                 emit(status)
-                val credentialsForMigration = credentialsAsync.await()
+                val credentialsForMigration = awaitCredentialsWhileAllowingIssueDismissal(
+                    credentialsAsync = credentialsAsync,
+                    issueDismissals = issueDismissals,
+                    lastStatus = status,
+                    onStatusUpdate = { newStatus ->
+                        status = newStatus
+                        emit(status)
+                    }
+                )
                 status = status.copy(hadIncorrectPassword = false, lastIssue = null, sendCredentials = null)
                 emit(status)
                 val authentication = MigrationAuthentication.NoOngoingLogin(credentialsForMigration.password)
@@ -360,9 +373,29 @@ internal class AuthenticatorFacadeImpl(
                 }
             }.cancellable().getOrElse {
                 it.printStackTrace()
-                status.copy(lastIssue = it.toIssueCause(accountToMigrate.id))
+                val issue = ReLogin.DismissableIssue(
+                    dismiss = { issueDismissals.trySend(Unit) },
+                    cause = it.toIssueCause(accountToMigrate.id)
+                )
+                status.copy(lastIssue = issue)
             }
         }
+    }
+
+    private suspend inline fun awaitCredentialsWhileAllowingIssueDismissal(
+        credentialsAsync: CompletableDeferred<CredentialsForMigration>,
+        issueDismissals: ReceiveChannel<Unit>,
+        lastStatus: ReLogin,
+        onStatusUpdate: (newStatus: ReLogin) -> Unit,
+    ): CredentialsForMigration = race {
+        launchRacer { credentialsAsync.await() }
+        if (lastStatus.lastIssue != null) launchRacer {
+            issueDismissals.receive()
+            null
+        }
+    } ?: run {
+        onStatusUpdate(lastStatus.copy(lastIssue = null))
+        credentialsAsync.await()
     }
 
     private suspend fun FlowCollector<Account.Status.NotConnected>.restoreFromBackupAttempts(account: AccountEntity) {

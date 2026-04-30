@@ -19,6 +19,7 @@ package com.infomaniak.auth.ui.previewparameter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.Account.Status.NotConnected.ReLogin
 import com.infomaniak.auth.lib.Issue
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.ui.compose.preview.previewparameter.dummyUserOf
@@ -52,7 +53,7 @@ val fakeAccounts = persistentListOf(
         initials = "JS",
         email = "john.smith.relogin@ik.me",
         avatarUrl = null,
-        status = Account.Status.NotConnected.ReLogin(
+        status = ReLogin(
             legacyAccount = Account(
                 id = 2,
                 fullName = "John Issue ReLogin",
@@ -60,7 +61,10 @@ val fakeAccounts = persistentListOf(
                 email = "john.smith.relogin@ik.me",
                 status = Account.Status.NotConnected.AttemptingToConnect,
             ),
-            lastIssue = Issue.Retriable.Cause.NetworkIssue,
+            lastIssue = ReLogin.DismissableIssue(
+                dismiss = {},
+                cause = Issue.Retriable.Cause.NetworkIssue
+            ),
             sendCredentials = { _ -> },
         ),
     ),
