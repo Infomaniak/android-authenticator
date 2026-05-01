@@ -18,10 +18,10 @@
 package com.infomaniak.auth.utils
 
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
+import com.infomaniak.auth.lib.models.migration.user.preferences.Preferences
 import com.infomaniak.auth.lib.models.migration.user.preferences.SharedCountry
 import com.infomaniak.auth.lib.models.migration.user.preferences.SharedLanguage
 import com.infomaniak.auth.lib.models.migration.user.preferences.SharedOrganizationPreference
-import com.infomaniak.auth.lib.models.migration.user.preferences.Preferences
 import com.infomaniak.auth.lib.models.migration.user.preferences.SharedTimeZone
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedAuthDevices
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedSecurity
@@ -60,7 +60,7 @@ fun SharedUserProfile.toUser(): User {
 }
 
 private fun Preferences.toCorePreferences() = CorePreferences(
-    security = security?.toCoreSecurity(),
+    security = security.toCoreSecurity(),
     organizationPreference = organizationPreference.toCoreOrganizationPreference(),
     language = language.toCoreLanguage(),
     country = country.toCoreCountry(),
