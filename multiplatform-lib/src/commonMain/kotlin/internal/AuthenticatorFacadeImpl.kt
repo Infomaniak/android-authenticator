@@ -42,7 +42,7 @@ import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
-import com.infomaniak.auth.lib.models.migration.user.UserProfile
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.infomaniak.auth.lib.network.exceptions.NetworkException
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
@@ -395,7 +395,7 @@ internal class AuthenticatorFacadeImpl(
         return true
     }
 
-    private suspend fun syncAccountWithUserProfile(token: String, userId: Long): UserProfile {
+    private suspend fun syncAccountWithUserProfile(token: String, userId: Long): SharedUserProfile {
         val userProfile = authenticatorManager.getUserProfile(token)
         dao.getAccount(userId)?.let { account ->
             val passwordHasBeenUpdated =
