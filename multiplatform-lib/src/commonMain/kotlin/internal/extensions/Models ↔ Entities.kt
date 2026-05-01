@@ -22,7 +22,7 @@ import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountEntity.Status
 import com.infomaniak.auth.lib.internal.models.LegacyUser
 
-internal fun AccountEntity.toAccount(action: Account.Status.NotConnected?): Account {
+internal fun AccountEntity.toAccount(action: Account.Status?): Account {
     return Account(
         id = id,
         fullName = fullName,
@@ -31,6 +31,7 @@ internal fun AccountEntity.toAccount(action: Account.Status.NotConnected?): Acco
         avatarUrl = avatarUrl,
         status = when (status) {
             AccountEntity.Status.LoggedIn -> Account.Status.LoggedIn
+            AccountEntity.Status.PasswordChanged -> action ?: Account.Status.LoggedIn
             else -> action ?: Account.Status.NotConnected.AttemptingToConnect
         }
     )

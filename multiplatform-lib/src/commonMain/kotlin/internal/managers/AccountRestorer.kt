@@ -80,6 +80,7 @@ internal class AccountRestorer(
     private fun AccountEntity.hasNewKeyAlreadyBeenRegistered() = when (status) {
         AccountEntity.Status.RestoringFromBackup -> false
         AccountEntity.Status.DeletingOldKeyAfterRestoration -> true
+        AccountEntity.Status.PasswordChanged,
         AccountEntity.Status.ToBeMigrated,
         AccountEntity.Status.PasskeyRegistrationPending,
         AccountEntity.Status.FirstPasskeyAuthenticationPending,

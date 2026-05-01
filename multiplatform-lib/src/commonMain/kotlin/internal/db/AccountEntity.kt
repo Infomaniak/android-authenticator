@@ -32,7 +32,7 @@ internal data class AccountEntity(
     val securityScore: Int = 0,
     val lastPasswordUpdate: Long? = null
 ) {
-    val isLoggedIn: Boolean get() = status == Status.LoggedIn
+    val isLoggedIn: Boolean get() = status == Status.LoggedIn || status == Status.PasswordChanged
 
     enum class Status {
 
@@ -60,5 +60,7 @@ internal data class AccountEntity(
         RestoringFromBackup,
 
         DeletingOldKeyAfterRestoration,
+
+        PasswordChanged,
     }
 }

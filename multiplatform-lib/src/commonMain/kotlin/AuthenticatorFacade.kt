@@ -38,6 +38,7 @@ import kotlin.time.Duration.Companion.seconds
 abstract class AuthenticatorFacade internal constructor() {
 
     abstract val accounts: Flow<List<Account>>
+    abstract val accountsWithUpdatedPassword: Flow<List<Account>>
 
     abstract val appStatus: SharedFlow<AppStatus>
 

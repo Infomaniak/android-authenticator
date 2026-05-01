@@ -44,6 +44,8 @@ class DummyAuthenticatorFacade internal constructor(
     resetAfter: Duration,
 ) : AuthenticatorFacade() {
     override val accounts: Flow<List<Account>>
+    override val accountsWithUpdatedPassword: Flow<List<Account>>
+        get() = TODO("Not yet implemented")
 
     private var _accounts: List<Account> by MutableStateFlow<List<Account>>(emptyList()).also {
         accounts = accountsRepository.getAccounts().map {

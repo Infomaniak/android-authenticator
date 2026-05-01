@@ -40,6 +40,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
@@ -85,9 +86,16 @@ fun MainScreen(
         }
     }
 
+    var showPasswordDialogFor: Account? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.accountsWithPasswordUpdate.collect { accounts ->
+            accounts.firstOrNull()?.let { showPasswordDialogFor = it }
+        }
+    }
+
     MainScreen(backStack, entryDecorators)
 }
-
 
 @OptIn(ExperimentalPermissionsApi::class)
 private fun handleAppStatus(
