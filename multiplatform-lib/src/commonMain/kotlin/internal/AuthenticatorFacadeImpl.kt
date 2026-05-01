@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.CredentialsForMigration
 import com.infomaniak.auth.lib.Issue
 import com.infomaniak.auth.lib.Issue.Retriable.Cause
 import com.infomaniak.auth.lib.internal.db.AccountEntity
+import com.infomaniak.auth.lib.internal.db.AccountEntity.Status
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
@@ -73,6 +74,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.launch
 import kotlinx.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
@@ -113,10 +115,46 @@ internal class AuthenticatorFacadeImpl(
 
     override val accounts: Flow<List<Account>> = channelFlow {
         accountEntities.collectLatest { entities ->
-            val idsOfAccountsToLogIn = entities.mapNotNull { entity -> entity.id.takeUnless { entity.isLoggedIn } }.toSet()
+            val idsOfAccountsToLogIn =
+                entities.mapNotNull { entity -> entity.id.takeUnless { entity.isLoggedIn } }
+                    .toSet()
             accountsToLogin.useElements(idsOfAccountsToLogIn) { map ->
                 accountsFlow(entities, map).collectLatest { send(it) }
                 awaitCancellation() // Stay in the useElements scope until a new list of accounts is received.
+            }
+        }
+    }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+
+    override val accountsWithUpdatedPassword: Flow<List<Account>> = channelFlow {
+        accountEntities.collectLatest { entities ->
+            val idsOfAccountsWithUpdatedPassword =
+                entities.mapNotNull { entity -> entity.id.takeUnless { entity.status != AccountEntity.Status.PasswordChanged } }
+                    .toSet()
+            val accountsWithUpdatedPassword = accounts.first().filter { it.id in idsOfAccountsWithUpdatedPassword }
+
+            val passwordUpdatedHandledList = mutableListOf<Pair<Long, CompletableDeferred<Unit>>>()
+            val passwordUpdatedAccounts = accountsWithUpdatedPassword.map {
+                val passwordUpdatedHandled = CompletableDeferred<Unit>()
+                passwordUpdatedHandledList.add(it.id to passwordUpdatedHandled)
+                val modified =
+                    it.copy(status = Account.Status.PasswordChanged(hasBeenHandled = passwordUpdatedHandled::complete))
+                modified
+            }
+
+            send(passwordUpdatedAccounts)
+
+            launch {
+                kotlinx.coroutines.selects.select {
+                    passwordUpdatedHandledList.forEach { (userId, signal) ->
+                        signal.onAwait {
+                            dao.getAccount(userId)?.let { account ->
+                                if (account.status == AccountEntity.Status.PasswordChanged) {
+                                    dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
@@ -236,7 +274,7 @@ internal class AuthenticatorFacadeImpl(
                 AccountEntity.Status.RestoringFromBackup, AccountEntity.Status.DeletingOldKeyAfterRestoration -> {
                     restoreFromBackupAttempts(account = entity)
                 }
-                AccountEntity.Status.LoggedIn, null -> Unit // Should not happen in practice.
+                AccountEntity.Status.LoggedIn, Status.PasswordChanged, null -> Unit // Should not happen in practice.
             }
         }
 
@@ -360,8 +398,11 @@ internal class AuthenticatorFacadeImpl(
     private suspend fun syncAccountWithUserProfile(token: String, userId: Long): UserProfile {
         val userProfile = authenticatorManager.getUserProfile(token)
         dao.getAccount(userId)?.let { account ->
+            val passwordHasBeenUpdated =
+                account.lastPasswordUpdate != null && userProfile.preferences.security.dateLastChangedPassword > account.lastPasswordUpdate
             dao.upsert(
                 account.copy(
+                    status = if (passwordHasBeenUpdated) Status.PasswordChanged else account.status,
                     securityScore = userProfile.preferences.security.score,
                     lastPasswordUpdate = userProfile.preferences.security.dateLastChangedPassword
                 )

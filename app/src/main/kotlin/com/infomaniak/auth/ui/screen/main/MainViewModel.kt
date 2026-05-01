@@ -39,6 +39,8 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     val appStatus = authenticatorFacade.appStatus
 
+    val accountsWithPasswordUpdate = authenticatorFacade.accountsWithUpdatedPassword
+
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
     val hasTriggeredNotificationPermission: StateFlow<Boolean> = flow {
         emitAll(PermissionPreferences().hasTriggeredNotificationPermissionFlow)
