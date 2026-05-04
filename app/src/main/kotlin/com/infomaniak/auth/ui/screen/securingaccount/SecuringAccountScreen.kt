@@ -82,7 +82,7 @@ private suspend fun handleLoginResultWithMinDelay(
     launch {
         coroutineScope {
             launch { delay(.7.seconds) } // Stay on this screen for a min duration to avoid too quick flashes of the screen.
-            fetchAccountStatus.first { it is Account.Status.NotConnected.ReLogin && it.lastIssue != null }
+            fetchAccountStatus.first { it is Account.Status.NotConnected.ReLogin && (it.lastIssue != null || it.hadIncorrectPassword) }
         }
         returnToLoginScreen()
     }

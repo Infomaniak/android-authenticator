@@ -72,7 +72,7 @@ fun baseEntryProvider(
         AccountDetailsScreen(
             accountId = it.accountId,
             onLoginPressed = { legacyAccount ->
-                backStack.add(NavDestination.LoginInApp(legacyAccount, isOnboarding = false))
+                backStack.add(NavDestination.LoginInApp.Form(legacyAccount, isOnboarding = false))
             },
             onBackPressed = backStack::tryPopLast
         )
@@ -96,19 +96,28 @@ fun baseEntryProvider(
             },
         )
     }
-    entry<NavDestination.LoginInApp> {
+    entry<NavDestination.LoginInApp.Form> {
         LoginScreen(
             legacyAccountId = it.legacyAccountId,
-            onSendingCredentials = { backStack.add(NavDestination.SecuringAccount(it.legacyAccountId))},
+            onSendingCredentials = {
+                backStack.add(
+                    NavDestination.LoginInApp.SecuringAccount(
+                        accountId = it.legacyAccountId,
+                        isOnboarding = it.isOnboarding
+                    )
+                )
+            },
             closeLoginScreen = backStack::tryPopLast,
             isOnboarding = it.isOnboarding
         )
     }
-    entry<NavDestination.SecuringAccount> {
+    entry<NavDestination.LoginInApp.SecuringAccount> {
         SecuringAccountFromLoginInAppScreen(
             accountId = it.accountId,
             onAccountLoggedIn = {
-                backStack.popUntil(NavDestination.Home)
+                if (!it.isOnboarding) {
+                    backStack.popUntil(NavDestination.Home)
+                }
             },
             returnToLoginScreen = backStack::tryPopLast,
         )
