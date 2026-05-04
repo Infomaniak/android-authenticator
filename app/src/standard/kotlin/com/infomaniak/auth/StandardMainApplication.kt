@@ -24,9 +24,12 @@ import kotlinx.coroutines.launch
 
 class StandardMainApplication : MainApplication() {
 
+    init {
+        userDataCleanableList = userDataCleanableList + NotificationsRegistrationManager
+    }
+
     override fun onCreate() {
         super.onCreate()
-        userDataCleanableList = userDataCleanableList + NotificationsRegistrationManager
         registerUserDeviceIfNeeded()
     }
 

@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.infomaniak.auth.data.preferences.SentryPreferences
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.NotificationUtils
@@ -49,6 +50,9 @@ open class MainApplication : Application(), Configuration.Provider {
     lateinit var notificationUtils: NotificationUtils
 
     @Inject
+    lateinit var db: AppSettingsDatabase // Workaround to ensure it's initialized eagerly, before StrictMode is activated.
+
+    @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
     protected val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
@@ -64,14 +68,13 @@ open class MainApplication : Application(), Configuration.Provider {
             appVersionCode = BuildConfig.VERSION_CODE,
             apiEnvironment = ApiEnvironment.Prod,
         )
+        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
     }
 
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
-
-        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
         applicationScope.launch {
             configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = SentryPreferences().isSentryAuthorized)
             DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()

@@ -37,7 +37,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 internal class AuthenticatorRequest(
-    private val httpClient: HttpClient,
+    private val httpClient: suspend () -> HttpClient,
     private val routes: ApiRoutes,
 ) {
 
@@ -45,7 +45,7 @@ internal class AuthenticatorRequest(
      * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
      */
     suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
-        return httpClient.get(routes.passkeysOptions()) {
+        return httpClient().get(routes.passkeysOptions()) {
             addAuthenticationHeader(token)
         }.decode()
     }
@@ -55,7 +55,7 @@ internal class AuthenticatorRequest(
      * after [getPasskeysOptions] is done.
      */
     suspend fun registerPasskey(token: String, registerPasskey: RegisterPasskey) {
-        httpClient.post(routes.registerPasskey()) {
+        httpClient().post(routes.registerPasskey()) {
             addAuthenticationHeader(token)
             setBody(registerPasskey)
         }
@@ -65,7 +65,7 @@ internal class AuthenticatorRequest(
      * Retrieves the backend-generated challenge, prior to authenticating with [verify].
      */
     suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
-        return httpClient.post(routes.challenge()) {
+        return httpClient().post(routes.challenge()) {
             setBody(mapOf("client_id" to clientId))
         }.decode()
     }
@@ -78,7 +78,7 @@ internal class AuthenticatorRequest(
      * @return An [AuthResult] that includes an access token.
      */
     suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
-        return httpClient.post(routes.verify()) {
+        return httpClient().post(routes.verify()) {
             setBody(verifyAuthenticationData)
         }.decode()
     }
@@ -90,7 +90,7 @@ internal class AuthenticatorRequest(
      * @param passkeyId The id of the passkey to delete.
      */
     suspend fun deletePasskey(token: String, passkeyId: String) {
-        httpClient.delete(routes.delete(passkeyId)) {
+        httpClient().delete(routes.delete(passkeyId)) {
             addAuthenticationHeader(token)
         }
     }
@@ -102,7 +102,7 @@ internal class AuthenticatorRequest(
      * @param userId The id of the user.
      */
     suspend fun getMigrationOptions(deviceId: String, userId: Long): SuccessfulApiResponse<MigrationOptions> {
-        return httpClient.post(routes.migrationsOptions()) {
+        return httpClient().post(routes.migrationsOptions()) {
             setBody(mapOf("device" to deviceId, "id" to userId.toString()))
         }.decode()
     }
@@ -122,7 +122,7 @@ internal class AuthenticatorRequest(
         sessionId: String,
         otpPayload: OtpPayload,
     ): SuccessfulApiResponse<AuthResult> {
-        return httpClient.post(routes.verifyMigration(sessionId)) {
+        return httpClient().post(routes.verifyMigration(sessionId)) {
             setBody(otpPayload)
         }.decode()
     }
@@ -134,7 +134,7 @@ internal class AuthenticatorRequest(
      * @param deviceId ID of the device.
      */
     suspend fun completeMigration(token: String, sessionId: String, deviceId: String) {
-        httpClient.delete(routes.finishMigration(sessionId)) {
+        httpClient().delete(routes.finishMigration(sessionId)) {
             addAuthenticationHeader(token)
             setBody(mapOf("device" to deviceId))
         }
@@ -145,7 +145,7 @@ internal class AuthenticatorRequest(
     ): SuccessfulApiResponse<SharedUserProfile> {
         val url = "${routes.userProfile()}&with=security"
 
-        return httpClient.get(url) {
+        return httpClient().get(url) {
             addAuthenticationHeader(token)
         }.decode()
     }

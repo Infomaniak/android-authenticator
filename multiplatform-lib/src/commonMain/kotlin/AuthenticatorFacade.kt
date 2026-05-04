@@ -77,6 +77,7 @@ abstract class AuthenticatorFacade internal constructor() {
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
+                        scope = scope,
                         userAgent = userAgent,
                         routes = routes,
                         crashReport = crashReport,
@@ -119,6 +120,7 @@ abstract class AuthenticatorFacade internal constructor() {
             val webAuthnRepository = WebAuthnRepository(
                 authenticatorRequest = AuthenticatorRequest(
                     httpClient = ApiClientProvider(
+                        scope = scope,
                         userAgent = userAgent,
                         routes = routes,
                         crashReport = crashReport,
