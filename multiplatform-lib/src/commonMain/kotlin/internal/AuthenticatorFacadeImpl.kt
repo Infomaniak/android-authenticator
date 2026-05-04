@@ -129,7 +129,7 @@ internal class AuthenticatorFacadeImpl(
     override val accountsWithUpdatedPassword: Flow<List<Account>> = channelFlow {
         accountEntities.collectLatest { entities ->
             val idsOfAccountsWithUpdatedPassword =
-                entities.mapNotNull { entity -> entity.id.takeUnless { entity.status != AccountEntity.Status.PasswordChanged } }
+                entities.mapNotNull { entity -> entity.id.takeUnless { entity.status != Status.PasswordChanged } }
                     .toSet()
             val accountsWithUpdatedPassword = accounts.first().filter { it.id in idsOfAccountsWithUpdatedPassword }
 
@@ -149,8 +149,8 @@ internal class AuthenticatorFacadeImpl(
                     passwordUpdatedHandledList.forEach { (userId, signal) ->
                         signal.onJoin {
                             dao.getAccount(userId)?.let { account ->
-                                if (account.status == AccountEntity.Status.PasswordChanged) {
-                                    dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+                                if (account.status == Status.PasswordChanged) {
+                                    dao.upsert(account.copy(status = Status.LoggedIn))
                                 }
                             }
                         }
@@ -165,7 +165,7 @@ internal class AuthenticatorFacadeImpl(
 
     override suspend fun addAccounts(connectedAccounts: List<Account>) {
         val entities = connectedAccounts.map {
-            it.toEntity(AccountEntity.Status.PasskeyRegistrationPending)
+            it.toEntity(Status.PasskeyRegistrationPending)
         }
         dao.upsert(entities)
     }
@@ -200,7 +200,7 @@ internal class AuthenticatorFacadeImpl(
         var needsToShowEverythingReady = false
 
         val appStatusFlow: Flow<AppStatus> = accountEntities.transformLatest { entities ->
-            val atLeastOneConnectedAccount = entities.any { it.status == AccountEntity.Status.LoggedIn }
+            val atLeastOneConnectedAccount = entities.any { it.status == Status.LoggedIn }
             val noConnectedAccount = !atLeastOneConnectedAccount
 
             if (noConnectedAccount) {
@@ -210,7 +210,7 @@ internal class AuthenticatorFacadeImpl(
                     /** Waiting for [addAccounts] to be called, which will cancel this, as `accountEntities` emits. */
                     awaitCancellation()
                 } else {
-                    val needsMigration = entities.any { it.status == AccountEntity.Status.ToBeMigrated }
+                    val needsMigration = entities.any { it.status == Status.ToBeMigrated }
                     if (needsMigration) {
                         emit(AppStatus.LoginRequired.MigratingFromLegacyKAuth(proceed = proceedMigration::complete))
                         proceedMigration.join()
@@ -268,14 +268,14 @@ internal class AuthenticatorFacadeImpl(
         dao.getAccountAsFlow(userId).transformLatest { entity ->
             emit(null)
             when (entity?.status) {
-                AccountEntity.Status.ToBeMigrated -> migrationAttempts(entity)
-                AccountEntity.Status.PasskeyRegistrationPending, AccountEntity.Status.FirstPasskeyAuthenticationPending -> {
+                Status.ToBeMigrated -> migrationAttempts(entity)
+                Status.PasskeyRegistrationPending, Status.FirstPasskeyAuthenticationPending -> {
                     registrationAttempts(entity)
                 }
-                AccountEntity.Status.RestoringFromBackup, AccountEntity.Status.DeletingOldKeyAfterRestoration -> {
+                Status.RestoringFromBackup, Status.DeletingOldKeyAfterRestoration -> {
                     restoreFromBackupAttempts(account = entity)
                 }
-                AccountEntity.Status.LoggedIn, Status.PasswordChanged, null -> Unit // Should not happen in practice.
+                Status.LoggedIn, Status.PasswordChanged, null -> Unit // Should not happen in practice.
             }
         }
 
@@ -292,8 +292,8 @@ internal class AuthenticatorFacadeImpl(
 
     private suspend fun FlowCollector<Account.Status.NotConnected>.registrationAttempts(notRegisteredAccount: AccountEntity) {
         val passKeyAlreadyRegistered = when (val accountStatus = notRegisteredAccount.status) {
-            AccountEntity.Status.PasskeyRegistrationPending -> false
-            AccountEntity.Status.FirstPasskeyAuthenticationPending -> true
+            Status.PasskeyRegistrationPending -> false
+            Status.FirstPasskeyAuthenticationPending -> true
             else -> throw IllegalArgumentException("registrationAttempts doesn't support $accountStatus")
         }
         val userId = notRegisteredAccount.id
@@ -304,7 +304,7 @@ internal class AuthenticatorFacadeImpl(
                 // Just in case orphans passkeys are lying around, we want to make sure to start from a clean state.
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
                 val _ = authenticatorManager.registerPasskey(token.accessToken, userId)
-                dao.upsert(notRegisteredAccount.copy(status = AccountEntity.Status.FirstPasskeyAuthenticationPending))
+                dao.upsert(notRegisteredAccount.copy(status = Status.FirstPasskeyAuthenticationPending))
                 // The DB update above is expected to cause the cancellation & restart of this.
             }
             val token = authenticatorManager.getToken(
@@ -317,7 +317,7 @@ internal class AuthenticatorFacadeImpl(
                 notRegisteredAccount.copy(
                     securityScore = profile.preferences.security.score,
                     lastPasswordUpdate = profile.preferences.security.dateLastChangedPassword,
-                    status = AccountEntity.Status.LoggedIn
+                    status = Status.LoggedIn
                 )
             )
         }
@@ -333,7 +333,7 @@ internal class AuthenticatorFacadeImpl(
      * 4. Authenticate with it, getting a new access token
      */
     private suspend fun FlowCollector<Account.Status.NotConnected>.migrationAttempts(accountToMigrate: AccountEntity) {
-        require(accountToMigrate.status == AccountEntity.Status.ToBeMigrated)
+        require(accountToMigrate.status == Status.ToBeMigrated)
 
         if (shouldTryImmediateLogin()) {
             tryCrossAppLogin(accountToMigrate) { return }
@@ -391,7 +391,7 @@ internal class AuthenticatorFacadeImpl(
 
         if (succeeded.not()) return false
 
-        dao.upsert(notConnectedAccount.copy(status = AccountEntity.Status.LoggedIn))
+        dao.upsert(notConnectedAccount.copy(status = Status.LoggedIn))
 
         return true
     }
