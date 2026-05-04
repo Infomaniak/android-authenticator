@@ -22,6 +22,7 @@ import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 
 internal class AccountRestorer(
     accountsDatabase: AccountsDatabase,
@@ -32,7 +33,7 @@ internal class AccountRestorer(
 
     private val dao = accountsDatabase.getDao()
 
-    suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: String) -> Unit) {
+    suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: SharedApiToken) -> Unit) {
         val keyPairManager = authenticatorManager.keyPairManager
         val existingKeyIds = keyPairManager.getSortedKeyIds(MatchOn.UserId(account.id))
         checkKeyCountIsOneOrTwo(existingKeyIds)
@@ -68,7 +69,7 @@ internal class AccountRestorer(
             userId = account.id,
             keyIdOrDefault = newKeyId,
         ).firstOrElse { error(it) }
-        persistToken(account.id, tokenWithNewPassKey.accessToken)
+        persistToken(account.id, tokenWithNewPassKey)
         // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
         oldKeyId?.let { keyId ->
             webAuthnRepository.deletePasskeyIfExists(tokenWithNewPassKey.accessToken, keyId)
