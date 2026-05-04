@@ -19,8 +19,8 @@ package com.infomaniak.auth.di
 
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
+import com.infomaniak.auth.MainApplication
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
@@ -54,6 +54,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import javax.inject.Singleton
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -192,6 +193,7 @@ object ApplicationModule {
             }
 
             override suspend fun persistTokenForAccount(userId: Long, token: SharedApiToken) {
+                MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
                 val dao = UserDatabase.getDatabase().userDao()
                 val user = accountUtils.getUserById(userId.toInt()) ?: return
                 dao.update(user.copy(apiToken = token.toLoginApiToken()))
