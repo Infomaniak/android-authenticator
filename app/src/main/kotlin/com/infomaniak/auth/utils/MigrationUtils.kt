@@ -26,7 +26,7 @@ import com.infomaniak.auth.lib.models.migration.user.preferences.SharedTimeZone
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedAuthDevices
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedSecurity
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.auth.lib.models.migration.SharedApiToken as MigrationApiToken
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.core.auth.models.user.preferences.Country as CoreCountry
 import com.infomaniak.core.auth.models.user.preferences.Language as CoreLanguage
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference as CoreOrganizationPreference
@@ -36,13 +36,19 @@ import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices as 
 import com.infomaniak.core.auth.models.user.preferences.security.Security as CoreSecurity
 import com.infomaniak.lib.login.ApiToken as LoginApiToken
 
-fun LoginApiToken.toMigrationApiToken(): MigrationApiToken {
-    return MigrationApiToken(
+fun LoginApiToken.toSharedApiToken(): SharedApiToken {
+    return SharedApiToken(
         accessToken = accessToken,
         tokenType = tokenType,
         userId = userId,
     )
 }
+
+fun SharedApiToken.toLoginApiToken() = LoginApiToken(
+    accessToken = accessToken,
+    tokenType = tokenType,
+    userId = userId,
+)
 
 fun SharedUserProfile.toUser(): User {
     return User(
@@ -115,10 +121,4 @@ private fun SharedAuthDevices.toCoreAuthDevices() = CoreAuthDevices(
     createdAt = createdAt,
     updatedAt = updatedAt,
     deletedAt = deletedAt,
-)
-
-private fun MigrationApiToken.toLoginApiToken() = LoginApiToken(
-    accessToken = accessToken,
-    tokenType = tokenType,
-    userId = userId,
 )

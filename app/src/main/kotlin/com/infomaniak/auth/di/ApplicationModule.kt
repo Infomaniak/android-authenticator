@@ -20,13 +20,15 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import com.infomaniak.auth.utils.AccountUtils
-import com.infomaniak.auth.utils.toMigrationApiToken
+import com.infomaniak.auth.utils.toLoginApiToken
+import com.infomaniak.auth.utils.toSharedApiToken
 import com.infomaniak.auth.utils.toUser
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.utils.buildUserAgent
@@ -52,8 +54,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import javax.inject.Singleton
-import com.infomaniak.auth.lib.models.migration.SharedApiToken as MigrationApiToken
-import com.infomaniak.lib.login.ApiToken as LoginApiToken
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -174,7 +174,7 @@ object ApplicationModule {
 
             override suspend fun getTokenFromCrossAppLogin(
                 userId: Long
-            ): MigrationApiToken? = crossAppLoginFacade.accountsCheckingState.transform { state ->
+            ): SharedApiToken? = crossAppLoginFacade.accountsCheckingState.transform { state ->
                 val matchingAccount = state.checkedAccounts.find { it.id == userId }
                     ?: when (state.status) {
                         AccountsCheckingStatus.Checking -> return@transform // Wait for next emission.
@@ -184,25 +184,17 @@ object ApplicationModule {
                     }
                 if (matchingAccount == null) return@transform emit(null)
                 val result = crossAppLoginFacade.attemptLogin(listOf(matchingAccount))
-                emit(result.tokens.singleOrNull()?.toMigrationApiToken())
+                emit(result.tokens.singleOrNull()?.toSharedApiToken())
             }.first()
 
-            override suspend fun getTokenFromDatabase(userId: Long): String? {
-                return accountUtils.getUserById(userId.toInt())?.apiToken?.accessToken
+            override suspend fun getTokenFromDatabase(userId: Long): SharedApiToken? {
+                return accountUtils.getUserById(userId.toInt())?.apiToken?.toSharedApiToken()
             }
 
-            override suspend fun persistTokenForAccount(userId: Long, token: String) {
+            override suspend fun persistTokenForAccount(userId: Long, token: SharedApiToken) {
                 val dao = UserDatabase.getDatabase().userDao()
                 val user = accountUtils.getUserById(userId.toInt()) ?: return
-                dao.update(
-                    user.copy(
-                        apiToken = LoginApiToken(
-                            accessToken = token,
-                            tokenType = user.apiToken.tokenType,
-                            userId = userId.toInt()
-                        )
-                    )
-                )
+                dao.update(user.copy(apiToken = token.toLoginApiToken()))
             }
 
             override suspend fun persistUserProfile(userProfile: SharedUserProfile) {

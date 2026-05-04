@@ -60,7 +60,7 @@ internal class MigrationManager(
         }
     }
 
-    suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: String) -> Unit) {
+    suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: SharedApiToken) -> Unit) {
         val restorer = AccountRestorer(
             accountsDatabase = accountsDatabase,
             authenticatorManager = authenticatorManager,

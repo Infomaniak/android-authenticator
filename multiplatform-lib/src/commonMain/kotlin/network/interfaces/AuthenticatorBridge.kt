@@ -22,7 +22,7 @@ import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 
 interface AuthenticatorBridge {
     suspend fun getTokenFromCrossAppLogin(userId: Long): SharedApiToken?
-    suspend fun getTokenFromDatabase(userId: Long): String?
-    suspend fun persistTokenForAccount(userId: Long, token: String)
+    suspend fun getTokenFromDatabase(userId: Long): SharedApiToken?
+    suspend fun persistTokenForAccount(userId: Long, token: SharedApiToken)
     suspend fun persistUserProfile(userProfile: SharedUserProfile)
 }
