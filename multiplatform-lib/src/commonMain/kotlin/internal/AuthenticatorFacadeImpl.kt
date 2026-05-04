@@ -132,9 +132,9 @@ internal class AuthenticatorFacadeImpl(
                     .toSet()
             val accountsWithUpdatedPassword = accounts.first().filter { it.id in idsOfAccountsWithUpdatedPassword }
 
-            val passwordUpdatedHandledList = mutableListOf<Pair<Long, CompletableDeferred<Unit>>>()
+            val passwordUpdatedHandledList = mutableListOf<Pair<Long, CompletableJob>>()
             val passwordUpdatedAccounts = accountsWithUpdatedPassword.map {
-                val passwordUpdatedHandled = CompletableDeferred<Unit>()
+                val passwordUpdatedHandled: CompletableJob = Job()
                 passwordUpdatedHandledList.add(it.id to passwordUpdatedHandled)
                 val modified =
                     it.copy(status = Account.Status.PasswordChanged(hasBeenHandled = passwordUpdatedHandled::complete))
@@ -146,7 +146,7 @@ internal class AuthenticatorFacadeImpl(
             launch {
                 kotlinx.coroutines.selects.select {
                     passwordUpdatedHandledList.forEach { (userId, signal) ->
-                        signal.onAwait {
+                        signal.onJoin {
                             dao.getAccount(userId)?.let { account ->
                                 if (account.status == AccountEntity.Status.PasswordChanged) {
                                     dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
