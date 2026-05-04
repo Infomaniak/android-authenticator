@@ -56,6 +56,6 @@ data class Account(
             data class LoginFailed(val issue: Issue) : NotConnected
         }
 
-        data class PasswordChanged(val hasBeenHandled: (Unit) -> Unit) : Status
+        data class PasswordChanged(val hasBeenHandled: () -> Unit) : Status
     }
 }
