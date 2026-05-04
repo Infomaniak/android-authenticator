@@ -75,6 +75,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import kotlinx.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
@@ -144,7 +145,7 @@ internal class AuthenticatorFacadeImpl(
             send(passwordUpdatedAccounts)
 
             launch {
-                kotlinx.coroutines.selects.select {
+                select {
                     passwordUpdatedHandledList.forEach { (userId, signal) ->
                         signal.onJoin {
                             dao.getAccount(userId)?.let { account ->
