@@ -111,36 +111,5 @@ abstract class AuthenticatorFacade internal constructor() {
             )
         }
 
-        fun dummyInstance(
-            userAgent: String,
-            apiHost: String,
-            crashReport: CrashReportInterface?,
-            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-            loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
-            resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
-        ): AuthenticatorFacade {
-            val routes = ApiRoutes(apiHost)
-            val webAuthnRepository = WebAuthnRepository(
-                authenticatorRequest = AuthenticatorRequest(
-                    httpClient = ApiClientProvider(
-                        scope = scope,
-                        userAgent = userAgent,
-                        routes = routes,
-                        crashReport = crashReport,
-                    ).httpClient,
-                    routes = routes,
-                )
-            )
-            val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))
-            val authenticatorManager =
-                AuthenticatorManager(webAuthnRepository = webAuthnRepository, accountsRepository = accountsRepository)
-            return DummyAuthenticatorFacade(
-                accountsRepository = accountsRepository,
-                authenticatorManager = authenticatorManager,
-                scope = scope,
-                loadingDuration = loadingDurationMillis.milliseconds,
-                resetAfter = resetAfterMillis.milliseconds,
-            )
-        }
     }
 }
