@@ -29,7 +29,8 @@ import com.infomaniak.auth.ui.screen.onboarding.complete.OnboardingCompleteScree
 import com.infomaniak.auth.ui.screen.onboarding.migration.MigrationScreen
 import com.infomaniak.auth.ui.screen.onboarding.start.OnboardingStartScreen
 import com.infomaniak.auth.ui.screen.permission.NotificationPermissionScreen
-import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountScreen
+import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountFromLoginInAppScreen
+import com.infomaniak.auth.ui.screen.securingaccount.SecuringAccountFromOnboardingScreen
 import com.infomaniak.auth.ui.screen.settings.SettingsScreen
 import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementMatomoScreen
 import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementScreen
@@ -71,7 +72,7 @@ fun baseEntryProvider(
         AccountDetailsScreen(
             accountId = it.accountId,
             onLoginPressed = { legacyAccount ->
-                backStack.add(NavDestination.LoginInApp(legacyAccount, isOnboarding = false))
+                backStack.add(NavDestination.LoginInApp.Form(legacyAccount, isOnboarding = false))
             },
             onBackPressed = backStack::tryPopLast
         )
@@ -82,8 +83,8 @@ fun baseEntryProvider(
     entry<NavDestination.Onboarding.Start> {
         OnboardingStartScreen()
     }
-    entry<NavDestination.SecuringAccount> {
-        SecuringAccountScreen()
+    entry<NavDestination.Onboarding.SecuringAccount> {
+        SecuringAccountFromOnboardingScreen()
     }
     entry<NavDestination.Onboarding.Complete> {
         OnboardingCompleteScreen()
@@ -95,11 +96,30 @@ fun baseEntryProvider(
             },
         )
     }
-    entry<NavDestination.LoginInApp> {
+    entry<NavDestination.LoginInApp.Form> {
         LoginScreen(
             legacyAccountId = it.legacyAccountId,
+            onSendingCredentials = {
+                backStack.add(
+                    NavDestination.LoginInApp.SecuringAccount(
+                        accountId = it.legacyAccountId,
+                        isOnboarding = it.isOnboarding
+                    )
+                )
+            },
             closeLoginScreen = backStack::tryPopLast,
             isOnboarding = it.isOnboarding
+        )
+    }
+    entry<NavDestination.LoginInApp.SecuringAccount> {
+        SecuringAccountFromLoginInAppScreen(
+            accountId = it.accountId,
+            onAccountLoggedIn = {
+                if (!it.isOnboarding) {
+                    backStack.popUntil(NavDestination.Home)
+                }
+            },
+            returnToLoginScreen = backStack::tryPopLast,
         )
     }
 }
@@ -121,6 +141,12 @@ fun homeEntryProvider(rootBackStack: NavBackStack<NavKey>): (NavKey) -> NavEntry
                 rootBackStack.add(NavDestination.PrivacyManagement)
             }
         )
+    }
+}
+
+fun NavBackStack<NavKey>.popUntil(destination: NavKey) {
+    while (lastIndex != 0 && this.last() != destination) {
+        removeAt(lastIndex)
     }
 }
 

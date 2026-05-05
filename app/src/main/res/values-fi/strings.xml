@@ -73,6 +73,7 @@
     <string name="errorLoginFailed">Tilille kirjautuminen epäonnistui. Yritä uudelleen tai ota yhteyttä tukeen. (virhekoodi: %d)</string>
     <string name="errorMigrationFailed">Siirtyminen on keskeytetty.\nOta yhteyttä tekniseen tukitiimiimme.</string>
     <string name="errorOccuredTitle">Tapahtui virhe</string>
+    <string name="errorWithRetryMessage">On tapahtunut virhe. Yritä myöhemmin uudelleen.</string>
     <string name="estimatedWait">Arvioitu odotusaika: %s</string>
     <string name="feedbackTitle">Palaute</string>
     <string name="laterButton">Myöhemmin</string>

@@ -73,6 +73,7 @@
     <string name="errorLoginFailed">Pålogging til kontoen mislyktes. Prøv igjen eller kontakt brukerstøtte. (feilkode: %d)</string>
     <string name="errorMigrationFailed">Migreringen har blitt avbrutt.\nTa kontakt med vårt tekniske supportteam.</string>
     <string name="errorOccuredTitle">En feil oppstod</string>
+    <string name="errorWithRetryMessage">Det har oppstått en feil. Vennligst prøv igjen senere.</string>
     <string name="estimatedWait">Estimert ventetid: %s</string>
     <string name="feedbackTitle">Tilbakemelding</string>
     <string name="laterButton">Senere</string>

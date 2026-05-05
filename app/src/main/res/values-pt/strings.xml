@@ -73,6 +73,7 @@
     <string name="errorLoginFailed">Falha no login da conta. Tente novamente ou contate o suporte. (código de erro: %d)</string>
     <string name="errorMigrationFailed">A migração foi interrompida.\nContacte a nossa equipa de apoio técnico.</string>
     <string name="errorOccuredTitle">Ocorreu um erro</string>
+    <string name="errorWithRetryMessage">Ocorreu um erro. Por favor, tente novamente mais tarde.</string>
     <string name="estimatedWait">Tempo estimado de espera: %s</string>
     <string name="feedbackTitle">Feedback</string>
     <string name="laterButton">Mais tarde</string>
