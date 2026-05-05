@@ -144,6 +144,8 @@ dependencies {
     implementation(core.infomaniak.core.coil)
     implementation(core.infomaniak.core.common)
     implementation(core.infomaniak.core.crossapplogin.front)
+    implementation(core.infomaniak.core.inappreview)
+    implementation(core.infomaniak.core.inappupdate)
     implementation(core.infomaniak.core.matomo)
     implementation(core.infomaniak.core.network)
     implementation(core.infomaniak.core.onboarding)
