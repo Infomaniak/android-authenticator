@@ -22,6 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
+import com.infomaniak.auth.ui.theme.color.DarkCustomScheme
+import com.infomaniak.auth.ui.theme.color.DarkStatusColorScheme
+import com.infomaniak.auth.ui.theme.color.LightCustomScheme
+import com.infomaniak.auth.ui.theme.color.LightStatusColorScheme
 import com.infomaniak.auth.ui.theme.color.StatusColorScheme
 import com.infomaniak.auth.ui.theme.color.brand10
 import com.infomaniak.auth.ui.theme.color.brand15
@@ -35,10 +39,6 @@ import com.infomaniak.auth.ui.theme.color.brand70
 import com.infomaniak.auth.ui.theme.color.brand80
 import com.infomaniak.auth.ui.theme.color.brand90
 import com.infomaniak.auth.ui.theme.color.brand99
-import com.infomaniak.auth.ui.theme.color.DarkCustomScheme
-import com.infomaniak.auth.ui.theme.color.DarkStatusColorScheme
-import com.infomaniak.auth.ui.theme.color.LightCustomScheme
-import com.infomaniak.auth.ui.theme.color.LightStatusColorScheme
 import com.infomaniak.auth.ui.theme.color.neutral0
 import com.infomaniak.auth.ui.theme.color.neutral10
 import com.infomaniak.auth.ui.theme.color.neutral100
@@ -71,6 +71,8 @@ import com.infomaniak.core.avatar.theme.DarkAvatarColorsScheme
 import com.infomaniak.core.avatar.theme.LightAvatarColorsScheme
 import com.infomaniak.core.privacymanagement.theme.LocalPrivacyManagementTheme
 import com.infomaniak.core.privacymanagement.theme.PrivacyManagementTheme
+import com.infomaniak.core.ui.compose.basics.bottomsheet.BottomSheetThemeDefaults
+import com.infomaniak.core.ui.compose.basics.bottomsheet.LocalBottomSheetTheme
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
 
@@ -215,6 +217,11 @@ fun AuthenticatorTheme(
         trackerContainerShape = RoundedCornerShape(DefaultCornerRadius),
         trackerContainerPadding = PaddingValues(Margin.Medium, 0.dp)
     )
+    val bottomSheetTheme = BottomSheetThemeDefaults.theme(
+        contentColor = customColors.sectionBackground,
+        titleTextStyle = MaterialTheme.typography.titleMedium,
+        titleColor = MaterialTheme.colorScheme.onPrimary,
+    )
     val avatarColors = if (isDarkTheme) DarkAvatarColorsScheme else LightAvatarColorsScheme
 
     CompositionLocalProvider(
@@ -222,6 +229,7 @@ fun AuthenticatorTheme(
         LocalCustomColorScheme provides customColors,
         LocalIsThemeDarkMode provides isDarkTheme,
         LocalPrivacyManagementTheme provides privacyManagementTheme,
+        LocalBottomSheetTheme provides bottomSheetTheme,
         LocalAvatarColors provides AvatarColors(avatarColors.colorList, customColors.sectionBackground),
     ) {
         MaterialTheme(

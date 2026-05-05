@@ -17,16 +17,13 @@
  */
 package com.infomaniak.auth.ui.screen.onboarding.start
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,7 +74,6 @@ fun OnboardingStartScreen(
     val isSignUpButtonLoading by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val hostActivity = LocalActivity.current as ComponentActivity
 
     val loginFlowController = LoginUtils.rememberLoginFlowController(
         infomaniakLogin = onboardingStartViewModel.infomaniakLogin,
