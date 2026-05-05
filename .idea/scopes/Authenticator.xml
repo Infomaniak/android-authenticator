@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Authenticator" pattern="file[Authenticator*]:*//*||file[build-logic*]:*//*||file[Authenticator]:*/||file[build-logic]:*/" />
+</component>
