@@ -251,7 +251,7 @@ private fun SettingsSections(
         isRefreshing = true
     }
 
-    val firstSectionItem = if (accountStatus == Account.Status.LoggedIn) {
+    val firstSectionItem = if (accountStatus is Account.Status.LoggedIn) {
         persistentListOf(
             OptionItemType.WithLoader(
                 stringResId = R.string.refreshPendingLoginsButton,
@@ -333,7 +333,7 @@ private enum class AccountSecurityConfiguration(
 
     companion object {
         fun Account.Status.toSecurityConfiguration(): AccountSecurityConfiguration = when (this) {
-            Account.Status.LoggedIn -> Secured
+            is Account.Status.LoggedIn -> Secured
             is Account.Status.NotConnected -> Disconnected
             else -> PartiallyProtected // TODO: Use secure level to determine the status more precisely
         }

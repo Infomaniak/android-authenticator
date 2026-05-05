@@ -19,34 +19,33 @@ package com.infomaniak.auth.lib.internal.extensions
 
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.internal.db.AccountEntity
-import com.infomaniak.auth.lib.internal.db.AccountEntity.Status
 import com.infomaniak.auth.lib.internal.models.LegacyUser
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 
-internal fun AccountEntity.toAccount(action: Account.Status?): Account {
+internal fun AccountEntity.toAccount(status: Account.Status?): Account {
     return Account(
         id = id,
         fullName = fullName,
         initials = initials,
         email = email,
         avatarUrl = avatarUrl,
-        status = when (status) {
-            AccountEntity.Status.LoggedIn -> Account.Status.LoggedIn
-            AccountEntity.Status.PasswordChanged -> action ?: Account.Status.LoggedIn
-            else -> action ?: Account.Status.NotConnected.AttemptingToConnect
-        }
+        status =  status ?: Account.Status.NotConnected.AttemptingToConnect
     )
 }
 
-internal fun Account.toEntity(status: AccountEntity.Status): AccountEntity {
+internal fun SharedUserProfile.toAccountEntity(status: AccountEntity.Status): AccountEntity {
     return AccountEntity(
-        id = id,
-        fullName = fullName,
-        initials = initials,
+        id = id.toLong(),
+        fullName = "$firstname $lastname",
+        initials = getInitials(),
         email = email,
-        avatarUrl = avatarUrl,
-        status = status
+        avatarUrl = avatar,
+        status = status,
+        securityScore = preferences.security?.score,
+        lastPasswordUpdate = preferences.security?.dateLastChangedPassword,
     )
 }
+
 
 internal fun LegacyUser.toEntity(): AccountEntity {
     val initials = "${displayName.firstOrNull()?.uppercase()}" +
@@ -57,6 +56,6 @@ internal fun LegacyUser.toEntity(): AccountEntity {
         initials = initials,
         email = email,
         avatarUrl = avatar,
-        status = Status.ToBeMigrated
+        status = AccountEntity.Status.ToBeMigrated
     )
 }

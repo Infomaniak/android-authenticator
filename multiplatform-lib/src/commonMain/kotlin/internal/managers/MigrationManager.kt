@@ -34,6 +34,7 @@ import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.models.migration.SharedApiToken
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
@@ -78,7 +79,7 @@ internal class MigrationManager(
     }
 
     /**
-     * @return false if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
+     * @return null if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
      *
      * @throws IOException in case of networking or I/O issues
      * @throws ApiException in case the backend returns a non-successful response (except for "access_denied")
@@ -86,9 +87,9 @@ internal class MigrationManager(
      */
     suspend fun tryMigrating(
         userId: Long,
-        persistUser: suspend (apiToken: SharedApiToken) -> Unit,
+        persistUser: suspend (userProfile: SharedUserProfile) -> Unit,
         authentication: MigrationAuthentication,
-    ): Boolean {
+    ): SharedUserProfile? {
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
         val secret = checkNotNull(getSecretFor(userId)) { "Couldn't find the secret for user $userId" }
@@ -122,7 +123,7 @@ internal class MigrationManager(
                 }.cancellable().getOrElse {
                     if (it !is ApiException.ApiErrorException) throw it
                     when (it.errorCode) {
-                        "access_denied", "not_authorized" -> return false
+                        "access_denied", "not_authorized" -> return null
                         else -> throw it
                     }
                 }
@@ -138,7 +139,12 @@ internal class MigrationManager(
             clientId = clientId,
             userId = userId,
         ).firstOrElse { error("Didn't find the key locally: $it") }
-        persistUser(apiTokenFromPasskey)
+
+        val userProfile = authenticatorManager.getUserProfile(apiTokenFromPasskey.accessToken).also {
+            it.apiToken = apiTokenFromPasskey
+        }
+        persistUser(userProfile)
+
         webAuthnRepository.completeMigration(
             token = apiTokenFromPasskey.accessToken,
             sessionId = migrationOptions.session,
@@ -148,7 +154,7 @@ internal class MigrationManager(
 
         if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
 
-        return true
+        return userProfile
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {

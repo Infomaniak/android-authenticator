@@ -44,4 +44,6 @@ data class SharedUserProfile(
      */
     @Transient
     var apiToken: SharedApiToken = SharedApiToken(accessToken = "", tokenType = "", userId = 0),
-)
+) {
+    fun getInitials() = "${firstname.firstOrNull()?.uppercase() ?: ""}${lastname.firstOrNull()?.uppercase() ?: ""}"
+}

@@ -64,7 +64,7 @@ class AccountListViewModel @Inject constructor(
         viewModelScope.launch {
             authenticatorFacade.accounts.first()
                 .filter { account ->
-                    account.status == Account.Status.LoggedIn
+                    account.status is Account.Status.LoggedIn
                 }
                 .forEach { account ->
                     twoFactorAuthManager.refreshChallengeNow(account.id)
@@ -73,12 +73,7 @@ class AccountListViewModel @Inject constructor(
     }
 
     fun refreshUserProfiles() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val userIds = authenticatorFacade.accounts.first().map { it.id.toInt() }.toIntArray()
-            accountUtils.getUsersById(userIds).forEach { user ->
-                authenticatorFacade.refreshUserProfileFor(user.apiToken.accessToken, user.id.toLong())
-            }
-        }
+        authenticatorFacade.refreshUserProfiles()
     }
 
     @Immutable
