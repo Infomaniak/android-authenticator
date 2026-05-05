@@ -74,14 +74,14 @@ private suspend fun handleLoginResultWithMinDelay(
 ) = coroutineScope {
     launch {
         coroutineScope {
-            launch { delay(2.seconds) } // Stay on this screen for a min duration to avoid too quick flashes of the screen.
+            launch { delay(2.seconds) } // Keep this screen visible long enough to avoid a flash before navigating to the success state.
             fetchAccountStatus.first { it is Account.Status.LoggedIn }
         }
         onAccountLoggedIn()
     }
     launch {
         coroutineScope {
-            launch { delay(.7.seconds) } // Stay on this screen for a min duration to avoid too quick flashes of the screen.
+            launch { delay(.7.seconds) } // Keep this screen visible long enough to avoid a flash before returning to the login screen.
             fetchAccountStatus.first { it is Account.Status.NotConnected.ReLogin && (it.lastIssue != null || it.hadIncorrectPassword) }
         }
         returnToLoginScreen()
