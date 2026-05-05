@@ -217,11 +217,6 @@ fun AuthenticatorTheme(
         trackerContainerShape = RoundedCornerShape(DefaultCornerRadius),
         trackerContainerPadding = PaddingValues(Margin.Medium, 0.dp)
     )
-    val bottomSheetTheme = BottomSheetThemeDefaults.theme(
-        contentColor = customColors.sectionBackground,
-        titleTextStyle = MaterialTheme.typography.titleMedium,
-        titleColor = MaterialTheme.colorScheme.onPrimary,
-    )
     val avatarColors = if (isDarkTheme) DarkAvatarColorsScheme else LightAvatarColorsScheme
 
     CompositionLocalProvider(
@@ -229,13 +224,18 @@ fun AuthenticatorTheme(
         LocalCustomColorScheme provides customColors,
         LocalIsThemeDarkMode provides isDarkTheme,
         LocalPrivacyManagementTheme provides privacyManagementTheme,
-        LocalBottomSheetTheme provides bottomSheetTheme,
         LocalAvatarColors provides AvatarColors(avatarColors.colorList, customColors.sectionBackground),
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            content = content
-        )
+        ) {
+            val bottomSheetTheme = BottomSheetThemeDefaults.theme()
+
+            CompositionLocalProvider(
+                LocalBottomSheetTheme provides bottomSheetTheme,
+                content = content
+            )
+        }
     }
 }
 
