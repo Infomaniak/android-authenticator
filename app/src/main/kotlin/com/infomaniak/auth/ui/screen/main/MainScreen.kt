@@ -88,11 +88,11 @@ fun MainScreen(
         }
     }
 
-    var showPasswordDialogFor: Account? by remember { mutableStateOf(null) }
+    var showPasswordChangedDialogFor: Account? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         viewModel.accountsWithPasswordUpdate.collect { accounts ->
-            accounts.firstOrNull()?.let { showPasswordDialogFor = it }
+            accounts.firstOrNull()?.let { showPasswordChangedDialogFor = it }
         }
     }
 

@@ -20,13 +20,16 @@ package com.infomaniak.auth.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.data.preferences.PermissionPreferences
+import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,7 +42,14 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     val appStatus = authenticatorFacade.appStatus
 
-    val accountsWithPasswordUpdate = authenticatorFacade.accountsWithUpdatedPassword
+    val accountsWithPasswordUpdate: Flow<List<Account>> = authenticatorFacade.accounts.map { accounts ->
+        accounts.filter {
+            when (val status = it.status) {
+                is Account.Status.LoggedIn if (status.passwordChangedAck != null) -> true
+                else -> false
+            }
+        }
+    }
 
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
     val hasTriggeredNotificationPermission: StateFlow<Boolean> = flow {

@@ -233,10 +233,17 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
 
     companion object {
-        fun Account.Status.toAccountSecurityLevel() = when (this) {
-            Account.Status.LoggedIn -> Secured
+        fun Account.Status.toAccountSecurityLevel(): AccountSecurityLevel = when (this) {
+            is Account.Status.LoggedIn -> accountSecurityLevelForScore(securityScore)
             is Account.Status.NotConnected -> Danger //TODO: Shouldn't this show the exclamation mark too?
             else -> Warning // TODO: Use secure level to determine the status more precisely
+        }
+
+        private fun accountSecurityLevelForScore(securityScore: Int?): AccountSecurityLevel {
+            return when (securityScore) {
+                5 -> Secured
+                else -> Warning
+            }
         }
     }
 }

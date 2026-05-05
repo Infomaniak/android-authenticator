@@ -26,19 +26,17 @@ import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 abstract class AuthenticatorFacade internal constructor() {
 
     abstract val accounts: Flow<List<Account>>
-    abstract val accountsWithUpdatedPassword: Flow<List<Account>>
 
     abstract val appStatus: SharedFlow<AppStatus>
 
@@ -49,7 +47,7 @@ abstract class AuthenticatorFacade internal constructor() {
      *
      * Will lead to [appStatus] to switch to the [AppStatus.LoggingIn] case.
      */
-    abstract suspend fun addAccounts(connectedAccounts: List<Account>)
+    abstract suspend fun addAccounts(connectedAccounts: List<SharedUserProfile>)
 
     /**
      * Remove account from the authenticator.
@@ -63,7 +61,7 @@ abstract class AuthenticatorFacade internal constructor() {
     @Throws(Exception::class)
     abstract suspend fun refreshTokenFor(userId: Long)
 
-    abstract suspend fun refreshUserProfileFor(token: String, userId: Long)
+    abstract fun refreshUserProfiles()
 
     companion object {
 
