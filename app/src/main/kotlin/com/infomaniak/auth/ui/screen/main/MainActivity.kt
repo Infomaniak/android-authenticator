@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
@@ -34,14 +35,17 @@ import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.applock.AppLockManager
+import com.infomaniak.core.inappreview.reviewmanagers.InAppReviewManager
+import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.front.TwoFactorAuthApprovalAutoManagedBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : FragmentActivity() {
+class MainActivity : FragmentActivity(), InAppServiceManager {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
@@ -50,6 +54,9 @@ class MainActivity : FragmentActivity() {
     @Inject
     lateinit var twoFactorAuthManager: TwoFactorAuthManager
 
+    override val inAppReviewManager by lazy { InAppReviewManager(this) }
+    override val inAppUpdateManager by lazy { InAppUpdateManager(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
@@ -57,6 +64,14 @@ class MainActivity : FragmentActivity() {
 
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+
+        lifecycleScope.launch {
+            inAppUpdateManager.isUpdateRequired.collect { isUpdateRequired ->
+                initAppUpdateManager(isUpdateRequired)
+            }
+        }
+
+        initAppReviewManager()
 
         AppLockManager.scheduleLockIfNeeded(
             targetActivity = this,
