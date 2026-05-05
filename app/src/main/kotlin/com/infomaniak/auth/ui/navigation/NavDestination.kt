@@ -34,6 +34,9 @@ sealed interface NavDestination : NavKey {
         data object Start : Onboarding
 
         @Serializable
+        data object SecuringAccount : Onboarding
+
+        @Serializable
         data object Complete : Onboarding
     }
 
@@ -41,9 +44,6 @@ sealed interface NavDestination : NavKey {
         @Serializable
         data object Notification : Permission
     }
-
-    @Serializable
-    data object SecuringAccount : NavDestination
 
     //endregion
 
@@ -70,8 +70,18 @@ sealed interface NavDestination : NavKey {
 
     //endregion
 
+    //region Login in App
+
     @Serializable
-    data class LoginInApp(val legacyAccountId: Long, val isOnboarding: Boolean) : NavDestination
+    sealed interface LoginInApp : NavDestination {
+        @Serializable
+        data class Form(val legacyAccountId: Long, val isOnboarding: Boolean) : LoginInApp
+
+        @Serializable
+        data class SecuringAccount(val accountId: Long, val isOnboarding: Boolean) : LoginInApp
+    }
+
+    //endregion
 
     @Serializable
     data class AccountDetails(val accountId: Long) : NavDestination

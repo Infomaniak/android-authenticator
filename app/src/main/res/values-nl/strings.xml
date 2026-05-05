@@ -73,6 +73,7 @@
     <string name="errorLoginFailed">Inloggen op account mislukt. Probeer het opnieuw of neem contact op met ondersteuning. (foutcode: %d)</string>
     <string name="errorMigrationFailed">De migratie is onderbroken.\nNeem contact op met onze technische ondersteuning.</string>
     <string name="errorOccuredTitle">Er is een fout opgetreden</string>
+    <string name="errorWithRetryMessage">Er is een fout opgetreden. Probeer het later nog eens.</string>
     <string name="estimatedWait">Geschatte wachttijd: %s</string>
     <string name="feedbackTitle">Feedback</string>
     <string name="laterButton">Later</string>

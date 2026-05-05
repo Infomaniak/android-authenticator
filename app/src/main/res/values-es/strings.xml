@@ -74,6 +74,7 @@
     <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte. (código de error: %d)</string>
     <string name="errorMigrationFailed">La migración se ha interrumpido.\nPóngase en contacto con nuestro equipo de asistencia técnica.</string>
     <string name="errorOccuredTitle">Se produjo un error</string>
+    <string name="errorWithRetryMessage">Se ha producido un error. Vuelva a intentarlo más tarde.</string>
     <string name="estimatedWait">Tiempo estimado de espera: %s</string>
     <string name="feedbackTitle">Comentarios</string>
     <string name="laterButton">Más tarde</string>
