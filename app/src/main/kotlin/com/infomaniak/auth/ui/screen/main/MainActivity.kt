@@ -27,6 +27,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
@@ -74,9 +76,11 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 
         lifecycleScope.launch {
-            inAppUpdateManager.isUpdateRequired.collect { isUpdateRequired ->
-                initAppUpdateManager(isUpdateRequired)
-            }
+            inAppUpdateManager.isUpdateRequired
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { isUpdateRequired ->
+                    initAppUpdateManager(isUpdateRequired)
+                }
         }
 
         initAppReviewManager()
