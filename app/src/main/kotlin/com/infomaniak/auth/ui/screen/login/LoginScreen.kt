@@ -86,7 +86,7 @@ fun LoginScreen(
         is LoginUiState.Loading -> Unit
         is LoginUiState.Ready -> {
             val resources = LocalResources.current
-            LaunchedEffect(state.legacyAccount.status, resources) {
+            LaunchedEffect(state.legacyAccount.status) {
                 when (val status = state.legacyAccount.status) {
                     is Account.Status.NotConnected.ReLogin if status.isSendingCredentials -> {
                         onSendingCredentials()

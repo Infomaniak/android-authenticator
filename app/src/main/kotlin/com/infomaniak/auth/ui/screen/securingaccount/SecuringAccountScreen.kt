@@ -56,7 +56,7 @@ fun SecuringAccountFromLoginInAppScreen(
     returnToLoginScreen: () -> Unit,
     viewModel: SecuringAccountViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(accountId) {
+    LaunchedEffect(Unit) {
         handleLoginResultWithMinDelay(
             fetchAccountStatus = viewModel.fetchAccountStatus(accountId),
             onAccountLoggedIn = onAccountLoggedIn,
