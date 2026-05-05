@@ -70,14 +70,18 @@ sealed interface NavDestination : NavKey {
 
     //endregion
 
+    //region Login in App
+
     @Serializable
     sealed interface LoginInApp : NavDestination {
         @Serializable
         data class Form(val legacyAccountId: Long, val isOnboarding: Boolean) : LoginInApp
 
         @Serializable
-        data class SecuringAccount(val accountId: Long, val isOnboarding: Boolean) : NavDestination
+        data class SecuringAccount(val accountId: Long, val isOnboarding: Boolean) : LoginInApp
     }
+
+    //endregion
 
     @Serializable
     data class AccountDetails(val accountId: Long) : NavDestination
