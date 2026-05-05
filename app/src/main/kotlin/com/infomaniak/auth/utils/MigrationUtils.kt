@@ -27,13 +27,13 @@ import com.infomaniak.auth.lib.models.migration.user.preferences.security.Shared
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedSecurity
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.auth.lib.models.migration.SharedApiToken
-import com.infomaniak.core.auth.models.user.preferences.Country as CoreCountry
-import com.infomaniak.core.auth.models.user.preferences.Language as CoreLanguage
-import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference as CoreOrganizationPreference
+import com.infomaniak.core.auth.models.user.preferences.Country
+import com.infomaniak.core.auth.models.user.preferences.Language
+import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.Preferences as CorePreferences
-import com.infomaniak.core.auth.models.user.preferences.TimeZone as CoreTimeZone
-import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices as CoreAuthDevices
-import com.infomaniak.core.auth.models.user.preferences.security.Security as CoreSecurity
+import com.infomaniak.core.auth.models.user.preferences.TimeZone
+import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices
+import com.infomaniak.core.auth.models.user.preferences.security.Security
 import com.infomaniak.lib.login.ApiToken as LoginApiToken
 
 fun LoginApiToken.toSharedApiToken(): SharedApiToken {
@@ -65,35 +65,78 @@ fun SharedUserProfile.toUser(): User {
     )
 }
 
+fun User.toSharedUser(): SharedUserProfile {
+    return SharedUserProfile(
+        id = id,
+        displayName = displayName,
+        firstname = firstname,
+        lastname = lastname,
+        email = email,
+        avatar = avatar,
+        login = login,
+        isStaff = isStaff,
+        preferences = preferences.toPreferences(),
+        apiToken = apiToken.toSharedApiToken(),
+    )
+}
+
 private fun Preferences.toCorePreferences() = CorePreferences(
-    security = security.toCoreSecurity(),
-    organizationPreference = organizationPreference.toCoreOrganizationPreference(),
-    language = language.toCoreLanguage(),
-    country = country.toCoreCountry(),
-    timezone = timezone?.toCoreTimeZone(),
+    security = security?.toSecurity(),
+    organizationPreference = organizationPreference.toOrganizationPreference(),
+    language = language.toLanguage(),
+    country = country.toCountry(),
+    timezone = timezone?.toTimeZone(),
 )
 
-private fun SharedLanguage.toCoreLanguage() = CoreLanguage(
+private fun CorePreferences.toPreferences() = Preferences(
+    security = security?.toSharedSecurity(),
+    organizationPreference = organizationPreference.toSharedOrganizationPreference(),
+    language = language.toSharedLanguage(),
+    country = country.toSharedCountry(),
+    timezone = timezone?.toSharedTimeZone(),
+)
+
+private fun SharedLanguage.toLanguage() = Language(
     shortName = shortName,
     locale = locale,
     shortLocale = shortLocale,
 )
 
-private fun SharedCountry.toCoreCountry() = CoreCountry(
+private fun Language.toSharedLanguage() = SharedLanguage(
+    shortName = shortName,
+    locale = locale,
+    shortLocale = shortLocale,
+)
+
+private fun SharedCountry.toCountry() = Country(
     shortName = shortName,
     isEnabled = isEnabled,
 )
 
-private fun SharedTimeZone.toCoreTimeZone() = CoreTimeZone(
+private fun Country.toSharedCountry() = SharedCountry(
+    shortName = shortName,
+    isEnabled = isEnabled,
+)
+
+private fun SharedTimeZone.toTimeZone() = TimeZone(
     gmt = gmt,
 )
 
-private fun SharedOrganizationPreference.toCoreOrganizationPreference() = CoreOrganizationPreference(
+private fun TimeZone.toSharedTimeZone() = SharedTimeZone(
+    gmt = gmt,
+)
+
+private fun SharedOrganizationPreference.toOrganizationPreference() = OrganizationPreference(
     currentOrganizationId = currentOrganizationId,
     lastLoginAt = lastLoginAt,
 )
 
-private fun SharedSecurity.toCoreSecurity() = CoreSecurity(
+private fun OrganizationPreference.toSharedOrganizationPreference() = SharedOrganizationPreference(
+    currentOrganizationId = currentOrganizationId,
+    lastLoginAt = lastLoginAt,
+)
+
+private fun SharedSecurity.toSecurity() = Security(
     score = score,
     hasRecoveryEmail = hasRecoveryEmail,
     hasValidPhone = hasValidPhone,
@@ -108,13 +151,43 @@ private fun SharedSecurity.toCoreSecurity() = CoreSecurity(
     lastLoginAt = lastLoginAt,
     dateLastChangedPassword = dateLastChangedPassword,
     doubleAuthMethod = doubleAuthMethod,
-    authDevices = authDevices?.mapTo(ArrayList()) { it.toCoreAuthDevices() },
+    authDevices = authDevices?.mapTo(ArrayList()) { it.toAuthDevices() },
 )
 
-private fun SharedAuthDevices.toCoreAuthDevices() = CoreAuthDevices(
+private fun Security.toSharedSecurity() = SharedSecurity(
+    score = score,
+    hasRecoveryEmail = hasRecoveryEmail,
+    hasValidPhone = hasValidPhone,
+    emailValidatedAt = emailValidatedAt,
+    otp = otp,
+    sms = sms,
+    smsPhone = smsPhone,
+    yubikey = yubikey,
+    infomaniakApplication = infomaniakApplication,
+    doubleAuth = doubleAuth,
+    remainingRescueCode = remainingRescueCode,
+    lastLoginAt = lastLoginAt,
+    dateLastChangedPassword = dateLastChangedPassword,
+    doubleAuthMethod = doubleAuthMethod,
+    authDevices = authDevices?.mapTo(ArrayList()) { it.toSharedAuthDevices() },
+)
+
+private fun SharedAuthDevices.toAuthDevices() = AuthDevices(
     id = id,
     name = name,
     lastConnexion = lastConnexion ?: 0L,
+    userAgent = userAgent,
+    userIp = userIp,
+    device = device,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    deletedAt = deletedAt,
+)
+
+private fun AuthDevices.toSharedAuthDevices() = SharedAuthDevices(
+    id = id,
+    name = name,
+    lastConnexion = lastConnexion,
     userAgent = userAgent,
     userIp = userIp,
     device = device,
