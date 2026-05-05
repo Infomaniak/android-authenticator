@@ -82,12 +82,12 @@ fun ActionRequiredCard(
             )
         }
         is Account.Status.NotConnected.LoginFailed -> {
-            when (status.cause) {
+            when (val issue = status.issue) {
                 is Issue.Retriable -> {
-                    val code = when (val reason = (status.cause as Issue.Retriable).reason) {
-                        Issue.Retriable.Reason.NetworkIssue -> -1
-                        Issue.Retriable.Reason.ServerUnavailable -> 503
-                        is Issue.Retriable.Reason.Other -> reason.errorCode
+                    val code = when (val cause = issue.cause) {
+                        Issue.Retriable.Cause.NetworkIssue -> -1
+                        Issue.Retriable.Cause.ServerUnavailable -> 503
+                        is Issue.Retriable.Cause.Other -> cause.errorCode
                     }
                     ActionRequiredCard(
                         configuration = ActionRequiredConfiguration(
@@ -108,7 +108,7 @@ fun ActionRequiredCard(
                                 title = stringResource(RCore.string.buttonRetry),
                                 style = ButtonStyle.Tertiary,
                                 onClick = {
-                                    val cause = status.cause as? Issue.Retriable
+                                    val cause = status.issue as? Issue.Retriable
                                     cause?.proceed?.invoke(true)
                                 }
                             )

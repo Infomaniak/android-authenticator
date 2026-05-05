@@ -20,7 +20,7 @@ package com.infomaniak.auth.di
 import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.models.migration.user.UserProfile
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
@@ -52,7 +52,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import javax.inject.Singleton
-import com.infomaniak.auth.lib.models.migration.ApiToken as MigrationApiToken
+import com.infomaniak.auth.lib.models.migration.SharedApiToken as MigrationApiToken
 import com.infomaniak.lib.login.ApiToken as LoginApiToken
 
 @Module
@@ -205,7 +205,7 @@ object ApplicationModule {
                 )
             }
 
-            override suspend fun persistUserProfile(userProfile: UserProfile) {
+            override suspend fun persistUserProfile(userProfile: SharedUserProfile) {
                 accountUtils.addUser(userProfile.toUser())
             }
         }

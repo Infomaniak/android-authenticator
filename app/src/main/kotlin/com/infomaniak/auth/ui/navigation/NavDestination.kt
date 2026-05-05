@@ -52,14 +52,6 @@ sealed interface NavDestination : NavKey {
     @Serializable
     data object Home : NavDestination
 
-    sealed interface HomeSubDestination : NavDestination {
-        @Serializable
-        data object AccountList : HomeSubDestination
-
-        @Serializable
-        data object Settings : HomeSubDestination
-    }
-
     //endregion
 
     //region Settings
@@ -83,4 +75,14 @@ sealed interface NavDestination : NavKey {
 
     @Serializable
     data class AccountDetails(val accountId: Long) : NavDestination
+}
+
+@Immutable
+@Serializable
+sealed interface HomeSubDestination : NavKey {
+    @Serializable
+    data object AccountList : HomeSubDestination
+
+    @Serializable
+    data object Settings : HomeSubDestination
 }

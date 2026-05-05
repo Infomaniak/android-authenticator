@@ -41,6 +41,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.AuthenticatorFab
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
+import com.infomaniak.auth.ui.navigation.HomeSubDestination
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.homeEntryProvider
 import com.infomaniak.auth.ui.navigation.tryPopLast
@@ -70,7 +71,7 @@ fun HomeScreen(
     rootBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier
 ) {
-    val homeBackStack = rememberNavBackStack(NavDestination.HomeSubDestination.AccountList)
+    val homeBackStack = rememberNavBackStack(HomeSubDestination.AccountList)
 
     SinglePaneScaffold(
         modifier = modifier,
@@ -81,7 +82,7 @@ fun HomeScreen(
             AuthenticatorBottomBar(
                 backStack = homeBackStack,
                 onMyAccountsClicked = { homeBackStack.tryPopLast() },
-                onSettingsClicked = { homeBackStack.add(NavDestination.HomeSubDestination.Settings) }
+                onSettingsClicked = { homeBackStack.add(HomeSubDestination.Settings) }
             )
         },
         floatingActionButton = {
@@ -115,13 +116,13 @@ private fun AuthenticatorBottomBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             NavigationBarItem(
-                selected = backStack.last() is NavDestination.HomeSubDestination.AccountList,
+                selected = backStack.last() is HomeSubDestination.AccountList,
                 onClick = onMyAccountsClicked,
                 icon = { Icon(painterResource(R.drawable.accounts), null) },
                 label = { Text(stringResource(R.string.accountsTitle)) },
             )
             NavigationBarItem(
-                selected = backStack.last() is NavDestination.HomeSubDestination.Settings,
+                selected = backStack.last() is HomeSubDestination.Settings,
                 onClick = onSettingsClicked,
                 icon = { Icon(painterResource(R.drawable.settings), null) },
                 label = { Text(stringResource(R.string.settingsTitle)) },

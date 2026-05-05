@@ -15,12 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.models.migration.user.preferences
+package com.infomaniak.auth.lib.models.migration.user.preferences.security
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-abstract class PreferenceTemplate(
-    var id: Int = 0,
-    var name: String = "",
+data class SharedAuthDevices(
+    var id: Int,
+    var name: String,
+    @SerialName("last_connexion")
+    var lastConnexion: Long?,
+    @SerialName("user_agent")
+    var userAgent: String,
+    @SerialName("user_ip")
+    var userIp: String,
+    var device: String,
+    @SerialName("created_at")
+    var createdAt: Long,
+    @SerialName("updated_at")
+    var updatedAt: Long,
+    @SerialName("deleted_at")
+    var deletedAt: Long?,
 )

@@ -17,31 +17,53 @@
  */
 package com.infomaniak.auth.lib.internal
 
+import com.infomaniak.auth.lib.internal.Failure.KeyManagement.GenerationFailed
+import com.infomaniak.auth.lib.internal.Failure.KeyManagement.KeyExtractionFailed
+import com.infomaniak.auth.lib.internal.Failure.KeyManagement.KeyNotFound
 import com.infomaniak.auth.lib.internal.utils.Xor
 
-internal interface KeyPairManager {
+internal expect fun createKeyPairManager(): KeyPairManager
+
+internal abstract class KeyPairManager protected constructor() {
+
+    companion object {
+        operator fun invoke(): KeyPairManager = createKeyPairManager()
+    }
+
+    open fun ensureKeyPairsAreMoved() = Unit
 
     /**
      * Generates key pair for a new registration
      * (migrating from kAuth v1 or a backup, or a fresh new login)
      */
-    suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed?
+    abstract suspend fun generateNewKey(userId: Long, keyId: String): GenerationFailed?
 
-    suspend fun retrievePublicKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    abstract suspend fun retrievePublicKey(userId: Long, keyId: String): Xor<ByteArray, KeyExtractionFailed>
 
-    suspend fun retrievePrivateKey(userId: Long, keyId: String): Xor<ByteArray, Failure.KeyManagement.KeyExtractionFailed>
+    abstract suspend fun retrievePrivateKey(userId: Long, keyId: String): Xor<ByteArray, KeyExtractionFailed>
 
-    suspend fun findKeyIdFor(predicate: (name: String) -> Boolean): String?
+    /** Sorted by creation date. */
+    abstract suspend fun getSortedKeyIds(matchOn: MatchOn): List<String>
 
-    suspend fun deleteKeysMatching(predicate: (name: String) -> Boolean): Xor<Unit, Failure.KeyManagement.KeyNotFound>
+    abstract suspend fun findKeyIdFor(matchOn: MatchOn): String?
 
-    companion object {
-        val privateKeyPurposes = KeyPurposes.privateKeyDefaults
-        val publicKeyPurposes = KeyPurposes.publicKeyDefaults
+    abstract suspend fun deleteKeysMatching(matchOn: MatchOn): Xor<Unit, KeyNotFound>
+
+    sealed interface MatchOn {
+        class UserId(val id: Long) : MatchOn
+        class PasskeyId(val id: String) : MatchOn
     }
 
-    object Filters {
-        fun forUserId(userId: Long): (name: String) -> Boolean = { it.startsWith("$userId-") }
-        fun forPasskeyId(passkeyId: String): (name: String) -> Boolean = { "-$passkeyId-" in it }
+    //region MatchOn to predicates
+    protected fun MatchOn.asFilterPredicate(): (name: String) -> Boolean = when (this) {
+        is MatchOn.PasskeyId -> asFilterPredicate()
+        is MatchOn.UserId -> asFilterPredicate()
     }
+
+    private fun MatchOn.UserId.asFilterPredicate() = { name: String ->
+        name.startsWith("$id-") // Same on both platforms.
+    }
+
+    protected abstract fun MatchOn.PasskeyId.asFilterPredicate(): (name: String) -> Boolean // Platform dependent.
+    //endregion
 }

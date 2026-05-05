@@ -56,5 +56,7 @@ internal data class AccountEntity(
         LoggedIn,
 
         RestoringFromBackup,
+
+        DeletingOldKeyAfterRestoration,
     }
 }

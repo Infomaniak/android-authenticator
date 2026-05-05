@@ -1,8 +1,8 @@
 <component name="CopyrightManager">
   <settings>
     <module2copyright>
-      <element module="Core project files" copyright="Core copyright" />
-      <element module="Project Source Files" copyright="Infomaniak Open Source" />
+      <element module="Authenticator" copyright="Infomaniak Open Source" />
+      <element module="Core" copyright="Core copyright" />
     </module2copyright>
     <LanguageOptions name="JAVA">
       <option name="fileTypeOverride" value="3" />

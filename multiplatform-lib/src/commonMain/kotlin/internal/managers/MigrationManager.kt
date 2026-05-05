@@ -33,7 +33,7 @@ import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.models.migration.ApiToken
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
@@ -41,7 +41,6 @@ import kotlinx.io.IOException
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import com.infomaniak.auth.lib.internal.KeyPairManager.Filters as keyFilters
 
 internal class MigrationManager(
     private val accountsDatabase: AccountsDatabase,
@@ -62,26 +61,13 @@ internal class MigrationManager(
     }
 
     suspend fun restore(account: AccountEntity, persistToken: suspend (userId: Long, token: String) -> Unit) {
-        val oldKeyId = authenticatorManager.getKeyIdFor(account.id) ?: return //TODO: Handle multiple passkeys present.
-        // Get token with previous passkey
-        val tokenFromOldPasskey = authenticatorManager.getToken(
-            clientId = clientId,
-            userId = account.id,
-            keyIdOrDefault = oldKeyId,
-        ).firstOrElse { error(it) }
-        // Register a new passkey
-        val newKeyId = authenticatorManager.registerPasskey(tokenFromOldPasskey.accessToken, account.id)
-        // Getting a new token with the new passkey
-        val tokenWithNewPassKey = authenticatorManager.getToken(
-            clientId = clientId,
-            userId = account.id,
-            keyIdOrDefault = newKeyId,
-        ).firstOrElse { error(it) }
-        persistToken(account.id, tokenWithNewPassKey.accessToken)
-        // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
-        webAuthnRepository.deletePasskey(tokenWithNewPassKey.accessToken, oldKeyId)
-        val _ = authenticatorManager.keyPairManager.deleteKeysMatching(keyFilters.forPasskeyId(oldKeyId))
-        dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))
+        val restorer = AccountRestorer(
+            accountsDatabase = accountsDatabase,
+            authenticatorManager = authenticatorManager,
+            webAuthnRepository = webAuthnRepository,
+            clientId = clientId
+        )
+        restorer.restore(account, persistToken)
     }
 
     suspend fun addLegacyAccountsToDB() {
@@ -100,7 +86,7 @@ internal class MigrationManager(
      */
     suspend fun tryMigrating(
         userId: Long,
-        persistUser: suspend (apiToken: ApiToken) -> Unit,
+        persistUser: suspend (apiToken: SharedApiToken) -> Unit,
         authentication: MigrationAuthentication,
     ): Boolean {
         @OptIn(ExperimentalUuidApi::class)
@@ -174,8 +160,8 @@ internal class MigrationManager(
         return generator.generate(timestampSeconds)
     }
 
-    private fun AuthResult.toApiToken(): ApiToken {
-        return ApiToken(
+    private fun AuthResult.toApiToken(): SharedApiToken {
+        return SharedApiToken(
             accessToken = this.accessToken,
             tokenType = this.tokenType,
             userId = this.userId.toInt(),

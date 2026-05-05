@@ -35,12 +35,17 @@ import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.applock.AppLockManager
+import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.inappreview.reviewmanagers.InAppReviewManager
 import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.front.TwoFactorAuthApprovalAutoManagedBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,6 +58,9 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
 
     @Inject
     lateinit var twoFactorAuthManager: TwoFactorAuthManager
+
+    @Inject
+    lateinit var crossAppLoginFacade: CrossAppLoginFacade
 
     override val inAppReviewManager by lazy { InAppReviewManager(this) }
     override val inAppUpdateManager by lazy { InAppUpdateManager(this) }
@@ -103,6 +111,22 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
                     )
                 }
             }
+        }
+        lifecycleScope.launch {
+            keepCrossAppLoginActivatedWhileNeeded(viewModel.appStatus)
+        }
+    }
+
+    private suspend fun keepCrossAppLoginActivatedWhileNeeded(appStatus: SharedFlow<AppStatus>) {
+        val shouldBeActivatedFlow = appStatus.map { status ->
+            when (status) {
+                is AppStatus.LoginRequired, is AppStatus.LoggingIn -> true
+                is AppStatus.AddingAnAccount -> true
+                is AppStatus.EverythingReady, is AppStatus.SetupComplete -> false
+            }
+        }.distinctUntilChanged()
+        shouldBeActivatedFlow.collectLatest { shouldBeActivated ->
+            if (shouldBeActivated) crossAppLoginFacade.activateUpdates(this)
         }
     }
 }

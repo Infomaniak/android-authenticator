@@ -15,19 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.models.migration
+@file:OptIn(ExperimentalSplittiesApi::class)
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+package com.infomaniak.auth.data.preferences
 
-@Serializable
-data class ApiToken(
-    @SerialName("access_token") val accessToken: String,
-    @SerialName("refresh_token") val refreshToken: String? = null,
-    @SerialName("token_type") val tokenType: String,
-    @SerialName("expires_in") val expiresIn: Int = 7200,
-    @SerialName("user_id") val userId: Int,
-    @SerialName("scope") val scope: String? = null,
-    @Transient var expiresAt: Long? = null
-)
+import kotlinx.coroutines.flow.Flow
+import splitties.experimental.ExperimentalSplittiesApi
+import splitties.preferences.Preferences
+import splitties.preferences.SuspendPrefsAccessor
+
+class PermissionPreferences private constructor(): Preferences(name = "PermissionPreferences") {
+    companion object : SuspendPrefsAccessor<PermissionPreferences>(::PermissionPreferences)
+
+    val hasTriggeredNotificationPermissionFlow : Flow<Boolean>
+    var hasTriggeredNotificationPermission by boolPref(key = "HasTriggeredNotificationPermission", defaultValue = false).also {
+        hasTriggeredNotificationPermissionFlow = it.valueFlow()
+    }
+}

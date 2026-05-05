@@ -18,9 +18,13 @@
 package com.infomaniak.auth
 
 import android.app.Application
+import android.os.Build.VERSION.SDK_INT
+import android.os.StrictMode
+import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.infomaniak.auth.data.preferences.SentryPreferences
+import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.NotificationUtils
@@ -30,10 +34,12 @@ import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.sentry.SentryConfig.configureSentry
 import dagger.hilt.android.HiltAndroidApp
+import io.sentry.Sentry
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import splitties.init.injectAsAppCtx
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -45,6 +51,9 @@ open class MainApplication : Application(), Configuration.Provider {
     lateinit var notificationUtils: NotificationUtils
 
     @Inject
+    lateinit var db: AppSettingsDatabase // Workaround to ensure it's initialized eagerly, before StrictMode is activated.
+
+    @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
     protected val applicationScope = CoroutineScope(Dispatchers.Default + CoroutineName("MainApplication"))
@@ -54,19 +63,20 @@ open class MainApplication : Application(), Configuration.Provider {
             .build()
 
     init {
+        injectAsAppCtx()
         NetworkConfiguration.init(
             appId = BuildConfig.APPLICATION_ID,
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
             apiEnvironment = ApiEnvironment.Prod,
         )
+        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
     }
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
-
-        userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
         applicationScope.launch {
             configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = SentryPreferences().isSentryAuthorized)
             DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
@@ -77,5 +87,42 @@ open class MainApplication : Application(), Configuration.Provider {
         @JvmStatic
         var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
             protected set
+    }
+
+    private fun setupStrictMode() {
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyFlashScreen()
+                .penaltyLog()
+                .build()
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+        )
+    }
+
+    private fun setupProductionThreadMonitoring() {
+        if (SDK_INT >= 28) {
+            setupProductionThreadMonitoringApi28()
+        }
+    }
+
+    @RequiresApi(28)
+    private fun setupProductionThreadMonitoringApi28() {
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .detectCustomSlowCalls()
+                .penaltyListener(mainExecutor) { violation ->
+                    Sentry.captureException(violation)
+                }
+                .build()
+        )
     }
 }
