@@ -28,6 +28,10 @@
             android:name="io.sentry.dsn"
             android:value="https://adacdde66d0ca8cca50da9d92847d49f@sentry-mobile.infomaniak.com/23" />
 
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
