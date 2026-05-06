@@ -28,7 +28,6 @@ import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -40,7 +39,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountListViewModel @Inject constructor(
-    private val accountUtils: AccountUtils,
+    accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
     private val twoFactorAuthManager: TwoFactorAuthManager
 ) : ViewModel() {
