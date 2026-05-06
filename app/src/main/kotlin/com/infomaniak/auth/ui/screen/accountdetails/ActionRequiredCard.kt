@@ -135,8 +135,7 @@ fun ActionRequiredCard(
             }
         }
         is Account.Status.LoggedIn,
-        is Account.Status.NotConnected.AttemptingToConnect,
-        is Account.Status.PasswordChanged -> Unit
+        is Account.Status.NotConnected.AttemptingToConnect -> Unit
     }
 }
 
