@@ -27,6 +27,11 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -72,17 +77,28 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val homeBackStack = rememberNavBackStack(HomeSubDestination.AccountList)
+    var topAppBarTitleResId by remember { mutableIntStateOf(R.string.appCompleteName) }
 
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {
-            InfomaniakAuthenticatorTopAppBar(isCentered = false, isBackgroundTransparent = true)
+            InfomaniakAuthenticatorTopAppBar(
+                titleResId = topAppBarTitleResId,
+                isCentered = false,
+                isBackgroundTransparent = true,
+            )
         },
         bottomBar = {
             AuthenticatorBottomBar(
                 backStack = homeBackStack,
-                onMyAccountsClicked = { homeBackStack.tryPopLast() },
-                onSettingsClicked = { homeBackStack.add(HomeSubDestination.Settings) }
+                onMyAccountsClicked = {
+                    topAppBarTitleResId = R.string.appCompleteName
+                    homeBackStack.tryPopLast()
+                },
+                onSettingsClicked = {
+                    topAppBarTitleResId = R.string.settingsTitle
+                    homeBackStack.add(HomeSubDestination.Settings)
+                }
             )
         },
         floatingActionButton = {

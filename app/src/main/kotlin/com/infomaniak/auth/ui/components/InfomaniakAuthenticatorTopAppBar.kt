@@ -39,6 +39,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfomaniakAuthenticatorTopAppBar(
+    titleResId: Int? = null,
     onBackPressed: (() -> Unit)? = null,
     withTitle: Boolean = true,
     isCentered: Boolean = true,
@@ -52,7 +53,7 @@ fun InfomaniakAuthenticatorTopAppBar(
     val title: @Composable () -> Unit = {
         if (withTitle) {
             Text(
-                text = stringResource(R.string.appCompleteName),
+                text = stringResource(titleResId ?: R.string.appCompleteName),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
             )
         }
