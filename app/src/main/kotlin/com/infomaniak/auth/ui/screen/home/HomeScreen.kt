@@ -27,7 +27,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -77,13 +77,12 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val homeBackStack = rememberNavBackStack(HomeSubDestination.AccountList)
+    val current by remember(homeBackStack) { derivedStateOf { homeBackStack.last() } }
     var topAppBarTitleResId by remember { mutableIntStateOf(R.string.appCompleteName) }
 
-    LaunchedEffect(homeBackStack.last()) {
-        when (homeBackStack.last()) {
-            is HomeSubDestination.AccountList -> topAppBarTitleResId = R.string.appCompleteName
-            is HomeSubDestination.Settings -> topAppBarTitleResId = R.string.settingsTitle
-        }
+    when (current) {
+        is HomeSubDestination.AccountList -> topAppBarTitleResId = R.string.appCompleteName
+        is HomeSubDestination.Settings -> topAppBarTitleResId = R.string.settingsTitle
     }
 
     SinglePaneScaffold(
