@@ -116,8 +116,8 @@ internal actual object SignUtils {
     }
 
     private fun convertDerToRawSignature(derSignature: ByteArray): Pair<ByteArray, ByteArray> {
-        require(derSignature.size in 70..72) {
-            "Invalid DER signature length: ${derSignature.size}, expected 70-72"
+        require(derSignature.size in 8..72) { // Typical length is between 68 and 72, but can theoretically be lower.
+            "Invalid DER signature length: ${derSignature.size}, expected 8-72"
         }
 
         // Position after SEQUENCE header (0x30, length)
