@@ -18,4 +18,31 @@
 <resources>
     <string name="appName" translatable="false">Authenticator</string>
     <string name="appCompleteName" translatable="false">Infomaniak Authenticator</string>
+    <string name="asset_statements" translatable="false"><![CDATA[[
+[
+{
+"relation": [
+"delegate_permission/common.get_login_creds",
+"delegate_permission/common.handle_all_urls"
+],
+"target": {
+"namespace": "web",
+"site": "login.infomaniak.com"
+}
+},
+{
+"relation": [
+"delegate_permission/common.get_login_creds",
+"delegate_permission/common.handle_all_urls"
+],
+| "target": {
+| "namespace": "android_app",
+| "package_name": "com.infomaniak.auth",
+| "sha256_cert_fingerprints": [
+"36:25:C5:9E:E2:31:30:CA:E8:EA:3D:F6:99:78:DE:0B:FC:9A:C2:5E:97:03:34:36:03:FD:12:29:B9:FB:C2:9C"
+]
+}
+}
+]
+]]></string>
 </resources>
