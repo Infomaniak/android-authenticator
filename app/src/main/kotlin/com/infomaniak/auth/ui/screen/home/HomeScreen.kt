@@ -29,9 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -78,11 +76,9 @@ fun HomeScreen(
 ) {
     val homeBackStack = rememberNavBackStack(HomeSubDestination.AccountList)
     val current by remember(homeBackStack) { derivedStateOf { homeBackStack.last() } }
-    var topAppBarTitleResId by remember { mutableIntStateOf(R.string.appCompleteName) }
-
-    when (current) {
-        is HomeSubDestination.AccountList -> topAppBarTitleResId = R.string.appCompleteName
-        is HomeSubDestination.Settings -> topAppBarTitleResId = R.string.settingsTitle
+    val topAppBarTitleResId = when (current) {
+        is HomeSubDestination.Settings -> R.string.settingsTitle
+        else -> R.string.appCompleteName
     }
 
     SinglePaneScaffold(
