@@ -27,6 +27,7 @@ import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.utils.AccountUtils
+import com.infomaniak.auth.utils.toSharedUser
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.utils.LoginUtils
@@ -70,15 +71,7 @@ class OnboardingStartViewModel @Inject constructor(
     }
 
     private suspend fun addUserToAuthenticatorDB(user: User) {
-        val connectedAccount = Account(
-            id = user.id.toLong(),
-            fullName = "${user.firstname} ${user.lastname}",
-            initials = user.getInitials(),
-            email = user.email,
-            avatarUrl = user.avatar,
-            status = Account.Status.LoggedIn,
-        )
-        authenticatorFacade.addAccounts(listOf(connectedAccount))
+        authenticatorFacade.addAccounts(listOf(user.toSharedUser()))
     }
 
     suspend fun connectSelectedAccounts(

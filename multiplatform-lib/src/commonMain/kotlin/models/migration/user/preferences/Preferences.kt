@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Preferences(
-    var security: SharedSecurity? = null,
+    var security: SharedSecurity?,
     @SerialName("account")
     var organizationPreference: SharedOrganizationPreference,
     var language: SharedLanguage,

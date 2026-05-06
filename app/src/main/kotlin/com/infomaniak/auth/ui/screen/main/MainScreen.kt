@@ -24,7 +24,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
@@ -40,6 +42,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
@@ -85,9 +88,16 @@ fun MainScreen(
         }
     }
 
+    var showPasswordChangedDialogFor: Account? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.accountsWithPasswordUpdate.collect { accounts ->
+            accounts.firstOrNull()?.let { showPasswordChangedDialogFor = it }
+        }
+    }
+
     MainScreen(backStack, entryDecorators)
 }
-
 
 @OptIn(ExperimentalPermissionsApi::class)
 private fun handleAppStatus(

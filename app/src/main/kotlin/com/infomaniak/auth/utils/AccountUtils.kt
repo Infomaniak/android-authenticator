@@ -33,4 +33,5 @@ class AccountUtils @Inject constructor(
     suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
 
     suspend fun getUserById(id: Int): User? = userDao.findById(id)
+    suspend fun getUsersById(userIds: IntArray): List<User> = userDao.loadAllByIds(userIds)
 }

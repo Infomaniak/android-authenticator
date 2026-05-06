@@ -63,17 +63,21 @@ class AccountListViewModel @Inject constructor(
         viewModelScope.launch {
             authenticatorFacade.accounts.first()
                 .filter { account ->
-                    account.status == Account.Status.LoggedIn
+                    account.status is Account.Status.LoggedIn
                 }
                 .forEach { account ->
                     twoFactorAuthManager.refreshChallengeNow(account.id)
                 }
         }
     }
-}
 
-@Immutable
-sealed interface AccountListUiState {
-    data object Loading : AccountListUiState
-    data class Success(val accountPairs: ImmutableList<Pair<Account, User?>>) : AccountListUiState
+    fun refreshUserProfiles() {
+        authenticatorFacade.refreshUserProfiles()
+    }
+
+    @Immutable
+    sealed interface AccountListUiState {
+        data object Loading : AccountListUiState
+        data class Success(val accountPairs: ImmutableList<Pair<Account, User?>>) : AccountListUiState
+    }
 }

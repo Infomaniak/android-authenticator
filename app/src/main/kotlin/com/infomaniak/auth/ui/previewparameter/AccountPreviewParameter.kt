@@ -37,7 +37,7 @@ val fakeAccounts = persistentListOf(
         initials = "JS",
         email = "john.smith@ik.me",
         avatarUrl = null,
-        status = Account.Status.LoggedIn,
+        status = Account.Status.LoggedIn(),
     ),
     Account(
         id = 1,

@@ -64,6 +64,7 @@ import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
+import com.infomaniak.auth.ui.screen.accountlist.AccountListViewModel.AccountListUiState
 import com.infomaniak.auth.ui.screen.accountlist.AccountSecurityLevel.Companion.toAccountSecurityLevel
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -86,6 +87,7 @@ fun AccountListScreen(
                 uiState = { state },
                 onAccountClicked = onAccountClicked,
                 onChallengesRefreshRequested = viewModel::refreshChallenges,
+                onUserProfilesRefreshRequested = viewModel::refreshUserProfiles,
             )
         }
         is AccountListUiState.Loading -> Unit
@@ -97,6 +99,7 @@ fun AccountListScreen(
     uiState: () -> AccountListUiState.Success,
     onAccountClicked: (Account) -> Unit,
     onChallengesRefreshRequested: () -> Unit,
+    onUserProfilesRefreshRequested: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = uiState()
@@ -122,6 +125,7 @@ fun AccountListScreen(
             onRefresh = {
                 isRefreshing = true
                 onChallengesRefreshRequested()
+                onUserProfilesRefreshRequested()
             },
         ) {
             Column(
@@ -229,10 +233,17 @@ private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Compo
     Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
 
     companion object {
-        fun Account.Status.toAccountSecurityLevel() = when (this) {
-            Account.Status.LoggedIn -> Secured
+        fun Account.Status.toAccountSecurityLevel(): AccountSecurityLevel = when (this) {
+            is Account.Status.LoggedIn -> accountSecurityLevelForScore(securityScore)
             is Account.Status.NotConnected -> Danger //TODO: Shouldn't this show the exclamation mark too?
             else -> Warning // TODO: Use secure level to determine the status more precisely
+        }
+
+        private fun accountSecurityLevelForScore(securityScore: Int?): AccountSecurityLevel {
+            return when (securityScore) {
+                5 -> Secured
+                else -> Warning
+            }
         }
     }
 }
@@ -247,6 +258,7 @@ private fun AccountListScreenPreview() {
                 uiState = { AccountListUiState.Success(fakeAccountPairs) },
                 onAccountClicked = {},
                 onChallengesRefreshRequested = {},
+                onUserProfilesRefreshRequested = {},
             )
         }
     }

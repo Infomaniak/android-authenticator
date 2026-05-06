@@ -27,7 +27,14 @@ data class Account(
 ) {
     sealed interface Status {
 
-        data object LoggedIn : Status
+        /**
+         * @property securityScore can range from 0 to 5
+         * @property passwordChangedAck is set when the password changed. Call it to acknowledge the change and dismiss it.
+         */
+        data class LoggedIn(
+            val securityScore: Int? = null,
+            val passwordChangedAck: (() -> Unit)? = null,
+        ) : Status
 
         sealed interface NotConnected : Status {
 

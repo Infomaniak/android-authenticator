@@ -15,14 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.lib.network.interfaces
+package com.infomaniak.auth.lib.internal.utils
 
-import com.infomaniak.auth.lib.models.migration.SharedApiToken
-import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 
-interface AuthenticatorBridge {
-    suspend fun getTokenFromCrossAppLogin(userId: Long): SharedApiToken?
-    suspend fun getTokenFromDatabase(userId: Long): SharedApiToken?
-    suspend fun persistTokenForAccount(userId: Long, token: SharedApiToken)
-    suspend fun persistUserProfile(userProfile: SharedUserProfile)
+/**
+ * Creates a Flow with the passed [block] using the values from this [DynamicLazyMap] corresponding to the passed [keys],
+ * while it is hot.
+ */
+internal fun <K, E, R> DynamicLazyMap<K, E>.buildFlowWithElements(
+    keys: Set<K>,
+    block: (map: Map<K, E>) -> Flow<R>
+): Flow<R> = flow {
+    useElements(keys) {
+        emitAll(block(it))
+    }
 }

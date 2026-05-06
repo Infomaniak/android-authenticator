@@ -26,14 +26,13 @@ import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 abstract class AuthenticatorFacade internal constructor() {
 
@@ -48,7 +47,7 @@ abstract class AuthenticatorFacade internal constructor() {
      *
      * Will lead to [appStatus] to switch to the [AppStatus.LoggingIn] case.
      */
-    abstract suspend fun addAccounts(connectedAccounts: List<Account>)
+    abstract suspend fun addAccounts(connectedAccounts: List<SharedUserProfile>)
 
     /**
      * Remove account from the authenticator.
@@ -61,6 +60,8 @@ abstract class AuthenticatorFacade internal constructor() {
      */
     @Throws(Exception::class)
     abstract suspend fun refreshTokenFor(userId: Long)
+
+    abstract fun refreshUserProfiles()
 
     companion object {
 
@@ -108,36 +109,5 @@ abstract class AuthenticatorFacade internal constructor() {
             )
         }
 
-        fun dummyInstance(
-            userAgent: String,
-            apiHost: String,
-            crashReport: CrashReportInterface?,
-            scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
-            loadingDurationMillis: Long = 2.seconds.inWholeMilliseconds,
-            resetAfterMillis: Long = 20.seconds.inWholeMilliseconds,
-        ): AuthenticatorFacade {
-            val routes = ApiRoutes(apiHost)
-            val webAuthnRepository = WebAuthnRepository(
-                authenticatorRequest = AuthenticatorRequest(
-                    httpClient = ApiClientProvider(
-                        scope = scope,
-                        userAgent = userAgent,
-                        routes = routes,
-                        crashReport = crashReport,
-                    ).httpClient,
-                    routes = routes,
-                )
-            )
-            val accountsRepository = AccountsRepository(getAccountsRoomDatabase(databaseNameOrPath = null))
-            val authenticatorManager =
-                AuthenticatorManager(webAuthnRepository = webAuthnRepository, accountsRepository = accountsRepository)
-            return DummyAuthenticatorFacade(
-                accountsRepository = accountsRepository,
-                authenticatorManager = authenticatorManager,
-                scope = scope,
-                loadingDuration = loadingDurationMillis.milliseconds,
-                resetAfter = resetAfterMillis.milliseconds,
-            )
-        }
     }
 }
