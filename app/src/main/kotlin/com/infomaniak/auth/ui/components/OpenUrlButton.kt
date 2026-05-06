@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.ui.theme.AppShapes.MediumButtonShape
-import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.margin.Margin
 
 @Composable
@@ -40,7 +40,7 @@ fun OpenUrlButton(
 
     TextButton(
         modifier = modifier.heightIn(min = 48.dp),
-        onClick = { context.openUrl(sourceUrl) },
+        onClick = { context.openUrlInCustomTab(sourceUrl) },
         contentPadding = PaddingValues(horizontal = Margin.Medium),
         shape = MediumButtonShape,
     ) {

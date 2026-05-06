@@ -40,7 +40,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.core.applock.AppLockHelper.requestCredentials
 import com.infomaniak.core.applock.AppLockManager
-import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.network.SUPPORT_URL
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.persistentListOf
@@ -123,14 +123,14 @@ private fun SettingsScreen(
             stringResId = R.string.feedbackTitle,
             rightIconResId = R.drawable.square_arrow_up,
             onClick = {
-                fragmentActivity?.getString(R.string.urlUserReport)?.let { fragmentActivity.openUrl(it) }
+                fragmentActivity?.getString(R.string.urlUserReport)?.let { fragmentActivity.openUrlInCustomTab(it) }
             },
         ),
         OptionItemType.WithRightIcon(
             stringResId = R.string.contactSupportTitle,
             rightIconResId = R.drawable.square_arrow_up,
             onClick = {
-                fragmentActivity?.openUrl(SUPPORT_URL)
+                fragmentActivity?.openUrlInCustomTab(SUPPORT_URL)
             },
         ),
     )

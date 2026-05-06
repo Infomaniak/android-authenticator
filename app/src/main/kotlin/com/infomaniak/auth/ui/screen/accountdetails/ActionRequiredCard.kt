@@ -42,7 +42,7 @@ import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.common.extensions.openUrl
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.common.R as RCore
 
@@ -101,7 +101,7 @@ fun ActionRequiredCard(
                                 title = stringResource(R.string.contactSupportTitle),
                                 style = ButtonStyle.Primary,
                                 onClick = {
-                                    context.openUrl(HELP_SUPPORT_URL)
+                                    context.openUrlInCustomTab(HELP_SUPPORT_URL)
                                 }
                             )
                             ActionRequiredButton(
@@ -127,7 +127,7 @@ fun ActionRequiredCard(
                             ActionRequiredButton(
                                 title = stringResource(R.string.contactSupportTitle),
                                 style = ButtonStyle.Primary,
-                                onClick = { context.openUrl(HELP_SUPPORT_URL) }
+                                onClick = { context.openUrlInCustomTab(HELP_SUPPORT_URL) }
                             )
                         }
                     )
