@@ -94,7 +94,11 @@ fun HomeScreen(
             AuthenticatorBottomBar(
                 backStack = homeBackStack,
                 onMyAccountsClicked = { homeBackStack.tryPopLast() },
-                onSettingsClicked = { homeBackStack.add(HomeSubDestination.Settings) }
+                onSettingsClicked = {
+                    if (homeBackStack.last() != HomeSubDestination.Settings) {
+                        homeBackStack.add(HomeSubDestination.Settings)
+                    }
+                }
             )
         },
         floatingActionButton = {
