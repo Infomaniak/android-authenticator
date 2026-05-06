@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,7 +40,7 @@ import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfomaniakAuthenticatorTopAppBar(
-    titleResId: Int? = null,
+    @StringRes titleResId: Int? = null,
     onBackPressed: (() -> Unit)? = null,
     withTitle: Boolean = true,
     isCentered: Boolean = true,
