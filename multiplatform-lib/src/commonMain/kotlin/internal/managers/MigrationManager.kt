@@ -32,7 +32,7 @@ import com.infomaniak.auth.lib.internal.otp.deleteLegacyDB
 import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
-import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.exceptions.ApiException
@@ -46,7 +46,7 @@ import kotlin.uuid.Uuid
 internal class MigrationManager(
     private val accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
-    private val webAuthnRepository: WebAuthnRepository,
+    private val webAuthnRequests: WebAuthnRequests,
     private val clientId: String,
 ) {
 
@@ -65,7 +65,7 @@ internal class MigrationManager(
         val restorer = AccountRestorer(
             accountsDatabase = accountsDatabase,
             authenticatorManager = authenticatorManager,
-            webAuthnRepository = webAuthnRepository,
+            webAuthnRequests = webAuthnRequests,
             clientId = clientId
         )
         restorer.restore(account, persistToken)
@@ -93,7 +93,7 @@ internal class MigrationManager(
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
         val secret = checkNotNull(getSecretFor(userId)) { "Couldn't find the secret for user $userId" }
-        val migrationOptions = webAuthnRepository.getMigrationOptions(
+        val migrationOptions = webAuthnRequests.getMigrationOptions(
             deviceId = deviceId,
             userId = userId,
         )
@@ -110,7 +110,7 @@ internal class MigrationManager(
                 }
 
                 runCatching {
-                    webAuthnRepository.getTokenForMigration(
+                    webAuthnRequests.getTokenForMigration(
                         sessionId = migrationOptions.session,
                         otpPayload = OtpPayload(
                             deviceId = deviceId,
@@ -145,7 +145,7 @@ internal class MigrationManager(
         }
         persistUser(userProfile)
 
-        webAuthnRepository.completeMigration(
+        webAuthnRequests.completeMigration(
             token = apiTokenFromPasskey.accessToken,
             sessionId = migrationOptions.session,
             deviceId = deviceId

@@ -28,6 +28,7 @@ import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.network.utils.decode
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
+import com.infomaniak.auth.lib.network.exceptions.ApiException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
@@ -36,18 +37,20 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
-internal class AuthenticatorRequest(
+internal class WebAuthnRequests(
     private val httpClient: suspend () -> HttpClient,
     private val routes: ApiRoutes,
 ) {
 
+    //region Passkey
+
     /**
      * Retrieves options (including a challenge) prior to registering a public key credential with [registerPasskey].
      */
-    suspend fun getPasskeysOptions(token: String): SuccessfulApiResponse<PasskeysOptions> {
+    suspend fun getPasskeysOptions(token: String): PasskeysOptions {
         return httpClient().get(routes.passkeysOptions()) {
             addAuthenticationHeader(token)
-        }.decode()
+        }.decode<SuccessfulApiResponse<PasskeysOptions>>().data
     }
 
     /**
@@ -64,10 +67,10 @@ internal class AuthenticatorRequest(
     /**
      * Retrieves the backend-generated challenge, prior to authenticating with [verify].
      */
-    suspend fun challenge(clientId: String): SuccessfulApiResponse<AuthenticationOptions> {
+    suspend fun challenge(clientId: String): AuthenticationOptions {
         return httpClient().post(routes.challenge()) {
             setBody(mapOf("client_id" to clientId))
-        }.decode()
+        }.decode<SuccessfulApiResponse<AuthenticationOptions>>().data
     }
 
     /**
@@ -77,10 +80,10 @@ internal class AuthenticatorRequest(
      *
      * @return An [AuthResult] that includes an access token.
      */
-    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): SuccessfulApiResponse<AuthResult> {
+    suspend fun verify(verifyAuthenticationData: VerifyAuthenticationData): AuthResult {
         return httpClient().post(routes.verify()) {
             setBody(verifyAuthenticationData)
-        }.decode()
+        }.decode<SuccessfulApiResponse<AuthResult>>().data
     }
 
     /**
@@ -89,11 +92,24 @@ internal class AuthenticatorRequest(
      * @param token The access token of the user.
      * @param passkeyId The id of the passkey to delete.
      */
-    suspend fun deletePasskey(token: String, passkeyId: String) {
+    suspend fun deletePasskeyIfExists(token: String, passkeyId: String) {
+        try {
+            deletePasskey(token, passkeyId)
+        } catch (e: ApiException) {
+            if (e.statusCode == 404) return
+            throw e
+        }
+    }
+
+    private suspend fun deletePasskey(token: String, passkeyId: String) {
         httpClient().delete(routes.delete(passkeyId)) {
             addAuthenticationHeader(token)
         }
     }
+
+    //endregion
+
+    //region Migration
 
     /**
      * Get migration options (see [MigrationOptions]), prior to migration from kAuth.
@@ -101,10 +117,10 @@ internal class AuthenticatorRequest(
      * @param deviceId The id of the device.
      * @param userId The id of the user.
      */
-    suspend fun getMigrationOptions(deviceId: String, userId: Long): SuccessfulApiResponse<MigrationOptions> {
+    suspend fun getMigrationOptions(deviceId: String, userId: Long): MigrationOptions {
         return httpClient().post(routes.migrationsOptions()) {
             setBody(mapOf("device" to deviceId, "id" to userId.toString()))
-        }.decode()
+        }.decode<SuccessfulApiResponse<MigrationOptions>>().data
     }
 
     /**
@@ -121,10 +137,10 @@ internal class AuthenticatorRequest(
     suspend fun getTokenForMigration(
         sessionId: String,
         otpPayload: OtpPayload,
-    ): SuccessfulApiResponse<AuthResult> {
+    ): AuthResult {
         return httpClient().post(routes.verifyMigration(sessionId)) {
             setBody(otpPayload)
-        }.decode()
+        }.decode<SuccessfulApiResponse<AuthResult>>().data
     }
 
     /**
@@ -140,14 +156,16 @@ internal class AuthenticatorRequest(
         }
     }
 
+    //endregion
+
     suspend fun getUserProfile(
         token: String,
-    ): SuccessfulApiResponse<SharedUserProfile> {
+    ): SharedUserProfile {
         val url = "${routes.userProfile()}&with=security"
 
         return httpClient().get(url) {
             addAuthenticationHeader(token)
-        }.decode()
+        }.decode<SuccessfulApiResponse<SharedUserProfile>>().data
     }
 
     private fun HttpRequestBuilder.addAuthenticationHeader(token: String) {

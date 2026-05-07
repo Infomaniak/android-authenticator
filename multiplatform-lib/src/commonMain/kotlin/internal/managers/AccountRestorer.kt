@@ -21,13 +21,13 @@ import com.infomaniak.auth.lib.internal.KeyPairManager.MatchOn
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
-import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.models.migration.SharedApiToken
 
 internal class AccountRestorer(
     accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
-    private val webAuthnRepository: WebAuthnRepository,
+    private val webAuthnRequests: WebAuthnRequests,
     private val clientId: String,
 ) {
 
@@ -51,7 +51,7 @@ internal class AccountRestorer(
             val previousRestorationAborted = existingKeyIds.size == 2
             if (previousRestorationAborted) {
                 val newKeyIdToDrop = existingKeyIds.last()
-                webAuthnRepository.deletePasskeyIfExists(tokenFromOldPasskey.accessToken, newKeyIdToDrop)
+                webAuthnRequests.deletePasskeyIfExists(tokenFromOldPasskey.accessToken, newKeyIdToDrop)
                 val _ = keyPairManager.deleteKeysMatching(MatchOn.PasskeyId(newKeyIdToDrop))
             }
             // Register a new passkey
@@ -72,7 +72,7 @@ internal class AccountRestorer(
         persistToken(account.id, tokenWithNewPassKey)
         // We can safely delete the old passkey, as the new one is working and the old token won't be valid anymore
         oldKeyId?.let { keyId ->
-            webAuthnRepository.deletePasskeyIfExists(tokenWithNewPassKey.accessToken, keyId)
+            webAuthnRequests.deletePasskeyIfExists(tokenWithNewPassKey.accessToken, keyId)
             val _ = keyPairManager.deleteKeysMatching(MatchOn.PasskeyId(keyId))
         }
         dao.upsert(account.copy(status = AccountEntity.Status.LoggedIn))

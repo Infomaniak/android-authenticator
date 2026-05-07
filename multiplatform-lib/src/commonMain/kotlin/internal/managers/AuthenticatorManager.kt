@@ -26,7 +26,7 @@ import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.models.VerifyResponse
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
-import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
+import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.internal.utils.SignUtils
 import com.infomaniak.auth.lib.internal.utils.Xor
 import com.infomaniak.auth.lib.models.migration.SharedApiToken
@@ -35,7 +35,7 @@ import kotlinx.serialization.json.Json
 import okio.ByteString.Companion.toByteString
 
 internal class AuthenticatorManager(
-    private val webAuthnRepository: WebAuthnRepository,
+    private val webAuthnRequests: WebAuthnRequests,
     private val accountsRepository: AccountsRepository,
 ) {
 
@@ -44,10 +44,10 @@ internal class AuthenticatorManager(
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
-    suspend fun getUserProfile(token: String) = webAuthnRepository.getUserProfile(token)
+    suspend fun getUserProfile(token: String) = webAuthnRequests.getUserProfile(token)
 
     suspend fun registerPasskey(token: String, userId: Long): String {
-        val passkeysOptions = webAuthnRepository.getPasskeysOptions(token).data
+        val passkeysOptions = webAuthnRequests.getPasskeysOptions(token)
         val keyIds = cryptoObjectsBuilder.getKeyIds()
         val keyIdAsByteArray = keyIds.first
         val keyIdAsString = keyIds.second
@@ -65,7 +65,7 @@ internal class AuthenticatorManager(
             id = keyIdAsString,
         )
 
-        webAuthnRepository.registerPasskey(token, registerPasskey)
+        webAuthnRequests.registerPasskey(token, registerPasskey)
 
         return keyIdAsString
     }
@@ -78,7 +78,7 @@ internal class AuthenticatorManager(
         val keyId = keyIdOrDefault ?: keyPairManager.findKeyIdFor(MatchOn.UserId(userId))
         ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No key found for user $userId"))
 
-        val authenticationOptions = webAuthnRepository.challenge(clientId)
+        val authenticationOptions = webAuthnRequests.challenge(clientId)
         val publicKey = keyPairManager.retrievePublicKey(userId, keyId).firstOrNull()
             ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No public key found for $userId"))
         val rawAuthenticatorData = cryptoObjectsBuilder.generateAuthenticatorData(
@@ -114,7 +114,7 @@ internal class AuthenticatorManager(
             clientExtensionResults = ClientExtensionResults,
             authenticatorAttachment = "platform",
         )
-        val verifyAuthData = webAuthnRepository.verify(verifyAuthenticationData)
+        val verifyAuthData = webAuthnRequests.verify(verifyAuthenticationData)
         val apiToken = SharedApiToken(
             accessToken = verifyAuthData.accessToken,
             tokenType = verifyAuthData.tokenType,
@@ -129,7 +129,7 @@ internal class AuthenticatorManager(
 
         if (passkeyId != null) {
             // If we have a passkey for this account, revoke it against the backend and delete it
-            webAuthnRepository.deletePasskeyIfExists(token, passkeyId)
+            webAuthnRequests.deletePasskeyIfExists(token, passkeyId)
             val _ = keyPairManager.deleteKeysMatching(MatchOn.PasskeyId(passkeyId))
         }
 
