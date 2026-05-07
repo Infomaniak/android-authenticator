@@ -83,7 +83,7 @@ internal class AuthenticatorFacadeImpl(
     private val migrationManager: MigrationManager,
     private val authenticatorBridge: AuthenticatorBridge,
     private val crashReport: CrashReportInterface,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
 
     private val dao = accountsDatabase.getDao()
@@ -438,10 +438,9 @@ internal class AuthenticatorFacadeImpl(
 
     private suspend fun updateUserProfileLoop(account: AccountEntity) {
         require(account.isLoggedIn)
-        val token = authenticatorBridge.getTokenFromDatabase(account.id) ?: return
         while (true) {
             runCatching {
-                val profile = authenticatorManager.getUserProfile(token.accessToken)
+                val profile = authenticatorManager.getUserProfile(account.id)
                 val profileSecurity = profile.preferences.security ?: return
                 val newStatus = when (account.lastPasswordUpdate) {
                     profileSecurity.dateLastChangedPassword -> account.status

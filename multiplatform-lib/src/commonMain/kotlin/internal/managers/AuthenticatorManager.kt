@@ -26,6 +26,7 @@ import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.models.VerifyResponse
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
+import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequests
 import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.internal.utils.SignUtils
 import com.infomaniak.auth.lib.internal.utils.Xor
@@ -39,12 +40,26 @@ internal class AuthenticatorManager(
     private val accountsRepository: AccountsRepository,
 ) {
 
+    private val authenticatorRequests: AuthenticatorRequests by lazy {
+        //TODO: Maybe this is not the right place to create it.
+        AuthenticatorRequests(
+            createHttpClient = TODO(),
+            getTokenForUser = TODO(),
+            refreshToken = TODO(),
+            disconnectAccount = TODO(),
+            routes = TODO(),
+            accountsDao = TODO(),
+            coroutineScope = TODO()
+        )
+    }
+
     private val cryptoObjectsBuilder by lazy { CryptoObjectsBuilder() }
     val keyPairManager: KeyPairManager by lazy { KeyPairManager() }
 
     private val base64NoPadding get() = cryptoObjectsBuilder.base64UrlSafeNoPadding
 
     suspend fun getUserProfile(token: String) = webAuthnRequests.getUserProfile(token)
+    suspend fun getUserProfile(userId: Long) = authenticatorRequests.getUserProfile(userId)
 
     suspend fun registerPasskey(token: String, userId: Long): String {
         val passkeysOptions = webAuthnRequests.getPasskeysOptions(token)
