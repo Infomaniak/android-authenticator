@@ -38,6 +38,10 @@
     <string name="actionRequiredDescription">Handling kreves for å sikre en av kontoene dine.</string>
     <string name="activityHistoryButton">Aktivitetshistorikk</string>
     <string name="addAccountContentDescription">Legg til en konto</string>
+    <string name="alertDialogNeutralButton">Jeg forstår</string>
+    <string name="alertDialogPasswordChangedText">Innloggingspassordet for Infomaniak-kontoen %s har blitt oppdatert.</string>
+    <string name="alertDialogPasswordChangedTitle">Innloggingspassordet er endret</string>
+    <string name="alertDialogReportButton">Det var ikke meg</string>
     <string name="appAccessIsSecure">Tilgang til Authenticator\ner sikret</string>
     <string name="authorizationCodeTitle">Autoriseringskoden din</string>
     <string name="autoCloseTitle">Denne informasjonen lukkes automatisk om 15 sekunder.</string>

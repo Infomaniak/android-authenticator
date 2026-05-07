@@ -38,6 +38,10 @@
     <string name="actionRequiredDescription">Ação necessária para proteger uma de suas contas.</string>
     <string name="activityHistoryButton">Histórico de atividades</string>
     <string name="addAccountContentDescription">Adicionar uma conta</string>
+    <string name="alertDialogNeutralButton">Compreendo</string>
+    <string name="alertDialogPasswordChangedText">A palavra-passe de acesso à conta Infomaniak %s foi actualizada.</string>
+    <string name="alertDialogPasswordChangedTitle">Alteração da palavra-passe de acesso</string>
+    <string name="alertDialogReportButton">Não fui eu</string>
     <string name="appAccessIsSecure">Acesso ao Authenticator é seguro</string>
     <string name="authorizationCodeTitle">Seu código de autorização</string>
     <string name="autoCloseTitle">Esta informação fecha automaticamente em 15 segundos.</string>

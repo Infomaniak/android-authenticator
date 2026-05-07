@@ -38,6 +38,10 @@
     <string name="actionRequiredDescription">Åtgärd krävs för att säkra ett av dina konton.</string>
     <string name="activityHistoryButton">Aktivitetshistorik</string>
     <string name="addAccountContentDescription">Lägg till konto</string>
+    <string name="alertDialogNeutralButton">Jag förstår</string>
+    <string name="alertDialogPasswordChangedText">Inloggningslösenordet för Infomaniak-kontot %s har uppdaterats.</string>
+    <string name="alertDialogPasswordChangedTitle">Lösenord för inloggning ändrat</string>
+    <string name="alertDialogReportButton">Det var inte jag</string>
     <string name="appAccessIsSecure">Åtkomst till Authenticator\när säker</string>
     <string name="authorizationCodeTitle">Din auktoriseringskod</string>
     <string name="autoCloseTitle">Denna information stängs automatiskt om 15 sekunder.</string>

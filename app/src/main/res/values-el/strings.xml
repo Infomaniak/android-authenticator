@@ -38,6 +38,10 @@
     <string name="actionRequiredDescription">Απαιτείται ενέργεια για την ασφάλεια ενός από τους λογαριασμούς σας.</string>
     <string name="activityHistoryButton">Ιστορικό δραστηριοτήτων</string>
     <string name="addAccountContentDescription">Προσθήκη λογαριασμού</string>
+    <string name="alertDialogNeutralButton">Καταλαβαίνω</string>
+    <string name="alertDialogPasswordChangedText">Ο κωδικός πρόσβασης για τον λογαριασμό Infomaniak %s έχει ενημερωθεί.</string>
+    <string name="alertDialogPasswordChangedTitle">Αλλαγή κωδικού πρόσβασης σύνδεσης</string>
+    <string name="alertDialogReportButton">Δεν ήμουν εγώ</string>
     <string name="appAccessIsSecure">Η πρόσβαση στο Authenticator\nείναι ασφαλής</string>
     <string name="authorizationCodeTitle">Ο κωδικός εξουσιοδότησής σας</string>
     <string name="autoCloseTitle">Αυτή η πληροφορία κλείνει αυτόματα σε 15 δευτερόλεπτα.</string>

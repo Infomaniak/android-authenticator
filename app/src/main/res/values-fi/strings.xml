@@ -38,6 +38,10 @@
     <string name="actionRequiredDescription">Toimenpide vaaditaan yhden tilisi suojaamiseksi.</string>
     <string name="activityHistoryButton">Toimintahistoria</string>
     <string name="addAccountContentDescription">Lisää tili</string>
+    <string name="alertDialogNeutralButton">Ymmärrän</string>
+    <string name="alertDialogPasswordChangedText">Infomaniak-tilin %s kirjautumissalasana on päivitetty.</string>
+    <string name="alertDialogPasswordChangedTitle">Kirjautumissalasana muutettu</string>
+    <string name="alertDialogReportButton">Se en ollut minä</string>
     <string name="appAccessIsSecure">Pääsy Authenticatoriin on suojattu</string>
     <string name="authorizationCodeTitle">Vahvistuskoodisi</string>
     <string name="autoCloseTitle">Tämä tieto sulkeutuu automaattisesti 15 sekunnin kuluttua.</string>
