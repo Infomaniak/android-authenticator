@@ -39,10 +39,14 @@
     <string name="actionRequiredDescription">Se requiere acción para proteger una de tus cuentas.</string>
     <string name="activityHistoryButton">Historial de actividad</string>
     <string name="addAccountContentDescription">Añadir una cuenta</string>
+    <string name="alertDialogChangePasswordButton">Cambiar contraseña</string>
+    <string name="alertDialogContactSupportButton">Contacto</string>
     <string name="alertDialogNeutralButton">Comprendo</string>
     <string name="alertDialogPasswordChangedText">Se ha actualizado la contraseña de acceso a la cuenta %s de Infomaniak.</string>
     <string name="alertDialogPasswordChangedTitle">Contraseña de inicio de sesión modificada</string>
     <string name="alertDialogReportButton">No fui yo</string>
+    <string name="alertDialogVerifyAccountText">Si no es tu caso, te aconsejamos que restablezcas tu contraseña y revises tu configuración de seguridad.</string>
+    <string name="alertDialogVerifyAccountTitle">Comprobar la seguridad de la cuenta</string>
     <string name="appAccessIsSecure">El acceso a Authenticator está seguro</string>
     <string name="authorizationCodeTitle">Tu código de autorización</string>
     <string name="autoCloseTitle">Esta información se cerrará automáticamente en 15 segundos.</string>

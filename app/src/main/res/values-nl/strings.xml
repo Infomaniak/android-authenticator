@@ -38,10 +38,14 @@
     <string name="actionRequiredDescription">Actie vereist om een van uw accounts te beveiligen.</string>
     <string name="activityHistoryButton">Activiteitengeschiedenis</string>
     <string name="addAccountContentDescription">Een account toevoegen</string>
+    <string name="alertDialogChangePasswordButton">Wachtwoord wijzigen</string>
+    <string name="alertDialogContactSupportButton">Contact Ondersteuning</string>
     <string name="alertDialogNeutralButton">Ik begrijp het</string>
     <string name="alertDialogPasswordChangedText">Het inlogwachtwoord voor de Infomaniak account %s is bijgewerkt.</string>
     <string name="alertDialogPasswordChangedTitle">Wachtwoord gewijzigd</string>
     <string name="alertDialogReportButton">Ik was het niet</string>
+    <string name="alertDialogVerifyAccountText">Als dit niet het geval was, raden we je aan je wachtwoord opnieuw in te stellen en je beveiligingsinstellingen te controleren.</string>
+    <string name="alertDialogVerifyAccountTitle">Accountbeveiliging controleren</string>
     <string name="appAccessIsSecure">Toegang tot Authenticator is veilig</string>
     <string name="authorizationCodeTitle">Uw autorisatiecode</string>
     <string name="autoCloseTitle">Deze informatie sluit automatisch na 15 seconden.</string>
