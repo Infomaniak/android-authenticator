@@ -29,7 +29,7 @@ fun getAppSettingsDatabaseBuilder(context: Context): RoomDatabase.Builder<AppSet
     return Room.databaseBuilder<AppSettingsDatabase>(
         context = appContext,
         name = dbFile.absolutePath
-    )
+    ).fallbackToDestructiveMigration(dropAllTables = true)
 }
 
 fun getAppSettingsRoomDatabase(context: Context): AppSettingsDatabase {

@@ -24,6 +24,6 @@ internal actual fun getAccountsRoomDatabase(databaseNameOrPath: String?): Accoun
     val dbBuilder = Room.databaseBuilder<AccountsDatabase>(
         context = appCtx,
         name = databaseNameOrPath ?: "accounts.db"
-    )
+    ).fallbackToDestructiveMigration(dropAllTables = true)
     return getAccountsRoomDatabase(dbBuilder)
 }
