@@ -24,8 +24,7 @@ import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.network.ApiClientProvider
 import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
-import com.infomaniak.auth.lib.internal.repositories.WebAuthnRepository
-import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequest
+import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
@@ -75,27 +74,25 @@ abstract class AuthenticatorFacade internal constructor() {
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
             val routes = ApiRoutes(apiHost)
-            val webAuthnRepository = WebAuthnRepository(
-                authenticatorRequest = AuthenticatorRequest(
-                    httpClient = ApiClientProvider(
-                        scope = scope,
-                        userAgent = userAgent,
-                        routes = routes,
-                        crashReport = crashReport,
-                    ).httpClient,
+            val webAuthnRequests = WebAuthnRequests(
+                httpClient = ApiClientProvider(
+                    scope = scope,
+                    userAgent = userAgent,
                     routes = routes,
-                )
+                    crashReport = crashReport,
+                ).httpClient,
+                routes = routes,
             )
             val accountsDatabase = getAccountsRoomDatabase(databaseNameOrPath)
             val accountsRepository = AccountsRepository(accountsDatabase)
             val authenticatorManager = AuthenticatorManager(
-                webAuthnRepository = webAuthnRepository,
+                webAuthnRequests = webAuthnRequests,
                 accountsRepository = accountsRepository
             ).also { it.keyPairManager.ensureKeyPairsAreMoved() }
             val migrationManager = MigrationManager(
                 accountsDatabase = accountsDatabase,
                 authenticatorManager = authenticatorManager,
-                webAuthnRepository = webAuthnRepository,
+                webAuthnRequests = webAuthnRequests,
                 clientId = clientId,
             )
             return AuthenticatorFacadeImpl(
