@@ -35,12 +35,11 @@ import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toAccountEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
-import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
 import com.infomaniak.auth.lib.internal.utils.buildFlowWithElements
+import com.infomaniak.auth.lib.internal.utils.dynamicLazyMapOfSharedFlow
 import com.infomaniak.auth.lib.internal.utils.launchRacer
 import com.infomaniak.auth.lib.internal.utils.race
 import com.infomaniak.auth.lib.internal.utils.raceOf
-import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
@@ -99,8 +98,7 @@ internal class AuthenticatorFacadeImpl(
         entities.any { entity -> entity.isLoggedIn }
     }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.WhileSubscribed(), replay = 1)
 
-    private val userIdsToStatusFlows = DynamicLazyMap.sharedFlow(
-        coroutineScope = coroutineScope,
+    private val userIdsToStatusFlows = coroutineScope.dynamicLazyMapOfSharedFlow(
         cacheManager = { _, _ ->
             delay(5.seconds) // Should be more than enough to keep the state between re-uses.
         }
