@@ -78,7 +78,7 @@
     <string name="doneButton">Τέλος</string>
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Ενεργοποίηση</string>
-    <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. (κωδικός σφάλματος: %d)</string>
+    <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη.</string>
     <string name="errorMigrationFailed">Η μετανάστευση έχει διακοπεί.\nΠαρακαλούμε επικοινωνήστε με την ομάδα τεχνικής υποστήριξης.</string>
     <string name="errorOccuredTitle">Παρουσιάστηκε σφάλμα</string>
     <string name="errorWithRetryMessage">Εμφανίστηκε σφάλμα. Προσπαθήστε ξανά αργότερα.</string>

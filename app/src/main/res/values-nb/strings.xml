@@ -78,7 +78,7 @@
     <string name="doneButton">Ferdig</string>
     <string name="emailPlaceholder">E-post</string>
     <string name="enableButton">Aktiver</string>
-    <string name="errorLoginFailed">Pålogging til kontoen mislyktes. Prøv igjen eller kontakt brukerstøtte. (feilkode: %d)</string>
+    <string name="errorLoginFailed">Pålogging til kontoen mislyktes. Prøv igjen eller kontakt brukerstøtte.</string>
     <string name="errorMigrationFailed">Migreringen har blitt avbrutt.\nTa kontakt med vårt tekniske supportteam.</string>
     <string name="errorOccuredTitle">En feil oppstod</string>
     <string name="errorWithRetryMessage">Det har oppstått en feil. Vennligst prøv igjen senere.</string>

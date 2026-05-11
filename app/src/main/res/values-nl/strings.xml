@@ -78,7 +78,7 @@
     <string name="doneButton">Gereed</string>
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Inschakelen</string>
-    <string name="errorLoginFailed">Inloggen op account mislukt. Probeer het opnieuw of neem contact op met ondersteuning. (foutcode: %d)</string>
+    <string name="errorLoginFailed">Inloggen op account mislukt. Probeer het opnieuw of neem contact op met ondersteuning.</string>
     <string name="errorMigrationFailed">De migratie is onderbroken.\nNeem contact op met onze technische ondersteuning.</string>
     <string name="errorOccuredTitle">Er is een fout opgetreden</string>
     <string name="errorWithRetryMessage">Er is een fout opgetreden. Probeer het later nog eens.</string>

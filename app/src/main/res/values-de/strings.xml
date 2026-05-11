@@ -79,7 +79,7 @@
     <string name="doneButton">Fertig</string>
     <string name="emailPlaceholder">E-Mail</string>
     <string name="enableButton">Aktivieren</string>
-    <string name="errorLoginFailed">Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support. (Fehlercode: %d)</string>
+    <string name="errorLoginFailed">Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.</string>
     <string name="errorMigrationFailed">Die Migration ist unterbrochen worden.\nBitte kontaktieren Sie unser technisches Support-Team.</string>
     <string name="errorOccuredTitle">Ein Fehler ist aufgetreten</string>
     <string name="errorWithRetryMessage">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.</string>

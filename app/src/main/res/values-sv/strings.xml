@@ -78,7 +78,7 @@
     <string name="doneButton">Klar</string>
     <string name="emailPlaceholder">E-post</string>
     <string name="enableButton">Aktivera</string>
-    <string name="errorLoginFailed">Kontoinloggning misslyckades. Försök igen eller kontakta support. (felkod: %d)</string>
+    <string name="errorLoginFailed">Kontoinloggning misslyckades. Försök igen eller kontakta support.</string>
     <string name="errorMigrationFailed">Migreringen har avbrutits.\nVänligen kontakta vårt tekniska supportteam.</string>
     <string name="errorOccuredTitle">Ett fel uppstod</string>
     <string name="errorWithRetryMessage">Ett fel har inträffat. Vänligen försök igen senare.</string>

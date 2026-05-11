@@ -78,7 +78,7 @@
     <string name="doneButton">Gotowe</string>
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Włącz</string>
-    <string name="errorLoginFailed">Logowanie do konta nie powiodło się. Spróbuj ponownie lub skontaktuj się z pomocą techniczną. (kod błędu: %d)</string>
+    <string name="errorLoginFailed">Logowanie do konta nie powiodło się. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.</string>
     <string name="errorMigrationFailed">Migracja została przerwana.\nProsimy o kontakt z naszym zespołem pomocy technicznej.</string>
     <string name="errorOccuredTitle">Wystąpił błąd</string>
     <string name="errorWithRetryMessage">Wystąpił błąd. Spróbuj ponownie później.</string>

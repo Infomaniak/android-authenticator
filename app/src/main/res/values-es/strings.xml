@@ -79,7 +79,7 @@
     <string name="doneButton">Listo</string>
     <string name="emailPlaceholder">Correo electrónico</string>
     <string name="enableButton">Habilitar</string>
-    <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte. (código de error: %d)</string>
+    <string name="errorLoginFailed">Inicio de sesión fallido. Por favor, inténtelo de nuevo o contacte con soporte.</string>
     <string name="errorMigrationFailed">La migración se ha interrumpido.\nPóngase en contacto con nuestro equipo de asistencia técnica.</string>
     <string name="errorOccuredTitle">Se produjo un error</string>
     <string name="errorWithRetryMessage">Se ha producido un error. Vuelva a intentarlo más tarde.</string>
