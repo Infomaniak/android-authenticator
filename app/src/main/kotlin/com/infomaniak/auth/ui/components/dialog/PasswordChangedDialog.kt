@@ -38,14 +38,14 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 @Composable
 fun PasswordChangedDialog(
     account: Account,
-    onDismissRequest: () -> Unit,
+    onDismissButton: () -> Unit,
     onReportUnauthorizedChange: () -> Unit,
 ) {
     AlertDialog(
         icon = {
             Icon(painter = painterResource(R.drawable.alert), contentDescription = null)
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {},
         title = {
             Text(
                 text = stringResource(R.string.alertDialogPasswordChangedTitle),
@@ -66,7 +66,7 @@ fun PasswordChangedDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(onClick = onDismissButton) {
                 Text(stringResource(R.string.alertDialogNeutralButton))
             }
         }
@@ -81,7 +81,7 @@ private fun PasswordChangedDialogPreview() {
         Scaffold { _ ->
             PasswordChangedDialog(
                 account = fakeAccounts.first(),
-                onDismissRequest = {},
+                onDismissButton = {},
                 onReportUnauthorizedChange = {}
             )
         }

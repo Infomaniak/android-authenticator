@@ -35,13 +35,12 @@ import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 fun VerifyAccountSecurityDialog(
     onChangePassword: () -> Unit,
     onContactSupport: () -> Unit,
-    onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
         icon = {
             Icon(painter = painterResource(R.drawable.triangle_alert), contentDescription = null)
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {},
         title = {
             Text(
                 text = stringResource(R.string.alertDialogVerifyAccountTitle),
@@ -71,7 +70,6 @@ private fun VerifyAccountSecurityDialogPreview() {
     AuthenticatorTheme {
         Scaffold { _ ->
             VerifyAccountSecurityDialog(
-                onDismissRequest = {},
                 onChangePassword = {},
                 onContactSupport = {},
             )

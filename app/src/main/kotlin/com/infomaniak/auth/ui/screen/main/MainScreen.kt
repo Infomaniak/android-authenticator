@@ -159,12 +159,11 @@ private fun PasswordChangedStackDialog(
     }
 
     var showVerifyAccountDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     if (showPasswordChangedDialog) {
         PasswordChangedDialog(
             account = account,
-            onDismissRequest = {
+            onDismissButton = {
                 (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
                 showPasswordChangedDialog = false
             },
@@ -176,6 +175,8 @@ private fun PasswordChangedStackDialog(
     }
 
     if (showVerifyAccountDialog) {
+        val context = LocalContext.current
+
         VerifyAccountSecurityDialog(
             onChangePassword = {
                 (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
@@ -189,7 +190,6 @@ private fun PasswordChangedStackDialog(
                 showVerifyAccountDialog = false
                 showPasswordChangedDialog = true
             },
-            onDismissRequest = { }
         )
     }
 }
