@@ -38,6 +38,14 @@
     <string name="actionRequiredDescription">Wymagana akcja w celu zabezpieczenia jednego z Twoich kont.</string>
     <string name="activityHistoryButton">Historia aktywności</string>
     <string name="addAccountContentDescription">Dodaj konto</string>
+    <string name="alertDialogChangePasswordButton">Zmiana hasła</string>
+    <string name="alertDialogContactSupportButton">Kontakt z pomocą techniczną</string>
+    <string name="alertDialogNeutralButton">Rozumiem</string>
+    <string name="alertDialogPasswordChangedText">Hasło logowania do konta Infomaniak %s zostało zaktualizowane.</string>
+    <string name="alertDialogPasswordChangedTitle">Zmieniono hasło logowania</string>
+    <string name="alertDialogReportButton">To nie byłem ja</string>
+    <string name="alertDialogVerifyAccountText">Jeśli tak się nie stało, zalecamy zresetowanie hasła i sprawdzenie ustawień zabezpieczeń.</string>
+    <string name="alertDialogVerifyAccountTitle">Sprawdź bezpieczeństwo konta</string>
     <string name="appAccessIsSecure">Dostęp do Authenticatora\njest zabezpieczony</string>
     <string name="authorizationCodeTitle">Twój kod autoryzacyjny</string>
     <string name="autoCloseTitle">Te informacje zamkną się automatycznie za 15 sekund.</string>

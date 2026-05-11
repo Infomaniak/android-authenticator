@@ -39,6 +39,14 @@
     <string name="actionRequiredDescription">Action required to secure one of your accounts.</string>
     <string name="activityHistoryButton">Activity history</string>
     <string name="addAccountContentDescription">Add an account</string>
+    <string name="alertDialogChangePasswordButton">Change password</string>
+    <string name="alertDialogContactSupportButton">Contact Support</string>
+    <string name="alertDialogNeutralButton">I understand</string>
+    <string name="alertDialogPasswordChangedText">The login password for the Infomaniak account %s has been updated.</string>
+    <string name="alertDialogPasswordChangedTitle">Login password changed</string>
+    <string name="alertDialogReportButton">It wasn’t me</string>
+    <string name="alertDialogVerifyAccountText">If this was not you, we advise you to reset your password and review your security settings.</string>
+    <string name="alertDialogVerifyAccountTitle">Check account security</string>
     <string name="appAccessIsSecure">Access to Authenticator is secure</string>
     <string name="authorizationCodeTitle">Your authorization code</string>
     <string name="autoCloseTitle">This information closes automatically in 15 seconds.</string>

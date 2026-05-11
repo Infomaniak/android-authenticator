@@ -39,6 +39,14 @@
     <string name="actionRequiredDescription">Aktion erforderlich, um eines Ihrer Konten zu sichern.</string>
     <string name="activityHistoryButton">Aktivitätsverlauf</string>
     <string name="addAccountContentDescription">Hinzufügen eines Kontos</string>
+    <string name="alertDialogChangePasswordButton">Passwort ändern</string>
+    <string name="alertDialogContactSupportButton">Kontakt zum Support</string>
+    <string name="alertDialogNeutralButton">Ich verstehe</string>
+    <string name="alertDialogPasswordChangedText">Das Anmeldekennwort für das Infomaniak-Konto %s wurde aktualisiert.</string>
+    <string name="alertDialogPasswordChangedTitle">Login-Passwort geändert</string>
+    <string name="alertDialogReportButton">Ich war es nicht</string>
+    <string name="alertDialogVerifyAccountText">Wenn Sie das nicht waren, empfehlen wir Ihnen, Ihr Passwort zurückzusetzen und Ihre Sicherheitseinstellungen zu überprüfen.</string>
+    <string name="alertDialogVerifyAccountTitle">Kontosicherheit prüfen</string>
     <string name="appAccessIsSecure">Der Zugriff auf Authenticator ist sicher</string>
     <string name="authorizationCodeTitle">Ihr Autorisierungscode</string>
     <string name="autoCloseTitle">Diese Information schliesst sich automatisch nach 15 Sekunden.</string>

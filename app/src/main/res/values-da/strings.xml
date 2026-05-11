@@ -38,6 +38,14 @@
     <string name="actionRequiredDescription">En handling er påkrævet for at sikre en af dine konti.</string>
     <string name="activityHistoryButton">Aktivitetshistorik</string>
     <string name="addAccountContentDescription">Tilføj en konto</string>
+    <string name="alertDialogChangePasswordButton">Skift adgangskode</string>
+    <string name="alertDialogContactSupportButton">Kontakt support</string>
+    <string name="alertDialogNeutralButton">Jeg forstår</string>
+    <string name="alertDialogPasswordChangedText">Login-adgangskoden til Infomaniak-kontoen %s er blevet opdateret.</string>
+    <string name="alertDialogPasswordChangedTitle">Ændret adgangskode til login</string>
+    <string name="alertDialogReportButton">Det var ikke mig</string>
+    <string name="alertDialogVerifyAccountText">Hvis det ikke var dig, råder vi dig til at nulstille din adgangskode og gennemgå dine sikkerhedsindstillinger.</string>
+    <string name="alertDialogVerifyAccountTitle">Tjek kontoens sikkerhed</string>
     <string name="appAccessIsSecure">Adgang til Authenticator er sikret</string>
     <string name="authorizationCodeTitle">Din autoriseringskode</string>
     <string name="autoCloseTitle">Disse informationer lukker automatisk om 15 sekunder.</string>

@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
@@ -44,12 +45,17 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AppStatus
+import com.infomaniak.auth.lib.models.UrlConstants.HELP_SUPPORT_URL
+import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
+import com.infomaniak.auth.ui.components.dialog.PasswordChangedDialog
+import com.infomaniak.auth.ui.components.dialog.VerifyAccountSecurityDialog
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
 import com.infomaniak.auth.ui.navigation.replaceAllWith
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.defaultEnterAnimation
 import com.infomaniak.auth.ui.theme.defaultExitAnimation
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -92,9 +98,10 @@ fun MainScreen(
 
     LaunchedEffect(Unit) {
         viewModel.accountsWithPasswordUpdate.collect { accounts ->
-            accounts.firstOrNull()?.let { showPasswordChangedDialogFor = it }
+            showPasswordChangedDialogFor = accounts.firstOrNull()
         }
     }
+    showPasswordChangedDialogFor?.let { PasswordChangedStackDialog(account = it) }
 
     MainScreen(backStack, entryDecorators)
 }
@@ -140,6 +147,51 @@ fun MainScreen(
         popTransitionSpec = { defaultExitAnimation },
         predictivePopTransitionSpec = { defaultExitAnimation },
     )
+}
+
+@Composable
+private fun PasswordChangedStackDialog(
+    account: Account,
+) {
+    var showPasswordChangedDialog by remember { mutableStateOf(true) }
+    LaunchedEffect(account) {
+        showPasswordChangedDialog = true
+    }
+
+    var showVerifyAccountDialog by remember { mutableStateOf(false) }
+
+    if (showPasswordChangedDialog) {
+        PasswordChangedDialog(
+            account = account,
+            onDismissButton = {
+                (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                showPasswordChangedDialog = false
+            },
+            onReportUnauthorizedChange = {
+                showPasswordChangedDialog = false
+                showVerifyAccountDialog = true
+            }
+        )
+    }
+
+    if (showVerifyAccountDialog) {
+        val context = LocalContext.current
+
+        VerifyAccountSecurityDialog(
+            onChangePassword = {
+                (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                context.openUrlInCustomTab(RECOVER_PASSWORD_URL)
+                showVerifyAccountDialog = false
+                showPasswordChangedDialog = true
+            },
+            onContactSupport = {
+                (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                context.openUrlInCustomTab(HELP_SUPPORT_URL)
+                showVerifyAccountDialog = false
+                showPasswordChangedDialog = true
+            },
+        )
+    }
 }
 
 @PreviewSmallWindow
