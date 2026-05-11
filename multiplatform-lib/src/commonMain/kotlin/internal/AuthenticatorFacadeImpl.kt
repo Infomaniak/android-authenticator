@@ -443,12 +443,12 @@ internal class AuthenticatorFacadeImpl(
         while (true) {
             runCatching {
                 val profile = authenticatorRequests.getUserProfile(account.id)
-                val profileSecurity = profile.preferences.security ?: return
+                val profileSecurity = profile.preferences.security
                 val newStatus = when (account.lastPasswordUpdate) {
-                    profileSecurity.dateLastChangedPassword -> account.status
+                    profileSecurity?.dateLastChangedPassword -> account.status
                     else -> Status.PasswordChanged
                 }
-                val updatedAccount = account.copy(status = newStatus, securityScore = profileSecurity.score)
+                val updatedAccount = profile.toAccountEntity(status = newStatus)
                 if (updatedAccount != account) { // Avoid re-trigger loops when we're up to date.
                     dao.upsert(updatedAccount)
                 }
