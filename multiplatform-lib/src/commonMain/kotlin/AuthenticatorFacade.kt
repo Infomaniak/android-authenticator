@@ -19,11 +19,13 @@ package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.AuthenticatorFacadeImpl
 import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
+import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
 import com.infomaniak.auth.lib.internal.network.ApiClientProvider
 import com.infomaniak.auth.lib.internal.network.ApiRoutes
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
+import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequests
 import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
@@ -74,15 +76,14 @@ abstract class AuthenticatorFacade internal constructor() {
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
             val routes = ApiRoutes(apiHost)
-            val webAuthnRequests = WebAuthnRequests(
-                httpClient = ApiClientProvider(
-                    scope = scope,
-                    userAgent = userAgent,
-                    routes = routes,
-                    crashReport = crashReport,
-                ).httpClient,
+            val apiClientProvider = ApiClientProvider(
+                scope = scope,
+                userAgent = userAgent,
                 routes = routes,
+                crashReport = crashReport,
             )
+            val httpClient = apiClientProvider.httpClient
+            val webAuthnRequests = WebAuthnRequests(httpClient = httpClient, routes = routes)
             val accountsDatabase = getAccountsRoomDatabase(databaseNameOrPath)
             val accountsRepository = AccountsRepository(accountsDatabase)
             val authenticatorManager = AuthenticatorManager(
@@ -95,9 +96,23 @@ abstract class AuthenticatorFacade internal constructor() {
                 webAuthnRequests = webAuthnRequests,
                 clientId = clientId,
             )
+            val authenticatorRequests: AuthenticatorRequests by lazy {
+                AuthenticatorRequests(
+                    createHttpClient = apiClientProvider::createHttpClient,
+                    getTokenForUser = authenticatorBridge::getTokenFromDatabase,
+                    refreshToken = { authenticatorManager.getToken(clientId, it).firstOrElse { error(it) } },
+                    disconnectAccount = {
+                        TODO("TDB. Must set the account into a disconnected state, without removing it from the DB.")
+                    },
+                    routes = routes,
+                    accountsDao = accountsDatabase.getDao(),
+                    coroutineScope = scope
+                )
+            }
             return AuthenticatorFacadeImpl(
                 accountsDatabase = accountsDatabase,
                 clientId = clientId,
+                authenticatorRequests = authenticatorRequests,
                 authenticatorManager = authenticatorManager,
                 migrationManager = migrationManager,
                 authenticatorBridge = authenticatorBridge,

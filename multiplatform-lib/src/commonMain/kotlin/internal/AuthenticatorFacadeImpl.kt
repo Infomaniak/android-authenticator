@@ -35,6 +35,7 @@ import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toAccountEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
+import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequests
 import com.infomaniak.auth.lib.internal.utils.buildFlowWithElements
 import com.infomaniak.auth.lib.internal.utils.dynamicLazyMapOfSharedFlow
 import com.infomaniak.auth.lib.internal.utils.launchRacer
@@ -79,6 +80,7 @@ import kotlin.time.Duration.Companion.seconds
 internal class AuthenticatorFacadeImpl(
     accountsDatabase: AccountsDatabase,
     private val clientId: String,
+    private val authenticatorRequests: AuthenticatorRequests,
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
     private val authenticatorBridge: AuthenticatorBridge,
@@ -440,7 +442,7 @@ internal class AuthenticatorFacadeImpl(
         require(account.isLoggedIn)
         while (true) {
             runCatching {
-                val profile = authenticatorManager.getUserProfile(account.id)
+                val profile = authenticatorRequests.getUserProfile(account.id)
                 val profileSecurity = profile.preferences.security ?: return
                 val newStatus = when (account.lastPasswordUpdate) {
                     profileSecurity.dateLastChangedPassword -> account.status

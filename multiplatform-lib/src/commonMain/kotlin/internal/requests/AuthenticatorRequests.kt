@@ -38,12 +38,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 
 internal class AuthenticatorRequests(
-    private val createHttpClient: (userConfiguration: HttpClientConfig<*>.() -> Unit) -> HttpClient, //TODO: Create it somehow with what is in ApiClientProvider.createHttpClient()
-    private val getTokenForUser: suspend (userId: Long) -> SharedApiToken, //TODO: Get it from the bridge
-    private val refreshToken: suspend (userId: Long) -> SharedApiToken, //TODO: getToken function from AuthenticatorManager
-    private val disconnectAccount: suspend (userId: Long) -> Unit, //TODO: TDB. Must set the account into a disconnected state, without removing it from the DB.
-    private val routes: ApiRoutes, //TODO: Created in AuthenticatorFacade.create()
-    private val accountsDao: AccountsDao, //TODO: Get it from the DB, where it is.
+    private val createHttpClient: (userConfiguration: HttpClientConfig<*>.() -> Unit) -> HttpClient,
+    private val getTokenForUser: suspend (userId: Long) -> SharedApiToken?,
+    private val refreshToken: suspend (userId: Long) -> SharedApiToken,
+    private val disconnectAccount: suspend (userId: Long) -> Unit,
+    private val routes: ApiRoutes,
+    private val accountsDao: AccountsDao,
     coroutineScope: CoroutineScope,
 ) {
 
@@ -74,7 +74,7 @@ internal class AuthenticatorRequests(
             bearer {
                 sendWithoutRequest { true }
                 refreshTokens { refreshTokenOrDisconnectAccount(userId) }
-                loadTokens { getTokenForUser(userId).toBearerTokens() }
+                loadTokens { getTokenForUser(userId)?.toBearerTokens() }
             }
         }
     }

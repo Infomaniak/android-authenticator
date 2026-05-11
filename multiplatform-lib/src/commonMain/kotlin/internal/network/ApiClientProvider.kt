@@ -26,6 +26,7 @@ import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
@@ -79,7 +80,10 @@ internal class ApiClientProvider(
     val httpClient: suspend () -> HttpClient = { httpClientAsync.await() }
     private val httpClientAsync = scope.async(Dispatchers.IO, start = CoroutineStart.LAZY) { createHttpClient() }
 
-    private fun createHttpClient() = HttpClient(getHttpClientEngine()) {
+    fun createHttpClient(
+        userConfiguration: (HttpClientConfig<*>.() -> Unit)? = null
+    ) = HttpClient(getHttpClientEngine()) {
+        if (userConfiguration != null) userConfiguration()
         install(UserAgent) {
             agent = userAgent
         }
