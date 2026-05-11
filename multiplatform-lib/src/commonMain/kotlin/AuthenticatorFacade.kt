@@ -18,6 +18,7 @@
 package com.infomaniak.auth.lib
 
 import com.infomaniak.auth.lib.internal.AuthenticatorFacadeImpl
+import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.getAccountsRoomDatabase
 import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
@@ -100,9 +101,12 @@ abstract class AuthenticatorFacade internal constructor() {
                 AuthenticatorRequests(
                     createHttpClient = apiClientProvider::createHttpClient,
                     getTokenForUser = authenticatorBridge::getTokenFromDatabase,
-                    refreshToken = { authenticatorManager.getToken(clientId, it).firstOrElse { error(it) } },
-                    disconnectAccount = {
-                        TODO("TDB. Must set the account into a disconnected state, without removing it from the DB.")
+                    refreshToken = { userId -> authenticatorManager.getToken(clientId, userId).firstOrElse { error(it) } },
+                    disconnectAccount = { userId ->
+                        accountsDatabase.getDao().updateStatusForUser(
+                            userId = userId,
+                            newStatus = AccountEntity.Status.Disconnected
+                        )
                     },
                     routes = routes,
                     accountsDao = accountsDatabase.getDao(),

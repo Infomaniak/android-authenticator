@@ -233,6 +233,9 @@ internal class AuthenticatorFacadeImpl(
                 Status.LoggedIn, Status.PasswordChanged -> {
                     handledLoggedInState(entity)
                 }
+                Status.Disconnected -> {
+                    handleDisconnectedState(entity)
+                }
                 null -> Unit // Should not happen in practice.
             }
         }
@@ -436,6 +439,14 @@ internal class AuthenticatorFacadeImpl(
             emit(Account.Status.LoggedIn(securityScore = account.securityScore))
         }
         updateUserProfileLoop(account)
+    }
+
+    private suspend fun FlowCollector<Account.Status.NotConnected.Disconnected>.handleDisconnectedState(account: AccountEntity) {
+        waitForComplete { disconnectionRequest ->
+            val status = Account.Status.NotConnected.Disconnected(disconnectionRequest::complete)
+            emit(status)
+        }
+        authenticatorManager.removeAccount(token = null, userId = account.id)
     }
 
     private suspend fun updateUserProfileLoop(account: AccountEntity) {
