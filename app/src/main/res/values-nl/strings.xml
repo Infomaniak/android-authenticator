@@ -140,6 +140,7 @@
     <string name="understandConfirmButton">Ik begrijp het</string>
     <string name="unlockWithBiometrics">Ontgrendelen met biometrie</string>
     <string name="unlockingWithFaceId">Ontgrendelen met Face ID</string>
+    <string name="updateButton">Bijwerken</string>
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Mijn beveiliging controleren</string>
     <string name="viewGuidesButton">Handleidingen bekijken</string>

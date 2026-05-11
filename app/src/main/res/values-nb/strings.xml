@@ -140,6 +140,7 @@
     <string name="understandConfirmButton">Jeg forstår</string>
     <string name="unlockWithBiometrics">Lås opp med biometri</string>
     <string name="unlockingWithFaceId">Lås opp med Face ID</string>
+    <string name="updateButton">Oppdater</string>
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Verifiser sikkerheten min</string>
     <string name="viewGuidesButton">Se gjennom veiledningene</string>
