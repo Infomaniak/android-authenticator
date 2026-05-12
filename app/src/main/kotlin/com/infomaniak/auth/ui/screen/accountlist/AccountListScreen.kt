@@ -104,12 +104,20 @@ fun AccountListScreen(
 ) {
     val state = uiState()
     val hasUnsecuredAccounts: Boolean by remember(state.accountPairs) {
-        derivedStateOf { state.accountPairs.any { it.first.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
+        derivedStateOf {
+            state.accountPairs.any { (first, _) ->
+                val securityScore = (first.status as? Account.Status.LoggedIn)?.securityScore
+                securityScore != null && securityScore < 5
+            }
+        }
+
+        derivedStateOf { state.accountPairs.any { (first, _) -> first.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
+    }
+    val hasAccountMigrationIssue: Boolean by remember(state.accountPairs) {
+        derivedStateOf { state.accountPairs.any { (first, _) -> first.status is Account.Status.NotConnected.ReLogin } }
     }
 
     Column(modifier = modifier) {
-        if (hasUnsecuredAccounts) ActionRequired()
-
         val pullToRefreshState = rememberPullToRefreshState()
         var isRefreshing by remember { mutableStateOf(false) }
         LaunchedEffect(isRefreshing) {
@@ -131,9 +139,12 @@ fun AccountListScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = Margin.Medium),
                 verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
+                if (hasUnsecuredAccounts) ActionRequired()
+                if (hasAccountMigrationIssue) MigrationWarning()
                 state.accountPairs.forEach { (account, user) ->
                     key(account.email) {
                         AccountItem(account, user, onClick = { account -> onAccountClicked(account) })
@@ -149,7 +160,30 @@ private fun ActionRequired() {
     StatusCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Margin.Medium, vertical = Margin.Large),
+            .padding(horizontal = Margin.Medium),
+        shape = RoundedCornerShape(DefaultCornerRadius),
+        variant = StatusCardVariant.Warning,
+    ) {
+        Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(R.drawable.shield_exclamation_mark),
+                contentDescription = null,
+                tint = AuthenticatorTheme.customColors.iconTintWarning
+            )
+            Text(
+                modifier = Modifier.padding(start = Margin.Small),
+                text = stringResource(R.string.actionRequiredDescription)
+            )
+        }
+    }
+}
+
+@Composable
+private fun MigrationWarning() {
+    StatusCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Margin.Medium),
         shape = RoundedCornerShape(DefaultCornerRadius),
         variant = StatusCardVariant.Warning,
     ) {
@@ -161,7 +195,7 @@ private fun ActionRequired() {
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
-                text = stringResource(R.string.actionRequiredDescription)
+                text = stringResource(R.string.migrationWarningDescription)
             )
         }
     }
@@ -212,12 +246,32 @@ private fun AccountItem(
                 )
             }
             Spacer(modifier = Modifier)
-            Icon(
-                modifier = Modifier.padding(end = Margin.Mini),
-                painter = painterResource(id = account.status.toAccountSecurityLevel().iconResId),
-                contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
-                tint = account.status.toAccountSecurityLevel().iconTint(),
-            )
+            val status = account.status
+            if (status is Account.Status.NotConnected) {
+                Icon(
+                    modifier = Modifier.padding(end = Margin.Mini),
+                    painter = painterResource(id = R.drawable.alert),
+                    contentDescription = stringResource(R.string.warningIconContentDescription),
+                    tint = AuthenticatorTheme.customColors.iconTintWarning,
+                )
+            } else if (status is Account.Status.LoggedIn) {
+                val securityScore = status.securityScore
+                if (securityScore != null && securityScore < 5) {
+                    Icon(
+                        modifier = Modifier.padding(end = Margin.Mini),
+                        painter = painterResource(id = R.drawable.shield_exclamation_mark),
+                        contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
+                        tint = AuthenticatorTheme.customColors.iconTintWarning,
+                    )
+                } else {
+                    Icon(
+                        modifier = Modifier.padding(end = Margin.Mini),
+                        painter = painterResource(id = R.drawable.shield_check),
+                        contentDescription = stringResource(R.string.securedIconContentDescription),
+                        tint = AuthenticatorTheme.customColors.iconTintSuccess,
+                    )
+                }
+            }
             Icon(
                 modifier = Modifier.size(20.dp),
                 painter = painterResource(R.drawable.chevron_right),
