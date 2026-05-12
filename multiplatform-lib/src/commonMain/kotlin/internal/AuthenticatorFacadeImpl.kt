@@ -454,9 +454,9 @@ internal class AuthenticatorFacadeImpl(
         while (true) {
             runCatching {
                 val profile = authenticatorRequests.getUserProfile(account.id)
-                val profileSecurity = profile.preferences.security
+                val profileSecurity = requireNotNull(profile.preferences.security)
                 val newStatus = when (account.lastPasswordUpdate) {
-                    profileSecurity?.dateLastChangedPassword -> account.status
+                    profileSecurity.dateLastChangedPassword -> account.status
                     else -> Status.PasswordChanged
                 }
                 val updatedAccount = profile.toAccountEntity(status = newStatus)
