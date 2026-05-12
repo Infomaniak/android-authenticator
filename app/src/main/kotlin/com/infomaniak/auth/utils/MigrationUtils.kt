@@ -17,23 +17,15 @@
  */
 package com.infomaniak.auth.utils
 
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.models.migration.user.preferences.Preferences
-import com.infomaniak.auth.lib.models.migration.user.preferences.SharedCountry
-import com.infomaniak.auth.lib.models.migration.user.preferences.SharedLanguage
 import com.infomaniak.auth.lib.models.migration.user.preferences.SharedOrganizationPreference
-import com.infomaniak.auth.lib.models.migration.user.preferences.SharedTimeZone
-import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedAuthDevices
 import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedSecurity
 import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.auth.lib.models.migration.SharedApiToken
-import com.infomaniak.core.auth.models.user.preferences.Country
-import com.infomaniak.core.auth.models.user.preferences.Language
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
-import com.infomaniak.core.auth.models.user.preferences.Preferences as CorePreferences
-import com.infomaniak.core.auth.models.user.preferences.TimeZone
-import com.infomaniak.core.auth.models.user.preferences.security.AuthDevices
 import com.infomaniak.core.auth.models.user.preferences.security.Security
+import com.infomaniak.core.auth.models.user.preferences.Preferences as CorePreferences
 import com.infomaniak.lib.login.ApiToken as LoginApiToken
 
 fun LoginApiToken.toSharedApiToken(): SharedApiToken {
@@ -83,47 +75,11 @@ fun User.toSharedUser(): SharedUserProfile {
 private fun Preferences.toCorePreferences() = CorePreferences(
     security = security?.toSecurity(),
     organizationPreference = organizationPreference.toOrganizationPreference(),
-    language = language.toLanguage(),
-    country = country.toCountry(),
-    timezone = timezone?.toTimeZone(),
 )
 
 private fun CorePreferences.toPreferences() = Preferences(
     security = security?.toSharedSecurity(),
-    organizationPreference = organizationPreference.toSharedOrganizationPreference(),
-    language = language.toSharedLanguage(),
-    country = country.toSharedCountry(),
-    timezone = timezone?.toSharedTimeZone(),
-)
-
-private fun SharedLanguage.toLanguage() = Language(
-    shortName = shortName,
-    locale = locale,
-    shortLocale = shortLocale,
-)
-
-private fun Language.toSharedLanguage() = SharedLanguage(
-    shortName = shortName,
-    locale = locale,
-    shortLocale = shortLocale,
-)
-
-private fun SharedCountry.toCountry() = Country(
-    shortName = shortName,
-    isEnabled = isEnabled,
-)
-
-private fun Country.toSharedCountry() = SharedCountry(
-    shortName = shortName,
-    isEnabled = isEnabled,
-)
-
-private fun SharedTimeZone.toTimeZone() = TimeZone(
-    gmt = gmt,
-)
-
-private fun TimeZone.toSharedTimeZone() = SharedTimeZone(
-    gmt = gmt,
+    organizationPreference = organizationPreference.toSharedOrganizationPreference()
 )
 
 private fun SharedOrganizationPreference.toOrganizationPreference() = OrganizationPreference(
@@ -138,60 +94,10 @@ private fun OrganizationPreference.toSharedOrganizationPreference() = SharedOrga
 
 private fun SharedSecurity.toSecurity() = Security(
     score = score,
-    hasRecoveryEmail = hasRecoveryEmail,
-    hasValidPhone = hasValidPhone,
-    emailValidatedAt = emailValidatedAt ?: 0L,
-    otp = otp,
-    sms = sms,
-    smsPhone = smsPhone,
-    yubikey = yubikey,
-    infomaniakApplication = infomaniakApplication,
-    doubleAuth = doubleAuth,
-    remainingRescueCode = remainingRescueCode,
-    lastLoginAt = lastLoginAt,
     dateLastChangedPassword = dateLastChangedPassword,
-    doubleAuthMethod = doubleAuthMethod,
-    authDevices = authDevices?.mapTo(ArrayList()) { it.toAuthDevices() },
 )
 
 private fun Security.toSharedSecurity() = SharedSecurity(
     score = score,
-    hasRecoveryEmail = hasRecoveryEmail,
-    hasValidPhone = hasValidPhone,
-    emailValidatedAt = emailValidatedAt,
-    otp = otp,
-    sms = sms,
-    smsPhone = smsPhone,
-    yubikey = yubikey,
-    infomaniakApplication = infomaniakApplication,
-    doubleAuth = doubleAuth,
-    remainingRescueCode = remainingRescueCode,
-    lastLoginAt = lastLoginAt,
     dateLastChangedPassword = dateLastChangedPassword,
-    doubleAuthMethod = doubleAuthMethod,
-    authDevices = authDevices?.mapTo(ArrayList()) { it.toSharedAuthDevices() },
-)
-
-private fun SharedAuthDevices.toAuthDevices() = AuthDevices(
-    id = id,
-    name = name,
-    lastConnexion = lastConnexion ?: 0L,
-    userAgent = userAgent,
-    userIp = userIp,
-    device = device,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    deletedAt = deletedAt,
-)
-
-private fun AuthDevices.toSharedAuthDevices() = SharedAuthDevices(
-    id = id,
-    name = name,
-    lastConnexion = lastConnexion,
-    userAgent = userAgent,
-    userIp = userIp,
-    device = device,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    deletedAt = deletedAt,
 )
