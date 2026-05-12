@@ -60,6 +60,12 @@ data class Account(
                 val isSendingCredentials: Boolean get() = sendCredentials == null
             }
 
+            /**
+             * **IMPORTANT:** Make sure to remove the user from the app's user db BEFORE calling [removeAccount] from here,
+             * so the operation is recoverable in all possible edge cases (like the app process dying).
+             */
+            data class Disconnected(val removeAccount: () -> Unit) : NotConnected
+
             data class LoginFailed(val issue: Issue) : NotConnected
         }
     }

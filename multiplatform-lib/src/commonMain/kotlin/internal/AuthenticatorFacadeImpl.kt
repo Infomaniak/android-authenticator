@@ -35,12 +35,12 @@ import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toAccountEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
-import com.infomaniak.auth.lib.internal.utils.DynamicLazyMap
+import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequests
 import com.infomaniak.auth.lib.internal.utils.buildFlowWithElements
+import com.infomaniak.auth.lib.internal.utils.dynamicLazyMapOfSharedFlow
 import com.infomaniak.auth.lib.internal.utils.launchRacer
 import com.infomaniak.auth.lib.internal.utils.race
 import com.infomaniak.auth.lib.internal.utils.raceOf
-import com.infomaniak.auth.lib.internal.utils.sharedFlow
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
@@ -80,11 +80,12 @@ import kotlin.time.Duration.Companion.seconds
 internal class AuthenticatorFacadeImpl(
     accountsDatabase: AccountsDatabase,
     private val clientId: String,
+    private val authenticatorRequests: AuthenticatorRequests,
     private val authenticatorManager: AuthenticatorManager,
     private val migrationManager: MigrationManager,
     private val authenticatorBridge: AuthenticatorBridge,
     private val crashReport: CrashReportInterface,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
 
     private val dao = accountsDatabase.getDao()
@@ -99,8 +100,7 @@ internal class AuthenticatorFacadeImpl(
         entities.any { entity -> entity.isLoggedIn }
     }.distinctUntilChanged().shareIn(coroutineScope, SharingStarted.WhileSubscribed(), replay = 1)
 
-    private val userIdsToStatusFlows = DynamicLazyMap.sharedFlow(
-        coroutineScope = coroutineScope,
+    private val userIdsToStatusFlows = coroutineScope.dynamicLazyMapOfSharedFlow(
         cacheManager = { _, _ ->
             delay(5.seconds) // Should be more than enough to keep the state between re-uses.
         }
@@ -232,6 +232,9 @@ internal class AuthenticatorFacadeImpl(
                 }
                 Status.LoggedIn, Status.PasswordChanged -> {
                     handledLoggedInState(entity)
+                }
+                Status.Disconnected -> {
+                    handleDisconnectedState(entity)
                 }
                 null -> Unit // Should not happen in practice.
             }
@@ -438,18 +441,25 @@ internal class AuthenticatorFacadeImpl(
         updateUserProfileLoop(account)
     }
 
+    private suspend fun FlowCollector<Account.Status.NotConnected.Disconnected>.handleDisconnectedState(account: AccountEntity) {
+        waitForComplete { disconnectionRequest ->
+            val status = Account.Status.NotConnected.Disconnected(disconnectionRequest::complete)
+            emit(status)
+        }
+        authenticatorManager.removeAccount(token = null, userId = account.id)
+    }
+
     private suspend fun updateUserProfileLoop(account: AccountEntity) {
         require(account.isLoggedIn)
-        val token = authenticatorBridge.getTokenFromDatabase(account.id) ?: return
         while (true) {
             runCatching {
-                val profile = authenticatorManager.getUserProfile(token.accessToken)
-                val profileSecurity = profile.preferences.security ?: return
+                val profile = authenticatorRequests.getUserProfile(account.id)
+                val profileSecurity = requireNotNull(profile.preferences.security)
                 val newStatus = when (account.lastPasswordUpdate) {
                     profileSecurity.dateLastChangedPassword -> account.status
                     else -> Status.PasswordChanged
                 }
-                val updatedAccount = account.copy(status = newStatus, securityScore = profileSecurity.score)
+                val updatedAccount = profile.toAccountEntity(status = newStatus)
                 if (updatedAccount != account) { // Avoid re-trigger loops when we're up to date.
                     dao.upsert(updatedAccount)
                 }

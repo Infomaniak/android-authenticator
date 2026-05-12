@@ -135,6 +135,7 @@ fun ActionRequiredCard(
             }
         }
         is Account.Status.LoggedIn,
+        is Account.Status.NotConnected.Disconnected,
         is Account.Status.NotConnected.AttemptingToConnect -> Unit
     }
 }

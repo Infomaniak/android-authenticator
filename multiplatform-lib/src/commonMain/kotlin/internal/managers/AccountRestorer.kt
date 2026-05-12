@@ -85,6 +85,7 @@ internal class AccountRestorer(
         AccountEntity.Status.ToBeMigrated,
         AccountEntity.Status.PasskeyRegistrationPending,
         AccountEntity.Status.FirstPasskeyAuthenticationPending,
+        AccountEntity.Status.Disconnected,
         AccountEntity.Status.LoggedIn -> error("Unexpected status for restoration: $status")
     }
 
