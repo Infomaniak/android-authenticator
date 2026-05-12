@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.job
 
 internal class AuthenticatorRequests(
     private val createHttpClient: (userConfiguration: HttpClientConfig<*>.() -> Unit) -> HttpClient,
@@ -52,8 +53,14 @@ internal class AuthenticatorRequests(
             accountsDao.getAccountAsFlow(userId).first { it == null }
         }
     ) { userId: Long ->
+        val parentJob = this.coroutineContext.job
         async(Dispatchers.IO) {
-            createHttpClient { configureHttpClientForUser(userId) }
+            createHttpClient { configureHttpClientForUser(userId) }.also { httpClient ->
+                parentJob.invokeOnCompletion {
+                    httpClient.close()
+                    httpClient.engine.close()
+                }
+            }
         }
     }
 
