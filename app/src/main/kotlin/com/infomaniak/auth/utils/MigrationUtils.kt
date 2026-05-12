@@ -84,12 +84,10 @@ private fun CorePreferences.toPreferences() = Preferences(
 
 private fun SharedOrganizationPreference.toOrganizationPreference() = OrganizationPreference(
     currentOrganizationId = currentOrganizationId,
-    lastLoginAt = lastLoginAt,
 )
 
 private fun OrganizationPreference.toSharedOrganizationPreference() = SharedOrganizationPreference(
     currentOrganizationId = currentOrganizationId,
-    lastLoginAt = lastLoginAt,
 )
 
 private fun SharedSecurity.toSecurity() = Security(
