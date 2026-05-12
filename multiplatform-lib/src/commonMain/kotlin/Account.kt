@@ -62,7 +62,7 @@ data class Account(
 
             /**
              * **IMPORTANT:** Make sure to remove the user from the app's user db BEFORE calling [removeAccount] from here,
-             * to the operation is recoverable in all possible edge cases (like the app process dying).
+             * so the operation is recoverable in all possible edge cases (like the app process dying).
              */
             data class Disconnected(val removeAccount: () -> Unit) : NotConnected
 
