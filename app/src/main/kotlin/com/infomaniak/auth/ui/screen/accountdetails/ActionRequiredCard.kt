@@ -239,7 +239,7 @@ private fun ActionRequiredAccountPartiallySecured(
         configuration = ActionRequiredConfiguration(
             title = stringResource(R.string.accountPartiallyProtectedTitle),
             text = stringResource(R.string.accountPartiallyProtectedDescription),
-            iconRes = R.drawable.shield_check,
+            iconRes = R.drawable.shield_exclamation_mark,
             iconColor = AuthenticatorTheme.customColors.iconTintWarning,
             statusCardVariant = StatusCardVariant.Neutral
         ),
