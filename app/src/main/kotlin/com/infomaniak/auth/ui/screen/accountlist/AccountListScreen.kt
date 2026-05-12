@@ -50,7 +50,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -65,7 +64,6 @@ import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
 import com.infomaniak.auth.ui.screen.accountlist.AccountListViewModel.AccountListUiState
-import com.infomaniak.auth.ui.screen.accountlist.AccountSecurityLevel.Companion.toAccountSecurityLevel
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.user.User
@@ -110,8 +108,6 @@ fun AccountListScreen(
                 securityScore != null && securityScore < 5
             }
         }
-
-        derivedStateOf { state.accountPairs.any { (first, _) -> first.status.toAccountSecurityLevel() != AccountSecurityLevel.Secured } }
     }
     val hasAccountMigrationIssue: Boolean by remember(state.accountPairs) {
         derivedStateOf { state.accountPairs.any { (first, _) -> first.status is Account.Status.NotConnected.ReLogin } }
