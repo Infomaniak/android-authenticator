@@ -48,6 +48,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
+import com.infomaniak.core.common.R as RCore
 
 private data class ActionRequiredConfiguration(
     val title: String? = null,
@@ -67,10 +68,11 @@ fun ActionRequiredCard(
     when (status) {
         is Account.Status.NotConnected.ReLogin -> {
             ActionRequiredLoginFailed(
+                retryButtonStringRes = R.string.logInButton,
                 onContactSupportClick = {
                     context.openUrlInCustomTab(HELP_SUPPORT_URL)
                 },
-                onLogInClick = {
+                onRetryClick = {
                     val legacyAccount = status.legacyAccount
                     onLoginPressed(legacyAccount.id)
                 }
@@ -80,10 +82,11 @@ fun ActionRequiredCard(
             when (status.issue) {
                 is Issue.Retriable -> {
                     ActionRequiredLoginFailed(
+                        retryButtonStringRes = RCore.string.buttonRetry,
                         onContactSupportClick = {
                             context.openUrlInCustomTab(HELP_SUPPORT_URL)
                         },
-                        onLogInClick = {
+                        onRetryClick = {
                             val cause = status.issue as? Issue.Retriable
                             cause?.proceed?.invoke(true)
                         }
@@ -171,8 +174,9 @@ private fun ActionRequiredLoginNeeded(
 
 @Composable
 private fun ActionRequiredLoginFailed(
+    retryButtonStringRes: Int,
     onContactSupportClick: () -> Unit,
-    onLogInClick: () -> Unit,
+    onRetryClick: () -> Unit,
 ) {
     ActionRequiredCard(
         configuration = ActionRequiredConfiguration(
@@ -188,9 +192,9 @@ private fun ActionRequiredLoginFailed(
                 onClick = onContactSupportClick
             )
             ActionRequiredButton(
-                title = stringResource(R.string.logInButton),
+                title = stringResource(retryButtonStringRes),
                 style = ButtonStyle.Tertiary,
-                onClick = onLogInClick
+                onClick = onRetryClick
             )
         }
     )
@@ -241,7 +245,11 @@ private fun ActionRequiredCardPreview() {
     AuthenticatorTheme {
         Column {
             ActionRequiredLoginNeeded(onLogInClick = {})
-            ActionRequiredLoginFailed(onContactSupportClick = {}, onLogInClick = {})
+            ActionRequiredLoginFailed(
+                retryButtonStringRes = R.string.logInButton,
+                onContactSupportClick = {},
+                onRetryClick = {}
+            )
             ActionRequiredMigrationInterrupted(onContactSupportClick = {})
         }
     }
