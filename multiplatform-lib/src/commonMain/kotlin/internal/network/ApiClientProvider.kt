@@ -124,6 +124,7 @@ internal class ApiClientProvider(
 
         addSentryUrlBreadcrumb(response, statusCode, requestContextId)
 
+        if (statusCode == 401) return // Let 401 bubble up to ktor auth unchanged.
         if (statusCode >= 300) {
             val bodyResponse = response.bodyAsText()
             val apiError = runCatching {
