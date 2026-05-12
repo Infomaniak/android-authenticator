@@ -112,23 +112,24 @@ fun AccountItem(
 
 @Composable
 private fun StatusIcon(status: Account.Status) {
-    if (status is Account.Status.NotConnected) {
-        Icon(
-            modifier = Modifier.padding(end = Margin.Mini),
-            painter = painterResource(id = R.drawable.alert),
-            contentDescription = stringResource(R.string.warningIconContentDescription),
-            tint = AuthenticatorTheme.customColors.iconTintWarning,
-        )
-    } else if (status is Account.Status.LoggedIn) {
-        val securityScore = status.securityScore
-        if (securityScore != null && securityScore < 5) {
+    when (status) {
+        is Account.Status.NotConnected -> {
+            Icon(
+                modifier = Modifier.padding(end = Margin.Mini),
+                painter = painterResource(id = R.drawable.alert),
+                contentDescription = stringResource(R.string.warningIconContentDescription),
+                tint = AuthenticatorTheme.customColors.iconTintWarning,
+            )
+        }
+        is Account.Status.LoggedIn if !status.isSecured -> {
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
                 painter = painterResource(id = R.drawable.shield_exclamation_mark),
                 contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
                 tint = AuthenticatorTheme.customColors.iconTintWarning,
             )
-        } else {
+        }
+        else -> {
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
                 painter = painterResource(id = R.drawable.shield_check),

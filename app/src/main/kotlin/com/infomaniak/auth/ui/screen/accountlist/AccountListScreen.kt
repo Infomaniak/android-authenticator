@@ -89,8 +89,7 @@ fun AccountListScreen(
     val hasUnsecuredAccounts: Boolean by remember(state.accountPairs) {
         derivedStateOf {
             state.accountPairs.any { (first, _) ->
-                val securityScore = (first.status as? Account.Status.LoggedIn)?.securityScore
-                securityScore != null && securityScore < 5
+                (first.status as? Account.Status.LoggedIn)?.isSecured == false
             }
         }
     }
