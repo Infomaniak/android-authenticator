@@ -17,24 +17,16 @@
  */
 package com.infomaniak.auth.ui.screen.accountlist
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -49,25 +41,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
 import com.infomaniak.auth.ui.screen.accountlist.AccountListViewModel.AccountListUiState
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.ui.compose.basics.Dimens
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.coroutines.delay
@@ -143,7 +128,12 @@ fun AccountListScreen(
                 if (hasAccountMigrationIssue) MigrationWarning()
                 state.accountPairs.forEach { (account, user) ->
                     key(account.email) {
-                        AccountItem(account, user, onClick = { account -> onAccountClicked(account) })
+                        AccountItem(
+                            modifier = Modifier.padding(horizontal = Margin.Medium),
+                            account = account,
+                            user = user,
+                            onClick = { account -> onAccountClicked(account) }
+                        )
                     }
                 }
             }
@@ -193,107 +183,6 @@ private fun MigrationWarning() {
                 modifier = Modifier.padding(start = Margin.Small),
                 text = stringResource(R.string.migrationWarningDescription)
             )
-        }
-    }
-}
-
-@Composable
-private fun AccountItem(
-    account: Account,
-    user: User?,
-    onClick: (Account) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium)
-            .clip(RoundedCornerShape(DefaultCornerRadius))
-            .clickable(onClick = { onClick(account) }),
-        colors = CardDefaults.cardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground),
-    ) {
-        Row(
-            modifier = Modifier.padding(vertical = Margin.Small, horizontal = Margin.Medium),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Margin.Micro)
-        ) {
-            Avatar(
-                account = account,
-                user = user,
-                modifier = Modifier
-                    .size(Dimens.bigAvatarSize)
-                    .clip(CircleShape)
-                    .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
-            )
-            Column(
-                modifier = Modifier
-                    .padding(start = Margin.Medium)
-                    .weight(1f),
-            ) {
-                Text(
-                    text = account.fullName,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = account.email,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Spacer(modifier = Modifier)
-            val status = account.status
-            if (status is Account.Status.NotConnected) {
-                Icon(
-                    modifier = Modifier.padding(end = Margin.Mini),
-                    painter = painterResource(id = R.drawable.alert),
-                    contentDescription = stringResource(R.string.warningIconContentDescription),
-                    tint = AuthenticatorTheme.customColors.iconTintWarning,
-                )
-            } else if (status is Account.Status.LoggedIn) {
-                val securityScore = status.securityScore
-                if (securityScore != null && securityScore < 5) {
-                    Icon(
-                        modifier = Modifier.padding(end = Margin.Mini),
-                        painter = painterResource(id = R.drawable.shield_exclamation_mark),
-                        contentDescription = stringResource(R.string.accountSecurityLevelContentDescription),
-                        tint = AuthenticatorTheme.customColors.iconTintWarning,
-                    )
-                } else {
-                    Icon(
-                        modifier = Modifier.padding(end = Margin.Mini),
-                        painter = painterResource(id = R.drawable.shield_check),
-                        contentDescription = stringResource(R.string.securedIconContentDescription),
-                        tint = AuthenticatorTheme.customColors.iconTintSuccess,
-                    )
-                }
-            }
-            Icon(
-                modifier = Modifier.size(20.dp),
-                painter = painterResource(R.drawable.chevron_right),
-                contentDescription = null
-            )
-        }
-    }
-}
-
-private enum class AccountSecurityLevel(val iconResId: Int, val iconTint: @Composable () -> Color) {
-    Secured(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }),
-    Warning(iconResId = R.drawable.shield_check, iconTint = { AuthenticatorTheme.customColors.iconTintWarning }),
-    Danger(iconResId = R.drawable.shield_exclamation_mark, iconTint = { AuthenticatorTheme.customColors.iconTintWarning });
-
-    companion object {
-        fun Account.Status.toAccountSecurityLevel(): AccountSecurityLevel = when (this) {
-            is Account.Status.LoggedIn -> accountSecurityLevelForScore(securityScore)
-            is Account.Status.NotConnected -> Danger //TODO: Shouldn't this show the exclamation mark too?
-            else -> Warning // TODO: Use secure level to determine the status more precisely
-        }
-
-        private fun accountSecurityLevelForScore(securityScore: Int?): AccountSecurityLevel {
-            return when (securityScore) {
-                5 -> Secured
-                else -> Warning
-            }
         }
     }
 }
