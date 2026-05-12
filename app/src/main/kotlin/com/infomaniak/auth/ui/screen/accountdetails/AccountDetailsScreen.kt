@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,9 +58,12 @@ import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.lib.models.UrlConstants.ACTIVITY_MANAGER_URL
+import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL
 import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_MANAGER_URL
 import com.infomaniak.auth.ui.components.Avatar
+import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
+import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
@@ -67,6 +71,7 @@ import com.infomaniak.auth.ui.screen.accountdetails.AccountSecurityConfiguration
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -223,6 +228,18 @@ private fun AccountSecurityCheck(configuration: AccountSecurityConfiguration) {
             configuration.descriptionResId?.let {
                 Text(text = stringResource(configuration.descriptionResId))
             }
+            if (configuration.action != null) {
+                val context = LocalContext.current
+                LargeButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Margin.Medium)
+                        .padding(bottom = Margin.Medium),
+                    title = stringResource(R.string.updateButton),
+                    style = ButtonStyle.Primary,
+                    onClick = { configuration.action(context) }
+                )
+            }
         }
     }
 }
@@ -312,7 +329,8 @@ private enum class AccountSecurityConfiguration(
     val titleResId: Int,
     val descriptionResId: Int? = null,
     val iconResId: Int,
-    val iconTint: @Composable (() -> Color)? = null
+    val iconTint: @Composable (() -> Color)? = null,
+    val action: ((Context) -> Unit)? = null,
 ) {
     Secured(
         titleResId = R.string.accountProtected,
@@ -323,7 +341,12 @@ private enum class AccountSecurityConfiguration(
         titleResId = R.string.accountPartiallyProtectedTitle,
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
-        iconTint = { AuthenticatorTheme.customColors.iconTintWarning }
+        iconTint = { AuthenticatorTheme.customColors.iconTintWarning },
+        action = { context ->
+            val host = ApiEnvironment.current.host
+            val url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, SETTINGS_ACCOUNT_SECURITY_URL))
+            context.openUrlInCustomTab(url)
+        }
     ),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
@@ -333,9 +356,9 @@ private enum class AccountSecurityConfiguration(
 
     companion object {
         fun Account.Status.toSecurityConfiguration(): AccountSecurityConfiguration = when (this) {
+            is Account.Status.LoggedIn if !isSecured -> PartiallyProtected
             is Account.Status.LoggedIn -> Secured
             is Account.Status.NotConnected -> Disconnected
-            else -> PartiallyProtected // TODO: Use secure level to determine the status more precisely
         }
     }
 }

@@ -38,9 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.Issue
-import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.lib.models.UrlConstants.HELP_SUPPORT_URL
-import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.StatusCard
@@ -48,7 +46,6 @@ import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
-import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
@@ -101,18 +98,7 @@ fun ActionRequiredCard(
                 }
             }
         }
-        is Account.Status.LoggedIn ->  {
-            val score = status.securityScore
-            if (score != null && score < 5) {
-                ActionRequiredAccountPartiallySecured(
-                    onUpdateClick = {
-                        val host = ApiEnvironment.current.host
-                        val url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, SETTINGS_ACCOUNT_SECURITY_URL))
-                        context.openUrlInCustomTab(url)
-                    }
-                )
-            }
-        }
+        is Account.Status.LoggedIn,
         is Account.Status.NotConnected.AttemptingToConnect -> Unit
     }
 }
@@ -232,28 +218,6 @@ private fun ActionRequiredMigrationInterrupted(
 }
 
 @Composable
-private fun ActionRequiredAccountPartiallySecured(
-    onUpdateClick: () -> Unit = {},
-) {
-    ActionRequiredCard(
-        configuration = ActionRequiredConfiguration(
-            title = stringResource(R.string.accountPartiallyProtectedTitle),
-            text = stringResource(R.string.accountPartiallyProtectedDescription),
-            iconRes = R.drawable.shield_exclamation_mark,
-            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-            statusCardVariant = StatusCardVariant.Neutral
-        ),
-        bottomButton = {
-            ActionRequiredButton(
-                title = stringResource(R.string.updateButton),
-                style = ButtonStyle.Primary,
-                onClick = onUpdateClick
-            )
-        }
-    )
-}
-
-@Composable
 private fun ActionRequiredButton(
     title: String,
     style: ButtonStyle,
@@ -279,7 +243,6 @@ private fun ActionRequiredCardPreview() {
             ActionRequiredLoginNeeded(onLogInClick = {})
             ActionRequiredLoginFailed(onContactSupportClick = {}, onLogInClick = {})
             ActionRequiredMigrationInterrupted(onContactSupportClick = {})
-            ActionRequiredAccountPartiallySecured()
         }
     }
 }
