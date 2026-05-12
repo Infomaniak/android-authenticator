@@ -88,8 +88,8 @@ fun AccountSecurityCard(
                     tint = configuration.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
                 )
             }
-            configuration.descriptionResId?.let {
-                Text(text = stringResource(configuration.descriptionResId))
+            configuration.descriptionResId?.let { descriptionResId ->
+                Text(text = stringResource(descriptionResId))
             }
             if (configuration.action != null) {
                 val context = LocalContext.current
