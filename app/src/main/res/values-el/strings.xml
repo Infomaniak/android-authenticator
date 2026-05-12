@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Αυτό το αίτημα έχει ήδη υποβληθεί σε επεξεργασία</string>
     <string name="loginRequestExpiredTitle">Αυτό το αίτημα σύνδεσης έχει λήξει</string>
     <string name="manageNotifications">Διαχείριση ειδοποιήσεων</string>
+    <string name="migrationWarningDescription">Η μετάβαση στη νέα εφαρμογή δεν μπόρεσε να ολοκληρωθεί για έναν ή περισσότερους από τους λογαριασμούς σας.</string>
     <string name="noInternetTitle">Χωρίς σύνδεση στο διαδίκτυο</string>
     <string name="notMeButton">Δεν ήμουν εγώ</string>
     <string name="notificationsDescription">Ενεργοποιήστε τις ειδοποιήσεις για να λαμβάνετε πληροφορίες ασφαλείας σχετικά με τους λογαριασμούς σας Infomaniak.</string>

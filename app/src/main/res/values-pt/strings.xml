@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Esta solicitação já foi processada</string>
     <string name="loginRequestExpiredTitle">Esta solicitação de login expirou</string>
     <string name="manageNotifications">Gerenciar notificações</string>
+    <string name="migrationWarningDescription">A transição para a nova aplicação não pôde ser concluída para uma ou mais das suas contas.</string>
     <string name="noInternetTitle">Sem conexão com a internet</string>
     <string name="notMeButton">Não fui eu</string>
     <string name="notificationsDescription">Ative as notificações para receber informações de segurança sobre suas contas Infomaniak.</string>

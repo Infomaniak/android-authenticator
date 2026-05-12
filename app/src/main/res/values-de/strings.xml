@@ -97,6 +97,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Diese Anfrage wurde bereits verarbeitet</string>
     <string name="loginRequestExpiredTitle">Diese Anmeldeanfrage ist abgelaufen</string>
     <string name="manageNotifications">Benachrichtigungen verwalten</string>
+    <string name="migrationWarningDescription">Der Übergang zur neuen App konnte für eines oder mehrere Ihrer Konten nicht abgeschlossen werden.</string>
     <string name="noInternetTitle">Keine Internetverbindung</string>
     <string name="notMeButton">Das war nicht ich</string>
     <string name="notificationsDescription">Aktivieren Sie Benachrichtigungen, um Sicherheitsinformationen zu Ihren Infomaniak-Konten zu erhalten.</string>

@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Denna förfrågan har redan behandlats</string>
     <string name="loginRequestExpiredTitle">Denna inloggningsförfrågan har löpt ut</string>
     <string name="manageNotifications">Hantera notifikationer</string>
+    <string name="migrationWarningDescription">Övergången till den nya appen kunde inte slutföras för ett eller flera av dina konton.</string>
     <string name="noInternetTitle">Ingen internetanslutning</string>
     <string name="notMeButton">Det var inte jag</string>
     <string name="notificationsDescription">Aktivera notifikationer för att ta emot säkerhetsinformation om dina Infomaniak-konton.</string>

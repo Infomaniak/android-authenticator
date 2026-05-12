@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Dit verzoek is al verwerkt</string>
     <string name="loginRequestExpiredTitle">Dit inlogverzoek is verlopen</string>
     <string name="manageNotifications">Meldingen beheren</string>
+    <string name="migrationWarningDescription">De overgang naar de nieuwe app kon voor een of meer van je accounts niet worden voltooid.</string>
     <string name="noInternetTitle">Geen internetverbinding</string>
     <string name="notMeButton">Ik was het niet</string>
     <string name="notificationsDescription">Schakel meldingen in om beveiligingsinformatie over uw Infomaniak accounts te ontvangen.</string>

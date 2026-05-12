@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">To żądanie zostało już przetworzone</string>
     <string name="loginRequestExpiredTitle">To żądanie logowania wygasło</string>
     <string name="manageNotifications">Zarządzaj powiadomieniami</string>
+    <string name="migrationWarningDescription">Przejście do nowej aplikacji nie mogło zostać ukończone dla jednego lub więcej kont.</string>
     <string name="noInternetTitle">Brak połączenia z internetem</string>
     <string name="notMeButton">To nie ja</string>
     <string name="notificationsDescription">Włącz powiadomienia, aby otrzymywać informacje o bezpieczeństwie swoich kont Infomaniak.</string>
