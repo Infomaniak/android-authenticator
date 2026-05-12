@@ -125,6 +125,7 @@
     <string name="removeAccountTitle">Poista tili</string>
     <string name="removeButton">Poista</string>
     <string name="requiredLabel">Vaadittu</string>
+    <string name="securedIconContentDescription">Tilin turvattu kuvake</string>
     <string name="settingsTitle">Asetukset</string>
     <string name="showAccountPasswordButton">Näytä tilin salasana</string>
     <string name="startButton">Aloita</string>
@@ -145,6 +146,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Vahvista turvallisuuteni</string>
     <string name="viewGuidesButton">Selaa oppaita</string>
+    <string name="warningIconContentDescription">Tilin varoituskuvake</string>
     <string name="whenLoginTitle">Milloin</string>
     <string name="wrongPasswordLabel">Salasana on väärä</string>
 </resources>

@@ -126,6 +126,7 @@
     <string name="removeAccountTitle">Rimuovi account</string>
     <string name="removeButton">Rimuovi</string>
     <string name="requiredLabel">Richiesto</string>
+    <string name="securedIconContentDescription">Icona del conto protetto</string>
     <string name="settingsTitle">Impostazioni</string>
     <string name="showAccountPasswordButton">Mostra password account</string>
     <string name="startButton">Inizia</string>
@@ -146,6 +147,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/2d80b656-2a33-4550-9f4c-e78adc37e331/</string>
     <string name="verifySecurityButton">Verifica la mia sicurezza</string>
     <string name="viewGuidesButton">Sfoglia le guide</string>
+    <string name="warningIconContentDescription">Icona di avviso dell’account</string>
     <string name="whenLoginTitle">Quando</string>
     <string name="wrongPasswordLabel">La password non è corretta</string>
 </resources>

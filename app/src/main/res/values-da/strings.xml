@@ -125,6 +125,7 @@
     <string name="removeAccountTitle">Fjern konto</string>
     <string name="removeButton">Fjern</string>
     <string name="requiredLabel">Påkrævet</string>
+    <string name="securedIconContentDescription">Ikon for sikret konto</string>
     <string name="settingsTitle">Indstillinger</string>
     <string name="showAccountPasswordButton">Vis konto adgangskode</string>
     <string name="startButton">Start</string>
@@ -145,6 +146,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Bekræft min sikkerhed</string>
     <string name="viewGuidesButton">Gennemse vejledningerne</string>
+    <string name="warningIconContentDescription">Advarselsikon for konto</string>
     <string name="whenLoginTitle">Hvornår</string>
     <string name="wrongPasswordLabel">Adgangskoden er forkert</string>
 </resources>

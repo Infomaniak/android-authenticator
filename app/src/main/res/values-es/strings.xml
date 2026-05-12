@@ -126,6 +126,7 @@
     <string name="removeAccountTitle">Eliminar cuenta</string>
     <string name="removeButton">Eliminar</string>
     <string name="requiredLabel">Requerido</string>
+    <string name="securedIconContentDescription">Icono de cuenta protegida</string>
     <string name="settingsTitle">Configuración</string>
     <string name="showAccountPasswordButton">Mostrar contraseña de la cuenta</string>
     <string name="startButton">Comenzar</string>
@@ -146,6 +147,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/55f0cfb4-9f53-431f-aae5-413925a4aaad/</string>
     <string name="verifySecurityButton">Verificar mi seguridad</string>
     <string name="viewGuidesButton">Explorar las guías</string>
+    <string name="warningIconContentDescription">Icono de advertencia de cuenta</string>
     <string name="whenLoginTitle">Cuándo</string>
     <string name="wrongPasswordLabel">La contraseña es incorrecta</string>
 </resources>

@@ -126,6 +126,7 @@
     <string name="removeAccountTitle">Retirer le compte</string>
     <string name="removeButton">Retirer</string>
     <string name="requiredLabel">Requis</string>
+    <string name="securedIconContentDescription">Icône de compte sécurisé</string>
     <string name="settingsTitle">Paramètres</string>
     <string name="showAccountPasswordButton">Afficher le mot de passe du compte</string>
     <string name="startButton">Commencer</string>
@@ -146,6 +147,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/6b7dde99-c4cd-4bcd-8d41-e855dfccac91/</string>
     <string name="verifySecurityButton">Vérifier ma sécurité</string>
     <string name="viewGuidesButton">Consulter les guides</string>
+    <string name="warningIconContentDescription">Icône d’avertissement du compte</string>
     <string name="whenLoginTitle">Quand</string>
     <string name="wrongPasswordLabel">Le mot de passe est incorrect</string>
 </resources>

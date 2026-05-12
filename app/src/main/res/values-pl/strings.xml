@@ -125,6 +125,7 @@
     <string name="removeAccountTitle">Usuń konto</string>
     <string name="removeButton">Usuń</string>
     <string name="requiredLabel">Wymagane</string>
+    <string name="securedIconContentDescription">Ikona zabezpieczonego konta</string>
     <string name="settingsTitle">Ustawienia</string>
     <string name="showAccountPasswordButton">Pokaż hasło do konta</string>
     <string name="startButton">Rozpocznij</string>
@@ -145,6 +146,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Zweryfikuj moje bezpieczeństwo</string>
     <string name="viewGuidesButton">Przeglądaj przewodniki</string>
+    <string name="warningIconContentDescription">Ikona ostrzeżenia konta</string>
     <string name="whenLoginTitle">Kiedy</string>
     <string name="wrongPasswordLabel">Hasło jest nieprawidłowe</string>
 </resources>

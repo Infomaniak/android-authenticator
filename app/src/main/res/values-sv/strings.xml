@@ -125,6 +125,7 @@
     <string name="removeAccountTitle">Ta bort konto</string>
     <string name="removeButton">Ta bort</string>
     <string name="requiredLabel">Krävs</string>
+    <string name="securedIconContentDescription">Ikon för säkrat konto</string>
     <string name="settingsTitle">Inställningar</string>
     <string name="showAccountPasswordButton">Visa kontolösenord</string>
     <string name="startButton">Starta</string>
@@ -145,6 +146,7 @@
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Verifiera min säkerhet</string>
     <string name="viewGuidesButton">Bläddra i guiderna</string>
+    <string name="warningIconContentDescription">Varningsikon för konto</string>
     <string name="whenLoginTitle">När</string>
     <string name="wrongPasswordLabel">Lösenordet är felaktigt</string>
 </resources>
