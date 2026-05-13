@@ -17,10 +17,15 @@
  */
 package com.infomaniak.auth.ui.navigation
 
+import androidx.compose.ui.window.DialogProperties
+import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.scene.DialogSceneStrategy
+import com.infomaniak.auth.ui.components.dialog.DisconnectConfirmDialog
+import com.infomaniak.auth.ui.components.dialog.DisconnectWarningDialog
 import com.infomaniak.auth.ui.screen.accountdetails.AccountDetailsScreen
 import com.infomaniak.auth.ui.screen.accountlist.AccountListScreen
 import com.infomaniak.auth.ui.screen.home.HomeScreen
@@ -74,7 +79,10 @@ fun baseEntryProvider(
             onLoginPressed = { legacyAccount ->
                 backStack.add(NavDestination.LoginInApp.Form(legacyAccount, isOnboarding = false))
             },
-            onBackPressed = backStack::tryPopLast
+            onBackPressed = backStack::tryPopLast,
+            onRemoveAccountClicked = { configuration ->
+                backStack.add(NavDestination.DisconnectDialog.DisconnectWarning(configuration))
+            }
         )
     }
     entry<NavDestination.Onboarding.Migration> {
@@ -122,6 +130,37 @@ fun baseEntryProvider(
             returnToLoginScreen = backStack::tryPopLast,
         )
     }
+    addDisconnectEntries(backStack)
+}
+
+private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackStack<NavKey>) {
+    entry<NavDestination.DisconnectDialog.DisconnectWarning>(
+        metadata = DialogSceneStrategy.dialog()
+    ) { params ->
+        DisconnectWarningDialog(
+            params.configuration,
+            onDismissRequest = {
+                backStack.clearDialog()
+            },
+            onConfirmButton = {
+                backStack.clearDialog()
+                backStack.add(NavDestination.DisconnectDialog.DisconnectConfirmation(params.configuration))
+            }
+        )
+    }
+
+    entry<NavDestination.DisconnectDialog.DisconnectConfirmation>(
+        metadata = DialogSceneStrategy.dialog(
+            DialogProperties(windowTitle = "Route B dialog")
+        )
+    ) { params ->
+        DisconnectConfirmDialog(
+            params.configuration,
+            onDismissRequest = {
+                backStack.clearDialog()
+            }
+        )
+    }
 }
 
 fun homeEntryProvider(rootBackStack: NavBackStack<NavKey>): (NavKey) -> NavEntry<NavKey> = entryProvider {
@@ -153,6 +192,11 @@ fun NavBackStack<NavKey>.popUntil(destination: NavKey) {
 fun NavBackStack<NavKey>.tryPopLast() {
     if (lastIndex == 0) return
     removeAt(lastIndex)
+}
+
+fun NavBackStack<NavKey>.clearDialog() {
+    if (lastIndex == 0) return
+    removeAll { it is NavDestination.DialogDestination }
 }
 
 fun NavBackStack<NavKey>.replaceAllWith(destination: NavKey) {

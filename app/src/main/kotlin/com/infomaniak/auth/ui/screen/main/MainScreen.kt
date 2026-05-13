@@ -35,6 +35,7 @@ import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
@@ -139,10 +140,13 @@ fun MainScreen(
     backStack: NavBackStack<NavKey>,
     entryDecorators: ImmutableList<NavEntryDecorator<NavKey>>,
 ) {
+    val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
+
     NavDisplay(
         backStack = backStack,
         entryDecorators = entryDecorators,
         entryProvider = baseEntryProvider(backStack),
+        sceneStrategies = listOf(dialogStrategy),
         transitionSpec = { defaultEnterAnimation },
         popTransitionSpec = { defaultExitAnimation },
         predictivePopTransitionSpec = { defaultExitAnimation },

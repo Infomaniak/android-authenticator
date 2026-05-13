@@ -20,8 +20,10 @@ package com.infomaniak.auth.ui.screen.accountdetails
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
@@ -59,7 +61,14 @@ class AccountDetailsViewModel @Inject constructor(
                 val account = accounts.find { it.id == id }
 
                 if (account != null) {
-                    AccountDetailsUiState.Success(account, user)
+                    AccountDetailsUiState.Success(
+                        account = account,
+                        user = user,
+                        disconnectConfiguration = genDisconnectConfiguration(
+                            status = account.status,
+                            accessToken = user?.apiToken?.accessToken
+                        )
+                    )
                 } else {
                     AccountDetailsUiState.Error
                 }
@@ -77,15 +86,37 @@ class AccountDetailsViewModel @Inject constructor(
         accountIdFlow.tryEmit(accountId)
     }
 
-    fun removeAccount() {
+    private fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             accountIdFlow.first()
                 .let { accountId -> accountUtils.users.first().firstOrNull { it.id.toLong() == accountId } }
                 ?.let { user ->
-                    authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toLong())
                     accountUtils.removeUser(user.id)
+                    authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toLong())
                     accountRemovedChannel.send(Unit)
                 }
+        }
+    }
+
+    private fun genDisconnectConfiguration(status: Account.Status, accessToken: String?): DisconnectConfiguration {
+        return when (status) {
+            is Account.Status.LoggedIn -> {
+                if (status.isSecured) {
+                    DisconnectConfiguration.DisconnectSecuredAccount(
+                        onConfirmButton = { removeAccount() },
+                        accessToken = accessToken
+
+                    )
+                } else {
+                    DisconnectConfiguration.DisconnectPartiallySecuredAccount(
+                        onConfirmButton = { removeAccount() },
+                        accessToken = accessToken
+                    )
+                }
+            }
+            else -> DisconnectConfiguration.DisconnectNotConnectedAccount(
+                onConfirmButton = { removeAccount() }
+            )
         }
     }
 
@@ -97,6 +128,58 @@ class AccountDetailsViewModel @Inject constructor(
 @Immutable
 sealed interface AccountDetailsUiState {
     data object Loading : AccountDetailsUiState
-    data class Success(val account: Account, val user: User?) : AccountDetailsUiState
+    data class Success(
+        val account: Account,
+        val user: User?,
+        val disconnectConfiguration: DisconnectConfiguration
+    ) : AccountDetailsUiState
     data object Error : AccountDetailsUiState
+}
+
+sealed interface DisconnectConfiguration {
+    val warningTitleResId: Int
+    val warningDescriptionResId: Int
+    val confirmationTitleResId: Int
+    val confirmationDescriptionResId: Int
+    val neutralButtonStringResId: Int
+    val criticalButtonStringResId: Int
+    val dismissHelpUrl: String
+    val onConfirmButton: () -> Unit
+    val accessToken: String?
+
+    data class DisconnectSecuredAccount(
+        override val warningTitleResId: Int = R.string.disconnectAccountWarningTitle,
+        override val warningDescriptionResId: Int = R.string.disconnectAccountWarningDescription,
+        override val confirmationTitleResId: Int = R.string.disconnectAccountTitle,
+        override val confirmationDescriptionResId: Int = R.string.disconnectAccountOnThisDeviceDescription,
+        override val neutralButtonStringResId: Int = R.string.checkMyMethodsButton,
+        override val criticalButtonStringResId: Int = R.string.disconnectCriticalButton,
+        override val dismissHelpUrl: String = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
+        override val onConfirmButton: () -> Unit,
+        override val accessToken: String?,
+    ) : DisconnectConfiguration
+
+    data class DisconnectPartiallySecuredAccount(
+        override val warningTitleResId: Int = R.string.disconnectAccountPartiallySecuredWarningTitle,
+        override val warningDescriptionResId: Int = R.string.disconnectAccountPartiallySecuredWarningDescription,
+        override val confirmationTitleResId: Int = R.string.disconnectAccountTitle,
+        override val confirmationDescriptionResId: Int = R.string.disconnectPartiallySecuredDescription,
+        override val neutralButtonStringResId: Int = R.string.disconnectAccountAdd2faButton,
+        override val criticalButtonStringResId: Int = R.string.disconnectCriticalButton,
+        override val dismissHelpUrl: String = UrlConstants.SETTINGS_2FA_MANAGER_URL,
+        override val onConfirmButton: () -> Unit,
+        override val accessToken: String?,
+    ) : DisconnectConfiguration
+
+    data class DisconnectNotConnectedAccount(
+        override val warningTitleResId: Int = R.string.removeAccountWarningTitle,
+        override val warningDescriptionResId: Int = R.string.removeAccountWarningDescription,
+        override val confirmationTitleResId: Int = R.string.removeAccountTitle,
+        override val confirmationDescriptionResId: Int = R.string.removeAccountDescription,
+        override val neutralButtonStringResId: Int = R.string.checkMyMethodsButton,
+        override val criticalButtonStringResId: Int = R.string.removeAccountTitle,
+        override val dismissHelpUrl: String = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
+        override val onConfirmButton: () -> Unit,
+        override val accessToken: String? = null,
+    ) : DisconnectConfiguration
 }

@@ -69,6 +69,7 @@ fun AccountDetailsScreen(
     accountId: Long,
     onBackPressed: () -> Unit,
     onLoginPressed: (Long) -> Unit,
+    onRemoveAccountClicked: (DisconnectConfiguration) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -89,9 +90,7 @@ fun AccountDetailsScreen(
         onChallengesRefreshClicked = {
             viewModel.refreshChallenges(accountId)
         },
-        onRemoveAccountClicked = {
-            viewModel.removeAccount()
-        }
+        onRemoveAccountClicked = onRemoveAccountClicked
     )
 }
 
@@ -101,7 +100,7 @@ fun AccountDetailsScreen(
     onLoginPressed: (Long) -> Unit,
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
-    onRemoveAccountClicked: () -> Unit,
+    onRemoveAccountClicked: (DisconnectConfiguration) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
@@ -122,7 +121,9 @@ fun AccountDetailsScreen(
                     user = uiState.user,
                     onLoginPressed = onLoginPressed,
                     onChallengesRefreshClicked = onChallengesRefreshClicked,
-                    onRemoveAccountClicked = onRemoveAccountClicked
+                    onRemoveAccountClicked = {
+                        onRemoveAccountClicked(uiState.disconnectConfiguration)
+                    }
                 )
             }
             is AccountDetailsUiState.Loading -> Unit
@@ -242,7 +243,7 @@ private fun SettingsSections(
         }
         add(
             OptionItemType.Default(
-                stringResId = R.string.disconnectButton,
+                stringResId = if (accountStatus is Account.Status.NotConnected) R.string.removeAccountButton else R.string.disconnectButton,
                 textColor = AuthenticatorTheme.materialColors.error,
                 onClick = {
                     onRemoveAccountClicked()
@@ -265,7 +266,14 @@ private fun AccountDetailsScreenPreview(
 ) {
     AuthenticatorTheme {
         AccountDetailsScreen(
-            uiState = { AccountDetailsUiState.Success(accountPairs.first, accountPairs.second) },
+            uiState = { AccountDetailsUiState.Success(
+                account = accountPairs.first,
+                user = accountPairs.second,
+                disconnectConfiguration = DisconnectConfiguration.DisconnectSecuredAccount(
+                    onConfirmButton = {},
+                    accessToken = "fake_access_token",
+                )
+            ) },
             onLoginPressed = {},
             onBackPressed = {},
             onChallengesRefreshClicked = {},
