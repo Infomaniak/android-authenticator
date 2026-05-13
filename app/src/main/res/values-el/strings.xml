@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Ξεχάσατε τον κωδικό πρόσβασης;</string>
     <string name="passwordLabel">Κωδικός πρόσβασης</string>
     <string name="refreshPendingLoginsButton">Ανανέωση εκκρεμών συνδέσεων</string>
+    <string name="removeAccountButton">Κατάργηση λογαριασμού</string>
     <string name="removeAccountDescription">Δεν θα μπορείτε πλέον να επαληθεύετε τη σύνδεσή σας σε αυτόν τον λογαριασμό με το Authenticator.</string>
     <string name="removeAccountSuccess">Ο λογαριασμός αφαιρέθηκε</string>
     <string name="removeAccountTitle">Αφαίρεση λογαριασμού</string>

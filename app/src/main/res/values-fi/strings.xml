@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Unohditko salasanan?</string>
     <string name="passwordLabel">Salasana</string>
     <string name="refreshPendingLoginsButton">Päivitä odottavat kirjautumiset</string>
+    <string name="removeAccountButton">Poista tili</string>
     <string name="removeAccountDescription">Et voi enää vahvistaa kirjautumistasi tälle tilille Authenticatorilla.</string>
     <string name="removeAccountSuccess">Tili poistettu</string>
     <string name="removeAccountTitle">Poista tili</string>

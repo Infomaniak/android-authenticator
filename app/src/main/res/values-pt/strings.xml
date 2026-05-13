@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Esqueceu-se da palavra-passe?</string>
     <string name="passwordLabel">Palavra-passe</string>
     <string name="refreshPendingLoginsButton">Atualizar logins pendentes</string>
+    <string name="removeAccountButton">Remover conta</string>
     <string name="removeAccountDescription">Você não poderá mais verificar seu login nesta conta com o Authenticator.</string>
     <string name="removeAccountSuccess">Conta removida</string>
     <string name="removeAccountTitle">Remover conta</string>

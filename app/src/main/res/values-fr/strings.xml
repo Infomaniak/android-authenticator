@@ -126,6 +126,7 @@
     <string name="passwordForgottenButton">Mot de passe oublié ?</string>
     <string name="passwordLabel">Mot de passe</string>
     <string name="refreshPendingLoginsButton">Actualiser les connexions en attente</string>
+    <string name="removeAccountButton">Retirer le compte</string>
     <string name="removeAccountDescription">Vous ne pourrez plus valider la connexion à ce compte avec Authenticator.</string>
     <string name="removeAccountSuccess">Compte retiré</string>
     <string name="removeAccountTitle">Retirer le compte</string>

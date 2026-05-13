@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Nie pamiętasz hasła?</string>
     <string name="passwordLabel">Hasło</string>
     <string name="refreshPendingLoginsButton">Odśwież oczekujące logowania</string>
+    <string name="removeAccountButton">Usuń konto</string>
     <string name="removeAccountDescription">Nie będziesz już mógł weryfikować logowania do tego konta za pomocą Authenticatora.</string>
     <string name="removeAccountSuccess">Konto usunięte</string>
     <string name="removeAccountTitle">Usuń konto</string>

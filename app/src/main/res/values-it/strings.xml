@@ -126,6 +126,7 @@
     <string name="passwordForgottenButton">Hai dimenticato la password?</string>
     <string name="passwordLabel">Password</string>
     <string name="refreshPendingLoginsButton">Aggiorna accessi in sospeso</string>
+    <string name="removeAccountButton">Rimuovere l’account</string>
     <string name="removeAccountDescription">Non potrai più verificare l’accesso a questo account con Authenticator.</string>
     <string name="removeAccountSuccess">Account rimosso</string>
     <string name="removeAccountTitle">Rimuovi account</string>

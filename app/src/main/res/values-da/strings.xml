@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Glemt adgangskode?</string>
     <string name="passwordLabel">Adgangskode</string>
     <string name="refreshPendingLoginsButton">Opdater afventende login</string>
+    <string name="removeAccountButton">Fjern konto</string>
     <string name="removeAccountDescription">Du vil ikke længere kunne bekræfte dit login til denne konto med Authenticator.</string>
     <string name="removeAccountSuccess">Konto fjernet</string>
     <string name="removeAccountTitle">Fjern konto</string>

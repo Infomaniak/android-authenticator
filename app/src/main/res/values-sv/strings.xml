@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Glömt lösenordet?</string>
     <string name="passwordLabel">Lösenord</string>
     <string name="refreshPendingLoginsButton">Uppdatera väntande inloggningar</string>
+    <string name="removeAccountButton">Ta bort konto</string>
     <string name="removeAccountDescription">Du kommer inte längre att kunna verifiera din inloggning till detta konto med Authenticator.</string>
     <string name="removeAccountSuccess">Konto borttaget</string>
     <string name="removeAccountTitle">Ta bort konto</string>

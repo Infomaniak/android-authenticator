@@ -126,6 +126,7 @@
     <string name="passwordForgottenButton">Passwort vergessen?</string>
     <string name="passwordLabel">Passwort</string>
     <string name="refreshPendingLoginsButton">Ausstehende Anmeldungen aktualisieren</string>
+    <string name="removeAccountButton">Konto entfernen</string>
     <string name="removeAccountDescription">Sie können sich nicht mehr mit Authenticator bei diesem Konto anmelden.</string>
     <string name="removeAccountSuccess">Konto entfernt</string>
     <string name="removeAccountTitle">Konto entfernen</string>

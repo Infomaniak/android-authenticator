@@ -126,6 +126,7 @@
     <string name="passwordForgottenButton">¿Olvidaste tu contraseña?</string>
     <string name="passwordLabel">Contraseña</string>
     <string name="refreshPendingLoginsButton">Actualizar inicios de sesión pendientes</string>
+    <string name="removeAccountButton">Eliminar cuenta</string>
     <string name="removeAccountDescription">Ya no podrá verificar su inicio de sesión en esta cuenta con Authenticator.</string>
     <string name="removeAccountSuccess">Cuenta eliminada</string>
     <string name="removeAccountTitle">Eliminar cuenta</string>

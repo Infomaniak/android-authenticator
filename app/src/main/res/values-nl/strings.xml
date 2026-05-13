@@ -125,6 +125,7 @@
     <string name="passwordForgottenButton">Wachtwoord vergeten?</string>
     <string name="passwordLabel">Wachtwoord</string>
     <string name="refreshPendingLoginsButton">In afwachting zijnde inloggen vernieuwen</string>
+    <string name="removeAccountButton">Account verwijderen</string>
     <string name="removeAccountDescription">U kunt uw inloggen naar dit account niet langer verifiëren met Authenticator.</string>
     <string name="removeAccountSuccess">Account verwijderd</string>
     <string name="removeAccountTitle">Account verwijderen</string>
