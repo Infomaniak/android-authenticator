@@ -88,13 +88,11 @@ class AccountDetailsViewModel @Inject constructor(
 
     private fun removeAccount() {
         viewModelScope.launch(Dispatchers.IO) {
-            accountIdFlow.first()
-                .let { accountId -> accountUtils.users.first().firstOrNull { it.id.toLong() == accountId } }
-                ?.let { user ->
-                    accountUtils.removeUser(user.id)
-                    authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toLong())
-                    accountRemovedChannel.send(Unit)
-                }
+            accountIdFlow.first().let { accountId ->
+                accountUtils.removeUser(accountId.toInt())
+                authenticatorFacade.removeAccount(token = null, id = accountId)
+                accountRemovedChannel.send(Unit)
+            }
         }
     }
 
@@ -105,7 +103,6 @@ class AccountDetailsViewModel @Inject constructor(
                     DisconnectConfiguration.DisconnectSecuredAccount(
                         onConfirmButton = { removeAccount() },
                         accessToken = accessToken
-
                     )
                 } else {
                     DisconnectConfiguration.DisconnectPartiallySecuredAccount(
