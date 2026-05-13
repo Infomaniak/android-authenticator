@@ -68,6 +68,7 @@
     <string name="denyButton">Hylkää</string>
     <string name="descriptionPlaceholder">Kuvaus</string>
     <string name="deviceLoginTitle">Laite</string>
+    <string name="disconnectAccountAdd2faButton">Lisää toinen vaihe</string>
     <string name="disconnectAccountDescription">Tilisi ei ole enää suojattu kaksivaiheisella todennuksella ja se on altis luvattomalle käytölle.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Et voi enää hyväksyä kirjautumisia tällä laitteella Authenticatorilla.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Tämä laite on ainoa, jolla on lupa kirjautua sisään.\n\nLisää toinen laite tai kirjautumismenetelmä ennen jatkamista.</string>

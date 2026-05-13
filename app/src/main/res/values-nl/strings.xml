@@ -68,6 +68,7 @@
     <string name="denyButton">Weigeren</string>
     <string name="descriptionPlaceholder">Beschrijving</string>
     <string name="deviceLoginTitle">Apparaat</string>
+    <string name="disconnectAccountAdd2faButton">Nog een stap toevoegen</string>
     <string name="disconnectAccountDescription">Uw account zal niet langer worden beschermd door twee-stapsverificatie en zal kwetsbaar worden voor ongeautoriseerde toegang.</string>
     <string name="disconnectAccountOnThisDeviceDescription">U kunt geen inloggen meer goedkeuren op dit apparaat met Authenticator.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Dit apparaat is het enige dat gemachtigd is om aan te melden.\n\nVoeg een ander apparaat of een andere aanmeldingsmethode toe voordat u doorgaat.</string>

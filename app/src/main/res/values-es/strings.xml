@@ -69,6 +69,7 @@
     <string name="denyButton">Denegar</string>
     <string name="descriptionPlaceholder">Descripción</string>
     <string name="deviceLoginTitle">Dispositivo</string>
+    <string name="disconnectAccountAdd2faButton">Añadir otro paso</string>
     <string name="disconnectAccountDescription">Su cuenta ya no estará protegida por la verificación en dos pasos y se volverá vulnerable a accesos no autorizados.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Ya no podrá validar el inicio de sesión en este dispositivo con Authenticator.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Este dispositivo es el único autorizado para iniciar sesión.\n\nAñade otro dispositivo o método de inicio de sesión antes de continuar.</string>

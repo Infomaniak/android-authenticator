@@ -68,6 +68,7 @@
     <string name="denyButton">Άρνηση</string>
     <string name="descriptionPlaceholder">Περιγραφή</string>
     <string name="deviceLoginTitle">Συσκευή</string>
+    <string name="disconnectAccountAdd2faButton">Προσθήκη ενός άλλου βήματος</string>
     <string name="disconnectAccountDescription">Ο λογαριασμός σας δεν θα προστατεύεται πλέον από επαλήθευση σε δύο βήματα και θα γίνει ευάλωτος σε μη εξουσιοδοτημένη πρόσβαση.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Δεν θα μπορείτε πλέον να εγκρίνετε συνδέσεις σε αυτή τη συσκευή με το Authenticator.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Αυτή η συσκευή είναι η μόνη εξουσιοδοτημένη να συνδεθεί.\n\nΠροσθέστε άλλη συσκευή ή μέθοδο σύνδεσης πριν συνεχίσετε.</string>

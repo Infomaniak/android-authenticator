@@ -69,6 +69,7 @@
     <string name="denyButton">Refuser</string>
     <string name="descriptionPlaceholder">Description</string>
     <string name="deviceLoginTitle">Appareil</string>
+    <string name="disconnectAccountAdd2faButton">Ajouter une autre étape</string>
     <string name="disconnectAccountDescription">Votre compte ne sera plus protégé par la validation en deux étapes et deviendra vulnérable aux accès non autorisés.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Vous ne pourrez plus valider la connexion sur cet appareil avec Authenticator.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Cet appareil est le seul autorisé à se connecter.\n\nAjoutez un autre appareil ou une autre méthode de connexion avant de continuer.</string>

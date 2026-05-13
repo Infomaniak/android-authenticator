@@ -68,6 +68,7 @@
     <string name="denyButton">Afvis</string>
     <string name="descriptionPlaceholder">Beskrivelse</string>
     <string name="deviceLoginTitle">Enhed</string>
+    <string name="disconnectAccountAdd2faButton">Tilføj endnu et trin</string>
     <string name="disconnectAccountDescription">Din konto vil ikke længere være beskyttet af totrinsbekræftelse og vil blive sårbar over for uautoriseret adgang.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Du vil ikke længere kunne godkende login på denne enhed med Authenticator.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Denne enhed er den eneste, der er autoriseret til at logge ind.\n\nTilføj en anden enhed eller login-metode, før du fortsætter.</string>

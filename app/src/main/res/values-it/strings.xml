@@ -69,6 +69,7 @@
     <string name="denyButton">Nega</string>
     <string name="descriptionPlaceholder">Descrizione</string>
     <string name="deviceLoginTitle">Dispositivo</string>
+    <string name="disconnectAccountAdd2faButton">Aggiungi un altro passo</string>
     <string name="disconnectAccountDescription">Il tuo account non sarà più protetto dalla verifica a due passaggi e diventerà vulnerabile ad accessi non autorizzati.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Non potrai più verificare l’accesso su questo dispositivo con Authenticator.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">Questo dispositivo è l’unico autorizzato ad accedere.\n\nAggiungere un altro dispositivo o metodo di accesso prima di continuare.</string>

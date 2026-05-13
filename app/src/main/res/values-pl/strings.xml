@@ -68,6 +68,7 @@
     <string name="denyButton">Odmów</string>
     <string name="descriptionPlaceholder">Opis</string>
     <string name="deviceLoginTitle">Urządzenie</string>
+    <string name="disconnectAccountAdd2faButton">Dodaj kolejny krok</string>
     <string name="disconnectAccountDescription">Twoje konto nie będzie już chronione przez weryfikację dwuetapową i stanie się podatne na nieautoryzowany dostęp.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Nie będziesz już mógł zatwierdzać logowań na tym urządzeniu za pomocą Authenticatora.</string>
     <string name="disconnectAccountPartiallySecuredWarningDescription">To urządzenie jest jedynym uprawnionym do logowania.\n\nPrzed kontynuowaniem dodaj inne urządzenie lub metodę logowania.</string>
