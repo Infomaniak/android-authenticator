@@ -70,11 +70,14 @@
     <string name="deviceLoginTitle">Laite</string>
     <string name="disconnectAccountDescription">Tilisi ei ole enää suojattu kaksivaiheisella todennuksella ja se on altis luvattomalle käytölle.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Et voi enää hyväksyä kirjautumisia tällä laitteella Authenticatorilla.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Tämä laite on ainoa, jolla on lupa kirjautua sisään.\n\nLisää toinen laite tai kirjautumismenetelmä ennen jatkamista.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">Tilin yhteyden katkaiseminen poistaa sen suojauksen</string>
     <string name="disconnectAccountTitle">Katkaise tämän tilin yhteys</string>
     <string name="disconnectAccountWarningDescription">Varmista että vahvistus- ja palautusmenetelmäsi ovat edelleen ajan tasalla, jotta et menetä pääsyä tiliisi.</string>
     <string name="disconnectAccountWarningTitle">Tämän tilin yhteyden katkaiseminen voi heikentää sen turvallisuutta</string>
     <string name="disconnectButton">Kirjaudu ulos</string>
     <string name="disconnectCriticalButton">Tilin katkaiseminen</string>
+    <string name="disconnectPartiallySecuredDescription">Tiliäsi ei enää suojata kaksivaiheisella vahvistuksella, ja se on altis luvattomalle käytölle.</string>
     <string name="disconnectSuccess">Tilin yhteys katkaistu</string>
     <string name="doneButton">Valmis</string>
     <string name="emailPlaceholder">Sähköposti</string>

@@ -70,11 +70,14 @@
     <string name="deviceLoginTitle">Dispositivo</string>
     <string name="disconnectAccountDescription">Sua conta não estará mais protegida pela verificação em duas etapas e ficará vulnerável a acessos não autorizados.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Você não poderá mais aprovar logins neste dispositivo com o Authenticator.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Este dispositivo é o único autorizado a iniciar sessão.\n\nAdicione outro dispositivo ou método de início de sessão antes de continuar.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">A desconexão da conta removerá a sua proteção</string>
     <string name="disconnectAccountTitle">Desconectar esta conta</string>
     <string name="disconnectAccountWarningDescription">Certifique-se de que seus métodos de verificação e recuperação ainda estão atualizados para evitar perder o acesso à sua conta.</string>
     <string name="disconnectAccountWarningTitle">Desconectar esta conta pode enfraquecer sua segurança</string>
     <string name="disconnectButton">Sair</string>
     <string name="disconnectCriticalButton">Desligar a conta</string>
+    <string name="disconnectPartiallySecuredDescription">A sua conta deixará de estar protegida pela verificação em dois passos e ficará vulnerável a acessos não autorizados.</string>
     <string name="disconnectSuccess">Conta desconectada</string>
     <string name="doneButton">Concluir</string>
     <string name="emailPlaceholder">E-mail</string>

@@ -71,11 +71,14 @@
     <string name="deviceLoginTitle">Gerät</string>
     <string name="disconnectAccountDescription">Ihr Konto wird nicht mehr durch die Zwei-Faktor-Verifizierung geschützt und ist anfällig für unbefugten Zugriff.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Sie können die Anmeldung auf diesem Gerät nicht mehr mit Authenticator bestätigen.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Dieses Gerät ist das einzige, das zur Anmeldung berechtigt ist.\n\nFügen Sie ein anderes Gerät oder eine andere Anmeldemethode hinzu, bevor Sie fortfahren.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">Durch das Trennen der Verbindung wird der Schutz des Kontos aufgehoben</string>
     <string name="disconnectAccountTitle">Dieses Konto trennen</string>
     <string name="disconnectAccountWarningDescription">Stellen Sie sicher, dass Ihre Verifizierungs- und Wiederherstellungsmethoden immer aktuell sind, um den Zugriff auf Ihr Konto nicht zu verlieren.</string>
     <string name="disconnectAccountWarningTitle">Das Trennen dieses Kontos kann dessen Sicherheit beeinträchtigen</string>
     <string name="disconnectButton">Abmelden</string>
     <string name="disconnectCriticalButton">Trennen Sie das Konto</string>
+    <string name="disconnectPartiallySecuredDescription">Ihr Konto ist dann nicht mehr durch die zweistufige Verifizierung geschützt und anfällig für unbefugten Zugriff.</string>
     <string name="disconnectSuccess">Konto getrennt</string>
     <string name="doneButton">Fertig</string>
     <string name="emailPlaceholder">E-Mail</string>

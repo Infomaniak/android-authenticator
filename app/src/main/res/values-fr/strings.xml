@@ -71,11 +71,14 @@
     <string name="deviceLoginTitle">Appareil</string>
     <string name="disconnectAccountDescription">Votre compte ne sera plus protégé par la validation en deux étapes et deviendra vulnérable aux accès non autorisés.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Vous ne pourrez plus valider la connexion sur cet appareil avec Authenticator.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Cet appareil est le seul autorisé à se connecter.\n\nAjoutez un autre appareil ou une autre méthode de connexion avant de continuer.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">La déconnexion du compte supprimera sa protection</string>
     <string name="disconnectAccountTitle">Déconnecter ce compte</string>
     <string name="disconnectAccountWarningDescription">Vérifiez que vos méthodes de validation et de récupération soient toujours à jour pour ne pas perdre l’accès à votre compte.</string>
     <string name="disconnectAccountWarningTitle">Déconnecter ce compte peut affaiblir sa sécurité</string>
     <string name="disconnectButton">Se déconnecter</string>
     <string name="disconnectCriticalButton">Déconnecter le compte</string>
+    <string name="disconnectPartiallySecuredDescription">Votre compte ne sera plus protégé par la vérification en deux étapes et sera vulnérable à un accès non autorisé.</string>
     <string name="disconnectSuccess">Compte déconnecté</string>
     <string name="doneButton">Terminer</string>
     <string name="emailPlaceholder">E-mail</string>

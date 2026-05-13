@@ -70,11 +70,14 @@
     <string name="deviceLoginTitle">Enhet</string>
     <string name="disconnectAccountDescription">Kontoen din vil ikke lenger være beskyttet av totrinnsverifisering og vil bli sårbar for uautorisert tilgang.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Du vil ikke lenger kunne godkjenne pålogginger på denne enheten med Authenticator.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Denne enheten er den eneste som er autorisert til å logge på.\n\nLegg til en annen enhet eller påloggingsmetode før du fortsetter.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">Hvis du kobler fra kontoen, oppheves beskyttelsen av den</string>
     <string name="disconnectAccountTitle">Koble fra denne kontoen</string>
     <string name="disconnectAccountWarningDescription">Sørg for at verifiserings- og gjenopprettingsmetodene dine fortsatt er oppdaterte for å unngå å miste tilgangen til kontoen din.</string>
     <string name="disconnectAccountWarningTitle">Å koble fra denne kontoen kan svekke sikkerheten</string>
     <string name="disconnectButton">Logg ut</string>
     <string name="disconnectCriticalButton">Koble fra kontoen</string>
+    <string name="disconnectPartiallySecuredDescription">Kontoen din vil ikke lenger være beskyttet av totrinnsbekreftelse og vil være sårbar for uautorisert tilgang.</string>
     <string name="disconnectSuccess">Konto frakoblet</string>
     <string name="doneButton">Ferdig</string>
     <string name="emailPlaceholder">E-post</string>

@@ -70,11 +70,14 @@
     <string name="deviceLoginTitle">Συσκευή</string>
     <string name="disconnectAccountDescription">Ο λογαριασμός σας δεν θα προστατεύεται πλέον από επαλήθευση σε δύο βήματα και θα γίνει ευάλωτος σε μη εξουσιοδοτημένη πρόσβαση.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Δεν θα μπορείτε πλέον να εγκρίνετε συνδέσεις σε αυτή τη συσκευή με το Authenticator.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Αυτή η συσκευή είναι η μόνη εξουσιοδοτημένη να συνδεθεί.\n\nΠροσθέστε άλλη συσκευή ή μέθοδο σύνδεσης πριν συνεχίσετε.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">Η αποσύνδεση του λογαριασμού θα καταργήσει την προστασία του</string>
     <string name="disconnectAccountTitle">Αποσύνδεση αυτού του λογαριασμού</string>
     <string name="disconnectAccountWarningDescription">Βεβαιωθείτε ότι οι μέθοδοι επαλήθευσης και ανάκτησής σας είναι ενημερωμένοι για να αποφύγετε την απώλεια πρόσβασης στον λογαριασμό σας.</string>
     <string name="disconnectAccountWarningTitle">Η αποσύνδεση αυτού του λογαριασμού μπορεί να εξασθενήσει την ασφάλειά του</string>
     <string name="disconnectButton">Αποσύνδεση</string>
     <string name="disconnectCriticalButton">Αποσυνδέστε το λογαριασμό</string>
+    <string name="disconnectPartiallySecuredDescription">Ο λογαριασμός σας δεν θα προστατεύεται πλέον από επαλήθευση δύο βημάτων και θα είναι ευάλωτος σε μη εξουσιοδοτημένη πρόσβαση.</string>
     <string name="disconnectSuccess">Ο λογαριασμός αποσυνδέθηκε</string>
     <string name="doneButton">Τέλος</string>
     <string name="emailPlaceholder">Email</string>

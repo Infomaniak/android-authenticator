@@ -70,11 +70,14 @@
     <string name="deviceLoginTitle">Urządzenie</string>
     <string name="disconnectAccountDescription">Twoje konto nie będzie już chronione przez weryfikację dwuetapową i stanie się podatne na nieautoryzowany dostęp.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Nie będziesz już mógł zatwierdzać logowań na tym urządzeniu za pomocą Authenticatora.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">To urządzenie jest jedynym uprawnionym do logowania.\n\nPrzed kontynuowaniem dodaj inne urządzenie lub metodę logowania.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">Odłączenie konta spowoduje usunięcie jego ochrony</string>
     <string name="disconnectAccountTitle">Odłącz to konto</string>
     <string name="disconnectAccountWarningDescription">Upewnij się, że Twoje metody weryfikacji i odzyskiwania są nadal aktualne, aby nie stracić dostępu do konta.</string>
     <string name="disconnectAccountWarningTitle">Odłączenie tego konta może osłabić jego bezpieczeństwo</string>
     <string name="disconnectButton">Wyloguj się</string>
     <string name="disconnectCriticalButton">Odłączenie konta</string>
+    <string name="disconnectPartiallySecuredDescription">Twoje konto nie będzie już chronione weryfikacją dwuetapową i będzie podatne na nieautoryzowany dostęp.</string>
     <string name="disconnectSuccess">Konto odłączone</string>
     <string name="doneButton">Gotowe</string>
     <string name="emailPlaceholder">E-mail</string>

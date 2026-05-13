@@ -71,11 +71,14 @@
     <string name="deviceLoginTitle">Device</string>
     <string name="disconnectAccountDescription">Your account will no longer be protected by two-step verification and will become vulnerable to unauthorized access.</string>
     <string name="disconnectAccountOnThisDeviceDescription">You will no longer be able to approve logins on this device with Authenticator.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">This device is the only one authorized to sign in.\n\nAdd another device or sign-in method before continuing.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">Disconnecting the account will remove its protection</string>
     <string name="disconnectAccountTitle">Disconnect this account</string>
     <string name="disconnectAccountWarningDescription">Make sure your verification and recovery methods are still up to date to avoid losing access to your account.</string>
     <string name="disconnectAccountWarningTitle">Disconnecting this account may weaken its security</string>
     <string name="disconnectButton">Log out</string>
     <string name="disconnectCriticalButton">Disconnect the account</string>
+    <string name="disconnectPartiallySecuredDescription">Your account will no longer be protected by two-step verification and will be vulnerable to unauthorized access.</string>
     <string name="disconnectSuccess">Account disconnected</string>
     <string name="doneButton">Done</string>
     <string name="emailPlaceholder">Email</string>

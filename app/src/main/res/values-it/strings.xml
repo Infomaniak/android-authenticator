@@ -71,11 +71,14 @@
     <string name="deviceLoginTitle">Dispositivo</string>
     <string name="disconnectAccountDescription">Il tuo account non sarà più protetto dalla verifica a due passaggi e diventerà vulnerabile ad accessi non autorizzati.</string>
     <string name="disconnectAccountOnThisDeviceDescription">Non potrai più verificare l’accesso su questo dispositivo con Authenticator.</string>
+    <string name="disconnectAccountPartiallySecuredWarningDescription">Questo dispositivo è l’unico autorizzato ad accedere.\n\nAggiungere un altro dispositivo o metodo di accesso prima di continuare.</string>
+    <string name="disconnectAccountPartiallySecuredWarningTitle">La disconnessione dell’account ne rimuove la protezione</string>
     <string name="disconnectAccountTitle">Disconnetti questo account</string>
     <string name="disconnectAccountWarningDescription">Verifica che i tuoi metodi di verifica e recupero siano sempre aggiornati per non perdere l’accesso al tuo account.</string>
     <string name="disconnectAccountWarningTitle">Disconnettere questo account può indebolirne la sicurezza</string>
     <string name="disconnectButton">Disconnettiti</string>
     <string name="disconnectCriticalButton">Disconnettere l’account</string>
+    <string name="disconnectPartiallySecuredDescription">Il vostro account non sarà più protetto dalla verifica in due passaggi e sarà vulnerabile ad accessi non autorizzati.</string>
     <string name="disconnectSuccess">Account disconnesso</string>
     <string name="doneButton">Fine</string>
     <string name="emailPlaceholder">Email</string>
