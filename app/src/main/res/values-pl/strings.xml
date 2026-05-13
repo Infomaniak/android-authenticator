@@ -16,6 +16,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="accountDisconnectedDescription">Nie będziesz już otrzymywać żądań połączenia do zatwierdzenia na tym urządzeniu dla %s</string>
+    <string name="accountDisconnectedTitle">Konto odłączone od aplikacji Authenticator</string>
     <string name="accountLoggedOut">Konto wylogowane</string>
     <string name="accountLossRiskBackupVerificationDescription">Upewnij się, że inna metoda weryfikacji dwuetapowej jest skonfigurowana i działa.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Jeśli Authenticator to Twoja ostatnia metoda weryfikacji dwuetapowej, możesz zostać zablokowany przy następnym logowaniu.</string>

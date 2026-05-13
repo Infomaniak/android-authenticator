@@ -16,6 +16,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="accountDisconnectedDescription">Δεν θα λαμβάνετε πλέον αιτήσεις σύνδεσης για έγκριση σε αυτή τη συσκευή για το %s</string>
+    <string name="accountDisconnectedTitle">Αποσύνδεση λογαριασμού από τον Αυθεντικοποιητή</string>
     <string name="accountLoggedOut">Ο λογαριασμός αποσυνδέθηκε</string>
     <string name="accountLossRiskBackupVerificationDescription">Βεβαιωθείτε ότι έχει ρυθμιστεί και λειτουργεί μια άλλη μέθοδος επαλήθευσης σε δύο βήματα.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Αν το Authenticator είναι η τελευταία σας μέθοδος επαλήθευσης σε δύο βήματα, μπορεί να κλειδωθείτε την επόμενη φορά που θα συνδεθείτε.</string>

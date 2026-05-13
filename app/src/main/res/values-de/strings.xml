@@ -17,6 +17,8 @@
   -->
 
 <resources>
+    <string name="accountDisconnectedDescription">Sie erhalten keine Verbindungsanfragen mehr zur Genehmigung auf diesem Gerät für die %s</string>
+    <string name="accountDisconnectedTitle">Konto wurde vom Authenticator getrennt</string>
     <string name="accountLoggedOut">Konto abgemeldet</string>
     <string name="accountLossRiskBackupVerificationDescription">Stellen Sie sicher, dass eine andere Zwei-Faktor-Verifizierungsmethode eingerichtet und funktionsfähig ist.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Wenn Authenticator Ihre letzte Zwei-Faktor-Verifizierungsmethode ist, könnten Sie beim nächsten Anmeldeversuch gesperrt werden.</string>

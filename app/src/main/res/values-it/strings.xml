@@ -17,6 +17,8 @@
   -->
 
 <resources>
+    <string name="accountDisconnectedDescription">Non si riceveranno più richieste di connessione da approvare su questo dispositivo per il %s</string>
+    <string name="accountDisconnectedTitle">Account disconnesso da Authenticator</string>
     <string name="accountLoggedOut">Account disconnesso</string>
     <string name="accountLossRiskBackupVerificationDescription">Assicurati che un altro metodo di verifica a due passaggi sia configurato e funzionante.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Se Authenticator è il tuo ultimo metodo di verifica a due passaggi, potresti essere bloccato al prossimo accesso.</string>

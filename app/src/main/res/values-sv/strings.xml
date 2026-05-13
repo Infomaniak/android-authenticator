@@ -16,6 +16,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="accountDisconnectedDescription">Du kommer inte längre att få anslutningsförfrågningar för att godkänna på den här enheten för %s</string>
+    <string name="accountDisconnectedTitle">Konto frånkopplat från Authenticator</string>
     <string name="accountLoggedOut">Konto utloggat</string>
     <string name="accountLossRiskBackupVerificationDescription">Se till att en annan tvåstegsverifieringsmetod är inställd och fungerar.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Om Authenticator är din sista tvåstegsverifieringsmetod kan du bli utelåst nästa gång du loggar in.</string>
