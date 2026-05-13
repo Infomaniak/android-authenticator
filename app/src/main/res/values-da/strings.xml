@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">Du vil ikke længere kunne bekræfte dit login til denne konto med Authenticator.</string>
     <string name="removeAccountSuccess">Konto fjernet</string>
     <string name="removeAccountTitle">Fjern konto</string>
+    <string name="removeAccountWarningDescription">Hvis Authenticator er din eneste totrinsbekræftelse, kan du blive låst ude, næste gang du prøver at logge ind.</string>
+    <string name="removeAccountWarningTitle">Fjern konto</string>
     <string name="removeButton">Fjern</string>
     <string name="requiredLabel">Påkrævet</string>
     <string name="securedIconContentDescription">Ikon for sikret konto</string>

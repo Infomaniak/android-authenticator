@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">Et voi enää vahvistaa kirjautumistasi tälle tilille Authenticatorilla.</string>
     <string name="removeAccountSuccess">Tili poistettu</string>
     <string name="removeAccountTitle">Poista tili</string>
+    <string name="removeAccountWarningDescription">Jos Authenticator on ainoa kaksivaiheinen vahvistusmenetelmäsi, saatat jäädä ulos, kun yrität kirjautua sisään seuraavan kerran.</string>
+    <string name="removeAccountWarningTitle">Poista tili</string>
     <string name="removeButton">Poista</string>
     <string name="requiredLabel">Vaadittu</string>
     <string name="securedIconContentDescription">Tilin turvattu kuvake</string>

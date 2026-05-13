@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">Você não poderá mais verificar seu login nesta conta com o Authenticator.</string>
     <string name="removeAccountSuccess">Conta removida</string>
     <string name="removeAccountTitle">Remover conta</string>
+    <string name="removeAccountWarningDescription">Se o Authenticator for o seu único método de verificação em dois passos, poderá ficar bloqueado da próxima vez que tentar iniciar sessão.</string>
+    <string name="removeAccountWarningTitle">Remover conta</string>
     <string name="removeButton">Remover</string>
     <string name="requiredLabel">Necessário</string>
     <string name="securedIconContentDescription">Ícone de conta protegida</string>

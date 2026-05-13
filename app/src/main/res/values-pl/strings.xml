@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">Nie będziesz już mógł weryfikować logowania do tego konta za pomocą Authenticatora.</string>
     <string name="removeAccountSuccess">Konto usunięte</string>
     <string name="removeAccountTitle">Usuń konto</string>
+    <string name="removeAccountWarningDescription">Jeśli Authenticator jest jedyną metodą weryfikacji dwuetapowej, możesz zostać zablokowany przy następnej próbie logowania.</string>
+    <string name="removeAccountWarningTitle">Usuń konto</string>
     <string name="removeButton">Usuń</string>
     <string name="requiredLabel">Wymagane</string>
     <string name="securedIconContentDescription">Ikona zabezpieczonego konta</string>

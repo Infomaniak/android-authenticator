@@ -129,6 +129,8 @@
     <string name="removeAccountDescription">Sie können sich nicht mehr mit Authenticator bei diesem Konto anmelden.</string>
     <string name="removeAccountSuccess">Konto entfernt</string>
     <string name="removeAccountTitle">Konto entfernen</string>
+    <string name="removeAccountWarningDescription">Wenn Authenticator Ihre einzige Methode der zweistufigen Verifizierung ist, werden Sie möglicherweise beim nächsten Anmeldeversuch gesperrt.</string>
+    <string name="removeAccountWarningTitle">Konto entfernen</string>
     <string name="removeButton">Entfernen</string>
     <string name="requiredLabel">Erforderlich</string>
     <string name="securedIconContentDescription">Symbol für ein gesichertes Konto</string>

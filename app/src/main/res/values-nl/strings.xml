@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">U kunt uw inloggen naar dit account niet langer verifiëren met Authenticator.</string>
     <string name="removeAccountSuccess">Account verwijderd</string>
     <string name="removeAccountTitle">Account verwijderen</string>
+    <string name="removeAccountWarningDescription">Als Authenticator uw enige tweestapsverificatiemethode is, wordt u mogelijk uitgesloten wanneer u de volgende keer probeert in te loggen.</string>
+    <string name="removeAccountWarningTitle">Account verwijderen</string>
     <string name="removeButton">Verwijderen</string>
     <string name="requiredLabel">Vereist</string>
     <string name="securedIconContentDescription">Pictogram voor beveiligde account</string>

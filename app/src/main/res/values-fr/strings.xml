@@ -129,6 +129,8 @@
     <string name="removeAccountDescription">Vous ne pourrez plus valider la connexion à ce compte avec Authenticator.</string>
     <string name="removeAccountSuccess">Compte retiré</string>
     <string name="removeAccountTitle">Retirer le compte</string>
+    <string name="removeAccountWarningDescription">Si Authenticator est votre seule méthode de vérification en deux étapes, vous risquez d’être bloqué lors de votre prochaine tentative de connexion.</string>
+    <string name="removeAccountWarningTitle">Retirer le compte</string>
     <string name="removeButton">Retirer</string>
     <string name="requiredLabel">Requis</string>
     <string name="securedIconContentDescription">Icône de compte sécurisé</string>

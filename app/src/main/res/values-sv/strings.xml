@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">Du kommer inte längre att kunna verifiera din inloggning till detta konto med Authenticator.</string>
     <string name="removeAccountSuccess">Konto borttaget</string>
     <string name="removeAccountTitle">Ta bort konto</string>
+    <string name="removeAccountWarningDescription">Om Authenticator är din enda metod för tvåstegsverifiering kan du bli utelåst nästa gång du försöker logga in.</string>
+    <string name="removeAccountWarningTitle">Ta bort konto</string>
     <string name="removeButton">Ta bort</string>
     <string name="requiredLabel">Krävs</string>
     <string name="securedIconContentDescription">Ikon för säkrat konto</string>

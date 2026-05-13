@@ -128,6 +128,8 @@
     <string name="removeAccountDescription">Δεν θα μπορείτε πλέον να επαληθεύετε τη σύνδεσή σας σε αυτόν τον λογαριασμό με το Authenticator.</string>
     <string name="removeAccountSuccess">Ο λογαριασμός αφαιρέθηκε</string>
     <string name="removeAccountTitle">Αφαίρεση λογαριασμού</string>
+    <string name="removeAccountWarningDescription">Εάν ο Αυθεντικός έλεγχος είναι η μόνη μέθοδος επαλήθευσης δύο βημάτων, ενδέχεται να κλειδωθείτε την επόμενη φορά που θα προσπαθήσετε να συνδεθείτε.</string>
+    <string name="removeAccountWarningTitle">Κατάργηση λογαριασμού</string>
     <string name="removeButton">Αφαίρεση</string>
     <string name="requiredLabel">Απαιτούμενο</string>
     <string name="securedIconContentDescription">Εικονίδιο ασφαλισμένου λογαριασμού</string>

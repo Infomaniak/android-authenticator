@@ -129,6 +129,8 @@
     <string name="removeAccountDescription">You will no longer be able to verify your login to this account with Authenticator.</string>
     <string name="removeAccountSuccess">Account removed</string>
     <string name="removeAccountTitle">Remove account</string>
+    <string name="removeAccountWarningDescription">If Authenticator is your only two-step verification method, you may be locked out the next time you try to log in.</string>
+    <string name="removeAccountWarningTitle">Remove account</string>
     <string name="removeButton">Remove</string>
     <string name="requiredLabel">Required</string>
     <string name="securedIconContentDescription">Account secured icon</string>
