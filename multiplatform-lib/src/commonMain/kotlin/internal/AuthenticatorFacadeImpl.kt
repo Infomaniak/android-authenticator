@@ -135,9 +135,8 @@ internal class AuthenticatorFacadeImpl(
         dao.upsert(entities)
     }
 
-    override suspend fun removeAccount(token: String, id: Long) {
+    override suspend fun removeAccount(token: String?, id: Long) {
         authenticatorManager.removeAccount(token, id)
-        dao.delete(id)
     }
 
     override suspend fun refreshTokenFor(userId: Long) {
