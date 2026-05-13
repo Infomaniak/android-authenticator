@@ -48,9 +48,9 @@ import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.models.UrlConstants.HELP_SUPPORT_URL
 import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
-import com.infomaniak.auth.ui.components.dialog.PriorityEventAlert
-import com.infomaniak.auth.ui.components.dialog.PriorityEventAlertDialog
-import com.infomaniak.auth.ui.components.dialog.VerifyAccountSecurityDialog
+import com.infomaniak.auth.ui.dialog.PriorityEventAlert
+import com.infomaniak.auth.ui.dialog.PriorityEventAlertDialog
+import com.infomaniak.auth.ui.dialog.VerifyAccountSecurityDialog
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
 import com.infomaniak.auth.ui.navigation.replaceAllWith

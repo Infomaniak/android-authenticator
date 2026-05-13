@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.components.dialog
+package com.infomaniak.auth.ui.dialog
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.AlertDialog

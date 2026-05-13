@@ -24,8 +24,8 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
-import com.infomaniak.auth.ui.components.dialog.DisconnectConfirmDialog
-import com.infomaniak.auth.ui.components.dialog.DisconnectWarningDialog
+import com.infomaniak.auth.ui.dialog.disconnect.DisconnectConfirmDialog
+import com.infomaniak.auth.ui.dialog.disconnect.DisconnectWarningDialog
 import com.infomaniak.auth.ui.screen.accountdetails.AccountDetailsScreen
 import com.infomaniak.auth.ui.screen.accountlist.AccountListScreen
 import com.infomaniak.auth.ui.screen.home.HomeScreen
