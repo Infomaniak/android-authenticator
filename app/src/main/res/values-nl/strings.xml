@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Zorg ervoor dat uw verificatie- en herstelmethoden nog steeds up-to-date zijn om de toegang tot uw account niet te verliezen.</string>
     <string name="disconnectAccountWarningTitle">Het loskoppelen van dit account kan de beveiliging ervan verzwakken</string>
     <string name="disconnectButton">Uitloggen</string>
+    <string name="disconnectCriticalButton">De account ontkoppelen</string>
     <string name="disconnectSuccess">Account losgekoppeld</string>
     <string name="doneButton">Gereed</string>
     <string name="emailPlaceholder">E-mail</string>

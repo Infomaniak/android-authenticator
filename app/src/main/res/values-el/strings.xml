@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Βεβαιωθείτε ότι οι μέθοδοι επαλήθευσης και ανάκτησής σας είναι ενημερωμένοι για να αποφύγετε την απώλεια πρόσβασης στον λογαριασμό σας.</string>
     <string name="disconnectAccountWarningTitle">Η αποσύνδεση αυτού του λογαριασμού μπορεί να εξασθενήσει την ασφάλειά του</string>
     <string name="disconnectButton">Αποσύνδεση</string>
+    <string name="disconnectCriticalButton">Αποσυνδέστε το λογαριασμό</string>
     <string name="disconnectSuccess">Ο λογαριασμός αποσυνδέθηκε</string>
     <string name="doneButton">Τέλος</string>
     <string name="emailPlaceholder">Email</string>

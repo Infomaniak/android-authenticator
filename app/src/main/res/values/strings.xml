@@ -75,6 +75,7 @@
     <string name="disconnectAccountWarningDescription">Make sure your verification and recovery methods are still up to date to avoid losing access to your account.</string>
     <string name="disconnectAccountWarningTitle">Disconnecting this account may weaken its security</string>
     <string name="disconnectButton">Log out</string>
+    <string name="disconnectCriticalButton">Disconnect the account</string>
     <string name="disconnectSuccess">Account disconnected</string>
     <string name="doneButton">Done</string>
     <string name="emailPlaceholder">Email</string>

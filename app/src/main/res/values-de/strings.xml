@@ -75,6 +75,7 @@
     <string name="disconnectAccountWarningDescription">Stellen Sie sicher, dass Ihre Verifizierungs- und Wiederherstellungsmethoden immer aktuell sind, um den Zugriff auf Ihr Konto nicht zu verlieren.</string>
     <string name="disconnectAccountWarningTitle">Das Trennen dieses Kontos kann dessen Sicherheit beeinträchtigen</string>
     <string name="disconnectButton">Abmelden</string>
+    <string name="disconnectCriticalButton">Trennen Sie das Konto</string>
     <string name="disconnectSuccess">Konto getrennt</string>
     <string name="doneButton">Fertig</string>
     <string name="emailPlaceholder">E-Mail</string>

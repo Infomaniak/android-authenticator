@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Certifique-se de que seus métodos de verificação e recuperação ainda estão atualizados para evitar perder o acesso à sua conta.</string>
     <string name="disconnectAccountWarningTitle">Desconectar esta conta pode enfraquecer sua segurança</string>
     <string name="disconnectButton">Sair</string>
+    <string name="disconnectCriticalButton">Desligar a conta</string>
     <string name="disconnectSuccess">Conta desconectada</string>
     <string name="doneButton">Concluir</string>
     <string name="emailPlaceholder">E-mail</string>

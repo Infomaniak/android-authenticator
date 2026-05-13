@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Se till att dina verifierings- och återställningsmetoder fortfarande är uppdaterade för att undvika att förlora åtkomst till ditt konto.</string>
     <string name="disconnectAccountWarningTitle">Att koppla från detta konto kan försvaga dess säkerhet</string>
     <string name="disconnectButton">Logga ut</string>
+    <string name="disconnectCriticalButton">Koppla bort kontot</string>
     <string name="disconnectSuccess">Konto frånkopplat</string>
     <string name="doneButton">Klar</string>
     <string name="emailPlaceholder">E-post</string>

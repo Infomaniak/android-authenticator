@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Sørg for, at dine bekræftelses- og gendannelsesmetoder stadig er opdaterede for ikke at miste adgangen til din konto.</string>
     <string name="disconnectAccountWarningTitle">Afbrydelse af denne konto kan svække dens sikkerhed</string>
     <string name="disconnectButton">Log ud</string>
+    <string name="disconnectCriticalButton">Afbryd forbindelsen til kontoen</string>
     <string name="disconnectSuccess">Konto afbrudt</string>
     <string name="doneButton">Færdig</string>
     <string name="emailPlaceholder">E-mail</string>

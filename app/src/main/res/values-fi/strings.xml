@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Varmista että vahvistus- ja palautusmenetelmäsi ovat edelleen ajan tasalla, jotta et menetä pääsyä tiliisi.</string>
     <string name="disconnectAccountWarningTitle">Tämän tilin yhteyden katkaiseminen voi heikentää sen turvallisuutta</string>
     <string name="disconnectButton">Kirjaudu ulos</string>
+    <string name="disconnectCriticalButton">Tilin katkaiseminen</string>
     <string name="disconnectSuccess">Tilin yhteys katkaistu</string>
     <string name="doneButton">Valmis</string>
     <string name="emailPlaceholder">Sähköposti</string>

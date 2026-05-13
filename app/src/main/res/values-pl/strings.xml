@@ -74,6 +74,7 @@
     <string name="disconnectAccountWarningDescription">Upewnij się, że Twoje metody weryfikacji i odzyskiwania są nadal aktualne, aby nie stracić dostępu do konta.</string>
     <string name="disconnectAccountWarningTitle">Odłączenie tego konta może osłabić jego bezpieczeństwo</string>
     <string name="disconnectButton">Wyloguj się</string>
+    <string name="disconnectCriticalButton">Odłączenie konta</string>
     <string name="disconnectSuccess">Konto odłączone</string>
     <string name="doneButton">Gotowe</string>
     <string name="emailPlaceholder">E-mail</string>

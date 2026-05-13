@@ -75,6 +75,7 @@
     <string name="disconnectAccountWarningDescription">Verifica che i tuoi metodi di verifica e recupero siano sempre aggiornati per non perdere l’accesso al tuo account.</string>
     <string name="disconnectAccountWarningTitle">Disconnettere questo account può indebolirne la sicurezza</string>
     <string name="disconnectButton">Disconnettiti</string>
+    <string name="disconnectCriticalButton">Disconnettere l’account</string>
     <string name="disconnectSuccess">Account disconnesso</string>
     <string name="doneButton">Fine</string>
     <string name="emailPlaceholder">Email</string>

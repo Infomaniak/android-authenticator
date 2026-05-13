@@ -75,6 +75,7 @@
     <string name="disconnectAccountWarningDescription">Vérifiez que vos méthodes de validation et de récupération soient toujours à jour pour ne pas perdre l’accès à votre compte.</string>
     <string name="disconnectAccountWarningTitle">Déconnecter ce compte peut affaiblir sa sécurité</string>
     <string name="disconnectButton">Se déconnecter</string>
+    <string name="disconnectCriticalButton">Déconnecter le compte</string>
     <string name="disconnectSuccess">Compte déconnecté</string>
     <string name="doneButton">Terminer</string>
     <string name="emailPlaceholder">E-mail</string>
