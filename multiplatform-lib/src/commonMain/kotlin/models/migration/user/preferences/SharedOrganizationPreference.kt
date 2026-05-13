@@ -24,6 +24,4 @@ import kotlinx.serialization.Serializable
 data class SharedOrganizationPreference(
     @SerialName("current_account_id")
     var currentOrganizationId: Int,
-    @SerialName("last_login_at")
-    var lastLoginAt: Long,
 )

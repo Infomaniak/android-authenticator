@@ -63,6 +63,7 @@ kotlin {
                 implementation(core.kotlinx.serialization.json)
                 implementation(core.kotlinx.serialization.cbor)
                 implementation(core.ktor.client.core)
+                implementation(core.ktor.client.auth)
                 implementation(core.ktor.client.content.negociation)
                 implementation(core.ktor.client.json)
                 implementation(core.ktor.client.encoding)

@@ -23,29 +23,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SharedSecurity(
     var score: Int,
-    @SerialName("has_recovery_email")
-    var hasRecoveryEmail: Boolean,
-    @SerialName("has_valid_phone")
-    var hasValidPhone: Boolean,
-    @SerialName("email_validated_at")
-    var emailValidatedAt: Long?,
-    var otp: Boolean,
-    var sms: Boolean,
-    @SerialName("sms_phone")
-    var smsPhone: String,
-    var yubikey: Boolean,
-    @SerialName("infomaniak_application")
-    var infomaniakApplication: Boolean,
-    @SerialName("double_auth")
-    var doubleAuth: Boolean,
-    @SerialName("remaining_rescue_code")
-    var remainingRescueCode: Int,
-    @SerialName("last_login_at")
-    var lastLoginAt: Long,
     @SerialName("date_last_changed_password")
     var dateLastChangedPassword: Long,
-    @SerialName("double_auth_method")
-    var doubleAuthMethod: String,
-    @SerialName("auth_devices")
-    var authDevices: ArrayList<SharedAuthDevices>?,
 )

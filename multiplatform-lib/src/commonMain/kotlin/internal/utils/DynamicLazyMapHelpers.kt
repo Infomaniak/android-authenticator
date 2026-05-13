@@ -1,5 +1,5 @@
 /*
- * Infomaniak Authenticator - Android
+ * Infomaniak Core - Android
  * Copyright (C) 2025-2026 Infomaniak Network SA
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 
 /**
  * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
+ *
+ * It's equivalent to [dynamicLazyMapOfSharedFlow].
  *
  * @see flowForKey
  */
@@ -50,4 +53,45 @@ internal fun <K, E> DynamicLazyMap<K, SharedFlow<E>>.flowForKey(key: K): Flow<E>
     useElement(key) { sharedFlow: SharedFlow<E> ->
         emitAll(sharedFlow)
     }
+}
+
+/**
+ * Creates a [DynamicLazyMap].
+ *
+ * @see DynamicLazyMap
+ */
+internal fun <K, E> CoroutineScope.dynamicLazyMap(
+    cacheManager: DynamicLazyMap.CacheManager<K, E>? = null,
+    createElement: CoroutineScope.(K) -> E
+): DynamicLazyMap<K, E> {
+    return DynamicLazyMap(
+        cacheManager = cacheManager,
+        coroutineScope = this,
+        createElement = createElement
+    )
+}
+
+/**
+ * Helper to create a [DynamicLazyMap] of [SharedFlow]s with a [Flow] factory.
+ *
+ * It's equivalent to [sharedFlow].
+ *
+ * @see flowForKey
+ */
+internal fun <K, E> CoroutineScope.dynamicLazyMapOfSharedFlow(
+    cacheManager: DynamicLazyMap.CacheManager<K, SharedFlow<E>>? = null,
+    createFlow: CoroutineScope.(K) -> Flow<E>,
+): DynamicLazyMap<K, SharedFlow<E>> {
+    return DynamicLazyMap.sharedFlow(
+        cacheManager = cacheManager,
+        coroutineScope = this,
+        createFlow = createFlow
+    )
+}
+
+internal inline fun <K, reified E, R> DynamicLazyMap<K, SharedFlow<E>>.combineFor(
+    keys: Set<K>,
+    crossinline transform: suspend (Array<E>) -> R
+): Flow<R> = flow {
+    useElements(keys) { emitAll(combine(it.values, transform)) }
 }
