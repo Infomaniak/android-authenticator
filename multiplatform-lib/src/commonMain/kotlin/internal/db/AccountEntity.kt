@@ -62,5 +62,7 @@ internal data class AccountEntity(
         DeletingOldKeyAfterRestoration,
 
         PasswordChanged,
+
+        Disconnected,
     }
 }

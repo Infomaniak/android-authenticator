@@ -51,6 +51,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    val accountsDisconnected: Flow<List<Account>> = authenticatorFacade.accounts.map { accounts ->
+        accounts.filter { it.status is Account.Status.NotConnected.Disconnected }
+    }
+
     val isAppLocked = appSettingsRepository.getSettings().mapNotNull { it?.isAppLockEnabled }
     val hasTriggeredNotificationPermission: StateFlow<Boolean> = flow {
         emitAll(PermissionPreferences().hasTriggeredNotificationPermissionFlow)

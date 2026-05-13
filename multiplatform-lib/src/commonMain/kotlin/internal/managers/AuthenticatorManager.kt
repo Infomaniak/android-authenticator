@@ -124,12 +124,13 @@ internal class AuthenticatorManager(
         return Xor.First(apiToken)
     }
 
-    suspend fun removeAccount(token: String, userId: Long) {
+    suspend fun removeAccount(token: String?, userId: Long) {
         val passkeyId = keyPairManager.findKeyIdFor(MatchOn.UserId(userId))
 
         if (passkeyId != null) {
+            val needsToRevokePasskey = token != null
             // If we have a passkey for this account, revoke it against the backend and delete it
-            webAuthnRequests.deletePasskeyIfExists(token, passkeyId)
+            if (needsToRevokePasskey) webAuthnRequests.deletePasskeyIfExists(token, passkeyId)
             val _ = keyPairManager.deleteKeysMatching(MatchOn.PasskeyId(passkeyId))
         }
 

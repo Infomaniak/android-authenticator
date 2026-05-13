@@ -96,13 +96,20 @@ fun MainScreen(
     }
 
     var showPasswordChangedDialogFor: Account? by remember { mutableStateOf(null) }
-
     LaunchedEffect(Unit) {
         viewModel.accountsWithPasswordUpdate.collect { accounts ->
             showPasswordChangedDialogFor = accounts.firstOrNull()
         }
     }
     showPasswordChangedDialogFor?.let { PasswordChangedStackDialog(account = it) }
+
+    var showDisconnectedAccountDialogFor: Account? by remember { mutableStateOf(null) }
+    LaunchedEffect(Unit) {
+        viewModel.accountsDisconnected.collect {  accounts ->
+            showDisconnectedAccountDialogFor = accounts.firstOrNull()
+        }
+    }
+    showDisconnectedAccountDialogFor?.let {  }
 
     MainScreen(backStack, entryDecorators)
 }

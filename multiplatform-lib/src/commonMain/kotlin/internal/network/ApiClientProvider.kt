@@ -26,6 +26,7 @@ import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.infomaniak.auth.lib.network.interfaces.CrashReportLevel
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
@@ -79,7 +80,10 @@ internal class ApiClientProvider(
     val httpClient: suspend () -> HttpClient = { httpClientAsync.await() }
     private val httpClientAsync = scope.async(Dispatchers.IO, start = CoroutineStart.LAZY) { createHttpClient() }
 
-    private fun createHttpClient() = HttpClient(getHttpClientEngine()) {
+    fun createHttpClient(
+        authenticationConfig: (HttpClientConfig<*>.() -> Unit)? = null
+    ) = HttpClient(getHttpClientEngine()) {
+        if (authenticationConfig != null) authenticationConfig()
         install(UserAgent) {
             agent = userAgent
         }
@@ -109,17 +113,18 @@ internal class ApiClientProvider(
         }
 
         HttpResponseValidator {
-            validateResponse(::validateResponse)
+            validateResponse { validateResponse(it, skipUnauthorizedConversion = authenticationConfig != null) }
             handleResponseExceptionWithRequest(::handleResponseExceptionWithRequest)
         }
     }
 
-    private suspend fun validateResponse(response: HttpResponse) {
+    private suspend fun validateResponse(response: HttpResponse, skipUnauthorizedConversion: Boolean) {
         val requestContextId = response.getRequestContextId()
         val statusCode = response.status.value
 
         addSentryUrlBreadcrumb(response, statusCode, requestContextId)
 
+        if (skipUnauthorizedConversion && statusCode == 401) return // Let 401 bubble up to ktor auth unchanged.
         if (statusCode >= 300) {
             val bodyResponse = response.bodyAsText()
             val apiError = runCatching {

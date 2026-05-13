@@ -44,6 +44,9 @@ internal interface AccountsDao {
     @Query("UPDATE AccountEntity SET status = :newStatus WHERE status = :currentStatus")
     suspend fun updateStatus(currentStatus: AccountEntity.Status, newStatus: AccountEntity.Status)
 
+    @Query("UPDATE AccountEntity SET status = :newStatus WHERE id = :userId")
+    suspend fun updateStatusForUser(userId: Long, newStatus: AccountEntity.Status)
+
     @Insert
     suspend fun insert(account: AccountEntity)
 

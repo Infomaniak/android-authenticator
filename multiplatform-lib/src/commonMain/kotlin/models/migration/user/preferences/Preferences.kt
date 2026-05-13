@@ -26,7 +26,4 @@ data class Preferences(
     var security: SharedSecurity?,
     @SerialName("account")
     var organizationPreference: SharedOrganizationPreference,
-    var language: SharedLanguage,
-    var country: SharedCountry,
-    var timezone: SharedTimeZone? = null,
 )
