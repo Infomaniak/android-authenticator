@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.infomaniak.auth.ui.components.dialog
+package com.infomaniak.auth.ui.dialog
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.AlertDialog
@@ -30,43 +30,44 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.infomaniak.auth.R
-import com.infomaniak.auth.ui.screen.accountdetails.DisconnectConfiguration
+import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun DisconnectConfirmDialog(
-    configuration: DisconnectConfiguration,
-    onDismissRequest: () -> Unit,
+fun PasswordChangedDialog(
+    account: Account,
+    onDismissButton: () -> Unit,
+    onReportUnauthorizedChange: () -> Unit,
 ) {
     AlertDialog(
         icon = {
-            Icon(
-                painter = painterResource(R.drawable.triangle_alert),
-                contentDescription = null
-            )
+            Icon(painter = painterResource(R.drawable.alert), contentDescription = null)
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {},
         title = {
             Text(
-                text = stringResource(configuration.confirmationTitleResId),
+                text = stringResource(R.string.alertDialogPasswordChangedTitle),
                 textAlign = TextAlign.Center
             )
         },
         text = {
-            Text(text = stringResource(configuration.confirmationDescriptionResId))
+            Text(stringResource(R.string.alertDialogPasswordChangedText, account.email))
         },
         confirmButton = {
             TextButton(
-                onClick = {
-                    configuration.onConfirmButton()
-                    onDismissRequest()
-                },
+                onClick = onReportUnauthorizedChange,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,
                 )
             ) {
-                Text(stringResource(configuration.criticalButtonStringResId))
+                Text(stringResource(R.string.alertDialogReportButton))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissButton) {
+                Text(stringResource(R.string.alertDialogNeutralButton))
             }
         }
     )
@@ -75,15 +76,13 @@ fun DisconnectConfirmDialog(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @PreviewSmallWindow
 @Composable
-private fun DisconnectWarningDialogPreview() {
+private fun PasswordChangedDialogPreview() {
     AuthenticatorTheme {
         Scaffold { _ ->
-            DisconnectConfirmDialog(
-                configuration = DisconnectConfiguration.DisconnectSecuredAccount(
-                    onConfirmButton = {},
-                    accessToken = "fake_access_token",
-                ),
-                onDismissRequest = {},
+            PasswordChangedDialog(
+                account = fakeAccounts.first(),
+                onDismissButton = {},
+                onReportUnauthorizedChange = {}
             )
         }
     }
