@@ -79,7 +79,7 @@
     <string name="doneButton">Fertig</string>
     <string name="emailPlaceholder">E-Mail</string>
     <string name="enableButton">Aktivieren</string>
-    <string name="errorLoginFailed">Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support. (Fehlercode: %d)</string>
+    <string name="errorLoginFailed">Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.</string>
     <string name="errorMigrationFailed">Die Migration ist unterbrochen worden.\nBitte kontaktieren Sie unser technisches Support-Team.</string>
     <string name="errorOccuredTitle">Ein Fehler ist aufgetreten</string>
     <string name="errorWithRetryMessage">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.</string>
@@ -97,6 +97,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Diese Anfrage wurde bereits verarbeitet</string>
     <string name="loginRequestExpiredTitle">Diese Anmeldeanfrage ist abgelaufen</string>
     <string name="manageNotifications">Benachrichtigungen verwalten</string>
+    <string name="migrationWarningDescription">Der Übergang zur neuen App konnte für eines oder mehrere Ihrer Konten nicht abgeschlossen werden.</string>
     <string name="noInternetTitle">Keine Internetverbindung</string>
     <string name="notMeButton">Das war nicht ich</string>
     <string name="notificationsDescription">Aktivieren Sie Benachrichtigungen, um Sicherheitsinformationen zu Ihren Infomaniak-Konten zu erhalten.</string>
@@ -125,6 +126,7 @@
     <string name="removeAccountTitle">Konto entfernen</string>
     <string name="removeButton">Entfernen</string>
     <string name="requiredLabel">Erforderlich</string>
+    <string name="securedIconContentDescription">Symbol für ein gesichertes Konto</string>
     <string name="settingsTitle">Einstellungen</string>
     <string name="showAccountPasswordButton">Kontopasswort anzeigen</string>
     <string name="startButton">Starten</string>
@@ -141,9 +143,11 @@
     <string name="understandConfirmButton">Ich verstehe</string>
     <string name="unlockWithBiometrics">Entsperren mit Biometrie</string>
     <string name="unlockingWithFaceId">Mit Face ID entsperren</string>
+    <string name="updateButton">Aktualisieren</string>
     <string name="urlUserReport">https://feedback.userreport.com/d8bbb6b0-dab0-4c3f-a2a0-6438a683ec95/</string>
     <string name="verifySecurityButton">Meine Sicherheit überprüfen</string>
     <string name="viewGuidesButton">Durchsuchen Sie die Anleitungen</string>
+    <string name="warningIconContentDescription">Konto-Warnsymbol</string>
     <string name="whenLoginTitle">Wann</string>
     <string name="wrongPasswordLabel">Das Passwort ist falsch</string>
 </resources>

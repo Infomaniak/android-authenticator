@@ -17,24 +17,15 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,10 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -64,7 +52,6 @@ import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
 import com.infomaniak.auth.ui.screen.accountdetails.AccountSecurityConfiguration.Companion.toSecurityConfiguration
-import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.network.ApiEnvironment
@@ -157,7 +144,7 @@ private fun AccountDetailsContent(
         modifier = Modifier.padding(paddingValues)
     ) {
         Header(account, user)
-        AccountSecurityCheck(account.status.toSecurityConfiguration())
+        AccountSecurityCard(account.status.toSecurityConfiguration())
         ActionRequiredCard(account.status, onLoginPressed)
         SettingsSections(
             accountStatus = account.status,
@@ -186,43 +173,6 @@ private fun Header(account: Account, user: User?) {
         Column {
             Text(text = account.fullName, style = Typography.h1)
             Text(text = account.email)
-        }
-    }
-}
-
-@Composable
-private fun AccountSecurityCheck(configuration: AccountSecurityConfiguration) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Margin.Large)
-            .padding(horizontal = Margin.Medium),
-        shape = RoundedCornerShape(DefaultCornerRadius),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        colors = CardDefaults.outlinedCardColors(containerColor = AuthenticatorTheme.customColors.sectionBackground)
-    ) {
-        Column(
-            modifier = Modifier.padding(Margin.Medium),
-            verticalArrangement = Arrangement.spacedBy(Margin.Mini)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(configuration.titleResId),
-                    style = if (configuration.descriptionResId != null) Typography.h2 else LocalTextStyle.current
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    painter = painterResource(configuration.iconResId),
-                    contentDescription = null,
-                    tint = configuration.iconTint?.invoke() ?: AuthenticatorTheme.customColors.iconTintWarning,
-                )
-            }
-            configuration.descriptionResId?.let {
-                Text(text = stringResource(configuration.descriptionResId))
-            }
         }
     }
 }
@@ -306,38 +256,6 @@ private fun SettingsSections(
         modifier = modifier,
         sections = persistentListOf(firstSectionItem, secondSectionItems)
     )
-}
-
-private enum class AccountSecurityConfiguration(
-    val titleResId: Int,
-    val descriptionResId: Int? = null,
-    val iconResId: Int,
-    val iconTint: @Composable (() -> Color)? = null
-) {
-    Secured(
-        titleResId = R.string.accountProtected,
-        iconResId = R.drawable.shield_check,
-        iconTint = { AuthenticatorTheme.customColors.iconTintSuccess }
-    ),
-    PartiallyProtected(
-        titleResId = R.string.accountPartiallyProtectedTitle,
-        descriptionResId = R.string.accountPartiallyProtectedDescription,
-        iconResId = R.drawable.shield_exclamation_mark,
-        iconTint = { AuthenticatorTheme.customColors.iconTintWarning }
-    ),
-    Disconnected(
-        titleResId = R.string.disconnectSuccess,
-        iconResId = R.drawable.circle_cross,
-        iconTint = { AuthenticatorTheme.customColors.iconTintDisconnected }
-    );
-
-    companion object {
-        fun Account.Status.toSecurityConfiguration(): AccountSecurityConfiguration = when (this) {
-            is Account.Status.LoggedIn -> Secured
-            is Account.Status.NotConnected -> Disconnected
-            else -> PartiallyProtected // TODO: Use secure level to determine the status more precisely
-        }
-    }
 }
 
 @PreviewSmallWindow

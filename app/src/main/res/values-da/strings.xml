@@ -78,7 +78,7 @@
     <string name="doneButton">Færdig</string>
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Aktivér</string>
-    <string name="errorLoginFailed">Kontologin mislykkedes. Prøv igen, eller kontakt support. (fejlkode: %d)</string>
+    <string name="errorLoginFailed">Kontologin mislykkedes. Prøv igen, eller kontakt support.</string>
     <string name="errorMigrationFailed">Migreringen er blevet afbrudt.\nKontakt venligst vores tekniske supportteam.</string>
     <string name="errorOccuredTitle">Der opstod en fejl</string>
     <string name="errorWithRetryMessage">Der er opstået en fejl. Prøv venligst igen senere.</string>
@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Denne anmodning er allerede behandlet</string>
     <string name="loginRequestExpiredTitle">Denne loginanmodning er udløbet</string>
     <string name="manageNotifications">Administrer notifikationer</string>
+    <string name="migrationWarningDescription">Overgangen til den nye app kunne ikke gennemføres for en eller flere af dine konti.</string>
     <string name="noInternetTitle">Ingen internetforbindelse</string>
     <string name="notMeButton">Det var ikke mig</string>
     <string name="notificationsDescription">Aktiver notifikationer for at modtage sikkerhedsoplysninger om dine Infomaniak konti.</string>
@@ -124,6 +125,7 @@
     <string name="removeAccountTitle">Fjern konto</string>
     <string name="removeButton">Fjern</string>
     <string name="requiredLabel">Påkrævet</string>
+    <string name="securedIconContentDescription">Ikon for sikret konto</string>
     <string name="settingsTitle">Indstillinger</string>
     <string name="showAccountPasswordButton">Vis konto adgangskode</string>
     <string name="startButton">Start</string>
@@ -140,9 +142,11 @@
     <string name="understandConfirmButton">Forstået</string>
     <string name="unlockWithBiometrics">Lås op med biometri</string>
     <string name="unlockingWithFaceId">Lås op med Face ID</string>
+    <string name="updateButton">Opdater</string>
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Bekræft min sikkerhed</string>
     <string name="viewGuidesButton">Gennemse vejledningerne</string>
+    <string name="warningIconContentDescription">Advarselsikon for konto</string>
     <string name="whenLoginTitle">Hvornår</string>
     <string name="wrongPasswordLabel">Adgangskoden er forkert</string>
 </resources>

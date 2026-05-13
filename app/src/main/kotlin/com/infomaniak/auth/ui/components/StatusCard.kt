@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -48,8 +49,8 @@ sealed interface StatusCardVariant {
     data object Neutral : StatusCardVariant {
         @Composable
         override fun getMaterialTheme(): ColorScheme = MaterialTheme.colorScheme.copy(
-            surface = MaterialTheme.colorScheme.surfaceContainer,
-            outlineVariant = MaterialTheme.colorScheme.outline
+            surface = AuthenticatorTheme.customColors.sectionBackground,
+            outlineVariant = MaterialTheme.colorScheme.outline,
         )
     }
 
@@ -118,6 +119,7 @@ private fun StatusCardPreview() {
     }
 }
 
+@SuppressLint("ComposeMultipleContentEmitters")
 @Composable
 private fun PreviewContent() {
     Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {

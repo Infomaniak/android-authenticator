@@ -37,7 +37,7 @@ val fakeAccounts = persistentListOf(
         initials = "JS",
         email = "john.smith@ik.me",
         avatarUrl = null,
-        status = Account.Status.LoggedIn(),
+        status = Account.Status.LoggedIn(securityScore = 5),
     ),
     Account(
         id = 1,
@@ -75,6 +75,14 @@ val fakeAccounts = persistentListOf(
         email = "john.smith@ik.me",
         avatarUrl = null,
         status = Account.Status.NotConnected.LoginFailed(Issue.NonRetriable("Preview error")),
+    ),
+    Account(
+        id = 4,
+        fullName = "John Relogin Security Score",
+        initials = "JS",
+        email = "john.smith@ik.me",
+        avatarUrl = null,
+        status = Account.Status.LoggedIn(securityScore = 3),
     )
 )
 

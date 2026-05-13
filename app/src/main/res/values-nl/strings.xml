@@ -78,7 +78,7 @@
     <string name="doneButton">Gereed</string>
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Inschakelen</string>
-    <string name="errorLoginFailed">Inloggen op account mislukt. Probeer het opnieuw of neem contact op met ondersteuning. (foutcode: %d)</string>
+    <string name="errorLoginFailed">Inloggen op account mislukt. Probeer het opnieuw of neem contact op met ondersteuning.</string>
     <string name="errorMigrationFailed">De migratie is onderbroken.\nNeem contact op met onze technische ondersteuning.</string>
     <string name="errorOccuredTitle">Er is een fout opgetreden</string>
     <string name="errorWithRetryMessage">Er is een fout opgetreden. Probeer het later nog eens.</string>
@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Dit verzoek is al verwerkt</string>
     <string name="loginRequestExpiredTitle">Dit inlogverzoek is verlopen</string>
     <string name="manageNotifications">Meldingen beheren</string>
+    <string name="migrationWarningDescription">De overgang naar de nieuwe app kon voor een of meer van je accounts niet worden voltooid.</string>
     <string name="noInternetTitle">Geen internetverbinding</string>
     <string name="notMeButton">Ik was het niet</string>
     <string name="notificationsDescription">Schakel meldingen in om beveiligingsinformatie over uw Infomaniak accounts te ontvangen.</string>
@@ -124,6 +125,7 @@
     <string name="removeAccountTitle">Account verwijderen</string>
     <string name="removeButton">Verwijderen</string>
     <string name="requiredLabel">Vereist</string>
+    <string name="securedIconContentDescription">Pictogram voor beveiligde account</string>
     <string name="settingsTitle">Instellingen</string>
     <string name="showAccountPasswordButton">Accountwachtwoord weergeven</string>
     <string name="startButton">Starten</string>
@@ -140,9 +142,11 @@
     <string name="understandConfirmButton">Ik begrijp het</string>
     <string name="unlockWithBiometrics">Ontgrendelen met biometrie</string>
     <string name="unlockingWithFaceId">Ontgrendelen met Face ID</string>
+    <string name="updateButton">Bijwerken</string>
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Mijn beveiliging controleren</string>
     <string name="viewGuidesButton">Handleidingen bekijken</string>
+    <string name="warningIconContentDescription">Waarschuwingspictogram account</string>
     <string name="whenLoginTitle">Wanneer</string>
     <string name="wrongPasswordLabel">Het wachtwoord is onjuist</string>
 </resources>

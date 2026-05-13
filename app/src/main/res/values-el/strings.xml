@@ -78,7 +78,7 @@
     <string name="doneButton">Τέλος</string>
     <string name="emailPlaceholder">Email</string>
     <string name="enableButton">Ενεργοποίηση</string>
-    <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. (κωδικός σφάλματος: %d)</string>
+    <string name="errorLoginFailed">Η σύνδεση στον λογαριασμό απέτυχε. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη.</string>
     <string name="errorMigrationFailed">Η μετανάστευση έχει διακοπεί.\nΠαρακαλούμε επικοινωνήστε με την ομάδα τεχνικής υποστήριξης.</string>
     <string name="errorOccuredTitle">Παρουσιάστηκε σφάλμα</string>
     <string name="errorWithRetryMessage">Εμφανίστηκε σφάλμα. Προσπαθήστε ξανά αργότερα.</string>
@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Αυτό το αίτημα έχει ήδη υποβληθεί σε επεξεργασία</string>
     <string name="loginRequestExpiredTitle">Αυτό το αίτημα σύνδεσης έχει λήξει</string>
     <string name="manageNotifications">Διαχείριση ειδοποιήσεων</string>
+    <string name="migrationWarningDescription">Η μετάβαση στη νέα εφαρμογή δεν μπόρεσε να ολοκληρωθεί για έναν ή περισσότερους από τους λογαριασμούς σας.</string>
     <string name="noInternetTitle">Χωρίς σύνδεση στο διαδίκτυο</string>
     <string name="notMeButton">Δεν ήμουν εγώ</string>
     <string name="notificationsDescription">Ενεργοποιήστε τις ειδοποιήσεις για να λαμβάνετε πληροφορίες ασφαλείας σχετικά με τους λογαριασμούς σας Infomaniak.</string>
@@ -124,6 +125,7 @@
     <string name="removeAccountTitle">Αφαίρεση λογαριασμού</string>
     <string name="removeButton">Αφαίρεση</string>
     <string name="requiredLabel">Απαιτούμενο</string>
+    <string name="securedIconContentDescription">Εικονίδιο ασφαλισμένου λογαριασμού</string>
     <string name="settingsTitle">Ρυθμίσεις</string>
     <string name="showAccountPasswordButton">Εμφάνιση κωδικού πρόσβασης λογαριασμού</string>
     <string name="startButton">Έναρξη</string>
@@ -140,9 +142,11 @@
     <string name="understandConfirmButton">Κατάλαβα</string>
     <string name="unlockWithBiometrics">Ξεκλείδωμα με βιομετρικά στοιχεία</string>
     <string name="unlockingWithFaceId">Ξεκλείδωμα με Face ID</string>
+    <string name="updateButton">Ενημέρωση</string>
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Επαλήθευση της ασφάλειάς μου</string>
     <string name="viewGuidesButton">Περιήγηση στους οδηγούς</string>
+    <string name="warningIconContentDescription">Εικονίδιο προειδοποίησης λογαριασμού</string>
     <string name="whenLoginTitle">Πότε</string>
     <string name="wrongPasswordLabel">Ο κωδικός πρόσβασης είναι λανθασμένος</string>
 </resources>

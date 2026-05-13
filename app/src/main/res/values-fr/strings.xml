@@ -79,7 +79,7 @@
     <string name="doneButton">Terminer</string>
     <string name="emailPlaceholder">E-mail</string>
     <string name="enableButton">Activer</string>
-    <string name="errorLoginFailed">La connexion au compte a échoué.\nVeuillez réessayer ou contacter le support. (code erreur : %d)</string>
+    <string name="errorLoginFailed">La connexion au compte a échoué.\nVeuillez réessayer ou contacter le support.</string>
     <string name="errorMigrationFailed">La migration a été interrompue.\nVeuillez contacter notre équipe de support technique.</string>
     <string name="errorOccuredTitle">Une erreur est survenue</string>
     <string name="errorWithRetryMessage">Une erreur s’est produite. Veuillez réessayer plus tard.</string>
@@ -97,6 +97,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Cette demande a déjà été traitée</string>
     <string name="loginRequestExpiredTitle">Cette demande de connexion a expiré</string>
     <string name="manageNotifications">Gérer les notifications</string>
+    <string name="migrationWarningDescription">La transition vers la nouvelle application n’a pas pu être effectuée pour un ou plusieurs de vos comptes.</string>
     <string name="noInternetTitle">Pas de connexion Internet</string>
     <string name="notMeButton">Ce n’était pas moi</string>
     <string name="notificationsDescription">Activez les notifications pour recevoir les informations relatives à la sécurité de vos comptes Infomaniak.</string>
@@ -125,6 +126,7 @@
     <string name="removeAccountTitle">Retirer le compte</string>
     <string name="removeButton">Retirer</string>
     <string name="requiredLabel">Requis</string>
+    <string name="securedIconContentDescription">Icône de compte sécurisé</string>
     <string name="settingsTitle">Paramètres</string>
     <string name="showAccountPasswordButton">Afficher le mot de passe du compte</string>
     <string name="startButton">Commencer</string>
@@ -141,9 +143,11 @@
     <string name="understandConfirmButton">J’ai compris</string>
     <string name="unlockWithBiometrics">Déverrouiller avec la biométrie</string>
     <string name="unlockingWithFaceId">Déverrouiller avec Face ID</string>
+    <string name="updateButton">Mettre à jour</string>
     <string name="urlUserReport">https://feedback.userreport.com/6b7dde99-c4cd-4bcd-8d41-e855dfccac91/</string>
     <string name="verifySecurityButton">Vérifier ma sécurité</string>
     <string name="viewGuidesButton">Consulter les guides</string>
+    <string name="warningIconContentDescription">Icône d’avertissement du compte</string>
     <string name="whenLoginTitle">Quand</string>
     <string name="wrongPasswordLabel">Le mot de passe est incorrect</string>
 </resources>

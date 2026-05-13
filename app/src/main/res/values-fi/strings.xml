@@ -78,7 +78,7 @@
     <string name="doneButton">Valmis</string>
     <string name="emailPlaceholder">Sähköposti</string>
     <string name="enableButton">Ota käyttöön</string>
-    <string name="errorLoginFailed">Tilille kirjautuminen epäonnistui. Yritä uudelleen tai ota yhteyttä tukeen. (virhekoodi: %d)</string>
+    <string name="errorLoginFailed">Tilille kirjautuminen epäonnistui. Yritä uudelleen tai ota yhteyttä tukeen.</string>
     <string name="errorMigrationFailed">Siirtyminen on keskeytetty.\nOta yhteyttä tekniseen tukitiimiimme.</string>
     <string name="errorOccuredTitle">Tapahtui virhe</string>
     <string name="errorWithRetryMessage">On tapahtunut virhe. Yritä myöhemmin uudelleen.</string>
@@ -96,6 +96,7 @@
     <string name="loginRequestAlreadyProcessedTitle">Tämä pyyntö on jo käsitelty</string>
     <string name="loginRequestExpiredTitle">Tämä kirjautumispyyntö on vanhentunut</string>
     <string name="manageNotifications">Hallitse ilmoituksia</string>
+    <string name="migrationWarningDescription">Siirtymistä uuteen sovellukseen ei saatu päätökseen yhden tai useamman tilisi osalta.</string>
     <string name="noInternetTitle">Ei Internet-yhteyttä</string>
     <string name="notMeButton">En ollut minä</string>
     <string name="notificationsDescription">Ota ilmoitukset käyttöön saadaksesi turvallisuustietoja Infomaniak-tileistäsi.</string>
@@ -124,6 +125,7 @@
     <string name="removeAccountTitle">Poista tili</string>
     <string name="removeButton">Poista</string>
     <string name="requiredLabel">Vaadittu</string>
+    <string name="securedIconContentDescription">Tilin turvattu kuvake</string>
     <string name="settingsTitle">Asetukset</string>
     <string name="showAccountPasswordButton">Näytä tilin salasana</string>
     <string name="startButton">Aloita</string>
@@ -140,9 +142,11 @@
     <string name="understandConfirmButton">Ymmärsin</string>
     <string name="unlockWithBiometrics">Avaa biometrialla</string>
     <string name="unlockingWithFaceId">Avaa Face ID:llä</string>
+    <string name="updateButton">Päivitä</string>
     <string name="urlUserReport">https://feedback.userreport.com/fa3ce592-86a2-4715-8536-5bf60234f52f/</string>
     <string name="verifySecurityButton">Vahvista turvallisuuteni</string>
     <string name="viewGuidesButton">Selaa oppaita</string>
+    <string name="warningIconContentDescription">Tilin varoituskuvake</string>
     <string name="whenLoginTitle">Milloin</string>
     <string name="wrongPasswordLabel">Salasana on väärä</string>
 </resources>

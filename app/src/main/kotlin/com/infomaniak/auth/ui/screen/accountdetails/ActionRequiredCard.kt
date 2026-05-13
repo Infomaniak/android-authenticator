@@ -20,10 +20,12 @@ package com.infomaniak.auth.ui.screen.accountdetails
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.Issue
@@ -44,9 +47,11 @@ import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.margin.Margin
+import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 import com.infomaniak.core.common.R as RCore
 
 private data class ActionRequiredConfiguration(
+    val title: String? = null,
     val text: String,
     val iconColor: Color,
     val iconRes: Int,
@@ -62,73 +67,35 @@ fun ActionRequiredCard(
 
     when (status) {
         is Account.Status.NotConnected.ReLogin -> {
-            ActionRequiredCard(
-                configuration = ActionRequiredConfiguration(
-                    text = stringResource(R.string.accountNotConnectedWarningTitle),
-                    iconRes = R.drawable.alert,
-                    iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-                    statusCardVariant = StatusCardVariant.Warning
-                ),
-                bottomButton = {
-                    ActionRequiredButton(
-                        title = stringResource(R.string.logInButton),
-                        style = ButtonStyle.Primary,
-                        onClick = {
-                            val legacyAccount = status.legacyAccount
-                            onLoginPressed(legacyAccount.id)
-                        }
-                    )
+            ActionRequiredLoginFailed(
+                retryButtonStringRes = R.string.logInButton,
+                onContactSupportClick = {
+                    context.openUrlInCustomTab(HELP_SUPPORT_URL)
+                },
+                onRetryClick = {
+                    val legacyAccount = status.legacyAccount
+                    onLoginPressed(legacyAccount.id)
                 }
             )
         }
         is Account.Status.NotConnected.LoginFailed -> {
-            when (val issue = status.issue) {
+            when (status.issue) {
                 is Issue.Retriable -> {
-                    val code = when (val cause = issue.cause) {
-                        Issue.Retriable.Cause.NetworkIssue -> -1
-                        Issue.Retriable.Cause.ServerUnavailable -> 503
-                        is Issue.Retriable.Cause.Other -> cause.errorCode
-                    }
-                    ActionRequiredCard(
-                        configuration = ActionRequiredConfiguration(
-                            text = stringResource(R.string.errorLoginFailed, code),
-                            iconRes = R.drawable.alert,
-                            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
-                            statusCardVariant = StatusCardVariant.Warning
-                        ),
-                        bottomButton = {
-                            ActionRequiredButton(
-                                title = stringResource(R.string.contactSupportTitle),
-                                style = ButtonStyle.Primary,
-                                onClick = {
-                                    context.openUrlInCustomTab(HELP_SUPPORT_URL)
-                                }
-                            )
-                            ActionRequiredButton(
-                                title = stringResource(RCore.string.buttonRetry),
-                                style = ButtonStyle.Tertiary,
-                                onClick = {
-                                    val cause = status.issue as? Issue.Retriable
-                                    cause?.proceed?.invoke(true)
-                                }
-                            )
+                    ActionRequiredLoginFailed(
+                        retryButtonStringRes = RCore.string.buttonRetry,
+                        onContactSupportClick = {
+                            context.openUrlInCustomTab(HELP_SUPPORT_URL)
+                        },
+                        onRetryClick = {
+                            val cause = status.issue as? Issue.Retriable
+                            cause?.proceed?.invoke(true)
                         }
                     )
                 }
                 is Issue.NonRetriable -> {
-                    ActionRequiredCard(
-                        configuration = ActionRequiredConfiguration(
-                            text = stringResource(R.string.errorMigrationFailed),
-                            iconRes = R.drawable.triangle_alert,
-                            iconColor = AuthenticatorTheme.customColors.iconTintError,
-                            statusCardVariant = StatusCardVariant.Error
-                        ),
-                        bottomButton = {
-                            ActionRequiredButton(
-                                title = stringResource(R.string.contactSupportTitle),
-                                style = ButtonStyle.Primary,
-                                onClick = { context.openUrlInCustomTab(HELP_SUPPORT_URL) }
-                            )
+                    ActionRequiredMigrationInterrupted(
+                        onContactSupportClick = {
+                            context.openUrlInCustomTab(HELP_SUPPORT_URL)
                         }
                     )
                 }
@@ -153,12 +120,29 @@ private fun ActionRequiredCard(
         shape = RoundedCornerShape(DefaultCornerRadius),
         variant = configuration.statusCardVariant,
     ) {
+        if (!configuration.title.isNullOrBlank()) {
+            Row(modifier = Modifier.padding(Margin.Medium, Margin.Medium, Margin.Medium, 0.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    modifier = Modifier.padding(horizontal = Margin.Small),
+                    text = configuration.title,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(configuration.iconRes),
+                    contentDescription = null,
+                    tint = configuration.iconColor
+                )
+            }
+        }
         Row(modifier = Modifier.padding(Margin.Medium), verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(configuration.iconRes),
-                contentDescription = null,
-                tint = configuration.iconColor
-            )
+            if (configuration.title.isNullOrBlank()) {
+                Icon(
+                    painter = painterResource(configuration.iconRes),
+                    contentDescription = null,
+                    tint = configuration.iconColor
+                )
+            }
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
                 text = configuration.text,
@@ -166,6 +150,76 @@ private fun ActionRequiredCard(
         }
         Column(content = bottomButton)
     }
+}
+
+@Composable
+private fun ActionRequiredLoginNeeded(
+    onLogInClick: () -> Unit
+) {
+    ActionRequiredCard(
+        configuration = ActionRequiredConfiguration(
+            text = stringResource(R.string.accountNotConnectedWarningTitle),
+            iconRes = R.drawable.alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
+            statusCardVariant = StatusCardVariant.Warning
+        ),
+        bottomButton = {
+            ActionRequiredButton(
+                title = stringResource(R.string.logInButton),
+                style = ButtonStyle.Primary,
+                onClick = onLogInClick
+            )
+        }
+    )
+}
+
+@Composable
+private fun ActionRequiredLoginFailed(
+    retryButtonStringRes: Int,
+    onContactSupportClick: () -> Unit,
+    onRetryClick: () -> Unit,
+) {
+    ActionRequiredCard(
+        configuration = ActionRequiredConfiguration(
+            text = stringResource(R.string.errorLoginFailed),
+            iconRes = R.drawable.alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintWarning,
+            statusCardVariant = StatusCardVariant.Warning
+        ),
+        bottomButton = {
+            ActionRequiredButton(
+                title = stringResource(R.string.contactSupportTitle),
+                style = ButtonStyle.Primary,
+                onClick = onContactSupportClick
+            )
+            ActionRequiredButton(
+                title = stringResource(retryButtonStringRes),
+                style = ButtonStyle.Tertiary,
+                onClick = onRetryClick
+            )
+        }
+    )
+}
+
+@Composable
+private fun ActionRequiredMigrationInterrupted(
+    onContactSupportClick: () -> Unit,
+) {
+    ActionRequiredCard(
+        configuration = ActionRequiredConfiguration(
+            text = stringResource(R.string.errorMigrationFailed),
+            iconRes = R.drawable.triangle_alert,
+            iconColor = AuthenticatorTheme.customColors.iconTintError,
+            statusCardVariant = StatusCardVariant.Error
+        ),
+        bottomButton = {
+            ActionRequiredButton(
+                title = stringResource(R.string.contactSupportTitle),
+                style = ButtonStyle.Primary,
+                onClick = onContactSupportClick
+            )
+        }
+    )
 }
 
 @Composable
@@ -183,4 +237,20 @@ private fun ActionRequiredButton(
         style = style,
         onClick = onClick
     )
+}
+
+@PreviewLightAndDark
+@Composable
+private fun ActionRequiredCardPreview() {
+    AuthenticatorTheme {
+        Column {
+            ActionRequiredLoginNeeded(onLogInClick = {})
+            ActionRequiredLoginFailed(
+                retryButtonStringRes = R.string.logInButton,
+                onContactSupportClick = {},
+                onRetryClick = {}
+            )
+            ActionRequiredMigrationInterrupted(onContactSupportClick = {})
+        }
+    }
 }

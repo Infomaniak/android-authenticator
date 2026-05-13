@@ -28,6 +28,7 @@ object UrlConstants {
     const val ACTIVITY_MANAGER_URL = "ng/profile/user/connection-history/activity"
     const val SETTINGS_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security"
     const val SETTINGS_2FA_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security-2fa"
+    const val SETTINGS_ACCOUNT_SECURITY_URL = "ng/profile/user/security-and-recovery-parameters/dashboard"
 
     const val RECOVER_PASSWORD_URL = "https://login.infomaniak.com/recover"
     const val HELP_SUPPORT_URL = "https://www.infomaniak.com/gtl/help"
