@@ -48,7 +48,8 @@ import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.models.UrlConstants.HELP_SUPPORT_URL
 import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
-import com.infomaniak.auth.ui.components.dialog.PasswordChangedDialog
+import com.infomaniak.auth.ui.components.dialog.PriorityEventAlert
+import com.infomaniak.auth.ui.components.dialog.PriorityEventAlertDialog
 import com.infomaniak.auth.ui.components.dialog.VerifyAccountSecurityDialog
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
@@ -101,7 +102,12 @@ fun MainScreen(
             showPasswordChangedDialogFor = accounts.firstOrNull()
         }
     }
-    showPasswordChangedDialogFor?.let { PasswordChangedStackDialog(account = it) }
+    showPasswordChangedDialogFor?.let {
+        PriorityEventStackDialog(
+            event = PriorityEventAlert.PasswordChanged,
+            account = it
+        )
+    }
 
     var showDisconnectedAccountDialogFor: Account? by remember { mutableStateOf(null) }
     LaunchedEffect(Unit) {
@@ -109,7 +115,12 @@ fun MainScreen(
             showDisconnectedAccountDialogFor = accounts.firstOrNull()
         }
     }
-    showDisconnectedAccountDialogFor?.let {  }
+    showDisconnectedAccountDialogFor?.let {
+        PriorityEventStackDialog(
+            event = PriorityEventAlert.AccountDisconnected,
+            account = it
+        )
+    }
 
     MainScreen(backStack, entryDecorators)
 }
@@ -161,25 +172,30 @@ fun MainScreen(
 }
 
 @Composable
-private fun PasswordChangedStackDialog(
+private fun PriorityEventStackDialog(
+    event: PriorityEventAlert,
     account: Account,
 ) {
-    var showPasswordChangedDialog by remember { mutableStateOf(true) }
+    var showPriorityEventDialog by remember { mutableStateOf(true) }
     LaunchedEffect(account) {
-        showPasswordChangedDialog = true
+        showPriorityEventDialog = true
     }
 
     var showVerifyAccountDialog by remember { mutableStateOf(false) }
 
-    if (showPasswordChangedDialog) {
-        PasswordChangedDialog(
+    if (showPriorityEventDialog) {
+        PriorityEventAlertDialog(
             account = account,
+            event = event,
             onDismissButton = {
-                (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
-                showPasswordChangedDialog = false
+                when (event) {
+                    PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                    PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
+                }
+                showPriorityEventDialog = false
             },
             onReportUnauthorizedChange = {
-                showPasswordChangedDialog = false
+                showPriorityEventDialog = false
                 showVerifyAccountDialog = true
             }
         )
@@ -190,16 +206,22 @@ private fun PasswordChangedStackDialog(
 
         VerifyAccountSecurityDialog(
             onChangePassword = {
-                (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                when (event) {
+                    PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                    PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
+                }
                 context.openUrlInCustomTab(RECOVER_PASSWORD_URL)
                 showVerifyAccountDialog = false
-                showPasswordChangedDialog = true
+                showPriorityEventDialog = true
             },
             onContactSupport = {
-                (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                when (event) {
+                    PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+                    PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
+                }
                 context.openUrlInCustomTab(HELP_SUPPORT_URL)
                 showVerifyAccountDialog = false
-                showPasswordChangedDialog = true
+                showPriorityEventDialog = true
             },
         )
     }

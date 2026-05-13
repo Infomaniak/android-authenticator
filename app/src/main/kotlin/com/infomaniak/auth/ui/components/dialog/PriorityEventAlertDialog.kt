@@ -36,8 +36,9 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
-fun PasswordChangedDialog(
+fun PriorityEventAlertDialog(
     account: Account,
+    event: PriorityEventAlert,
     onDismissButton: () -> Unit,
     onReportUnauthorizedChange: () -> Unit,
 ) {
@@ -48,12 +49,25 @@ fun PasswordChangedDialog(
         onDismissRequest = {},
         title = {
             Text(
-                text = stringResource(R.string.alertDialogPasswordChangedTitle),
+                text = stringResource(
+                    id = when (event) {
+                        PriorityEventAlert.PasswordChanged -> R.string.alertDialogPasswordChangedTitle
+                        PriorityEventAlert.AccountDisconnected -> R.string.accountDisconnectedTitle
+                    }
+                ),
                 textAlign = TextAlign.Center
             )
         },
         text = {
-            Text(stringResource(R.string.alertDialogPasswordChangedText, account.email))
+            Text(
+                text = stringResource(
+                    id = when (event) {
+                        PriorityEventAlert.PasswordChanged -> R.string.alertDialogPasswordChangedText
+                        PriorityEventAlert.AccountDisconnected -> R.string.accountDisconnectedDescription
+                    },
+                    account.email
+                )
+            )
         },
         confirmButton = {
             TextButton(
@@ -73,14 +87,20 @@ fun PasswordChangedDialog(
     )
 }
 
+enum class PriorityEventAlert {
+    PasswordChanged,
+    AccountDisconnected
+}
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @PreviewSmallWindow
 @Composable
-private fun PasswordChangedDialogPreview() {
+private fun PriorityEventAlertDialogPreview() {
     AuthenticatorTheme {
         Scaffold { _ ->
-            PasswordChangedDialog(
+            PriorityEventAlertDialog(
                 account = fakeAccounts.first(),
+                event = PriorityEventAlert.PasswordChanged,
                 onDismissButton = {},
                 onReportUnauthorizedChange = {}
             )
