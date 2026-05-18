@@ -28,7 +28,6 @@ import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -36,10 +35,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -64,10 +61,7 @@ class AccountDetailsViewModel @Inject constructor(
                     AccountDetailsUiState.Success(
                         account = account,
                         user = user,
-                        disconnectConfiguration = genDisconnectConfiguration(
-                            status = account.status,
-                            accessToken = user?.apiToken?.accessToken
-                        )
+                        disconnectConfiguration = genDisconnectConfiguration(status = account.status)
                     )
                 } else {
                     AccountDetailsUiState.Error
@@ -86,34 +80,16 @@ class AccountDetailsViewModel @Inject constructor(
         accountIdFlow.tryEmit(accountId)
     }
 
-    private fun removeAccount() {
-        viewModelScope.launch(Dispatchers.IO) {
-            accountIdFlow.first().let { accountId ->
-                accountUtils.removeUser(accountId.toInt())
-                authenticatorFacade.removeAccount(token = null, id = accountId)
-                accountRemovedChannel.send(Unit)
-            }
-        }
-    }
-
-    private fun genDisconnectConfiguration(status: Account.Status, accessToken: String?): DisconnectConfiguration {
+    private fun genDisconnectConfiguration(status: Account.Status): DisconnectConfiguration {
         return when (status) {
             is Account.Status.LoggedIn -> {
                 if (status.isSecured) {
-                    DisconnectConfiguration.DisconnectSecuredAccount(
-                        onConfirmButton = { removeAccount() },
-                        accessToken = accessToken
-                    )
+                    DisconnectConfiguration.DisconnectSecuredAccount
                 } else {
-                    DisconnectConfiguration.DisconnectPartiallySecuredAccount(
-                        onConfirmButton = { removeAccount() },
-                        accessToken = accessToken
-                    )
+                    DisconnectConfiguration.DisconnectPartiallySecuredAccount
                 }
             }
-            else -> DisconnectConfiguration.DisconnectNotConnectedAccount(
-                onConfirmButton = { removeAccount() }
-            )
+            else -> DisconnectConfiguration.DisconnectNotConnectedAccount
         }
     }
 
@@ -133,50 +109,42 @@ sealed interface AccountDetailsUiState {
     data object Error : AccountDetailsUiState
 }
 
-sealed interface DisconnectConfiguration {
-    val warningTitleResId: Int
-    val warningDescriptionResId: Int
-    val confirmationTitleResId: Int
-    val confirmationDescriptionResId: Int
-    val neutralButtonStringResId: Int
-    val criticalButtonStringResId: Int
+enum class DisconnectConfiguration(
+    val warningTitleResId: Int,
+    val warningDescriptionResId: Int,
+    val confirmationTitleResId: Int,
+    val confirmationDescriptionResId: Int,
+    val neutralButtonStringResId: Int,
+    val criticalButtonStringResId: Int,
     val dismissHelpUrl: String
-    val onConfirmButton: () -> Unit
-    val accessToken: String?
+) {
+    DisconnectSecuredAccount(
+        warningTitleResId = R.string.disconnectAccountWarningTitle,
+        warningDescriptionResId = R.string.disconnectAccountWarningDescription,
+        confirmationTitleResId = R.string.disconnectAccountTitle,
+        confirmationDescriptionResId = R.string.disconnectAccountOnThisDeviceDescription,
+        neutralButtonStringResId = R.string.checkMyMethodsButton,
+        criticalButtonStringResId = R.string.disconnectCriticalButton,
+        dismissHelpUrl = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
+    ),
 
-    data class DisconnectSecuredAccount(
-        override val warningTitleResId: Int = R.string.disconnectAccountWarningTitle,
-        override val warningDescriptionResId: Int = R.string.disconnectAccountWarningDescription,
-        override val confirmationTitleResId: Int = R.string.disconnectAccountTitle,
-        override val confirmationDescriptionResId: Int = R.string.disconnectAccountOnThisDeviceDescription,
-        override val neutralButtonStringResId: Int = R.string.checkMyMethodsButton,
-        override val criticalButtonStringResId: Int = R.string.disconnectCriticalButton,
-        override val dismissHelpUrl: String = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
-        override val onConfirmButton: () -> Unit,
-        override val accessToken: String?,
-    ) : DisconnectConfiguration
+    DisconnectPartiallySecuredAccount(
+        warningTitleResId = R.string.disconnectAccountPartiallySecuredWarningTitle,
+        warningDescriptionResId = R.string.disconnectAccountPartiallySecuredWarningDescription,
+        confirmationTitleResId = R.string.disconnectAccountTitle,
+        confirmationDescriptionResId = R.string.disconnectPartiallySecuredDescription,
+        neutralButtonStringResId = R.string.disconnectAccountAdd2faButton,
+        criticalButtonStringResId = R.string.disconnectCriticalButton,
+        dismissHelpUrl = UrlConstants.SETTINGS_2FA_MANAGER_URL,
+    ),
 
-    data class DisconnectPartiallySecuredAccount(
-        override val warningTitleResId: Int = R.string.disconnectAccountPartiallySecuredWarningTitle,
-        override val warningDescriptionResId: Int = R.string.disconnectAccountPartiallySecuredWarningDescription,
-        override val confirmationTitleResId: Int = R.string.disconnectAccountTitle,
-        override val confirmationDescriptionResId: Int = R.string.disconnectPartiallySecuredDescription,
-        override val neutralButtonStringResId: Int = R.string.disconnectAccountAdd2faButton,
-        override val criticalButtonStringResId: Int = R.string.disconnectCriticalButton,
-        override val dismissHelpUrl: String = UrlConstants.SETTINGS_2FA_MANAGER_URL,
-        override val onConfirmButton: () -> Unit,
-        override val accessToken: String?,
-    ) : DisconnectConfiguration
-
-    data class DisconnectNotConnectedAccount(
-        override val warningTitleResId: Int = R.string.removeAccountWarningTitle,
-        override val warningDescriptionResId: Int = R.string.removeAccountWarningDescription,
-        override val confirmationTitleResId: Int = R.string.removeAccountTitle,
-        override val confirmationDescriptionResId: Int = R.string.removeAccountDescription,
-        override val neutralButtonStringResId: Int = R.string.checkMyMethodsButton,
-        override val criticalButtonStringResId: Int = R.string.removeAccountTitle,
-        override val dismissHelpUrl: String = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
-        override val onConfirmButton: () -> Unit,
-        override val accessToken: String? = null,
-    ) : DisconnectConfiguration
+    DisconnectNotConnectedAccount(
+        warningTitleResId = R.string.removeAccountWarningTitle,
+        warningDescriptionResId = R.string.removeAccountWarningDescription,
+        confirmationTitleResId = R.string.removeAccountTitle,
+        confirmationDescriptionResId = R.string.removeAccountDescription,
+        neutralButtonStringResId = R.string.checkMyMethodsButton,
+        criticalButtonStringResId = R.string.removeAccountTitle,
+        dismissHelpUrl = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
+    )
 }

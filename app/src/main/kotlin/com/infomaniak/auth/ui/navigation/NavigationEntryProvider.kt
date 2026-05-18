@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.navigation
 
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
@@ -80,8 +79,8 @@ fun baseEntryProvider(
                 backStack.add(NavDestination.LoginInApp.Form(legacyAccount, isOnboarding = false))
             },
             onBackPressed = backStack::tryPopLast,
-            onRemoveAccountClicked = { configuration ->
-                backStack.add(NavDestination.DisconnectDialog.DisconnectWarning(configuration))
+            onRemoveAccountClicked = { accountId, configuration ->
+                backStack.add(NavDestination.DisconnectDialog.DisconnectWarning(accountId, configuration))
             }
         )
     }
@@ -138,24 +137,27 @@ private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackSt
         metadata = DialogSceneStrategy.dialog()
     ) { params ->
         DisconnectWarningDialog(
+            params.accountId,
             params.configuration,
             onDismissRequest = {
                 backStack.clearDialog()
             },
             onConfirmButton = {
                 backStack.clearDialog()
-                backStack.add(NavDestination.DisconnectDialog.DisconnectConfirmation(params.configuration))
+                backStack.add(NavDestination.DisconnectDialog.DisconnectConfirmation(accountId = params.accountId, params.configuration))
             }
         )
     }
 
     entry<NavDestination.DisconnectDialog.DisconnectConfirmation>(
-        metadata = DialogSceneStrategy.dialog(
-            DialogProperties(windowTitle = "Route B dialog")
-        )
+        metadata = DialogSceneStrategy.dialog()
     ) { params ->
         DisconnectConfirmDialog(
+            params.accountId,
             params.configuration,
+            onAccountDisconnected = {
+                backStack.popUntil(NavDestination.Home)
+            },
             onDismissRequest = {
                 backStack.clearDialog()
             }

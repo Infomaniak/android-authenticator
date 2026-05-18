@@ -34,16 +34,9 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
     private val keysDir by lazy {
         appCtx.filesDir.resolve("passkeys").also { passkeysDir ->
             passkeysDir.mkdir()
-            //TODO[ik-auth]: Remove the code below after the next pre-release.
-            appCtx.filesDir.listFiles { it.name.endsWith(".key") }!!.forEach { keyFile ->
-                keyFile.renameTo(passkeysDir.resolve(keyFile.name))
-            }
         }
     }
 
-    override fun ensureKeyPairsAreMoved() {
-        val _ = keysDir //TODO[ik-auth]: Remove this code and the super method after the next pre-release.
-    }
     @Throws(Exception::class)
     override suspend fun generateNewKey(userId: Long, keyId: String): Failure.KeyManagement.GenerationFailed? {
         val keyPair = generateEcKeyPair().getOrElse {

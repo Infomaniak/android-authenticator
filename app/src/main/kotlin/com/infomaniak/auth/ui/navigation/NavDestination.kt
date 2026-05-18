@@ -93,10 +93,10 @@ sealed interface NavDestination : NavKey {
     
     sealed interface DisconnectDialog : DialogDestination {
         @Serializable
-        data class DisconnectWarning(val configuration: DisconnectConfiguration) : DisconnectDialog
+        data class DisconnectWarning(val accountId: Long, val configuration: DisconnectConfiguration) : DisconnectDialog
 
         @Serializable
-        data class DisconnectConfirmation(val configuration: DisconnectConfiguration) : DisconnectDialog
+        data class DisconnectConfirmation(val accountId: Long, val configuration: DisconnectConfiguration) : DisconnectDialog
     }
 
     //endregion
