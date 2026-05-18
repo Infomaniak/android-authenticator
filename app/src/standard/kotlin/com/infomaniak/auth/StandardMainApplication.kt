@@ -33,7 +33,7 @@ class StandardMainApplication : MainApplication() {
         registerUserDeviceIfNeeded()
     }
 
-    fun registerUserDeviceIfNeeded() {
+    override fun registerUserDeviceIfNeeded() {
         applicationScope.launch {
             NotificationsRegistrationManager.scheduleWorkerOnUpdate<RegisterUserDeviceWorker>(
                 latestNotificationTopics = { userId -> notificationTopicsForUser(userId) }
