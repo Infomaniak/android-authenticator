@@ -74,7 +74,6 @@ fun DisconnectConfirmDialog(
             TextButton(
                 onClick = {
                     viewModel.removeAccount()
-                    onDismissRequest()
                 },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,
