@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -110,7 +109,6 @@ sealed interface AccountDetailsUiState {
     data object Error : AccountDetailsUiState
 }
 
-@Serializable
 enum class DisconnectConfiguration(
     val warningTitleResId: Int,
     val warningDescriptionResId: Int,
@@ -120,7 +118,6 @@ enum class DisconnectConfiguration(
     val criticalButtonStringResId: Int,
     val dismissHelpUrl: String
 ) {
-    @Serializable
     DisconnectSecuredAccount(
         warningTitleResId = R.string.disconnectAccountWarningTitle,
         warningDescriptionResId = R.string.disconnectAccountWarningDescription,
@@ -131,7 +128,6 @@ enum class DisconnectConfiguration(
         dismissHelpUrl = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
     ),
 
-    @Serializable
     DisconnectPartiallySecuredAccount(
         warningTitleResId = R.string.disconnectAccountPartiallySecuredWarningTitle,
         warningDescriptionResId = R.string.disconnectAccountPartiallySecuredWarningDescription,
@@ -142,7 +138,6 @@ enum class DisconnectConfiguration(
         dismissHelpUrl = UrlConstants.SETTINGS_2FA_MANAGER_URL,
     ),
 
-    @Serializable
     DisconnectNotConnectedAccount(
         warningTitleResId = R.string.removeAccountWarningTitle,
         warningDescriptionResId = R.string.removeAccountWarningDescription,
