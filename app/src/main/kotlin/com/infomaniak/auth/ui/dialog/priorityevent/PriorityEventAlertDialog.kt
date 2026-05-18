@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.dialog.priorityevent
 
 import android.annotation.SuppressLint
+import androidx.annotation.StringRes
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -49,25 +50,12 @@ fun PriorityEventAlertDialog(
         onDismissRequest = {},
         title = {
             Text(
-                text = stringResource(
-                    id = when (event) {
-                        PriorityEventAlert.PasswordChanged -> R.string.alertDialogPasswordChangedTitle
-                        PriorityEventAlert.AccountDisconnected -> R.string.accountDisconnectedTitle
-                    }
-                ),
+                text = stringResource(event.titleResId),
                 textAlign = TextAlign.Center
             )
         },
         text = {
-            Text(
-                text = stringResource(
-                    id = when (event) {
-                        PriorityEventAlert.PasswordChanged -> R.string.alertDialogPasswordChangedText
-                        PriorityEventAlert.AccountDisconnected -> R.string.accountDisconnectedDescription
-                    },
-                    account.email
-                )
-            )
+            Text(text = stringResource(event.descriptionResId, account.email))
         },
         confirmButton = {
             TextButton(
@@ -87,9 +75,18 @@ fun PriorityEventAlertDialog(
     )
 }
 
-enum class PriorityEventAlert {
-    PasswordChanged,
-    AccountDisconnected
+enum class PriorityEventAlert(
+    @StringRes val titleResId: Int,
+    @StringRes val descriptionResId: Int
+) {
+    PasswordChanged(
+        titleResId = R.string.alertDialogPasswordChangedTitle,
+        descriptionResId = R.string.alertDialogPasswordChangedText
+    ),
+    AccountDisconnected(
+        titleResId = R.string.accountDisconnectedTitle,
+        descriptionResId = R.string.accountDisconnectedDescription
+    )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
