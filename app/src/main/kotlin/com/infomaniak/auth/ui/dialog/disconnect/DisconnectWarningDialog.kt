@@ -26,10 +26,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.ui.screen.accountdetails.DisconnectConfiguration
@@ -40,12 +44,20 @@ import com.infomaniak.core.webview.ui.WebViewActivity
 
 @Composable
 fun DisconnectWarningDialog(
+    accountId: Long,
     configuration: DisconnectConfiguration,
     onDismissRequest: () -> Unit,
     onConfirmButton: () -> Unit,
+    viewModel: DisconnectViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val host = ApiEnvironment.current.host
+
+    val userAccessToken by viewModel.userAccessToken.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAccountDetails(accountId)
+    }
 
     AlertDialog(
         icon = {
@@ -75,7 +87,7 @@ fun DisconnectWarningDialog(
             }
         },
         dismissButton = {
-            if (configuration.accessToken != null) {
+            if (userAccessToken != null) {
                 TextButton(
                     onClick = {
                         onDismissRequest()
@@ -85,7 +97,7 @@ fun DisconnectWarningDialog(
                                 host = host,
                                 UrlConstants.managerUrl(host, configuration.dismissHelpUrl)
                             ),
-                            headers = mapOf("Authorization" to "Bearer ${configuration.accessToken}"),
+                            headers = mapOf("Authorization" to "Bearer $userAccessToken"),
                         )
                     }
                 ) {
@@ -103,10 +115,8 @@ private fun DisconnectWarningDialogPreview() {
     AuthenticatorTheme {
         Scaffold { _ ->
             DisconnectWarningDialog(
-                configuration = DisconnectConfiguration.DisconnectSecuredAccount(
-                    onConfirmButton = {},
-                    accessToken = "fake_access_token",
-                ),
+                accountId = 1L,
+                configuration = DisconnectConfiguration.DisconnectSecuredAccount,
                 onDismissRequest = {},
                 onConfirmButton = {}
             )

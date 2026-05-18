@@ -69,7 +69,7 @@ fun AccountDetailsScreen(
     accountId: Long,
     onBackPressed: () -> Unit,
     onLoginPressed: (Long) -> Unit,
-    onRemoveAccountClicked: (DisconnectConfiguration) -> Unit,
+    onRemoveAccountClicked: (Long, DisconnectConfiguration) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -100,7 +100,7 @@ fun AccountDetailsScreen(
     onLoginPressed: (Long) -> Unit,
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
-    onRemoveAccountClicked: (DisconnectConfiguration) -> Unit,
+    onRemoveAccountClicked: (Long, DisconnectConfiguration) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
@@ -122,7 +122,7 @@ fun AccountDetailsScreen(
                     onLoginPressed = onLoginPressed,
                     onChallengesRefreshClicked = onChallengesRefreshClicked,
                     onRemoveAccountClicked = {
-                        onRemoveAccountClicked(uiState.disconnectConfiguration)
+                        onRemoveAccountClicked(uiState.account.id, uiState.disconnectConfiguration)
                     }
                 )
             }
@@ -269,15 +269,12 @@ private fun AccountDetailsScreenPreview(
             uiState = { AccountDetailsUiState.Success(
                 account = accountPairs.first,
                 user = accountPairs.second,
-                disconnectConfiguration = DisconnectConfiguration.DisconnectSecuredAccount(
-                    onConfirmButton = {},
-                    accessToken = "fake_access_token",
-                )
+                disconnectConfiguration = DisconnectConfiguration.DisconnectSecuredAccount
             ) },
             onLoginPressed = {},
             onBackPressed = {},
             onChallengesRefreshClicked = {},
-            onRemoveAccountClicked = {},
+            onRemoveAccountClicked = { _, _ -> },
         )
     }
 }
