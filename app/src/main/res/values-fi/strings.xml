@@ -16,6 +16,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="accountDisconnectedDescription">Et saa enää yhteyspyyntöjä hyväksyä tätä laitetta varten %s</string>
+    <string name="accountDisconnectedTitle">Tilin yhteys Authenticatoriin katkaistiin</string>
     <string name="accountLoggedOut">Tililtä kirjauduttu ulos</string>
     <string name="accountLossRiskBackupVerificationDescription">Varmista, että toinen kaksivaiheisen todennuksen menetelmä on määritetty ja toimii.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Jos Authenticator on viimeinen kaksivaiheisen todennuksen menetelmäsi, saatat jäädä ulos seuraavalla kirjautumiskerralla.</string>

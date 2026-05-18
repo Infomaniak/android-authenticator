@@ -16,6 +16,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="accountDisconnectedDescription">Deixará de receber pedidos de ligação para aprovar neste dispositivo para a %s</string>
+    <string name="accountDisconnectedTitle">Conta desconectada do Authenticator</string>
     <string name="accountLoggedOut">Conta desconectada</string>
     <string name="accountLossRiskBackupVerificationDescription">Certifique-se de que outro método de verificação em duas etapas está configurado e funcionando.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Se o Authenticator for seu último método de verificação em duas etapas, você poderá ser bloqueado na próxima vez que fizer login.</string>

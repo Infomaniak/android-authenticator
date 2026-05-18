@@ -17,6 +17,8 @@
   -->
 
 <resources>
+    <string name="accountDisconnectedDescription">You will no longer receive connection requests to approve on this device for the %s</string>
+    <string name="accountDisconnectedTitle">Account disconnected from Authenticator</string>
     <string name="accountLoggedOut">Account logged out</string>
     <string name="accountLossRiskBackupVerificationDescription">Make sure another two-step verification method is set up and working.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">If Authenticator is your last two-step verification method, you could be locked out next time you log in.</string>

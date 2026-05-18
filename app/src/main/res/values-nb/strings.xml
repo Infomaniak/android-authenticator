@@ -16,6 +16,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
+    <string name="accountDisconnectedDescription">Du vil ikke lenger motta tilkoblingsforespørsler om å godkjenne på denne enheten for %s</string>
+    <string name="accountDisconnectedTitle">Konto frakoblet fra Authenticator</string>
     <string name="accountLoggedOut">Kontoen er logget ut</string>
     <string name="accountLossRiskBackupVerificationDescription">Sørg for at en annen totrinnsverifiseringsmetode er konfigurert og fungerer.</string>
     <string name="accountLossRiskLastDoubleAuthDescription">Hvis Authenticator er din siste totrinnsverifiseringsmetode, kan du bli låst ute neste gang du logger på.</string>
