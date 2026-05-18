@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,7 +41,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import com.infomaniak.auth.MainApplication
 import com.infomaniak.auth.R
+import com.infomaniak.auth.StandardMainApplication
 import com.infomaniak.auth.firebase.RegisterUserDeviceWorker
 import com.infomaniak.auth.firebase.notificationTopicsForUser
 import com.infomaniak.auth.ui.components.ButtonStyle
@@ -71,7 +74,7 @@ fun NotificationPermissionScreen(
     } else null
 
     var permissionAsked by remember { mutableStateOf(false) }
-
+    val context = LocalContext.current
     LaunchedEffect(notificationPermissionState?.status) {
         if (notificationPermissionState == null ||
             notificationPermissionState.status == PermissionStatus.Granted ||
@@ -80,9 +83,7 @@ fun NotificationPermissionScreen(
                 viewModel.onNotificationPermissionTriggered()
             }
             navigateToHome()
-            NotificationsRegistrationManager.scheduleWorkerOnUpdate<RegisterUserDeviceWorker>(
-                latestNotificationTopics = { userId -> notificationTopicsForUser(userId) }
-            )
+            (context.applicationContext as? StandardMainApplication)?.registerUserDeviceIfNeeded()
         }
     }
 
