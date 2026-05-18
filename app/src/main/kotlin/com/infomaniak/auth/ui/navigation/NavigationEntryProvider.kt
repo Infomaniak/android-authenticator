@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.navigation
 
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
@@ -151,9 +150,7 @@ private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackSt
     }
 
     entry<NavDestination.DisconnectDialog.DisconnectConfirmation>(
-        metadata = DialogSceneStrategy.dialog(
-            DialogProperties(windowTitle = "Route B dialog")
-        )
+        metadata = DialogSceneStrategy.dialog()
     ) { params ->
         DisconnectConfirmDialog(
             params.accountId,
