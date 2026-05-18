@@ -78,11 +78,6 @@ fun AccountDetailsScreen(
         viewModel.fetchAccountDetails(accountId)
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.accountRemovedChannel.receive()
-        onBackPressed()
-    }
-
     AccountDetailsScreen(
         uiState = { uiState },
         onLoginPressed = onLoginPressed,
