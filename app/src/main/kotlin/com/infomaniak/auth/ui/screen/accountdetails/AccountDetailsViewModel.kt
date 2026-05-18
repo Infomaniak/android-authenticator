@@ -20,24 +20,23 @@ package com.infomaniak.auth.ui.screen.accountdetails
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -59,7 +58,11 @@ class AccountDetailsViewModel @Inject constructor(
                 val account = accounts.find { it.id == id }
 
                 if (account != null) {
-                    AccountDetailsUiState.Success(account, user)
+                    AccountDetailsUiState.Success(
+                        account = account,
+                        user = user,
+                        disconnectConfiguration = genDisconnectConfiguration(status = account.status)
+                    )
                 } else {
                     AccountDetailsUiState.Error
                 }
@@ -70,22 +73,21 @@ class AccountDetailsViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = AccountDetailsUiState.Loading
         )
-
-    val accountRemovedChannel = Channel<Unit>(Channel.CONFLATED)
-
+    
     fun fetchAccountDetails(accountId: Long) {
         accountIdFlow.tryEmit(accountId)
     }
 
-    fun removeAccount() {
-        viewModelScope.launch(Dispatchers.IO) {
-            accountIdFlow.first()
-                .let { accountId -> accountUtils.users.first().firstOrNull { it.id.toLong() == accountId } }
-                ?.let { user ->
-                    authenticatorFacade.removeAccount(user.apiToken.accessToken, user.id.toLong())
-                    accountUtils.removeUser(user.id)
-                    accountRemovedChannel.send(Unit)
+    private fun genDisconnectConfiguration(status: Account.Status): DisconnectConfiguration {
+        return when (status) {
+            is Account.Status.LoggedIn -> {
+                if (status.isSecured) {
+                    DisconnectConfiguration.DisconnectSecuredAccount
+                } else {
+                    DisconnectConfiguration.DisconnectPartiallySecuredAccount
                 }
+            }
+            else -> DisconnectConfiguration.DisconnectNotConnectedAccount
         }
     }
 
@@ -97,6 +99,51 @@ class AccountDetailsViewModel @Inject constructor(
 @Immutable
 sealed interface AccountDetailsUiState {
     data object Loading : AccountDetailsUiState
-    data class Success(val account: Account, val user: User?) : AccountDetailsUiState
+    data class Success(
+        val account: Account,
+        val user: User?,
+        val disconnectConfiguration: DisconnectConfiguration
+    ) : AccountDetailsUiState
     data object Error : AccountDetailsUiState
+}
+
+@Serializable
+enum class DisconnectConfiguration(
+    val warningTitleResId: Int,
+    val warningDescriptionResId: Int,
+    val confirmationTitleResId: Int,
+    val confirmationDescriptionResId: Int,
+    val neutralButtonStringResId: Int,
+    val criticalButtonStringResId: Int,
+    val dismissHelpUrl: String
+) {
+    DisconnectSecuredAccount(
+        warningTitleResId = R.string.disconnectAccountWarningTitle,
+        warningDescriptionResId = R.string.disconnectAccountWarningDescription,
+        confirmationTitleResId = R.string.disconnectAccountTitle,
+        confirmationDescriptionResId = R.string.disconnectAccountOnThisDeviceDescription,
+        neutralButtonStringResId = R.string.checkMyMethodsButton,
+        criticalButtonStringResId = R.string.disconnectCriticalButton,
+        dismissHelpUrl = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
+    ),
+
+    DisconnectPartiallySecuredAccount(
+        warningTitleResId = R.string.disconnectAccountPartiallySecuredWarningTitle,
+        warningDescriptionResId = R.string.disconnectAccountPartiallySecuredWarningDescription,
+        confirmationTitleResId = R.string.disconnectAccountTitle,
+        confirmationDescriptionResId = R.string.disconnectPartiallySecuredDescription,
+        neutralButtonStringResId = R.string.disconnectAccountAdd2faButton,
+        criticalButtonStringResId = R.string.disconnectCriticalButton,
+        dismissHelpUrl = UrlConstants.SETTINGS_2FA_MANAGER_URL,
+    ),
+
+    DisconnectNotConnectedAccount(
+        warningTitleResId = R.string.removeAccountWarningTitle,
+        warningDescriptionResId = R.string.removeAccountWarningDescription,
+        confirmationTitleResId = R.string.removeAccountTitle,
+        confirmationDescriptionResId = R.string.removeAccountDescription,
+        neutralButtonStringResId = R.string.checkMyMethodsButton,
+        criticalButtonStringResId = R.string.removeAccountTitle,
+        dismissHelpUrl = UrlConstants.SETTINGS_ACCOUNT_SECURITY_URL,
+    )
 }

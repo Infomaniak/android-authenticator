@@ -19,6 +19,7 @@ package com.infomaniak.auth.ui.navigation
 
 import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
+import com.infomaniak.auth.ui.screen.accountdetails.DisconnectConfiguration
 import kotlinx.serialization.Serializable
 
 @Immutable
@@ -85,6 +86,20 @@ sealed interface NavDestination : NavKey {
 
     @Serializable
     data class AccountDetails(val accountId: Long) : NavDestination
+
+    //region Dialog
+    
+    interface DialogDestination : NavDestination
+    
+    sealed interface DisconnectDialog : DialogDestination {
+        @Serializable
+        data class DisconnectWarning(val accountId: Long, val configuration: DisconnectConfiguration) : DisconnectDialog
+
+        @Serializable
+        data class DisconnectConfirmation(val accountId: Long, val configuration: DisconnectConfiguration) : DisconnectDialog
+    }
+
+    //endregion
 }
 
 @Immutable
