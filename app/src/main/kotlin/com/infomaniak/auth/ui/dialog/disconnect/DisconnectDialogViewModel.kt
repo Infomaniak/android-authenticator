@@ -25,7 +25,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -40,7 +39,7 @@ import javax.inject.Inject
 class DisconnectDialogViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
-) : ViewModel()  {
+) : ViewModel() {
     private val accountIdFlow = MutableSharedFlow<Long>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     val userAccessToken = accountIdFlow
@@ -61,18 +60,16 @@ class DisconnectDialogViewModel @Inject constructor(
             initialValue = null
         )
 
-    val accountRemovedChannel = Channel<Unit>(Channel.CONFLATED)
-
     fun fetchAccountDetails(accountId: Long) {
         accountIdFlow.tryEmit(accountId)
     }
 
-    fun removeAccount() {
+    fun removeAccount(onAccountRemoved: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             accountIdFlow.first().let { accountId ->
                 accountUtils.removeUser(accountId.toInt())
                 authenticatorFacade.removeAccount(token = null, id = accountId)
-                accountRemovedChannel.send(Unit)
+                onAccountRemoved()
             }
         }
     }
