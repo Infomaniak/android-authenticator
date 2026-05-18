@@ -76,11 +76,18 @@ fun baseEntryProvider(
         AccountDetailsScreen(
             accountId = it.accountId,
             onLoginPressed = { legacyAccount ->
-                backStack.add(NavDestination.LoginInApp.Form(legacyAccount, isOnboarding = false))
+                backStack.add(
+                    NavDestination.LoginInApp.Form(legacyAccountId = legacyAccount, isOnboarding = false)
+                )
             },
             onBackPressed = backStack::tryPopLast,
             onRemoveAccountClicked = { accountId, configuration ->
-                backStack.add(NavDestination.DisconnectDialog.DisconnectWarning(accountId, configuration))
+                backStack.add(
+                    NavDestination.DisconnectDialog.DisconnectWarning(
+                        accountId = accountId,
+                        configuration = configuration
+                    )
+                )
             }
         )
     }
@@ -144,7 +151,12 @@ private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackSt
             },
             onConfirmButton = {
                 backStack.clearDialog()
-                backStack.add(NavDestination.DisconnectDialog.DisconnectConfirmation(accountId = params.accountId, params.configuration))
+                backStack.add(
+                    NavDestination.DisconnectDialog.DisconnectConfirmation(
+                        accountId = params.accountId,
+                        configuration =  params.configuration
+                    )
+                )
             }
         )
     }

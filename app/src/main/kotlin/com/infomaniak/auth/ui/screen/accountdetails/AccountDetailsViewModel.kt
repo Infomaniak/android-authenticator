@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -109,6 +110,7 @@ sealed interface AccountDetailsUiState {
     data object Error : AccountDetailsUiState
 }
 
+@Serializable
 enum class DisconnectConfiguration(
     val warningTitleResId: Int,
     val warningDescriptionResId: Int,
