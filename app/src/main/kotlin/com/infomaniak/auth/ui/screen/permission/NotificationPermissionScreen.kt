@@ -41,6 +41,8 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.R
+import com.infomaniak.auth.firebase.RegisterUserDeviceWorker
+import com.infomaniak.auth.firebase.notificationTopicsForUser
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
@@ -51,6 +53,7 @@ import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.bannerNotification.BannerNotification
 import com.infomaniak.auth.ui.screen.main.MainViewModel
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.notifications.registration.NotificationsRegistrationManager
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -77,6 +80,9 @@ fun NotificationPermissionScreen(
                 viewModel.onNotificationPermissionTriggered()
             }
             navigateToHome()
+            NotificationsRegistrationManager.scheduleWorkerOnUpdate<RegisterUserDeviceWorker>(
+                latestNotificationTopics = { userId -> notificationTopicsForUser(userId) }
+            )
         }
     }
 
