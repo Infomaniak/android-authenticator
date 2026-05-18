@@ -48,7 +48,7 @@ fun DisconnectWarningDialog(
     configuration: DisconnectConfiguration,
     onDismissRequest: () -> Unit,
     onConfirmButton: () -> Unit,
-    viewModel: DisconnectViewModel = hiltViewModel()
+    viewModel: DisconnectDialogViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val host = ApiEnvironment.current.host

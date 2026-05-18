@@ -42,7 +42,7 @@ fun DisconnectConfirmDialog(
     configuration: DisconnectConfiguration,
     onAccountDisconnected: () -> Unit,
     onDismissRequest: () -> Unit,
-    viewModel: DisconnectViewModel = hiltViewModel()
+    viewModel: DisconnectDialogViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         viewModel.fetchAccountDetails(accountId)

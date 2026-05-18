@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class DisconnectViewModel @Inject constructor(
+class DisconnectDialogViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel()  {
