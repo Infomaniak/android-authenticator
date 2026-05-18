@@ -48,11 +48,6 @@ fun DisconnectConfirmDialog(
         viewModel.fetchAccountDetails(accountId)
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.accountRemovedChannel.receive()
-        onAccountDisconnected()
-    }
-
     AlertDialog(
         icon = {
             Icon(
@@ -73,7 +68,7 @@ fun DisconnectConfirmDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    viewModel.removeAccount()
+                    viewModel.removeAccount(onAccountRemoved = onAccountDisconnected)
                 },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,
