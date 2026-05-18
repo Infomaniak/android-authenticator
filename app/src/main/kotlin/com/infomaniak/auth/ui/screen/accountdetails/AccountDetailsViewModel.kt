@@ -30,7 +30,6 @@ import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -74,9 +73,7 @@ class AccountDetailsViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = AccountDetailsUiState.Loading
         )
-
-    val accountRemovedChannel = Channel<Unit>(Channel.CONFLATED)
-
+    
     fun fetchAccountDetails(accountId: Long) {
         accountIdFlow.tryEmit(accountId)
     }
