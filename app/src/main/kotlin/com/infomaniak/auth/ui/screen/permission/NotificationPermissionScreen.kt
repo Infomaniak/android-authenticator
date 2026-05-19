@@ -72,7 +72,8 @@ fun NotificationPermissionScreen(
     var permissionAsked by remember { mutableStateOf(false) }
     val context = LocalContext.current
     LaunchedEffect(notificationPermissionState?.status) {
-        if (notificationPermissionState == null ||
+        if (
+            notificationPermissionState == null ||
             notificationPermissionState.status == PermissionStatus.Granted ||
             notificationPermissionState.status is PermissionStatus.Denied && permissionAsked
         ) {
