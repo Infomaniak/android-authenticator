@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -185,6 +186,27 @@ private val darkScheme = darkColorScheme(
 val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
 val LocalStatusColorScheme: ProvidableCompositionLocal<StatusColorScheme> = staticCompositionLocalOf { StatusColorScheme() }
 
+private val robotoFlexFamily = FontFamily(Font(R.font.roboto_flex))
+
+private val defaultTypography = Typography()
+private val robotoFlexTypography = defaultTypography.copy(
+    displayLarge = defaultTypography.displayLarge.copy(fontFamily = robotoFlexFamily),
+    displayMedium = defaultTypography.displayMedium.copy(fontFamily = robotoFlexFamily),
+    displaySmall = defaultTypography.displaySmall.copy(fontFamily = robotoFlexFamily),
+    headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = robotoFlexFamily),
+    headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = robotoFlexFamily),
+    headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = robotoFlexFamily),
+    titleLarge = defaultTypography.titleLarge.copy(fontFamily = robotoFlexFamily),
+    titleMedium = defaultTypography.titleMedium.copy(fontFamily = robotoFlexFamily),
+    titleSmall = defaultTypography.titleSmall.copy(fontFamily = robotoFlexFamily),
+    bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = robotoFlexFamily),
+    bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = robotoFlexFamily),
+    bodySmall = defaultTypography.bodySmall.copy(fontFamily = robotoFlexFamily),
+    labelLarge = defaultTypography.labelLarge.copy(fontFamily = robotoFlexFamily),
+    labelMedium = defaultTypography.labelMedium.copy(fontFamily = robotoFlexFamily),
+    labelSmall = defaultTypography.labelSmall.copy(fontFamily = robotoFlexFamily)
+)
+
 @Composable
 fun AuthenticatorTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -222,26 +244,6 @@ fun AuthenticatorTheme(
     )
     val avatarColors = if (isDarkTheme) DarkAvatarColorsScheme else LightAvatarColorsScheme
 
-    val robotoFlexFamily = FontFamily(Font(R.font.roboto_flex))
-
-    val typography = MaterialTheme.typography.copy(
-        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = robotoFlexFamily),
-        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = robotoFlexFamily),
-        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = robotoFlexFamily),
-        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = robotoFlexFamily),
-        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = robotoFlexFamily),
-        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = robotoFlexFamily),
-        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = robotoFlexFamily),
-        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = robotoFlexFamily),
-        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = robotoFlexFamily),
-        bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = robotoFlexFamily),
-        bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = robotoFlexFamily),
-        bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = robotoFlexFamily),
-        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = robotoFlexFamily),
-        labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = robotoFlexFamily),
-        labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = robotoFlexFamily)
-    )
-
     CompositionLocalProvider(
         LocalStatusColorScheme provides statusColors,
         LocalCustomColorScheme provides customColors,
@@ -251,7 +253,7 @@ fun AuthenticatorTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = typography,
+            typography = robotoFlexTypography,
         ) {
             val bottomSheetTheme = BottomSheetThemeDefaults.theme()
 
