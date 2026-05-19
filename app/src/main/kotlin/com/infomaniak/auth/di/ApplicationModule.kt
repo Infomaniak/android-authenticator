@@ -21,6 +21,7 @@ import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MainApplication
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.interfaces.AuthenticatorBridge
 import com.infomaniak.auth.lib.network.interfaces.BreadcrumbType
@@ -31,11 +32,11 @@ import com.infomaniak.auth.utils.toLoginApiToken
 import com.infomaniak.auth.utils.toSharedApiToken
 import com.infomaniak.auth.utils.toUser
 import com.infomaniak.core.auth.room.UserDatabase
-import com.infomaniak.core.common.utils.buildUserAgent
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
+import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
@@ -54,7 +55,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import javax.inject.Singleton
-import com.infomaniak.auth.lib.models.migration.SharedApiToken
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -75,27 +75,15 @@ object ApplicationModule {
         )
     }
 
-    @UserAgent
-    @Provides
-    @Singleton
-    fun providesUserAgent(): String {
-        return buildUserAgent(
-            appId = BuildConfig.APPLICATION_ID,
-            appVersionCode = BuildConfig.VERSION_CODE,
-            appVersionName = BuildConfig.VERSION_NAME,
-        )
-    }
-
     @Provides
     @Singleton
     fun provideAuthenticatorFacade(
-        @UserAgent userAgent: String,
         accountUtils: AccountUtils,
         crossAppLoginFacade: CrossAppLoginFacade,
     ): AuthenticatorFacade {
         return AuthenticatorFacade.create(
             apiHost = ApiEnvironment.current.host,
-            userAgent = userAgent,
+            userAgent = HttpUtils.getUserAgent,
             clientId = BuildConfig.CLIENT_ID,
             crashReport = createCrashReportInterface(),
             authenticatorBridge = createAuthenticatorBridge(accountUtils, crossAppLoginFacade),
