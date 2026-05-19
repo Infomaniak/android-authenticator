@@ -66,7 +66,6 @@ import com.infomaniak.auth.ui.components.OpenUrlButton
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
@@ -171,7 +170,7 @@ private fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Margin.Medium),
             ) {
-                Text(stringResource(R.string.logInTitle), style = Typography.h1)
+                Text(stringResource(R.string.logInTitle), style = MaterialTheme.typography.titleLarge)
                 Text(
                     text = stringResource(R.string.logInDescription),
                     style = MaterialTheme.typography.bodyLarge

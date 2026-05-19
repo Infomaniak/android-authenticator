@@ -18,8 +18,11 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.DarkCustomScheme
@@ -219,6 +222,26 @@ fun AuthenticatorTheme(
     )
     val avatarColors = if (isDarkTheme) DarkAvatarColorsScheme else LightAvatarColorsScheme
 
+    val robotoFlexFamily = FontFamily(Font(R.font.roboto_flex))
+
+    val typography = MaterialTheme.typography.copy(
+        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = robotoFlexFamily),
+        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = robotoFlexFamily),
+        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = robotoFlexFamily),
+        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = robotoFlexFamily),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = robotoFlexFamily),
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = robotoFlexFamily),
+        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = robotoFlexFamily),
+        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = robotoFlexFamily),
+        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = robotoFlexFamily),
+        bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = robotoFlexFamily),
+        bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = robotoFlexFamily),
+        bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = robotoFlexFamily),
+        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = robotoFlexFamily),
+        labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = robotoFlexFamily),
+        labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = robotoFlexFamily)
+    )
+
     CompositionLocalProvider(
         LocalStatusColorScheme provides statusColors,
         LocalCustomColorScheme provides customColors,
@@ -228,6 +251,7 @@ fun AuthenticatorTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
+            typography = typography,
         ) {
             val bottomSheetTheme = BottomSheetThemeDefaults.theme()
 

@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,6 @@ import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.core.ui.compose.basics.Dimens
-import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.common.R as RCore
 
@@ -52,7 +52,7 @@ fun MigrationListAccounts(accounts: () -> List<Account>, ) {
     ) {
         Text(
             text = pluralStringResource(RCore.plurals.myAccount, accounts().size),
-            style = Typography.h1
+            style = MaterialTheme.typography.titleLarge
         )
         accounts().forEach { account ->
             BottomSheetItem(

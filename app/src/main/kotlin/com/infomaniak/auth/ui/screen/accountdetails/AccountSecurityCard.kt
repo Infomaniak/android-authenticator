@@ -51,7 +51,6 @@ import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.network.ApiEnvironment
-import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
@@ -79,7 +78,7 @@ fun AccountSecurityCard(
             ) {
                 Text(
                     text = stringResource(configuration.titleResId),
-                    style = if (configuration.descriptionResId != null) Typography.h2 else LocalTextStyle.current
+                    style = if (configuration.descriptionResId != null) MaterialTheme.typography.titleLarge else LocalTextStyle.current
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(

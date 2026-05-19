@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +38,6 @@ import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
-import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -97,7 +97,7 @@ private fun ThemeSettingsScreen(
                     .padding(horizontal = Margin.Medium),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.themeTitle), style = Typography.h1)
+                Text(stringResource(R.string.themeTitle), style = MaterialTheme.typography.titleLarge)
             }
             OptionsSection(sections = persistentListOf(section),)
         }
