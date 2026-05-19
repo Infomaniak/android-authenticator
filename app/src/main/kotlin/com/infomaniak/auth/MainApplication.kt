@@ -83,6 +83,8 @@ open class MainApplication : Application(), Configuration.Provider {
         }
     }
 
+    open fun registerUserDeviceIfNeeded() {}
+
     companion object {
         @JvmStatic
         var userDataCleanableList: List<AssociatedUserDataCleanable> = emptyList()
