@@ -32,6 +32,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.MatomoAuthenticator.trackSettingsEvent
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
@@ -58,6 +60,8 @@ fun SettingsScreen(
         get = { uiState.isAppLocked },
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
+
+    MatomoTrackScreen(MatomoScreen.SettingsScreen)
 
     SettingsScreen(appLocked, onThemeClicked, onPrivacyManagementClicked, hasBiometrics)
 }

@@ -15,18 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.infomaniak.auth.utils
 
-package com.infomaniak.auth.lib.matomo
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import com.infomaniak.auth.MatomoAuthenticator.trackScreen
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 
-enum class MatomoScreen(val value: String) {
-    MigrationScreen("Migration"),
-    AccountListScreen("AccountList"),
-    AccountDetailsScreen("AccountDetails"),
-    SecuringAccountScreen("SecuringAccount"),
-    SettingsScreen("Settings"),
-    OnboardingStartScreen("OnboardingStart"),
-    OnboardingCompleteScreen("OnboardingComplete"),
-    NotificationPermissionScreen("NotificationPermission"),
-    ThemeSettingsScreen("ThemeSettings"),
-    PrivacyManagementScreen("PrivacyManagement"),
+@Composable
+fun MatomoTrackScreen(screen: MatomoScreen) {
+    LaunchedEffect(Unit) {
+        trackScreen("$screen", screen.value)
+    }
 }

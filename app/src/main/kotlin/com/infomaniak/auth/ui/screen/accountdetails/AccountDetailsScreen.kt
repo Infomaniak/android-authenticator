@@ -43,9 +43,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.lib.models.UrlConstants.ACTIVITY_MANAGER_URL
 import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_MANAGER_URL
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
@@ -73,6 +75,8 @@ fun AccountDetailsScreen(
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    MatomoTrackScreen(MatomoScreen.AccountDetailsScreen)
 
     LaunchedEffect(Unit) {
         viewModel.fetchAccountDetails(accountId)

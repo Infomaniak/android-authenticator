@@ -31,7 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.room.appsettings.Theme
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
@@ -50,6 +52,8 @@ fun ThemeSettingsScreen(
 ) {
     val uiState by themeViewModel.uiState.collectAsStateWithLifecycle()
     val theme = GetSetCallbacks(get = { uiState.theme }, set = { it?.let { themeViewModel.setTheme(it) } })
+
+    MatomoTrackScreen(MatomoScreen.ThemeSettingsScreen)
 
     ThemeSettingsScreen(theme, onBackPressed)
 }

@@ -37,6 +37,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -58,6 +60,9 @@ fun MigrationScreen(
     viewModel: MigrationViewModel = hiltViewModel(),
 ) {
     val accounts by viewModel.accounts.collectAsStateWithLifecycle(emptyList())
+
+    MatomoTrackScreen(MatomoScreen.MigrationScreen)
+
     MigrationScreen(
         accounts = { accounts },
         onContinue = viewModel::onContinue

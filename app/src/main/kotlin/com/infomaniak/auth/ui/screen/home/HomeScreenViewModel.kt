@@ -28,6 +28,7 @@ class HomeScreenViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade
 ) : ViewModel() {
     fun onAddAccountClicked() {
+        //MatomoAuthenticator.trackEvent()
         val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.SetupComplete>() ?: return
         appStatus.addAnAccount()
     }
