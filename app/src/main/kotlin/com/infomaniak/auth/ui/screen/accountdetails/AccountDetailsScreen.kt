@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,7 +61,6 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.network.ApiEnvironment
-import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -174,7 +174,7 @@ private fun Header(account: Account, user: User?) {
                 .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
         )
         Column {
-            Text(text = account.fullName, style = Typography.h1)
+            Text(text = account.fullName, style = MaterialTheme.typography.titleLarge)
             Text(text = account.email)
         }
     }

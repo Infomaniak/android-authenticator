@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +42,6 @@ import com.infomaniak.auth.ui.images.illus.dataProtection.DataProtection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.privacymanagement.screencontent.PrivacyManagementHomeContent
 import com.infomaniak.core.privacymanagement.tracker.Tracker
-import com.infomaniak.core.ui.compose.basics.Typography
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -72,7 +72,7 @@ fun PrivacyManagementScreen(
                     .padding(horizontal = Margin.Medium),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.dataManagementTitle), style = Typography.h1)
+                Text(stringResource(R.string.dataManagementTitle), style = MaterialTheme.typography.titleLarge)
             }
             PrivacyManagementHomeContent(
                 contentPadding = PaddingValues(horizontal = Margin.Medium),

@@ -25,6 +25,10 @@ import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.models.ClientExtensionResults
 import com.infomaniak.auth.lib.internal.models.VerifyAuthenticationData
 import com.infomaniak.auth.lib.internal.models.VerifyResponse
+import com.infomaniak.auth.lib.internal.otp.deleteLegacyAccount
+import com.infomaniak.auth.lib.internal.otp.deleteLegacyDB
+import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
+import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.repositories.AccountsRepository
 import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.internal.utils.SignUtils
@@ -135,6 +139,11 @@ internal class AuthenticatorManager(
         }
 
         accountsRepository.deleteAccount(userId)
+
+        if (needMigration()) {
+            deleteLegacyAccount(userId.toString())
+            if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
+        }
     }
 
     suspend fun deleteKeysFor(userId: Long) {
