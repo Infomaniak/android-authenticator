@@ -21,10 +21,18 @@ package com.infomaniak.auth.lib.matomo
 enum class MatomoName(val value: String) {
 
     //region Common
+    AskAddAccount("askAddAccount"),
+    AskRefreshChallenge("askRefreshChallenge"),
     ToggleBiometry("toggleBiometry"),
     LoggedIn("loggedIn"),
     OpenLoginWebview("openLoginWebview"),
     OpenCreationWebview("openCreationWebview"),
+    OpenHistoryWebview("openHistoryWebview"),
+    OpenSettingsWebview("openSettingsWebview"),
+    OpenNotificationSettings("openNotificationSettings"),
+    OpenFeedbackWebview("openFeedbackWebview"),
+    OpenSupportWebview("openSupportWebview"),
+    Disconnect("disconnect"),
     //endregion
 
     //region iOS

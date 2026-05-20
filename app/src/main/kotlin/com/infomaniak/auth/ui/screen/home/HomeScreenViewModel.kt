@@ -18,8 +18,11 @@
 package com.infomaniak.auth.ui.screen.home
 
 import androidx.lifecycle.ViewModel
+import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.matomo.MatomoCategory
+import com.infomaniak.auth.lib.matomo.MatomoName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -28,7 +31,7 @@ class HomeScreenViewModel @Inject constructor(
     private val authenticatorFacade: AuthenticatorFacade
 ) : ViewModel() {
     fun onAddAccountClicked() {
-        //MatomoAuthenticator.trackEvent()
+        MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.AskAddAccount)
         val appStatus = authenticatorFacade.appStatusOrNull<AppStatus.SetupComplete>() ?: return
         appStatus.addAnAccount()
     }
