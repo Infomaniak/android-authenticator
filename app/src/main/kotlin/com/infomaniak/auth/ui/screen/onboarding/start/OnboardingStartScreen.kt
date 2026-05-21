@@ -40,10 +40,12 @@ import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountCancelUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
+import com.infomaniak.auth.utils.isWindowSmall
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.utils.LoginFlowController
 import com.infomaniak.core.auth.utils.LoginUtils
@@ -58,6 +60,7 @@ import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import com.infomaniak.core.ui.compose.basics.ButtonStyle
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.coroutines.launch
 
@@ -133,6 +136,8 @@ private fun OnboardingStartScreen(
         onCancel?.invoke()
     }
 
+    LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
+
     OnboardingScaffold(
         pagerState = pagerState,
         snackbarHost = {
@@ -154,7 +159,10 @@ private fun OnboardingStartScreen(
                     buttonStyle = CrossLoginDefaults.buttonType(object : ButtonStyle {
                         override val height: Dp = AppDimens.LargeButtonHeight
                         override val shape: Shape = AppShapes.LargeButtonShape
-                    })
+                    }),
+                    colors = CrossLoginDefaults.colors(
+                        buttonSurfaceColors = AuthenticatorTheme.materialColors.surfaceBright,
+                    )
                 ),
                 onContinueWithSelectedAccounts = onLoginRequest,
                 onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },
