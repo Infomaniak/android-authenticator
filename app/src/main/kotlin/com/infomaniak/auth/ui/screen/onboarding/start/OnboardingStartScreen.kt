@@ -36,9 +36,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
 import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountCancelUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -91,6 +93,8 @@ fun OnboardingStartScreen(
 
         if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
     }
+
+    MatomoTrackScreen(MatomoScreen.OnboardingStartScreen)
 
     OnboardingStartScreen(
         snackbarHostState = snackbarHostState,

@@ -18,8 +18,11 @@
 package com.infomaniak.auth.ui.screen.onboarding.migration
 
 import androidx.lifecycle.ViewModel
+import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.lib.AppStatus.LoginRequired
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.auth.lib.matomo.MatomoCategory
+import com.infomaniak.auth.lib.matomo.MatomoName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -30,6 +33,7 @@ class MigrationViewModel @Inject constructor(
     val accounts = authenticatorFacade.accounts
 
     fun onContinue() {
+        MatomoAuthenticator.trackEvent(MatomoCategory.Migration, MatomoName.MigrationStart)
         val appStatus = authenticatorFacade.appStatusOrNull<LoginRequired.MigratingFromLegacyKAuth>() ?: return
         appStatus.proceed()
     }

@@ -29,15 +29,19 @@ import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.MatomoAuthenticator.trackSettingsEvent
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.matomo.MatomoCategory
 import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
 import com.infomaniak.auth.ui.screen.settings.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.applock.AppLockHelper.requestCredentials
 import com.infomaniak.core.applock.AppLockManager
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
@@ -59,6 +63,8 @@ fun SettingsScreen(
         set = { appSettingsViewModel.setIsAppLockEnabled(it) }
     )
 
+    MatomoTrackScreen(MatomoScreen.SettingsScreen)
+
     SettingsScreen(appLocked, onThemeClicked, onPrivacyManagementClicked, hasBiometrics)
 }
 
@@ -78,6 +84,7 @@ private fun SettingsScreen(
                 stringResId = R.string.manageNotifications,
                 rightIconResId = R.drawable.square_arrow_up,
                 onClick = {
+                    MatomoAuthenticator.trackEvent(MatomoCategory.SettingsGeneral, MatomoName.OpenNotificationSettings)
                     fragmentActivity?.let {
                         Intent()
                             .apply {
@@ -123,6 +130,7 @@ private fun SettingsScreen(
             stringResId = R.string.feedbackTitle,
             rightIconResId = R.drawable.square_arrow_up,
             onClick = {
+                MatomoAuthenticator.trackEvent(MatomoCategory.SettingsGeneral, MatomoName.OpenFeedbackWebview)
                 fragmentActivity?.getString(R.string.urlUserReport)?.let { fragmentActivity.openUrlInCustomTab(it) }
             },
         ),
@@ -130,6 +138,7 @@ private fun SettingsScreen(
             stringResId = R.string.contactSupportTitle,
             rightIconResId = R.drawable.square_arrow_up,
             onClick = {
+                MatomoAuthenticator.trackEvent(MatomoCategory.SettingsGeneral, MatomoName.OpenSupportWebview)
                 fragmentActivity?.openUrlInCustomTab(SUPPORT_URL)
             },
         ),
