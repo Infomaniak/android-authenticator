@@ -16,7 +16,7 @@ authentication / cross-app login is provided by the Infomaniak Core libraries.
 - **Build System**: Gradle with Kotlin DSL, version catalogs (`libs`, `core`)
 - **Architecture**: MVVM with Repository pattern; shared business logic lives in `:multiplatform-lib`
 - **Dependency Injection**: Dagger Hilt (`@HiltAndroidApp`, `@HiltViewModel`, `@Inject constructor`)
-- **Database**: Room (app settings DB in the app module, account/2FA DBs in `:multiplatform-lib`)
+- **Database**: Room (app settings, account, and 2FA persistence are provided via `:multiplatform-lib`)
 - **UI Framework**: Jetpack Compose only (Material3, Navigation 3) - no XML layouts / ViewBinding
 - **Navigation**: AndroidX Navigation 3 (`androidx.navigation3.*`) with Compose
 - **Network**: Ktor (in `:multiplatform-lib`) + OkHttp; Infomaniak Core `network` / `auth` modules
