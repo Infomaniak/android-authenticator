@@ -58,6 +58,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.defaultEnterAnimation
 import com.infomaniak.auth.ui.theme.defaultExitAnimation
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -78,6 +79,9 @@ fun MainScreen(
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else null
     val hasTriggeredNotificationPermission by viewModel.hasTriggeredNotificationPermission.collectAsStateWithLifecycle()
+
+    val shouldLockScreenOrientation = currentDestination in listOf(NavDestination.Onboarding.Start())
+    LockScreenOrientation(shouldLockScreenOrientation)
 
     LaunchedEffect(viewModel.appStatus) {
         viewModel.appStatus.collect {
