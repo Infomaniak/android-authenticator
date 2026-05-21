@@ -95,7 +95,7 @@ fun baseEntryProvider(
         MigrationScreen()
     }
     entry<NavDestination.Onboarding.Start> {
-        OnboardingStartScreen()
+        OnboardingStartScreen(withBackButton = it.withBackButton)
     }
     entry<NavDestination.Onboarding.SecuringAccount> {
         SecuringAccountFromOnboardingScreen()
@@ -154,7 +154,7 @@ private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackSt
                 backStack.add(
                     NavDestination.DisconnectDialog.DisconnectConfirmation(
                         accountId = params.accountId,
-                        configuration =  params.configuration
+                        configuration = params.configuration
                     )
                 )
             }

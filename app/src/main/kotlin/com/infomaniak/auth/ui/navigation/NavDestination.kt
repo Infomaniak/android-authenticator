@@ -32,7 +32,7 @@ sealed interface NavDestination : NavKey {
         data object Migration : Onboarding
 
         @Serializable
-        data object Start : Onboarding
+        data class Start(val withBackButton: Boolean) : Onboarding
 
         @Serializable
         data object SecuringAccount : Onboarding

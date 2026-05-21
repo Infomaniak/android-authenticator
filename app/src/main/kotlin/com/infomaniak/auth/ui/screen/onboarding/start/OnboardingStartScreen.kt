@@ -40,10 +40,12 @@ import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountCancelUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
+import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.utils.isWindowSmall
 import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.auth.models.UserLoginResult
@@ -66,6 +68,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingStartScreen(
+    withBackButton: Boolean,
     onboardingStartViewModel: OnboardingStartViewModel = hiltViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -114,7 +117,8 @@ fun OnboardingStartScreen(
         },
         onSaveSkippedAccounts = { crossAppLoginFacade.skippedAccountIds.value = it },
         onCreateAccount = { openAccountCreation(onboardingStartViewModel, loginFlowController) },
-        onCancel = onboardingStartViewModel.cancelOnboarding
+        onCancel = onboardingStartViewModel.cancelOnboarding,
+        withBackButton = withBackButton,
     )
 }
 
@@ -128,6 +132,7 @@ private fun OnboardingStartScreen(
     onLoginRequest: (accounts: List<ExternalAccount>) -> Unit,
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     onCreateAccount: () -> Unit,
+    withBackButton: Boolean,
     onCancel: (() -> Unit)? = null,
 ) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
@@ -140,6 +145,14 @@ private fun OnboardingStartScreen(
 
     OnboardingScaffold(
         pagerState = pagerState,
+        topBar = {
+            if (withBackButton) {
+                InfomaniakAuthenticatorTopAppBar(
+                    onBackPressed = onCancel,
+                    withTitle = false,
+                )
+            }
+        },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
@@ -213,6 +226,7 @@ private fun OnboardingStartScreenPreview(
                 AccountsCheckingState(AccountsCheckingStatus.Checking, checkedAccounts = accounts)
             },
             skippedIds = { emptySet() },
+            withBackButton = true,
             isLoginButtonLoading = { false },
             isSignUpButtonLoading = { false },
             onLoginRequest = {},
