@@ -25,7 +25,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -145,7 +147,9 @@ private fun AccountDetailsContent(
     onRemoveAccountClicked: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier
+            .padding(paddingValues)
+            .verticalScroll(rememberScrollState())
     ) {
         Header(account, user)
         AccountSecurityCard(account.status.toSecurityConfiguration())
@@ -260,10 +264,9 @@ private fun SettingsSections(
 
     }.toPersistentList()
 
-    OptionsSection(
-        modifier = modifier,
-        sections = persistentListOf(firstSectionItem, secondSectionItems)
-    )
+    Column(modifier.padding(top = Margin.Medium)) {
+        OptionsSection(sections = persistentListOf(firstSectionItem, secondSectionItems))
+    }
 }
 
 @PreviewSmallWindow

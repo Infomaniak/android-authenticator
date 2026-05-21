@@ -20,7 +20,10 @@ package com.infomaniak.auth.ui.screen.settings
 import android.content.Intent
 import android.provider.Settings
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -143,10 +146,9 @@ private fun SettingsScreen(
             },
         ),
     )
-    OptionsSection(
-        modifier = modifier,
-        sections = persistentListOf(firstSectionItems, secondSectionItems),
-    )
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+        OptionsSection(sections = persistentListOf(firstSectionItems, secondSectionItems),)
+    }
 }
 
 @PreviewSmallWindow

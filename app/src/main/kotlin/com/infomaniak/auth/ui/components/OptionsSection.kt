@@ -84,9 +84,7 @@ private fun OptionsSectionContainer(
     content: @Composable (optionItem: List<OptionItemType>) -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = Margin.Large),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Margin.Large)
     ) {
         sections.forEach { optionsSection ->
