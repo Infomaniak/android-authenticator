@@ -146,11 +146,8 @@ private fun SettingsScreen(
             },
         ),
     )
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        OptionsSection(
-            modifier = modifier,
-            sections = persistentListOf(firstSectionItems, secondSectionItems),
-        )
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+        OptionsSection(sections = persistentListOf(firstSectionItems, secondSectionItems),)
     }
 }
 

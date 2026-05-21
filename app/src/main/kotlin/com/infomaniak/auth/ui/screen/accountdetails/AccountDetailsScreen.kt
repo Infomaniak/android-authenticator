@@ -264,10 +264,9 @@ private fun SettingsSections(
 
     }.toPersistentList()
 
-    OptionsSection(
-        modifier = modifier,
-        sections = persistentListOf(firstSectionItem, secondSectionItems)
-    )
+    Column(modifier.padding(top = Margin.Medium)) {
+        OptionsSection(sections = persistentListOf(firstSectionItem, secondSectionItems))
+    }
 }
 
 @PreviewSmallWindow

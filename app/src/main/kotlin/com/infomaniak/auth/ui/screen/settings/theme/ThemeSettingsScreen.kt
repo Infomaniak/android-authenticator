@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.screen.settings.theme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,12 +35,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.room.appsettings.Theme
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.utils.GetSetCallbacks
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -94,7 +95,10 @@ private fun ThemeSettingsScreen(
                 onClick = { theme.set(Theme.System) },
             ),
         )
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(
+            modifier = Modifier.padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(Margin.Medium)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
