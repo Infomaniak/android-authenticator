@@ -1,3 +1,20 @@
+/*
+ * Infomaniak Authenticator - Android
+ * Copyright (C) 2026 Infomaniak Network SA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.infomaniak.auth.ui.theme
 
 import android.app.Activity
@@ -8,6 +25,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -79,6 +98,8 @@ import com.infomaniak.core.ui.compose.basics.bottomsheet.BottomSheetThemeDefault
 import com.infomaniak.core.ui.compose.basics.bottomsheet.LocalBottomSheetTheme
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.theme.LocalIsThemeDarkMode
+
+val LocalWindowAdaptiveInfo = staticCompositionLocalOf<WindowAdaptiveInfo> { error("No WindowAdaptiveInfo provided") }
 
 // Never access it directly outside the theme setup
 val lightScheme = lightColorScheme(
@@ -245,6 +266,7 @@ fun AuthenticatorTheme(
     val avatarColors = if (isDarkTheme) DarkAvatarColorsScheme else LightAvatarColorsScheme
 
     CompositionLocalProvider(
+        LocalWindowAdaptiveInfo provides currentWindowAdaptiveInfo(),
         LocalStatusColorScheme provides statusColors,
         LocalCustomColorScheme provides customColors,
         LocalIsThemeDarkMode provides isDarkTheme,
