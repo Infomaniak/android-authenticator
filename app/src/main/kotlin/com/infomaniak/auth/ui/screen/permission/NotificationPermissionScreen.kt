@@ -54,7 +54,10 @@ import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.bannerNotification.BannerNotification
 import com.infomaniak.auth.ui.screen.main.MainViewModel
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
 import com.infomaniak.auth.utils.MatomoTrackScreen
+import com.infomaniak.auth.utils.isWindowSmall
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
@@ -104,6 +107,8 @@ private fun NotificationPermissionScreen(
     navigateToHome: () -> Unit,
     onPermissionAsked: () -> Unit,
 ) {
+    LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
+
     BottomStickyButtonScaffold(
         topBar = {
             InfomaniakAuthenticatorTopAppBar()
