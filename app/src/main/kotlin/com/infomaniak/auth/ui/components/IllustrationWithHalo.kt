@@ -57,7 +57,7 @@ fun IllustrationWithHalo(
 
 @PreviewLightAndDark
 @Composable
-fun IllustrationWithHaloPreview() {
+private fun IllustrationWithHaloPreview() {
     AuthenticatorTheme {
         Surface {
             IllustrationWithHalo(

@@ -77,7 +77,7 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun LoginScreen(
@@ -278,7 +278,7 @@ private fun LoginForm(
     }
 }
 
-@PreviewLightAndDark
+@PreviewSmallWindow
 @Composable
 private fun LoginScreenPreview() {
     AuthenticatorTheme {

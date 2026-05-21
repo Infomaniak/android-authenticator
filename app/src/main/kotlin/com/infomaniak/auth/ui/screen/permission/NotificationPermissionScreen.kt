@@ -44,7 +44,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.MainApplication
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.matomo.MatomoScreen
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
@@ -55,9 +54,10 @@ import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.bannerNotification.BannerNotification
 import com.infomaniak.auth.ui.screen.main.MainViewModel
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -132,7 +132,10 @@ private fun NotificationPermissionScreen(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             EmptyElement()
-            IllustrationWithHalo(AppImages.AppIllus.BannerNotification)
+            IllustrationWithHalo(
+                themedImage = AppImages.AppIllus.BannerNotification,
+                modifier = Modifier.weight(1f)
+            )
             TitleAndDescription(
                 title = stringResource(R.string.onboardingNotificationsTitle),
                 description = stringResource(R.string.onboardingNotificationsDescription)
@@ -142,7 +145,7 @@ private fun NotificationPermissionScreen(
 }
 
 
-@PreviewSmallWindow
+@PreviewLightAndDark
 @Composable
 private fun NotificationPermissionScreenPreview() {
     AuthenticatorTheme {
