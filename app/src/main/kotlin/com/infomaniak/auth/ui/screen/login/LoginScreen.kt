@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
