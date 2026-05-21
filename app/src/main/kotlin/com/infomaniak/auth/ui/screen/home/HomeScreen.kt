@@ -51,10 +51,10 @@ import com.infomaniak.auth.ui.navigation.tryPopLast
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.defaultEnterAnimation
 import com.infomaniak.auth.ui.theme.defaultExitAnimation
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
-
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -62,6 +62,8 @@ fun HomeScreen(
     rootBackStack: NavBackStack<NavKey>,
     viewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
+    LockScreenOrientation(isLocked = false)
+
     HomeScreen(
         rootBackStack = rootBackStack,
         onAddAccountClicked = viewModel::onAddAccountClicked,
