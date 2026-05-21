@@ -24,10 +24,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -111,7 +113,6 @@ fun LoginScreen(
                     else -> Unit
                 }
             }
-
             LoginScreen(
                 legacyAccount = { state.legacyAccount },
                 onBackPressed = {
@@ -164,15 +165,19 @@ private fun LoginScreen(
             LargeButton(
                 modifier = topModifier.fillMaxWidth(),
                 title = stringResource(R.string.logInButton),
-                enabled = { passwordState.text.isNotEmpty()},
+                enabled = { passwordState.text.isNotEmpty() },
                 onClick = {
                     onLoginPressed(legacyAccount().email, passwordState.text.toString())
                 }
             )
         },
     ) {
+        val scrollingState = rememberScrollState()
+
         Column(
-            modifier = Modifier.padding(horizontal = Margin.Medium),
+            modifier = Modifier
+                .padding(horizontal = Margin.Medium)
+                .verticalScroll(scrollingState),
             verticalArrangement = Arrangement.spacedBy(Margin.Mini)
         ) {
             Column(
@@ -194,11 +199,7 @@ private fun LoginScreen(
             }
             Text(
                 modifier = Modifier.padding(start = Margin.Medium),
-                text = stringResource(if (passwordError) {
-                    R.string.wrongPasswordLabel
-                } else {
-                    R.string.requiredLabel
-                }),
+                text = stringResource(if (passwordError) R.string.wrongPasswordLabel else R.string.requiredLabel),
                 color = if (passwordError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodySmall,
             )
