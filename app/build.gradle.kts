@@ -162,7 +162,6 @@ dependencies {
     implementation(core.infomaniak.core.ui.view)
     implementation(core.infomaniak.core.webview)
 
-
     implementation(core.androidx.core.splashscreen)
     implementation(core.androidx.work.runtime.ktx)
 
@@ -170,11 +169,12 @@ dependencies {
     implementation(core.kotlinx.serialization.json)
     implementation(core.okhttp)
 
+    implementation(core.androidx.adaptive)
+    implementation(core.splitties.preferences)
+    implementation(libs.accompanist.permissions)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.accompanist.permissions)
-    implementation(core.splitties.preferences)
 
     // Notification
     "standardImplementation"(core.infomaniak.core.notifications.registration)
