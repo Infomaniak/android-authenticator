@@ -1,0 +1,35 @@
+<!--
+  ~ Infomaniak Authenticator - Android
+  ~ Copyright (C) 2026 Infomaniak Network SA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+
+    <group>
+
+        <clip-path android:pathData="M0,0h16v16h-16z" />
+
+        <path
+            android:fillColor="#9F9F9F"
+            android:fillType="evenOdd"
+            android:pathData="M7.552,0.481C5.571,0.59 3.681,1.511 2.354,3.016C0.837,4.736 0.195,7.003 0.578,9.288C0.855,10.946 1.737,12.522 3.016,13.647C3.976,14.491 5.109,15.071 6.344,15.351C7.414,15.593 8.613,15.59 9.687,15.343C11.094,15.019 12.359,14.308 13.377,13.269C14.203,12.427 14.745,11.541 15.149,10.376C15.431,9.562 15.569,8.554 15.522,7.644C15.467,6.585 15.233,5.659 14.785,4.728C14.051,3.202 12.798,1.949 11.272,1.215C10.104,0.653 8.867,0.409 7.552,0.481ZM7.504,1.489C6.494,1.575 5.599,1.852 4.728,2.349C3.892,2.826 3.096,3.579 2.546,4.412C1.552,5.919 1.229,7.783 1.657,9.544C1.826,10.239 2.114,10.913 2.501,11.52C2.653,11.757 2.73,11.862 3.02,12.222C3.038,12.244 3.655,11.633 7.64,7.648C10.17,5.118 12.24,3.044 12.239,3.04C12.238,3.028 12.069,2.891 11.9,2.764C11.217,2.251 10.388,1.862 9.544,1.657C9.015,1.528 8.519,1.471 7.968,1.474C7.796,1.475 7.588,1.482 7.504,1.489ZM8.352,8.36C4.367,12.345 3.756,12.962 3.778,12.98C4.138,13.27 4.243,13.348 4.48,13.499C5.535,14.172 6.75,14.528 8,14.528C9.15,14.528 10.252,14.233 11.272,13.651C12.104,13.176 12.906,12.418 13.454,11.588C14.306,10.297 14.666,8.752 14.479,7.192C14.348,6.1 13.899,4.983 13.236,4.1C13.109,3.931 12.972,3.762 12.96,3.761C12.956,3.76 10.882,5.83 8.352,8.36Z" />
+
+    </group>
+
+</vector>
