@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -174,7 +175,7 @@ private fun Header(account: Account, user: User?) {
                 .background(AuthenticatorTheme.materialColors.surfaceContainerHighest)
         )
         Column {
-            Text(text = account.fullName, style = MaterialTheme.typography.titleLarge)
+            Text(text = account.fullName, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Medium))
             Text(text = account.email)
         }
     }
