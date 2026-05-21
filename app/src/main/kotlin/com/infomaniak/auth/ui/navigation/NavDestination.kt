@@ -32,7 +32,7 @@ sealed interface NavDestination : NavKey {
         data object Migration : Onboarding
 
         @Serializable
-        data class Start(val withBackButton: Boolean) : Onboarding
+        data class Start(val withBackButton: Boolean = false) : Onboarding
 
         @Serializable
         data object SecuringAccount : Onboarding
@@ -88,9 +88,9 @@ sealed interface NavDestination : NavKey {
     data class AccountDetails(val accountId: Long) : NavDestination
 
     //region Dialog
-    
+
     interface DialogDestination : NavDestination
-    
+
     sealed interface DisconnectDialog : DialogDestination {
         @Serializable
         data class DisconnectWarning(val accountId: Long, val configuration: DisconnectConfiguration) : DisconnectDialog

@@ -110,7 +110,7 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
                         startDestination = if (appStatus is AppStatus.SetupComplete) {
                             NavDestination.Home
                         } else {
-                            NavDestination.Onboarding.Start(withBackButton = false)
+                            NavDestination.Onboarding.Start()
                         }
                     )
                 }

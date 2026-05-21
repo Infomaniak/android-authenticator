@@ -133,7 +133,7 @@ private fun handleAppStatus(
     showNotificationPermissionScreen: Boolean,
 ) {
     val targetDestination = when (appStatus) {
-        is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start(withBackButton = false)
+        is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start()
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
         is AppStatus.LoginRequired.MustReLogin -> NavDestination.LoginInApp.Form(
             legacyAccountId = appStatus.accountId,
