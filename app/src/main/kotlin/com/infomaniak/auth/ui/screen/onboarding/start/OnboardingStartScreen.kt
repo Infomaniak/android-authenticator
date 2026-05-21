@@ -40,12 +40,12 @@ import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountCancelUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
 import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
 import com.infomaniak.auth.utils.isWindowSmall
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.utils.LoginFlowController
 import com.infomaniak.core.auth.utils.LoginUtils
@@ -159,7 +159,10 @@ private fun OnboardingStartScreen(
                     buttonStyle = CrossLoginDefaults.buttonType(object : ButtonStyle {
                         override val height: Dp = AppDimens.LargeButtonHeight
                         override val shape: Shape = AppShapes.LargeButtonShape
-                    })
+                    }),
+                    colors = CrossLoginDefaults.colors(
+                        buttonSurfaceColors = AuthenticatorTheme.materialColors.surfaceBright,
+                    )
                 ),
                 onContinueWithSelectedAccounts = onLoginRequest,
                 onUseAnotherAccountClicked = { onLoginRequest(emptyList()) },
