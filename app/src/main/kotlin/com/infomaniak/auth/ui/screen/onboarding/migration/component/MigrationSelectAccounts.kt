@@ -91,7 +91,7 @@ private fun SelectedAccountsButton(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         shape = RoundedCornerShape(Dimens.largeCornerRadius),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.surfaceBright,
             contentColor = AuthenticatorTheme.materialColors.onSurface,
             disabledContainerColor = Color.Transparent,
         ),
