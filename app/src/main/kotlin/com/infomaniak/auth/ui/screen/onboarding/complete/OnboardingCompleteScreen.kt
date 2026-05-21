@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.matomo.MatomoScreen
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -39,6 +38,7 @@ import com.infomaniak.auth.ui.components.TitleAndDescription
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.infomaniakValidated.InfomaniakShieldCheckmark
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
@@ -73,7 +73,10 @@ private fun OnboardingCompleteScreen(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             EmptyElement()
-            IllustrationWithHalo(AppImages.AppIllus.InfomaniakShieldCheckmark)
+            IllustrationWithHalo(
+                themedImage = AppImages.AppIllus.InfomaniakShieldCheckmark,
+                modifier = Modifier.weight(1f)
+            )
             TitleAndDescription(
                 title = stringResource(R.string.onBoardingSuccessTitle),
                 description = stringResource(R.string.onBoardingSuccessDescription)
