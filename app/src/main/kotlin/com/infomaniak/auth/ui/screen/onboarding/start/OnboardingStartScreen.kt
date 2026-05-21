@@ -44,6 +44,8 @@ import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
+import com.infomaniak.auth.utils.isWindowSmall
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.utils.LoginFlowController
 import com.infomaniak.core.auth.utils.LoginUtils
@@ -58,6 +60,7 @@ import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.onboarding.OnboardingScaffold
 import com.infomaniak.core.onboarding.components.OnboardingComponents
 import com.infomaniak.core.ui.compose.basics.ButtonStyle
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.coroutines.launch
 
@@ -132,6 +135,8 @@ private fun OnboardingStartScreen(
     BackHandler(onCancel != null) {
         onCancel?.invoke()
     }
+
+    LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
 
     OnboardingScaffold(
         pagerState = pagerState,
