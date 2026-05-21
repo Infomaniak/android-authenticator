@@ -188,14 +188,14 @@ private fun ActionRequiredLoginFailed(
         ),
         bottomButton = {
             ActionRequiredButton(
-                title = stringResource(R.string.contactSupportTitle),
+                title = stringResource(retryButtonStringRes),
                 style = ButtonStyle.Primary,
-                onClick = onContactSupportClick
+                onClick = onRetryClick
             )
             ActionRequiredButton(
-                title = stringResource(retryButtonStringRes),
+                title = stringResource(R.string.contactSupportTitle),
                 style = ButtonStyle.Tertiary,
-                onClick = onRetryClick
+                onClick = onContactSupportClick
             )
         }
     )
