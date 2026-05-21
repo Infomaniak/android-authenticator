@@ -25,6 +25,6 @@ import com.infomaniak.auth.lib.matomo.MatomoScreen
 @Composable
 fun MatomoTrackScreen(screen: MatomoScreen) {
     LaunchedEffect(Unit) {
-        trackScreen("$screen", screen.value)
+        trackScreen(path = "/$screen", title = screen.value)
     }
 }
