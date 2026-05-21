@@ -76,10 +76,13 @@ import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AppShapes.MediumButtonShape
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
+import com.infomaniak.auth.utils.isWindowSmall
 import com.infomaniak.core.common.extensions.openUrlInCustomTab
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
+import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 
 @Composable
 fun LoginScreen(
@@ -94,6 +97,8 @@ fun LoginScreen(
     }.collectAsState(LoginUiState.Loading)
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
 
     when (val state = uiState) {
         is LoginUiState.Loading -> Unit
@@ -279,7 +284,7 @@ private fun LoginForm(
     }
 }
 
-@PreviewLightAndDark
+@PreviewSmallWindow
 @Composable
 private fun LoginScreenPreview() {
     AuthenticatorTheme {

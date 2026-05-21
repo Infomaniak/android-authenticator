@@ -35,12 +35,15 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.matomo.MatomoScreen
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages
 import com.infomaniak.auth.ui.images.illus.personKAuthAuthenticatorHalfCircle.PersonKAuthAuthenticatorHalfCircle
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
+import com.infomaniak.auth.utils.MatomoTrackScreen
+import com.infomaniak.auth.utils.isWindowSmall
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
@@ -65,6 +68,8 @@ fun SecuringAccountFromLoginInAppScreen(
             returnToLoginScreen = returnToLoginScreen
         )
     }
+
+    LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
 
     SecuringAccountScreen()
 }

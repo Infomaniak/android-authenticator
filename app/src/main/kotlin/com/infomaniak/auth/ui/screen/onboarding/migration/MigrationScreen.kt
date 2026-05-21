@@ -52,7 +52,10 @@ import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
 import com.infomaniak.auth.ui.screen.onboarding.migration.component.MigrationListAccounts
 import com.infomaniak.auth.ui.screen.onboarding.migration.component.MigrationSelectAccounts
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
 import com.infomaniak.auth.utils.MatomoTrackScreen
+import com.infomaniak.auth.utils.isWindowSmall
+import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -79,6 +82,8 @@ fun MigrationScreen(
     onContinue: () -> Unit,
 ) {
     var showAccountsBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
 
     BottomStickyButtonScaffold(
         modifier = modifier,
