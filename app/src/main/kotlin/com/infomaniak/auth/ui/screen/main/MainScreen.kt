@@ -80,7 +80,7 @@ fun MainScreen(
     } else null
     val hasTriggeredNotificationPermission by viewModel.hasTriggeredNotificationPermission.collectAsStateWithLifecycle()
 
-    val shouldLockScreenOrientation = currentDestination in listOf(NavDestination.Onboarding.Start)
+    val shouldLockScreenOrientation = currentDestination in listOf(NavDestination.Onboarding.Start())
     LockScreenOrientation(shouldLockScreenOrientation)
 
     LaunchedEffect(viewModel.appStatus) {
