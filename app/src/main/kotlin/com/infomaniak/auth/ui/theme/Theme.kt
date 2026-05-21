@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -19,11 +18,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.color.CustomColorScheme
 import com.infomaniak.auth.ui.theme.color.DarkCustomScheme
@@ -186,27 +182,6 @@ private val darkScheme = darkColorScheme(
 val LocalCustomColorScheme: ProvidableCompositionLocal<CustomColorScheme> = staticCompositionLocalOf { CustomColorScheme() }
 val LocalStatusColorScheme: ProvidableCompositionLocal<StatusColorScheme> = staticCompositionLocalOf { StatusColorScheme() }
 
-private val robotoFlexFamily = FontFamily(Font(R.font.roboto_flex))
-
-private val defaultTypography = Typography()
-private val robotoFlexTypography = defaultTypography.copy(
-    displayLarge = defaultTypography.displayLarge.copy(fontFamily = robotoFlexFamily),
-    displayMedium = defaultTypography.displayMedium.copy(fontFamily = robotoFlexFamily),
-    displaySmall = defaultTypography.displaySmall.copy(fontFamily = robotoFlexFamily),
-    headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = robotoFlexFamily),
-    headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = robotoFlexFamily),
-    headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = robotoFlexFamily),
-    titleLarge = defaultTypography.titleLarge.copy(fontFamily = robotoFlexFamily),
-    titleMedium = defaultTypography.titleMedium.copy(fontFamily = robotoFlexFamily),
-    titleSmall = defaultTypography.titleSmall.copy(fontFamily = robotoFlexFamily),
-    bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = robotoFlexFamily),
-    bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = robotoFlexFamily),
-    bodySmall = defaultTypography.bodySmall.copy(fontFamily = robotoFlexFamily),
-    labelLarge = defaultTypography.labelLarge.copy(fontFamily = robotoFlexFamily),
-    labelMedium = defaultTypography.labelMedium.copy(fontFamily = robotoFlexFamily),
-    labelSmall = defaultTypography.labelSmall.copy(fontFamily = robotoFlexFamily)
-)
-
 @Composable
 fun AuthenticatorTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -251,10 +226,7 @@ fun AuthenticatorTheme(
         LocalPrivacyManagementTheme provides privacyManagementTheme,
         LocalAvatarColors provides AvatarColors(avatarColors.colorList, customColors.sectionBackground),
     ) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = robotoFlexTypography,
-        ) {
+        MaterialTheme(colorScheme = colorScheme) {
             val bottomSheetTheme = BottomSheetThemeDefaults.theme()
 
             CompositionLocalProvider(
