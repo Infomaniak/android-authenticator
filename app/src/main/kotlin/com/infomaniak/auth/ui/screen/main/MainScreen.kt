@@ -111,7 +111,7 @@ fun MainScreen(
 
     var showDisconnectedAccountDialogFor: Account? by remember { mutableStateOf(null) }
     LaunchedEffect(Unit) {
-        viewModel.accountsDisconnected.collect {  accounts ->
+        viewModel.accountsDisconnected.collect { accounts ->
             showDisconnectedAccountDialogFor = accounts.firstOrNull()
         }
     }
@@ -133,9 +133,12 @@ private fun handleAppStatus(
     showNotificationPermissionScreen: Boolean,
 ) {
     val targetDestination = when (appStatus) {
-        is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start
+        is AppStatus.LoginRequired.NotMigrating -> NavDestination.Onboarding.Start()
         is AppStatus.LoginRequired.MigratingFromLegacyKAuth -> NavDestination.Onboarding.Migration
-        is AppStatus.LoginRequired.MustReLogin -> NavDestination.LoginInApp.Form(legacyAccountId = appStatus.accountId, isOnboarding = true)
+        is AppStatus.LoginRequired.MustReLogin -> NavDestination.LoginInApp.Form(
+            legacyAccountId = appStatus.accountId,
+            isOnboarding = true
+        )
         is AppStatus.LoggingIn -> NavDestination.Onboarding.SecuringAccount
         is AppStatus.EverythingReady -> NavDestination.Onboarding.Complete
         is AppStatus.SetupComplete -> {
@@ -145,7 +148,7 @@ private fun handleAppStatus(
                 NavDestination.Home
             }
         }
-        is AppStatus.AddingAnAccount -> NavDestination.Onboarding.Start
+        is AppStatus.AddingAnAccount -> NavDestination.Onboarding.Start(withBackButton = true)
     }
 
     if (currentDestination != targetDestination) {
