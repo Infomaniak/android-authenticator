@@ -19,7 +19,9 @@ package com.infomaniak.auth.ui.screen.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +39,7 @@ import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,23 +52,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.CredentialsForMigration
+import com.infomaniak.auth.lib.matomo.MatomoCategory
+import com.infomaniak.auth.lib.matomo.MatomoName
 import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton
-import com.infomaniak.auth.ui.components.OpenUrlButton
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
+import com.infomaniak.auth.ui.theme.AppShapes.MediumButtonShape
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
@@ -193,16 +202,23 @@ private fun LoginScreen(
                 color = if (passwordError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodySmall,
             )
-            OpenUrlButton(
-                text = stringResource(R.string.passwordForgottenButton),
-                sourceUrl = RECOVER_PASSWORD_URL,
-                leadingIcon = {
-                    Icon(
-                        modifier = Modifier.padding(end = Margin.Mini),
-                        painter = painterResource(R.drawable.ic_circle_information_full), contentDescription = null
-                    )
-                }
-            )
+
+            val context = LocalContext.current
+            TextButton(
+                modifier = Modifier.heightIn(min = 48.dp),
+                onClick = {
+                    MatomoAuthenticator.trackEvent(MatomoCategory.Migration, MatomoName.OpenForgotPasswordWebview)
+                    context.openUrlInCustomTab(RECOVER_PASSWORD_URL)
+                },
+                contentPadding = PaddingValues(horizontal = Margin.Medium),
+                shape = MediumButtonShape,
+            ) {
+                Icon(
+                    modifier = Modifier.padding(end = Margin.Mini),
+                    painter = painterResource(R.drawable.ic_circle_information_full), contentDescription = null
+                )
+                Text(text = stringResource(R.string.passwordForgottenButton))
+            }
         }
     }
 }

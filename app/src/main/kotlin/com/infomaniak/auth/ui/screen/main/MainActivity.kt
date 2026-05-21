@@ -30,7 +30,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
 import com.infomaniak.auth.lib.room.appsettings.Theme
@@ -120,8 +119,6 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
         lifecycleScope.launch {
             keepCrossAppLoginActivatedWhileNeeded(viewModel.appStatus)
         }
-        //TODO: Remove
-        MatomoAuthenticator.addTrackingCallbackForDebugLog()
     }
 
     private suspend fun keepCrossAppLoginActivatedWhileNeeded(appStatus: SharedFlow<AppStatus>) {

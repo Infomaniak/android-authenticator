@@ -33,6 +33,9 @@ enum class MatomoName(val value: String) {
     OpenFeedbackWebview("openFeedbackWebview"),
     OpenSupportWebview("openSupportWebview"),
     Disconnect("disconnect"),
+    MigrationStart("migrationStart"),
+    ShowRecoverableAccounts("showRecoverableAccounts"),
+    OpenForgotPasswordWebview("openForgotPasswordWebview"),
     //endregion
 
     //region iOS

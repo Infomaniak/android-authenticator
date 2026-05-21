@@ -23,6 +23,7 @@ enum class MatomoCategory(val value: String) {
     //region Common
     Account("account"),
     SettingsGeneral("settingsGeneral"),
+    Migration("migration"),
     //endregion
 
     //region iOS
