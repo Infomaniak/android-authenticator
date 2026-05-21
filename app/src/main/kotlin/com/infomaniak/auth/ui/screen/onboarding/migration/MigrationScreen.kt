@@ -35,8 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.matomo.MatomoCategory
+import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -48,6 +52,7 @@ import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
 import com.infomaniak.auth.ui.screen.onboarding.migration.component.MigrationListAccounts
 import com.infomaniak.auth.ui.screen.onboarding.migration.component.MigrationSelectAccounts
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
@@ -58,6 +63,9 @@ fun MigrationScreen(
     viewModel: MigrationViewModel = hiltViewModel(),
 ) {
     val accounts by viewModel.accounts.collectAsStateWithLifecycle(emptyList())
+
+    MatomoTrackScreen(MatomoScreen.MigrationScreen)
+
     MigrationScreen(
         accounts = { accounts },
         onContinue = viewModel::onContinue
@@ -81,7 +89,10 @@ fun MigrationScreen(
             BottomButton(
                 modifier = bottomModifier,
                 accounts = accounts,
-                onClick = { showAccountsBottomSheet = true },
+                onClick = {
+                    showAccountsBottomSheet = true
+                    MatomoAuthenticator.trackEvent(MatomoCategory.Migration, MatomoName.ShowRecoverableAccounts)
+                },
                 onContinue = onContinue
             )
         }

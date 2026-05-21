@@ -34,6 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages
@@ -95,6 +97,8 @@ fun SecuringAccountFromOnboardingScreen() {
 
 @Composable
 private fun SecuringAccountScreen(modifier: Modifier = Modifier) {
+    MatomoTrackScreen(MatomoScreen.SecuringAccountScreen)
+
     SinglePaneScaffold(
         modifier = modifier,
         topBar = {

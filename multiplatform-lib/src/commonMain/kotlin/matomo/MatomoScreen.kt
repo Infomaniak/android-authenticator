@@ -19,4 +19,14 @@
 package com.infomaniak.auth.lib.matomo
 
 enum class MatomoScreen(val value: String) {
+    MigrationScreen("Migration"),
+    AccountListScreen("AccountList"),
+    AccountDetailsScreen("AccountDetails"),
+    SecuringAccountScreen("SecuringAccount"),
+    SettingsScreen("Settings"),
+    OnboardingStartScreen("OnboardingStart"),
+    OnboardingCompleteScreen("OnboardingComplete"),
+    NotificationPermissionScreen("NotificationPermission"),
+    ThemeSettingsScreen("ThemeSettings"),
+    PrivacyManagementScreen("PrivacyManagement"),
 }

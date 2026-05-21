@@ -47,6 +47,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
@@ -63,6 +65,8 @@ fun AccountListScreen(
     viewModel: AccountListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    MatomoTrackScreen(MatomoScreen.AccountListScreen)
 
     when (val state = uiState) {
         is AccountListUiState.Success -> {

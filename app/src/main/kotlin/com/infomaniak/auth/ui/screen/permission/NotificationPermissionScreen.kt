@@ -43,6 +43,8 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.infomaniak.auth.MainApplication
 import com.infomaniak.auth.R
+import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.EmptyElement
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
@@ -84,6 +86,8 @@ fun NotificationPermissionScreen(
             (context.applicationContext as? MainApplication)?.registerUserDeviceIfNeeded()
         }
     }
+
+    MatomoTrackScreen(MatomoScreen.NotificationPermissionScreen)
 
     NotificationPermissionScreen(
         navigateToHome = navigateToHome,

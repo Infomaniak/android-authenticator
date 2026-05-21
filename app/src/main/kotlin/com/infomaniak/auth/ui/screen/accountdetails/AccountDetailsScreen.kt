@@ -43,8 +43,12 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
+import com.infomaniak.auth.lib.matomo.MatomoCategory
+import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.auth.lib.matomo.MatomoScreen
 import com.infomaniak.auth.lib.models.UrlConstants
 import com.infomaniak.auth.lib.models.UrlConstants.ACTIVITY_MANAGER_URL
 import com.infomaniak.auth.lib.models.UrlConstants.SETTINGS_MANAGER_URL
@@ -55,6 +59,7 @@ import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
 import com.infomaniak.auth.ui.screen.accountdetails.AccountSecurityConfiguration.Companion.toSecurityConfiguration
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
@@ -74,6 +79,8 @@ fun AccountDetailsScreen(
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    MatomoTrackScreen(MatomoScreen.AccountDetailsScreen)
 
     LaunchedEffect(Unit) {
         viewModel.fetchAccountDetails(accountId)
@@ -194,6 +201,7 @@ private fun SettingsSections(
     }
 
     val onClickRefreshChallenges = {
+        MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.AskRefreshChallenge)
         onChallengesRefreshClicked()
         isRefreshing = true
     }
@@ -215,6 +223,7 @@ private fun SettingsSections(
                     stringResId = R.string.activityHistoryButton,
                     rightIconResId = R.drawable.square_arrow_up,
                     onClick = {
+                        MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.OpenHistoryWebview)
                         WebViewActivity.startActivity(
                             context = context,
                             url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
@@ -228,6 +237,7 @@ private fun SettingsSections(
                     stringResId = R.string.accountSettingsButton,
                     rightIconResId = R.drawable.square_arrow_up,
                     onClick = {
+                        MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.OpenSettingsWebview)
                         WebViewActivity.startActivity(
                             context = context,
                             url = UrlConstants.autologUrl(host = host, UrlConstants.managerUrl(host, SETTINGS_MANAGER_URL)),
@@ -242,6 +252,7 @@ private fun SettingsSections(
                 stringResId = if (accountStatus is Account.Status.NotConnected) R.string.removeAccountButton else R.string.disconnectButton,
                 textColor = AuthenticatorTheme.materialColors.error,
                 onClick = {
+                    MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.Disconnect)
                     onRemoveAccountClicked()
                 }
             ),
