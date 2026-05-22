@@ -152,7 +152,7 @@ private fun AccountDetailsContent(
             .verticalScroll(rememberScrollState())
     ) {
         Header(account, user)
-        AccountSecurityCard(account.status.toSecurityConfiguration())
+        AccountSecurityCard(account.status.toSecurityConfiguration(), token = user?.apiToken?.accessToken)
         ActionRequiredCard(account.status, onLoginPressed)
         SettingsSections(
             accountStatus = account.status,
