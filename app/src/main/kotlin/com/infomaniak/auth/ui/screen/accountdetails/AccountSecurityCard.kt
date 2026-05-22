@@ -131,7 +131,7 @@ enum class AccountSecurityConfiguration(
             WebViewActivity.startActivity(
                 context = context,
                 url = url,
-                headers = token?.let { mapOf("Authorization" to "Bearer $token") } ?: emptyMap(),
+                headers = token?.let { mapOf("Authorization" to "Bearer $it") } ?: emptyMap(),
             )
         }
     ),
