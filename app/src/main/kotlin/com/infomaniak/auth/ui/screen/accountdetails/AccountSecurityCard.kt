@@ -49,7 +49,6 @@ import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
