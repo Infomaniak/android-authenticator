@@ -22,7 +22,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
-import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AppStatus
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.matomo.MatomoName
@@ -63,6 +62,7 @@ class OnboardingStartViewModel @Inject constructor(
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
             users.forEach { user ->
+                user.apiToken.isTemporary = true
                 accountUtils.addUser(user)
                 addUserToAuthenticatorDB(user)
             }
