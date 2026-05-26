@@ -4,8 +4,6 @@ kotlinCryptoBom = "0.8.0"
 kotlin = "2.3.0"
 osmerionkotlinBase32 = "1.0.0"
 ksp = "2.3.4"
-lifecycleViewmodelNav3 = "2.10.0"
-nav3Core = "1.1.1"
 room = "2.8.4"
 skie = "0.10.9"
 sonarqube = "7.2.3.7755"
@@ -13,9 +11,6 @@ sqlite = "2.6.2"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
-androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
-androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
-androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
