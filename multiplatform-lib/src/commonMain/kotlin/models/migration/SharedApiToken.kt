@@ -30,5 +30,5 @@ data class SharedApiToken(
     @SerialName("user_id") val userId: Int,
     @SerialName("scope") val scope: String? = null,
     @Transient var expiresAt: Long? = null,
-    @Transient var shouldBeRegistered: Boolean = true
+    @Transient var isTemporary: Boolean = false
 )

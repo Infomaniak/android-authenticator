@@ -33,7 +33,7 @@ fun LoginApiToken.toSharedApiToken(): SharedApiToken {
         accessToken = accessToken,
         tokenType = tokenType,
         userId = userId,
-        shouldBeRegistered = shouldBeRegistered,
+        isTemporary = isTemporary,
         expiresAt = expiresAt,
         expiresIn = expiresIn,
         refreshToken = refreshToken,
@@ -49,7 +49,7 @@ fun SharedApiToken.toLoginApiToken() = LoginApiToken(
     expiresIn = expiresIn,
     scope = scope,
     expiresAt = expiresAt,
-    shouldBeRegistered = shouldBeRegistered,
+    isTemporary = isTemporary,
 )
 
 fun SharedUserProfile.toUser(): User {

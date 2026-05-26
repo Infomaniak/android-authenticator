@@ -62,7 +62,7 @@ class OnboardingStartViewModel @Inject constructor(
         trackAccountEvent(MatomoName.LoggedIn)
         viewModelScope.launch {
             users.forEach { user ->
-                user.apiToken.shouldBeRegistered = false
+                user.apiToken.isTemporary = true
                 accountUtils.addUser(user)
                 addUserToAuthenticatorDB(user)
             }
