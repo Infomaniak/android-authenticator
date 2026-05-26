@@ -33,6 +33,11 @@ fun LoginApiToken.toSharedApiToken(): SharedApiToken {
         accessToken = accessToken,
         tokenType = tokenType,
         userId = userId,
+        shouldBeRegistered = shouldBeRegistered,
+        expiresAt = expiresAt,
+        expiresIn = expiresIn,
+        refreshToken = refreshToken,
+        scope = scope,
     )
 }
 
@@ -40,6 +45,11 @@ fun SharedApiToken.toLoginApiToken() = LoginApiToken(
     accessToken = accessToken,
     tokenType = tokenType,
     userId = userId,
+    refreshToken = refreshToken,
+    expiresIn = expiresIn,
+    scope = scope,
+    expiresAt = expiresAt,
+    shouldBeRegistered = shouldBeRegistered,
 )
 
 fun SharedUserProfile.toUser(): User {

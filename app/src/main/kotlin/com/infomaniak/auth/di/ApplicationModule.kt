@@ -188,6 +188,7 @@ object ApplicationModule {
             }
 
             override suspend fun persistUserProfile(userProfile: SharedUserProfile) {
+                userProfile.apiToken.shouldBeRegistered = false
                 accountUtils.addUser(userProfile.toUser())
             }
         }
