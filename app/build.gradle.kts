@@ -172,9 +172,11 @@ dependencies {
     implementation(core.androidx.adaptive)
     implementation(core.splitties.preferences)
     implementation(libs.accompanist.permissions)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.navigation3.ui)
+
+    // Navigation 3
+    implementation(core.androidx.lifecycle.viewmodel.navigation3)
+    implementation(core.androidx.navigation3.runtime)
+    implementation(core.androidx.navigation3.ui)
 
     // Notification
     "standardImplementation"(core.infomaniak.core.notifications.registration)
