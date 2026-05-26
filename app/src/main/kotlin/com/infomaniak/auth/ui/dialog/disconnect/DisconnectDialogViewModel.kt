@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -67,9 +68,11 @@ class DisconnectDialogViewModel @Inject constructor(
     fun removeAccount(onAccountRemoved: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             accountIdFlow.first().let { accountId ->
+                authenticatorFacade.removeAccount(token = userAccessToken.value, id = accountId)
                 accountUtils.removeUser(accountId.toInt())
-                authenticatorFacade.removeAccount(token = null, id = accountId)
-                onAccountRemoved()
+                withContext(Dispatchers.Main) {
+                    onAccountRemoved()
+                }
             }
         }
     }
