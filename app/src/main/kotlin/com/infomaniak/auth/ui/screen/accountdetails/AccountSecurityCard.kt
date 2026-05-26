@@ -49,15 +49,16 @@ import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.core.common.extensions.openUrlInCustomTab
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
+import com.infomaniak.core.webview.ui.WebViewActivity
 
 @Composable
 fun AccountSecurityCard(
     configuration: AccountSecurityConfiguration,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    token: String? = null,
 ) {
     Card(
         modifier = modifier
@@ -99,7 +100,7 @@ fun AccountSecurityCard(
                         .padding(bottom = Margin.Medium),
                     title = stringResource(R.string.updateButton),
                     style = ButtonStyle.Primary,
-                    onClick = { configuration.action(context) }
+                    onClick = { configuration.action(context, token) }
                 )
             }
         }
@@ -111,7 +112,7 @@ enum class AccountSecurityConfiguration(
     val descriptionResId: Int? = null,
     val iconResId: Int,
     val iconTint: @Composable (() -> Color)? = null,
-    val action: ((Context) -> Unit)? = null,
+    val action: ((Context, String?) -> Unit)? = null,
 ) {
     Secured(
         titleResId = R.string.accountProtected,
@@ -123,10 +124,15 @@ enum class AccountSecurityConfiguration(
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
         iconTint = { AuthenticatorTheme.customColors.iconTintWarning },
-        action = { context ->
+        action = { context, token ->
             val host = ApiEnvironment.current.host
             val url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, SETTINGS_ACCOUNT_SECURITY_URL))
-            context.openUrlInCustomTab(url)
+
+            WebViewActivity.startActivity(
+                context = context,
+                url = url,
+                headers = token?.let { mapOf("Authorization" to "Bearer $it") } ?: emptyMap(),
+            )
         }
     ),
     Disconnected(
