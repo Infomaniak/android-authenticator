@@ -188,7 +188,6 @@ object ApplicationModule {
             }
 
             override suspend fun persistUserProfile(userProfile: SharedUserProfile) {
-                userProfile.apiToken.isTemporary = true
                 accountUtils.addUser(userProfile.toUser())
             }
         }
