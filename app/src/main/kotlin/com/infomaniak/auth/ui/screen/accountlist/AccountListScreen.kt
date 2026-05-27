@@ -42,19 +42,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.R
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.matomo.MatomoScreen
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.StatusCard
 import com.infomaniak.auth.ui.components.StatusCardVariant
 import com.infomaniak.auth.ui.previewparameter.fakeAccountPairs
 import com.infomaniak.auth.ui.screen.accountlist.AccountListViewModel.AccountListUiState
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
 import kotlinx.coroutines.delay
@@ -128,7 +129,11 @@ fun AccountListScreen(
                 verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
                 if (hasUnsecuredAccounts) ActionRequired()
-                if (hasAccountMigrationIssue) MigrationWarning()
+                if (hasAccountMigrationIssue) MigrationWarning(
+                    accountWithMigrationIssueCount = state.accountPairs.count { (account, _) ->
+                        account.status is Account.Status.NotConnected.ReLogin
+                    }
+                )
                 state.accountPairs.forEach { (account, user) ->
                     key(account.email) {
                         AccountItem(
@@ -168,7 +173,7 @@ private fun ActionRequired() {
 }
 
 @Composable
-private fun MigrationWarning() {
+private fun MigrationWarning(accountWithMigrationIssueCount: Int) {
     StatusCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -184,7 +189,7 @@ private fun MigrationWarning() {
             )
             Text(
                 modifier = Modifier.padding(start = Margin.Small),
-                text = stringResource(R.string.migrationWarningDescription)
+                text = pluralStringResource(R.plurals.migrationWarningDescription, accountWithMigrationIssueCount)
             )
         }
     }

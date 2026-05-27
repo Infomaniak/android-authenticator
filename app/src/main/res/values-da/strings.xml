@@ -103,7 +103,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Denne anmodning er allerede behandlet</string>
     <string name="loginRequestExpiredTitle">Denne loginanmodning er udløbet</string>
     <string name="manageNotifications">Administrer notifikationer</string>
-    <string name="migrationWarningDescription">Overgangen til den nye app kunne ikke gennemføres for en eller flere af dine konti.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Log venligst ind igen for at sikre din konto.</item>
+        <item quantity="other">Log venligst ind igen for at sikre dine konti.</item>
+    </plurals>
     <string name="noInternetTitle">Ingen internetforbindelse</string>
     <string name="notMeButton">Det var ikke mig</string>
     <string name="notificationsDescription">Aktiver notifikationer for at modtage sikkerhedsoplysninger om dine Infomaniak konti.</string>

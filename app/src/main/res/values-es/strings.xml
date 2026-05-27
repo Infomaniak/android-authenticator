@@ -104,7 +104,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Esta solicitud ya ha sido procesada</string>
     <string name="loginRequestExpiredTitle">Esta solicitud de inicio de sesión ha expirado</string>
     <string name="manageNotifications">Gestionar notificaciones</string>
-    <string name="migrationWarningDescription">No se ha podido completar la transición a la nueva aplicación para una o más de tus cuentas.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Inicie sesión de nuevo para proteger su cuenta.</item>
+        <item quantity="other">Por favor, inicie sesión de nuevo para asegurar sus cuentas.</item>
+    </plurals>
     <string name="noInternetTitle">Sin conexión a internet</string>
     <string name="notMeButton">No fui yo</string>
     <string name="notificationsDescription">Active las notificaciones para recibir información relacionada con la seguridad de sus cuentas Infomaniak.</string>

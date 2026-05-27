@@ -104,7 +104,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Questa richiesta è già stata elaborata</string>
     <string name="loginRequestExpiredTitle">Questa richiesta di accesso è scaduta</string>
     <string name="manageNotifications">Gestisci le notifiche</string>
-    <string name="migrationWarningDescription">Non è stato possibile completare la transizione alla nuova app per uno o più account.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Effettuare nuovamente il login per proteggere il proprio account.</item>
+        <item quantity="other">Effettuate nuovamente il login per proteggere i vostri account.</item>
+    </plurals>
     <string name="noInternetTitle">Nessuna connessione Internet</string>
     <string name="notMeButton">Non sono stato io</string>
     <string name="notificationsDescription">Attiva le notifiche per ricevere informazioni sulla sicurezza dei tuoi account Infomaniak.</string>

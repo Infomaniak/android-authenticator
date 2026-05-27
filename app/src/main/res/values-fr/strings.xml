@@ -104,7 +104,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Cette demande a déjà été traitée</string>
     <string name="loginRequestExpiredTitle">Cette demande de connexion a expiré</string>
     <string name="manageNotifications">Gérer les notifications</string>
-    <string name="migrationWarningDescription">La transition vers la nouvelle application n’a pas pu être effectuée pour un ou plusieurs de vos comptes.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Veuillez vous connecter à nouveau pour sécuriser votre compte.</item>
+        <item quantity="other">Veuillez vous connecter à nouveau pour sécuriser vos comptes.</item>
+    </plurals>
     <string name="noInternetTitle">Pas de connexion Internet</string>
     <string name="notMeButton">Ce n’était pas moi</string>
     <string name="notificationsDescription">Activez les notifications pour recevoir les informations relatives à la sécurité de vos comptes Infomaniak.</string>
