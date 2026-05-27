@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Du vil ikke lenger motta tilkoblingsforespørsler om å godkjenne på denne enheten for %s</string>
     <string name="accountDisconnectedTitle">Konto frakoblet fra Authenticator</string>
     <string name="accountLoggedOut">Kontoen er logget ut</string>

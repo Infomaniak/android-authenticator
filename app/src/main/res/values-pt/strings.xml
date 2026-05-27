@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Deixará de receber pedidos de ligação para aprovar neste dispositivo para a %s</string>
     <string name="accountDisconnectedTitle">Conta desconectada do Authenticator</string>
     <string name="accountLoggedOut">Conta desconectada</string>

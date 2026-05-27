@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Non si riceveranno più richieste di connessione da approvare su questo dispositivo per il %s</string>
     <string name="accountDisconnectedTitle">Account disconnesso da Authenticator</string>
     <string name="accountLoggedOut">Account disconnesso</string>
