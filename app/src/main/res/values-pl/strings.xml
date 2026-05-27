@@ -106,6 +106,8 @@
     <plurals name="migrationWarningDescription">
         <item quantity="one">Zaloguj się ponownie, aby zabezpieczyć swoje konto.</item>
         <item quantity="few">Zaloguj się ponownie, aby zabezpieczyć swoje konta.</item>
+        <item quantity="many">Zaloguj się ponownie, aby zabezpieczyć swoje konta.</item>
+        <item quantity="other">Zaloguj się ponownie, aby zabezpieczyć swoje konta.</item>
     </plurals>
     <string name="noInternetTitle">Brak połączenia z internetem</string>
     <string name="notMeButton">To nie ja</string>
