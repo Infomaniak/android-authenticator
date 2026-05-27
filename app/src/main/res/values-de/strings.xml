@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Sie erhalten keine Verbindungsanfragen mehr zur Genehmigung auf diesem Gerät für die %s</string>
     <string name="accountDisconnectedTitle">Konto wurde vom Authenticator getrennt</string>
     <string name="accountLoggedOut">Konto abgemeldet</string>
@@ -104,7 +104,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Diese Anfrage wurde bereits verarbeitet</string>
     <string name="loginRequestExpiredTitle">Diese Anmeldeanfrage ist abgelaufen</string>
     <string name="manageNotifications">Benachrichtigungen verwalten</string>
-    <string name="migrationWarningDescription">Der Übergang zur neuen App konnte für eines oder mehrere Ihrer Konten nicht abgeschlossen werden.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Bitte melden Sie sich erneut an, um Ihr Konto zu sichern.</item>
+        <item quantity="other">Bitte melden Sie sich erneut an, um Ihre Konten zu sichern.</item>
+    </plurals>
     <string name="noInternetTitle">Keine Internetverbindung</string>
     <string name="notMeButton">Das war nicht ich</string>
     <string name="notificationsDescription">Aktivieren Sie Benachrichtigungen, um Sicherheitsinformationen zu Ihren Infomaniak-Konten zu erhalten.</string>

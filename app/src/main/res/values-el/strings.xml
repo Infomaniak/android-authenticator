@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Δεν θα λαμβάνετε πλέον αιτήσεις σύνδεσης για έγκριση σε αυτή τη συσκευή για το %s</string>
     <string name="accountDisconnectedTitle">Αποσύνδεση λογαριασμού από τον Αυθεντικοποιητή</string>
     <string name="accountLoggedOut">Ο λογαριασμός αποσυνδέθηκε</string>
@@ -103,7 +103,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Αυτό το αίτημα έχει ήδη υποβληθεί σε επεξεργασία</string>
     <string name="loginRequestExpiredTitle">Αυτό το αίτημα σύνδεσης έχει λήξει</string>
     <string name="manageNotifications">Διαχείριση ειδοποιήσεων</string>
-    <string name="migrationWarningDescription">Η μετάβαση στη νέα εφαρμογή δεν μπόρεσε να ολοκληρωθεί για έναν ή περισσότερους από τους λογαριασμούς σας.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Παρακαλούμε συνδεθείτε ξανά για να ασφαλίσετε το λογαριασμό σας.</item>
+        <item quantity="other">Παρακαλούμε συνδεθείτε ξανά για να ασφαλίσετε τους λογαριασμούς σας.</item>
+    </plurals>
     <string name="noInternetTitle">Χωρίς σύνδεση στο διαδίκτυο</string>
     <string name="notMeButton">Δεν ήμουν εγώ</string>
     <string name="notificationsDescription">Ενεργοποιήστε τις ειδοποιήσεις για να λαμβάνετε πληροφορίες ασφαλείας σχετικά με τους λογαριασμούς σας Infomaniak.</string>

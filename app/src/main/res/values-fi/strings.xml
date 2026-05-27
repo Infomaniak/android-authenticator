@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Et saa enää yhteyspyyntöjä hyväksyä tätä laitetta varten %s</string>
     <string name="accountDisconnectedTitle">Tilin yhteys Authenticatoriin katkaistiin</string>
     <string name="accountLoggedOut">Tililtä kirjauduttu ulos</string>
@@ -103,7 +103,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Tämä pyyntö on jo käsitelty</string>
     <string name="loginRequestExpiredTitle">Tämä kirjautumispyyntö on vanhentunut</string>
     <string name="manageNotifications">Hallitse ilmoituksia</string>
-    <string name="migrationWarningDescription">Siirtymistä uuteen sovellukseen ei saatu päätökseen yhden tai useamman tilisi osalta.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Kirjaudu uudelleen sisään turvataksesi tilisi.</item>
+        <item quantity="other">Kirjaudu uudelleen sisään turvataksesi tilisi.</item>
+    </plurals>
     <string name="noInternetTitle">Ei Internet-yhteyttä</string>
     <string name="notMeButton">En ollut minä</string>
     <string name="notificationsDescription">Ota ilmoitukset käyttöön saadaksesi turvallisuustietoja Infomaniak-tileistäsi.</string>

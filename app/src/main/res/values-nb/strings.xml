@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Du vil ikke lenger motta tilkoblingsforespørsler om å godkjenne på denne enheten for %s</string>
     <string name="accountDisconnectedTitle">Konto frakoblet fra Authenticator</string>
     <string name="accountLoggedOut">Kontoen er logget ut</string>
@@ -103,7 +103,10 @@
     <string name="loginRequestAlreadyProcessedTitle">Denne forespørselen er allerede behandlet</string>
     <string name="loginRequestExpiredTitle">Denne påloggingsforespørselen er utløpt</string>
     <string name="manageNotifications">Administrer varsler</string>
-    <string name="migrationWarningDescription">Overgangen til den nye appen kunne ikke fullføres for én eller flere av kontoene dine.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Vennligst logg inn på nytt for å sikre kontoen din.</item>
+        <item quantity="other">Vennligst logg inn på nytt for å sikre kontoene dine.</item>
+    </plurals>
     <string name="noInternetTitle">Ingen internettforbindelse</string>
     <string name="notMeButton">Det var ikke meg</string>
     <string name="notificationsDescription">Aktiver varsler for å motta sikkerhetsinformasjon om Infomaniak-kontoene dine.</string>

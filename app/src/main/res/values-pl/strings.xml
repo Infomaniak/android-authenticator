@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ImpliedQuantity">
     <string name="accountDisconnectedDescription">Nie będziesz już otrzymywać żądań połączenia do zatwierdzenia na tym urządzeniu dla %s</string>
     <string name="accountDisconnectedTitle">Konto odłączone od aplikacji Authenticator</string>
     <string name="accountLoggedOut">Konto wylogowane</string>
@@ -103,7 +103,12 @@
     <string name="loginRequestAlreadyProcessedTitle">To żądanie zostało już przetworzone</string>
     <string name="loginRequestExpiredTitle">To żądanie logowania wygasło</string>
     <string name="manageNotifications">Zarządzaj powiadomieniami</string>
-    <string name="migrationWarningDescription">Przejście do nowej aplikacji nie mogło zostać ukończone dla jednego lub więcej kont.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Zaloguj się ponownie, aby zabezpieczyć swoje konto.</item>
+        <item quantity="few">Zaloguj się ponownie, aby zabezpieczyć swoje konta.</item>
+        <item quantity="many">Zaloguj się ponownie, aby zabezpieczyć swoje konta.</item>
+        <item quantity="other">Zaloguj się ponownie, aby zabezpieczyć swoje konta.</item>
+    </plurals>
     <string name="noInternetTitle">Brak połączenia z internetem</string>
     <string name="notMeButton">To nie ja</string>
     <string name="notificationsDescription">Włącz powiadomienia, aby otrzymywać informacje o bezpieczeństwie swoich kont Infomaniak.</string>

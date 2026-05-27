@@ -104,7 +104,10 @@
     <string name="loginRequestAlreadyProcessedTitle">This request has already been processed</string>
     <string name="loginRequestExpiredTitle">This login request has expired</string>
     <string name="manageNotifications">Manage notifications</string>
-    <string name="migrationWarningDescription">The transition to the new app could not be completed for one or more of your accounts.</string>
+    <plurals name="migrationWarningDescription">
+        <item quantity="one">Please log in again to secure your account.</item>
+        <item quantity="other">Please log in again to secure your accounts.</item>
+    </plurals>
     <string name="noInternetTitle">No internet connection</string>
     <string name="notMeButton">It wasn’t me</string>
     <string name="notificationsDescription">Enable notifications to receive security information about your Infomaniak accounts.</string>
