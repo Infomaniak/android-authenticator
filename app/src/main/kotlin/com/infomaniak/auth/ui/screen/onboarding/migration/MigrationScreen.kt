@@ -110,7 +110,10 @@ fun MigrationScreen(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             EmptyElement()
-            IllustrationWithHalo(AppImages.AppIllus.GridTilesWithAuthenticator)
+            IllustrationWithHalo(
+                themedImage = AppImages.AppIllus.GridTilesWithAuthenticator,
+                modifier = Modifier.weight(1f)
+            )
             TitleAndDescription(
                 title = stringResource(R.string.onBoardingMigrationTitle),
                 description = stringResource(R.string.onBoardingMigrationDescription)
