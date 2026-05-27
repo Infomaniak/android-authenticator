@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.applock
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
@@ -36,7 +37,12 @@ class AppLockActivity : AppLockComposeActivity() {
         AuthenticatorTheme {
             AppLockScaffold(
                 topBar = { InfomaniakAuthenticatorTopAppBar() },
-                illustration = { IllustrationWithHalo(AppImages.AppIllus.Padlock) },
+                illustration = {
+                    IllustrationWithHalo(
+                        themedImage = AppImages.AppIllus.Padlock,
+                        modifier = Modifier.weight(1f)
+                    )
+                },
                 buttonStyle = AppValues.ButtonStyle,
                 buttonColors = ButtonStyle.Primary.colors(),
                 onUnlock = { requestCredentials { onCredentialsSuccessful() } }
