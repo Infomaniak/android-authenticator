@@ -67,10 +67,12 @@ import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
-import com.infomaniak.core.webview.ui.WebViewActivity
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
+import java.net.URLEncoder
 
 @Composable
 fun AccountDetailsScreen(
@@ -78,6 +80,7 @@ fun AccountDetailsScreen(
     onBackPressed: () -> Unit,
     onLoginPressed: (Long) -> Unit,
     onRemoveAccountClicked: (Long, DisconnectConfiguration) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -95,7 +98,8 @@ fun AccountDetailsScreen(
         onChallengesRefreshClicked = {
             viewModel.refreshChallenges(accountId)
         },
-        onRemoveAccountClicked = onRemoveAccountClicked
+        onRemoveAccountClicked = onRemoveAccountClicked,
+        onOpenWebview = onOpenWebview
     )
 }
 
@@ -106,6 +110,7 @@ fun AccountDetailsScreen(
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: (Long, DisconnectConfiguration) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
@@ -128,7 +133,8 @@ fun AccountDetailsScreen(
                     onChallengesRefreshClicked = onChallengesRefreshClicked,
                     onRemoveAccountClicked = {
                         onRemoveAccountClicked(uiState.account.id, uiState.disconnectConfiguration)
-                    }
+                    },
+                    onOpenWebview = onOpenWebview,
                 )
             }
             is AccountDetailsUiState.Loading -> Unit
@@ -145,6 +151,7 @@ private fun AccountDetailsContent(
     onLoginPressed: (Long) -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -152,13 +159,18 @@ private fun AccountDetailsContent(
             .verticalScroll(rememberScrollState())
     ) {
         Header(account, user)
-        AccountSecurityCard(account.status.toSecurityConfiguration(), token = user?.apiToken?.accessToken)
+        AccountSecurityCard(
+            configuration = account.status.toSecurityConfiguration(),
+            token = user?.apiToken?.accessToken,
+            onOpenWebview = onOpenWebview
+        )
         ActionRequiredCard(account.status, onLoginPressed)
         SettingsSections(
             accountStatus = account.status,
             user = user,
             onChallengesRefreshClicked = onChallengesRefreshClicked,
-            onRemoveAccountClicked = onRemoveAccountClicked
+            onRemoveAccountClicked = onRemoveAccountClicked,
+            onOpenWebview = onOpenWebview,
         )
     }
 }
@@ -191,6 +203,7 @@ private fun SettingsSections(
     user: User?,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -228,11 +241,9 @@ private fun SettingsSections(
                     rightIconResId = R.drawable.square_arrow_up,
                     onClick = {
                         MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.OpenHistoryWebview)
-                        WebViewActivity.startActivity(
-                            context = context,
-                            url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, ACTIVITY_MANAGER_URL)),
-                            headers = mapOf("Authorization" to "Bearer ${user.apiToken.accessToken}"),
-                        )
+                        val url = UrlConstants.autologUrl(host, URLEncoder.encode(UrlConstants.managerUrl(host = host, ACTIVITY_MANAGER_URL), "UTF-8"))
+                        val headers = persistentMapOf("Authorization" to "Bearer ${user.apiToken.accessToken}")
+                        onOpenWebview(url, headers)
                     },
                 ),
             )
@@ -242,11 +253,9 @@ private fun SettingsSections(
                     rightIconResId = R.drawable.square_arrow_up,
                     onClick = {
                         MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.OpenSettingsWebview)
-                        WebViewActivity.startActivity(
-                            context = context,
-                            url = UrlConstants.autologUrl(host = host, UrlConstants.managerUrl(host, SETTINGS_MANAGER_URL)),
-                            headers = mapOf("Authorization" to "Bearer ${user.apiToken.accessToken}"),
-                        )
+                        val url = UrlConstants.autologUrl(host = host, URLEncoder.encode(UrlConstants.managerUrl(host, SETTINGS_MANAGER_URL), "UTF-8"))
+                        val headers = persistentMapOf("Authorization" to "Bearer ${user.apiToken.accessToken}")
+                        onOpenWebview(url, headers)
                     },
                 )
             )
@@ -285,6 +294,7 @@ private fun AccountDetailsScreenPreview(
             onBackPressed = {},
             onChallengesRefreshClicked = {},
             onRemoveAccountClicked = { _, _ -> },
+            onOpenWebview = { _, _ -> }
         )
     }
 }

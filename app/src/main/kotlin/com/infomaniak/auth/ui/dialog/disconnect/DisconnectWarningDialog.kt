@@ -40,7 +40,9 @@ import com.infomaniak.auth.ui.screen.accountdetails.DisconnectConfiguration
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
-import com.infomaniak.core.webview.ui.WebViewActivity
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
+import java.net.URLEncoder
 
 @Composable
 fun DisconnectWarningDialog(
@@ -48,6 +50,7 @@ fun DisconnectWarningDialog(
     configuration: DisconnectConfiguration,
     onDismissRequest: () -> Unit,
     onConfirmButton: () -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
     viewModel: DisconnectDialogViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -91,14 +94,11 @@ fun DisconnectWarningDialog(
                 TextButton(
                     onClick = {
                         onDismissRequest()
-                        WebViewActivity.startActivity(
-                            context = context,
-                            url = UrlConstants.autologUrl(
-                                host = host,
-                                UrlConstants.managerUrl(host, configuration.dismissHelpUrl)
-                            ),
-                            headers = mapOf("Authorization" to "Bearer $userAccessToken"),
+                        val url = UrlConstants.autologUrl(
+                            host = host,
+                            url = URLEncoder.encode(UrlConstants.managerUrl(host, configuration.dismissHelpUrl), "UTF-8")
                         )
+                        onOpenWebview(url, persistentMapOf("Authorization" to "Bearer $userAccessToken"))
                     }
                 ) {
                     Text(stringResource(configuration.neutralButtonStringResId))
@@ -118,7 +118,8 @@ private fun DisconnectWarningDialogPreview() {
                 accountId = 1L,
                 configuration = DisconnectConfiguration.DisconnectSecuredAccount,
                 onDismissRequest = {},
-                onConfirmButton = {}
+                onConfirmButton = {},
+                onOpenWebview = { _, _ -> }
             )
         }
     }

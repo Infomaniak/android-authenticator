@@ -100,6 +100,12 @@ sealed interface NavDestination : NavKey {
     }
 
     //endregion
+
+    @Serializable
+    data class Webview(
+        val url: String,
+        val headers: Map<String, String>?
+    ) : NavDestination
 }
 
 @Immutable
