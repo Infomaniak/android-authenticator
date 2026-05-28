@@ -80,7 +80,18 @@ internal class AuthenticatorRequests(
         install(Auth) {
             bearer {
                 sendWithoutRequest { true }
-                refreshTokens { refreshTokenOrDisconnectAccount(userId) }
+                refreshTokens {
+                    val latestToken = getTokenForUser(userId)
+                    when (latestToken?.accessToken) {
+                        null -> { // Should never happen, because we are supposed to either:
+                            // - replace tokens, without in-between removal.
+                            // - remove users
+                            null
+                        }
+                        oldTokens?.accessToken -> refreshTokenOrDisconnectAccount(userId)
+                        else -> latestToken.toBearerTokens() // Previously loaded token is stale.
+                    }
+                }
                 loadTokens { getTokenForUser(userId)?.toBearerTokens() }
             }
         }
