@@ -101,7 +101,7 @@ fun AccountSecurityCard(
                     style = ButtonStyle.Primary,
                     onClick = {
                         val headers = token?.let { persistentMapOf("Authorization" to "Bearer $it") } ?: persistentMapOf()
-                        onOpenWebview(configuration.urlAction, headers)
+                        onOpenWebview(configuration.urlAction(), headers)
                     }
                 )
             }
@@ -114,7 +114,7 @@ enum class AccountSecurityConfiguration(
     val descriptionResId: Int? = null,
     val iconResId: Int,
     val iconTint: @Composable (() -> Color)? = null,
-    val urlAction: String? = null,
+    val urlAction: (() -> String)? = null,
 ) {
     Secured(
         titleResId = R.string.accountProtected,
@@ -126,10 +126,12 @@ enum class AccountSecurityConfiguration(
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
         iconTint = { AuthenticatorTheme.customColors.iconTintWarning },
-        urlAction = UrlConstants.autologUrl(
-            host = ApiEnvironment.current.host,
-            url = UrlConstants.managerUrl(host = ApiEnvironment.current.host, SETTINGS_ACCOUNT_SECURITY_URL)
-        ),
+        urlAction = {
+            UrlConstants.autologUrl(
+                host = ApiEnvironment.current.host,
+                url = UrlConstants.managerUrl(host = ApiEnvironment.current.host, SETTINGS_ACCOUNT_SECURITY_URL)
+            )
+        },
     ),
     Disconnected(
         titleResId = R.string.disconnectSuccess,

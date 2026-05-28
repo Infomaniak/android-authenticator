@@ -42,6 +42,7 @@ import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagemen
 import com.infomaniak.auth.ui.screen.settings.theme.ThemeSettingsScreen
 import com.infomaniak.auth.ui.screen.webview.WebviewScreen
 import com.infomaniak.core.privacymanagement.tracker.Tracker
+import kotlinx.collections.immutable.toPersistentMap
 
 fun baseEntryProvider(
     backStack: NavBackStack<NavKey>,
@@ -143,7 +144,7 @@ fun baseEntryProvider(
     entry<NavDestination.Webview> {
         WebviewScreen(
             url = it.url,
-            headers = it.headers,
+            headers = it.headers?.toPersistentMap(),
             onBackPressed = backStack::tryPopLast,
         )
     }

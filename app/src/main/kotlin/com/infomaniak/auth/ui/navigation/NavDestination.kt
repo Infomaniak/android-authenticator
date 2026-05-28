@@ -20,7 +20,6 @@ package com.infomaniak.auth.ui.navigation
 import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
 import com.infomaniak.auth.ui.screen.accountdetails.DisconnectConfiguration
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.serialization.Serializable
 
 @Immutable
@@ -105,7 +104,7 @@ sealed interface NavDestination : NavKey {
     @Serializable
     data class Webview(
         val url: String,
-        val headers: ImmutableMap<String, String>?
+        val headers: Map<String, String>?
     ) : NavDestination
 }
 
