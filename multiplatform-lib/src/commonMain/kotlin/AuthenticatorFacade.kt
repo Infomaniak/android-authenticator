@@ -101,7 +101,11 @@ abstract class AuthenticatorFacade internal constructor() {
                 AuthenticatorRequests(
                     createHttpClient = apiClientProvider::createHttpClient,
                     getTokenForUser = authenticatorBridge::getTokenFromDatabase,
-                    refreshToken = { userId -> authenticatorManager.getToken(clientId, userId).firstOrElse { error(it) } },
+                    refreshToken = { userId ->
+                        authenticatorManager.getToken(clientId, userId).firstOrElse { error(it) }.also { newToken ->
+                            authenticatorBridge.persistTokenForAccount(userId, newToken)
+                        }
+                    },
                     disconnectAccount = { userId ->
                         accountsDatabase.getDao().updateStatusForUser(
                             userId = userId,
