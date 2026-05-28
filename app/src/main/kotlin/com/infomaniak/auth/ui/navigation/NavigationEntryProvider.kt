@@ -40,6 +40,7 @@ import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagemen
 import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementScreen
 import com.infomaniak.auth.ui.screen.settings.privacymanagement.PrivacyManagementSentryScreen
 import com.infomaniak.auth.ui.screen.settings.theme.ThemeSettingsScreen
+import com.infomaniak.auth.ui.screen.webview.WebviewScreen
 import com.infomaniak.core.privacymanagement.tracker.Tracker
 
 fun baseEntryProvider(
@@ -88,6 +89,9 @@ fun baseEntryProvider(
                         configuration = configuration
                     )
                 )
+            },
+            onOpenWebview = { url, headers ->
+                backStack.add(NavDestination.Webview(url, headers))
             }
         )
     }
@@ -136,6 +140,13 @@ fun baseEntryProvider(
             returnToLoginScreen = backStack::tryPopLast,
         )
     }
+    entry<NavDestination.Webview> {
+        WebviewScreen(
+            url = it.url,
+            headers = it.headers,
+            onBackPressed = backStack::tryPopLast,
+        )
+    }
     addDisconnectEntries(backStack)
 }
 
@@ -157,6 +168,9 @@ private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackSt
                         configuration = params.configuration
                     )
                 )
+            },
+            onOpenWebview = { url, headers ->
+                backStack.add(NavDestination.Webview(url, headers))
             }
         )
     }

@@ -17,7 +17,6 @@
  */
 package com.infomaniak.auth.ui.screen.accountdetails
 
-import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -52,13 +50,15 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
-import com.infomaniak.core.webview.ui.WebViewActivity
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
 
 @Composable
 fun AccountSecurityCard(
     configuration: AccountSecurityConfiguration,
     modifier: Modifier = Modifier,
     token: String? = null,
+    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -91,8 +91,7 @@ fun AccountSecurityCard(
             configuration.descriptionResId?.let { descriptionResId ->
                 Text(text = stringResource(descriptionResId))
             }
-            if (configuration.action != null) {
-                val context = LocalContext.current
+            if (configuration.urlAction != null) {
                 LargeButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,7 +99,10 @@ fun AccountSecurityCard(
                         .padding(bottom = Margin.Medium),
                     title = stringResource(R.string.updateButton),
                     style = ButtonStyle.Primary,
-                    onClick = { configuration.action(context, token) }
+                    onClick = {
+                        val headers = token?.let { persistentMapOf("Authorization" to "Bearer $it") } ?: persistentMapOf()
+                        onOpenWebview(configuration.urlAction, headers)
+                    }
                 )
             }
         }
@@ -112,7 +114,7 @@ enum class AccountSecurityConfiguration(
     val descriptionResId: Int? = null,
     val iconResId: Int,
     val iconTint: @Composable (() -> Color)? = null,
-    val action: ((Context, String?) -> Unit)? = null,
+    val urlAction: String? = null,
 ) {
     Secured(
         titleResId = R.string.accountProtected,
@@ -124,16 +126,10 @@ enum class AccountSecurityConfiguration(
         descriptionResId = R.string.accountPartiallyProtectedDescription,
         iconResId = R.drawable.shield_exclamation_mark,
         iconTint = { AuthenticatorTheme.customColors.iconTintWarning },
-        action = { context, token ->
-            val host = ApiEnvironment.current.host
-            val url = UrlConstants.autologUrl(host, UrlConstants.managerUrl(host = host, SETTINGS_ACCOUNT_SECURITY_URL))
-
-            WebViewActivity.startActivity(
-                context = context,
-                url = url,
-                headers = token?.let { mapOf("Authorization" to "Bearer $it") } ?: emptyMap(),
-            )
-        }
+        urlAction = UrlConstants.autologUrl(
+            host = ApiEnvironment.current.host,
+            url = UrlConstants.managerUrl(host = ApiEnvironment.current.host, SETTINGS_ACCOUNT_SECURITY_URL)
+        ),
     ),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
@@ -159,9 +155,18 @@ private fun AccountSecurityCardPreview() {
                 modifier = Modifier.padding(Margin.Medium),
                 verticalArrangement = Arrangement.spacedBy(Margin.Medium)
             ) {
-                AccountSecurityCard(configuration = AccountSecurityConfiguration.Secured)
-                AccountSecurityCard(configuration = AccountSecurityConfiguration.PartiallyProtected)
-                AccountSecurityCard(configuration = AccountSecurityConfiguration.Disconnected)
+                AccountSecurityCard(
+                    configuration = AccountSecurityConfiguration.Secured,
+                    onOpenWebview = { _, _ -> }
+                )
+                AccountSecurityCard(
+                    configuration = AccountSecurityConfiguration.PartiallyProtected,
+                    onOpenWebview = { _, _ -> }
+                )
+                AccountSecurityCard(
+                    configuration = AccountSecurityConfiguration.Disconnected,
+                    onOpenWebview = { _, _ -> }
+                )
             }
         }
     }
