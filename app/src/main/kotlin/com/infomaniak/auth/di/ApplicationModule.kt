@@ -34,11 +34,11 @@ import com.infomaniak.auth.utils.toUser
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
+import com.infomaniak.core.login.InfomaniakLogin
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
-import com.infomaniak.lib.login.InfomaniakLogin
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -26,7 +26,7 @@ import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.security.Security
 import com.infomaniak.core.auth.models.user.preferences.Preferences as CorePreferences
-import com.infomaniak.lib.login.ApiToken as LoginApiToken
+import com.infomaniak.core.login.ApiToken as LoginApiToken
 
 fun LoginApiToken.toSharedApiToken(): SharedApiToken {
     return SharedApiToken(
