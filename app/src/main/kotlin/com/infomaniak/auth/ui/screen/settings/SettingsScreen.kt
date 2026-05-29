@@ -25,13 +25,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.MatomoAuthenticator.trackSettingsEvent
 import com.infomaniak.auth.R
@@ -43,6 +46,7 @@ import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel
 import com.infomaniak.auth.ui.screen.settings.theme.SettingsUiState
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.auth.utils.GetSetCallbacks
 import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.applock.AppLockHelper.requestCredentials
@@ -148,6 +152,12 @@ private fun SettingsScreen(
     )
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         OptionsSection(sections = persistentListOf(firstSectionItems, secondSectionItems),)
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = Margin.Medium),
+            text = "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE % 100}",
+        )
     }
 }
 
