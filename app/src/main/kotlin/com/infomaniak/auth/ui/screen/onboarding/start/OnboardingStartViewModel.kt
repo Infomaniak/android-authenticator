@@ -33,7 +33,7 @@ import com.infomaniak.core.auth.utils.LoginUtils
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
-import com.infomaniak.lib.login.InfomaniakLogin
+import com.infomaniak.core.login.InfomaniakLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
