@@ -92,8 +92,6 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
         )
 
         setContent {
-            TwoFactorAuthApprovalAutoManagedBottomSheet(twoFactorAuthManager)
-
             val appSettings by appSettingsRepository.getSettings().collectAsState(null)
             val appStatus by viewModel.appStatus.collectAsState(null)
 
@@ -102,6 +100,11 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
                 Theme.Dark -> true
                 else -> isSystemInDarkTheme()
             }
+
+            TwoFactorAuthApprovalAutoManagedBottomSheet(
+                twoFactorAuthManager = twoFactorAuthManager,
+                isInDarkTheme = isDarkTheme,
+            )
 
             if (appStatus != null) {
                 AuthenticatorTheme(isDarkTheme = isDarkTheme) {
