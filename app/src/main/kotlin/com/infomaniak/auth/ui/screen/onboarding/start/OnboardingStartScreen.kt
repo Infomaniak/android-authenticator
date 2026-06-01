@@ -47,7 +47,6 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.LocalWindowAdaptiveInfo
 import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.utils.isWindowSmall
-import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.core.auth.models.UserLoginResult
 import com.infomaniak.core.auth.utils.LoginFlowController
 import com.infomaniak.core.auth.utils.LoginUtils
