@@ -22,7 +22,6 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -140,7 +139,7 @@ private fun NotificationPermissionScreen(
             EmptyElement()
             IllustrationWithHalo(
                 themedImage = AppImages.AppIllus.BannerNotification,
-                modifier = Modifier.fillMaxSize(0.8f)
+                modifier = Modifier.fillMaxWidth(0.8f)
             )
             TitleAndDescription(
                 title = stringResource(R.string.onboardingNotificationsTitle),
