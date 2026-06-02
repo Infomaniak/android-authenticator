@@ -116,7 +116,7 @@ fun OnboardingStartScreen(
         },
         onSaveSkippedAccounts = { crossAppLoginFacade.skippedAccountIds.value = it },
         onCreateAccount = { openAccountCreation(onboardingStartViewModel, loginFlowController) },
-        onCancel = onboardingStartViewModel.cancelOnboarding,
+        onCancel = { onboardingStartViewModel.cancelOnboarding?.invoke() },
         withBackButton = withBackButton,
     )
 }
