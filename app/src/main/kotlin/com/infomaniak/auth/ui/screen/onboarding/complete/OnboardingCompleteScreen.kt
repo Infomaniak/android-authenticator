@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -75,7 +76,7 @@ private fun OnboardingCompleteScreen(
             EmptyElement()
             IllustrationWithHalo(
                 themedImage = AppImages.AppIllus.InfomaniakShieldCheckmark,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxSize(0.8f)
             )
             TitleAndDescription(
                 title = stringResource(R.string.onBoardingSuccessTitle),

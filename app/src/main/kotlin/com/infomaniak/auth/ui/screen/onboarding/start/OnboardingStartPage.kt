@@ -21,6 +21,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.PagerState
@@ -85,7 +86,10 @@ private fun Page.OnboardingPageIllustration(pagerState: PagerState, index: Int) 
 private fun RenderIllustration(resource: IllustrationResource, isCurrentPageVisible: () -> Boolean) {
     when (resource) {
         is IllustrationResource.Vector -> {
-            IllustrationWithHalo(resource.themedImage)
+            IllustrationWithHalo(
+                themedImage = resource.themedImage,
+                modifier = Modifier.fillMaxSize(0.8f)
+            )
         }
         is IllustrationResource.Animated -> {
             ThemedDotLottie(

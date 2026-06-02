@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -117,7 +118,10 @@ private fun SecuringAccountScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            IllustrationWithHalo(AppImages.AppIllus.PersonKAuthAuthenticatorHalfCircle)
+            IllustrationWithHalo(
+                themedImage = AppImages.AppIllus.PersonKAuthAuthenticatorHalfCircle,
+                modifier = Modifier.fillMaxSize(0.8f)
+            )
             Text(text = stringResource(R.string.onBoardingSecuringAccount))
             Spacer(modifier = Modifier.padding(Margin.Medium))
             LinearProgressIndicator()
