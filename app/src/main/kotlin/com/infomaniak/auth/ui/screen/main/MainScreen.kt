@@ -53,6 +53,7 @@ import com.infomaniak.auth.ui.dialog.priorityevent.PriorityEventAlertDialog
 import com.infomaniak.auth.ui.dialog.priorityevent.VerifyAccountSecurityDialog
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.navigation.baseEntryProvider
+import com.infomaniak.auth.ui.navigation.popUntil
 import com.infomaniak.auth.ui.navigation.replaceAllWith
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.auth.ui.theme.defaultEnterAnimation
@@ -156,7 +157,17 @@ private fun handleAppStatus(
     }
 
     if (currentDestination != targetDestination) {
-        backStack.replaceAllWith(targetDestination)
+        when (appStatus) {
+            is AppStatus.AddingAnAccount -> {
+                backStack.add(targetDestination)
+            }
+            is AppStatus.SetupComplete if backStack.contains(NavDestination.Home) -> {
+                backStack.popUntil(NavDestination.Home)
+            }
+            else -> {
+                backStack.replaceAllWith(targetDestination)
+            }
+        }
     }
 }
 
