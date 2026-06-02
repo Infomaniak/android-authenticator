@@ -73,7 +73,7 @@ class AccountDetailsViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = AccountDetailsUiState.Loading
         )
-    
+
     fun fetchAccountDetails(accountId: Long) {
         accountIdFlow.tryEmit(accountId)
     }
@@ -94,10 +94,6 @@ class AccountDetailsViewModel @Inject constructor(
     fun refreshChallenges(userId: Long) {
         twoFactorAuthManager.refreshChallengeNow(userId)
     }
-
-    fun refreshUserProfiles() {
-        authenticatorFacade.refreshUserProfiles()
-    }
 }
 
 @Immutable
@@ -108,6 +104,7 @@ sealed interface AccountDetailsUiState {
         val user: User?,
         val disconnectConfiguration: DisconnectConfiguration
     ) : AccountDetailsUiState
+
     data object Error : AccountDetailsUiState
 }
 

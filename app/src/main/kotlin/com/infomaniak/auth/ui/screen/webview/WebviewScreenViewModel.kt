@@ -24,10 +24,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WebviewScreenViewModel @Inject constructor(
-    val authenticatorFacade: AuthenticatorFacade,
+    private val authenticatorFacade: AuthenticatorFacade,
 ) : ViewModel() {
 
-    fun refreshProfile() {
+    fun refreshUserProfiles() {
         authenticatorFacade.refreshUserProfiles()
     }
 }

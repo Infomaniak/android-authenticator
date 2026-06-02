@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.ui.screen.webview
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.material3.Scaffold
@@ -30,19 +31,21 @@ import com.infomaniak.core.webview.ui.components.WebView
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
+@SuppressLint("ComposeViewModelInjection")
 @Composable
 fun WebviewScreen(
     url: String,
     headers: ImmutableMap<String, String>?,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: WebviewScreenViewModel = hiltViewModel(),
     withProfileRefresh: Boolean = false,
 ) {
     if (withProfileRefresh) {
+        val viewModel: WebviewScreenViewModel = hiltViewModel()
+
         DisposableEffect(Unit) {
             onDispose {
-                viewModel.refreshProfile()
+                viewModel.refreshUserProfiles()
             }
         }
     }
