@@ -139,7 +139,7 @@ private fun NotificationPermissionScreen(
             EmptyElement()
             IllustrationWithHalo(
                 themedImage = AppImages.AppIllus.BannerNotification,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth(0.8f)
             )
             TitleAndDescription(
                 title = stringResource(R.string.onboardingNotificationsTitle),

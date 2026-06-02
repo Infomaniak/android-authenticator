@@ -85,7 +85,10 @@ private fun Page.OnboardingPageIllustration(pagerState: PagerState, index: Int) 
 private fun RenderIllustration(resource: IllustrationResource, isCurrentPageVisible: () -> Boolean) {
     when (resource) {
         is IllustrationResource.Vector -> {
-            IllustrationWithHalo(resource.themedImage)
+            IllustrationWithHalo(
+                themedImage = resource.themedImage,
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
         }
         is IllustrationResource.Animated -> {
             ThemedDotLottie(

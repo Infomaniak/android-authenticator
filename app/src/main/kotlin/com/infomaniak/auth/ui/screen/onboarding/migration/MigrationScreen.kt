@@ -59,7 +59,7 @@ import com.infomaniak.core.ui.compose.basics.LockScreenOrientation
 import com.infomaniak.core.ui.compose.basics.bottomsheet.ThemedBottomSheetScaffold
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.BottomStickyButtonScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
-import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import com.infomaniak.core.ui.compose.preview.PreviewAllWindows
 
 @Composable
 fun MigrationScreen(
@@ -112,7 +112,7 @@ fun MigrationScreen(
             EmptyElement()
             IllustrationWithHalo(
                 themedImage = AppImages.AppIllus.GridTilesWithAuthenticator,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth(0.8f)
             )
             TitleAndDescription(
                 title = stringResource(R.string.onBoardingMigrationTitle),
@@ -162,7 +162,7 @@ private fun AccountsBottomSheetDialog(
     }
 }
 
-@PreviewSmallWindow
+@PreviewAllWindows
 @Composable
 private fun MigrationScreenPreview() {
     AuthenticatorTheme {
