@@ -129,6 +129,7 @@ internal class AuthenticatorFacadeImpl(
         .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override suspend fun addAccounts(connectedAccounts: List<SharedUserProfile>) {
+        connectedAccounts.forEach { authenticatorBridge.persistUserProfile(it) }
         val entities = connectedAccounts.map {
             it.toAccountEntity(Status.PasskeyRegistrationPending)
         }
