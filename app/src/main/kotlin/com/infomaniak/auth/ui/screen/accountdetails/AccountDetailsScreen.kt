@@ -80,7 +80,7 @@ fun AccountDetailsScreen(
     onBackPressed: () -> Unit,
     onLoginPressed: (Long) -> Unit,
     onRemoveAccountClicked: (Long, DisconnectConfiguration) -> Unit,
-    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>, Boolean) -> Unit,
     viewModel: AccountDetailsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -110,7 +110,7 @@ fun AccountDetailsScreen(
     onBackPressed: () -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: (Long, DisconnectConfiguration) -> Unit,
-    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SinglePaneScaffold(
@@ -151,7 +151,7 @@ private fun AccountDetailsContent(
     onLoginPressed: (Long) -> Unit,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
-    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>, Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -203,7 +203,7 @@ private fun SettingsSections(
     user: User?,
     onChallengesRefreshClicked: () -> Unit,
     onRemoveAccountClicked: () -> Unit,
-    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -241,9 +241,12 @@ private fun SettingsSections(
                     rightIconResId = R.drawable.square_arrow_up,
                     onClick = {
                         MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.OpenHistoryWebview)
-                        val url = UrlConstants.autologUrl(host, URLEncoder.encode(UrlConstants.managerUrl(host = host, ACTIVITY_MANAGER_URL), "UTF-8"))
+                        val url = UrlConstants.autologUrl(
+                            host,
+                            URLEncoder.encode(UrlConstants.managerUrl(host = host, ACTIVITY_MANAGER_URL), "UTF-8")
+                        )
                         val headers = persistentMapOf("Authorization" to "Bearer ${user.apiToken.accessToken}")
-                        onOpenWebview(url, headers)
+                        onOpenWebview(url, headers, false)
                     },
                 ),
             )
@@ -253,9 +256,12 @@ private fun SettingsSections(
                     rightIconResId = R.drawable.square_arrow_up,
                     onClick = {
                         MatomoAuthenticator.trackEvent(MatomoCategory.Account, MatomoName.OpenSettingsWebview)
-                        val url = UrlConstants.autologUrl(host = host, URLEncoder.encode(UrlConstants.managerUrl(host, SETTINGS_MANAGER_URL), "UTF-8"))
+                        val url = UrlConstants.autologUrl(
+                            host = host,
+                            URLEncoder.encode(UrlConstants.managerUrl(host, SETTINGS_MANAGER_URL), "UTF-8")
+                        )
                         val headers = persistentMapOf("Authorization" to "Bearer ${user.apiToken.accessToken}")
-                        onOpenWebview(url, headers)
+                        onOpenWebview(url, headers, true)
                     },
                 )
             )
@@ -285,16 +291,18 @@ private fun AccountDetailsScreenPreview(
 ) {
     AuthenticatorTheme {
         AccountDetailsScreen(
-            uiState = { AccountDetailsUiState.Success(
-                account = accountPairs.first,
-                user = accountPairs.second,
-                disconnectConfiguration = DisconnectConfiguration.DisconnectSecuredAccount
-            ) },
+            uiState = {
+                AccountDetailsUiState.Success(
+                    account = accountPairs.first,
+                    user = accountPairs.second,
+                    disconnectConfiguration = DisconnectConfiguration.DisconnectSecuredAccount
+                )
+            },
             onLoginPressed = {},
             onBackPressed = {},
             onChallengesRefreshClicked = {},
             onRemoveAccountClicked = { _, _ -> },
-            onOpenWebview = { _, _ -> }
+            onOpenWebview = { _, _, _ -> }
         )
     }
 }

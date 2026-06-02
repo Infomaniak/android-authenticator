@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.core.webview.ui.components.WebView
@@ -34,7 +36,17 @@ fun WebviewScreen(
     headers: ImmutableMap<String, String>?,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: WebviewScreenViewModel = hiltViewModel(),
+    withProfileRefresh: Boolean = false,
 ) {
+    if (withProfileRefresh) {
+        DisposableEffect(Unit) {
+            onDispose {
+                viewModel.refreshProfile()
+            }
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {

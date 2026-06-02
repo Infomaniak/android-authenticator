@@ -58,7 +58,7 @@ fun AccountSecurityCard(
     configuration: AccountSecurityConfiguration,
     modifier: Modifier = Modifier,
     token: String? = null,
-    onOpenWebview: (String, ImmutableMap<String, String>) -> Unit,
+    onOpenWebview: (String, ImmutableMap<String, String>, Boolean) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -101,7 +101,7 @@ fun AccountSecurityCard(
                     style = ButtonStyle.Primary,
                     onClick = {
                         val headers = token?.let { persistentMapOf("Authorization" to "Bearer $it") } ?: persistentMapOf()
-                        onOpenWebview(configuration.urlAction(), headers)
+                        onOpenWebview(configuration.urlAction(), headers, true)
                     }
                 )
             }
@@ -159,15 +159,15 @@ private fun AccountSecurityCardPreview() {
             ) {
                 AccountSecurityCard(
                     configuration = AccountSecurityConfiguration.Secured,
-                    onOpenWebview = { _, _ -> }
+                    onOpenWebview = { _, _, _ -> }
                 )
                 AccountSecurityCard(
                     configuration = AccountSecurityConfiguration.PartiallyProtected,
-                    onOpenWebview = { _, _ -> }
+                    onOpenWebview = { _, _, _ -> }
                 )
                 AccountSecurityCard(
                     configuration = AccountSecurityConfiguration.Disconnected,
-                    onOpenWebview = { _, _ -> }
+                    onOpenWebview = { _, _, _ -> }
                 )
             }
         }

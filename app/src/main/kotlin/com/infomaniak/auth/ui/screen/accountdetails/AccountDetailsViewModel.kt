@@ -94,6 +94,10 @@ class AccountDetailsViewModel @Inject constructor(
     fun refreshChallenges(userId: Long) {
         twoFactorAuthManager.refreshChallengeNow(userId)
     }
+
+    fun refreshUserProfiles() {
+        authenticatorFacade.refreshUserProfiles()
+    }
 }
 
 @Immutable
