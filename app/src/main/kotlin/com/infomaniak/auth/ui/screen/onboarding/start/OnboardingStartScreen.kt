@@ -132,12 +132,12 @@ private fun OnboardingStartScreen(
     onSaveSkippedAccounts: (Set<Long>) -> Unit,
     onCreateAccount: () -> Unit,
     withBackButton: Boolean,
-    onCancel: (() -> Unit)? = null,
+    onCancel: (() -> Unit),
 ) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
 
-    BackHandler(onCancel != null) {
-        onCancel?.invoke()
+    BackHandler {
+        onCancel()
     }
 
     LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
@@ -231,6 +231,7 @@ private fun OnboardingStartScreenPreview(
             onLoginRequest = {},
             onSaveSkippedAccounts = {},
             onCreateAccount = {},
+            onCancel = {},
         )
     }
 }
