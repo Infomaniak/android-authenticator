@@ -63,7 +63,6 @@ class OnboardingStartViewModel @Inject constructor(
         viewModelScope.launch {
             users.forEach { user ->
                 user.apiToken.isTemporary = true
-                accountUtils.addUser(user)
                 addUserToAuthenticatorDB(user)
             }
             _onLoginFinishedEvent.emit(Unit)
