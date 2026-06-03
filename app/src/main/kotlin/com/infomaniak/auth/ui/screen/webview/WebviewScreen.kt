@@ -18,8 +18,6 @@
 package com.infomaniak.auth.ui.screen.webview
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,7 +29,7 @@ import com.infomaniak.core.webview.ui.components.WebView
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
-@SuppressLint("ComposeViewModelInjection")
+@SuppressLint("ComposeViewModelInjection", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WebviewScreen(
     url: String,
@@ -59,15 +57,13 @@ fun WebviewScreen(
                 onBackPressed = onBackPressed
             )
         }
-    ) { paddingValues ->
-        Box(modifier = Modifier.consumeWindowInsets(paddingValues)) {
-            WebView(
-                url = url,
-                headers = headers ?: persistentMapOf(),
-                onUrlToQuitReached = onBackPressed,
-                urlToQuit = null,
-                domStorageEnabled = false,
-            )
-        }
+    ) { _ ->
+        WebView(
+            url = url,
+            headers = headers ?: persistentMapOf(),
+            onUrlToQuitReached = onBackPressed,
+            urlToQuit = null,
+            domStorageEnabled = false,
+        )
     }
 }
