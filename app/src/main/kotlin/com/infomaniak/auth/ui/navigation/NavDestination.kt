@@ -104,7 +104,8 @@ sealed interface NavDestination : NavKey {
     @Serializable
     data class Webview(
         val url: String,
-        val headers: Map<String, String>?
+        val headers: Map<String, String>?,
+        val refreshProfileOnClose: Boolean = false,
     ) : NavDestination
 }
 

@@ -91,8 +91,8 @@ fun baseEntryProvider(
                     )
                 )
             },
-            onOpenWebview = { url, headers ->
-                backStack.add(NavDestination.Webview(url, headers))
+            openWebview = { url, headers, refreshProfileOnClose ->
+                backStack.add(NavDestination.Webview(url = url, headers = headers, refreshProfileOnClose = refreshProfileOnClose))
             }
         )
     }
@@ -146,6 +146,7 @@ fun baseEntryProvider(
             url = it.url,
             headers = it.headers?.toPersistentMap(),
             onBackPressed = backStack::tryPopLast,
+            refreshProfileOnClose = it.refreshProfileOnClose,
         )
     }
     addDisconnectEntries(backStack)
@@ -171,7 +172,7 @@ private fun EntryProviderScope<NavKey>.addDisconnectEntries(backStack: NavBackSt
                 )
             },
             onOpenWebview = { url, headers ->
-                backStack.add(NavDestination.Webview(url, headers))
+                backStack.add(NavDestination.Webview(url = url, headers = headers))
             }
         )
     }

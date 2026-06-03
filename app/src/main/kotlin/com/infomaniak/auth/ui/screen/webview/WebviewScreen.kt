@@ -17,24 +17,39 @@
  */
 package com.infomaniak.auth.ui.screen.webview
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.core.webview.ui.components.WebView
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
+@SuppressLint("ComposeViewModelInjection")
 @Composable
 fun WebviewScreen(
     url: String,
     headers: ImmutableMap<String, String>?,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
+    refreshProfileOnClose: Boolean = false,
 ) {
+    if (refreshProfileOnClose) {
+        val viewModel: WebviewScreenViewModel = hiltViewModel()
+
+        DisposableEffect(Unit) {
+            onDispose {
+                viewModel.refreshUserProfiles()
+            }
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
