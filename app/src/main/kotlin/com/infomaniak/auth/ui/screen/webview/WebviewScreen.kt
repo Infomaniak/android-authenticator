@@ -29,7 +29,7 @@ import com.infomaniak.core.webview.ui.components.WebView
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
-@SuppressLint("ComposeViewModelInjection", "UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("ComposeViewModelInjection")
 @Composable
 fun WebviewScreen(
     url: String,
@@ -48,6 +48,7 @@ fun WebviewScreen(
         }
     }
 
+    @Suppress("UnusedMaterial3ScaffoldPaddingParameter")
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -57,7 +58,7 @@ fun WebviewScreen(
                 onBackPressed = onBackPressed
             )
         }
-    ) { _ ->
+    ) { _ -> // Avoid redundant padding (our Webview is already using safeDrawingPadding)
         WebView(
             url = url,
             headers = headers ?: persistentMapOf(),
