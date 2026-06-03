@@ -91,8 +91,8 @@ fun baseEntryProvider(
                     )
                 )
             },
-            onOpenWebview = { url, headers, withProfileRefresh ->
-                backStack.add(NavDestination.Webview(url, headers, withProfileRefresh))
+            openWebview = { url, headers, refreshProfileOnClose ->
+                backStack.add(NavDestination.Webview(url = url, headers = headers, refreshProfileOnClose = refreshProfileOnClose))
             }
         )
     }
@@ -146,7 +146,7 @@ fun baseEntryProvider(
             url = it.url,
             headers = it.headers?.toPersistentMap(),
             onBackPressed = backStack::tryPopLast,
-            withProfileRefresh = it.withProfileRefresh,
+            refreshProfileOnClose = it.refreshProfileOnClose,
         )
     }
     addDisconnectEntries(backStack)

@@ -50,15 +50,14 @@ import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewLightAndDark
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
 @Composable
 fun AccountSecurityCard(
     configuration: AccountSecurityConfiguration,
+    openWebview: OpenWebview,
     modifier: Modifier = Modifier,
     token: String? = null,
-    onOpenWebview: (String, ImmutableMap<String, String>, Boolean) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -101,7 +100,7 @@ fun AccountSecurityCard(
                     style = ButtonStyle.Primary,
                     onClick = {
                         val headers = token?.let { persistentMapOf("Authorization" to "Bearer $it") } ?: persistentMapOf()
-                        onOpenWebview(configuration.urlAction(), headers, true)
+                        openWebview(url = configuration.urlAction(), headers = headers, refreshProfileOnClose = true)
                     }
                 )
             }
@@ -159,15 +158,15 @@ private fun AccountSecurityCardPreview() {
             ) {
                 AccountSecurityCard(
                     configuration = AccountSecurityConfiguration.Secured,
-                    onOpenWebview = { _, _, _ -> }
+                    openWebview = { _, _, _ -> }
                 )
                 AccountSecurityCard(
                     configuration = AccountSecurityConfiguration.PartiallyProtected,
-                    onOpenWebview = { _, _, _ -> }
+                    openWebview = { _, _, _ -> }
                 )
                 AccountSecurityCard(
                     configuration = AccountSecurityConfiguration.Disconnected,
-                    onOpenWebview = { _, _, _ -> }
+                    openWebview = { _, _, _ -> }
                 )
             }
         }

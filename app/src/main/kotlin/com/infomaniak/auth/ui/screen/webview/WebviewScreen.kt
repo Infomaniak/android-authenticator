@@ -38,9 +38,9 @@ fun WebviewScreen(
     headers: ImmutableMap<String, String>?,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    withProfileRefresh: Boolean = false,
+    refreshProfileOnClose: Boolean = false,
 ) {
-    if (withProfileRefresh) {
+    if (refreshProfileOnClose) {
         val viewModel: WebviewScreenViewModel = hiltViewModel()
 
         DisposableEffect(Unit) {

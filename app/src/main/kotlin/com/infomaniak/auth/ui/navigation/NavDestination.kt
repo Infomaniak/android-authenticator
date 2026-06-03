@@ -105,7 +105,7 @@ sealed interface NavDestination : NavKey {
     data class Webview(
         val url: String,
         val headers: Map<String, String>?,
-        val withProfileRefresh: Boolean = false,
+        val refreshProfileOnClose: Boolean = false,
     ) : NavDestination
 }
 
