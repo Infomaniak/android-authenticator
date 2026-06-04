@@ -35,6 +35,7 @@ import com.infomaniak.core.network.NetworkConfiguration
 import com.infomaniak.core.sentry.SentryConfig.configureSentry
 import dagger.hilt.android.HiltAndroidApp
 import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -122,7 +123,9 @@ open class MainApplication : Application(), Configuration.Provider {
                 .detectNetwork()
                 .detectCustomSlowCalls()
                 .penaltyListener(mainExecutor) { violation ->
-                    Sentry.captureException(violation)
+                    Sentry.captureException(violation) {
+                        it.level = SentryLevel.DEBUG
+                    }
                 }
                 .build()
         )
