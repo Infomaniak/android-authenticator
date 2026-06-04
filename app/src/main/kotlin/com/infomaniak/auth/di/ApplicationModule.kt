@@ -18,6 +18,7 @@
 package com.infomaniak.auth.di
 
 import android.content.Context
+import androidx.room.withTransaction
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MainApplication
 import com.infomaniak.auth.lib.AuthenticatorFacade
@@ -188,7 +189,16 @@ object ApplicationModule {
             }
 
             override suspend fun persistUserProfile(userProfile: SharedUserProfile) {
-                accountUtils.addUser(userProfile.toUser())
+                if (userProfile.apiToken.accessToken.isNotEmpty()) {
+                    accountUtils.addUser(userProfile.toUser())
+                } else {
+                    val db = UserDatabase.getDatabase()
+                    db.withTransaction {
+                        userProfile.apiToken = db.userDao().findById(userProfile.id)?.apiToken?.toSharedApiToken()
+                            ?: return@withTransaction
+                        db.userDao().update(userProfile.toUser())
+                    }
+                }
             }
         }
 }

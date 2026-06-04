@@ -466,9 +466,8 @@ internal class AuthenticatorFacadeImpl(
                 val updatedAccount = profile.toAccountEntity(status = newStatus)
                 if (updatedAccount != account) { // Avoid re-trigger loops when we're up to date.
                     dao.upsert(updatedAccount)
+                    authenticatorBridge.persistUserProfile(profile)
                 }
-                // TODO Move this back to the if above when at least one version with this fix is released to unblock users on iOS
-                authenticatorBridge.persistUserProfile(profile)
             }.cancellable().onFailure {
                 it.printStackTrace()
                 it.reportIfNeeded(account.id, message = "profile update refresh failed")
