@@ -189,10 +189,11 @@ object ApplicationModule {
             }
 
             override suspend fun persistUserProfile(userProfile: SharedUserProfile) {
+                val db = UserDatabase.getDatabase()
                 if (userProfile.apiToken.accessToken.isNotEmpty()) {
-                    accountUtils.addUser(userProfile.toUser())
+                    MainApplication.userDataCleanableList.forEach { it.resetForUser(userProfile.id.toLong()) }
+                    db.userDao().upsert(userProfile.toUser())
                 } else {
-                    val db = UserDatabase.getDatabase()
                     db.withTransaction {
                         userProfile.apiToken = db.userDao().findById(userProfile.id)?.apiToken?.toSharedApiToken()
                             ?: return@withTransaction
