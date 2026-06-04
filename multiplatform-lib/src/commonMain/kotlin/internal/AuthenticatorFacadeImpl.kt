@@ -390,6 +390,10 @@ internal class AuthenticatorFacadeImpl(
                 }
             }.cancellable().getOrElse {
                 it.printStackTrace()
+                // TODO Delete the capture method here after investigation
+                crashReport.capture(accountToMigrate.id, "re-login migration attempt failed", it)
+                // TODO Uncomment this when investigation is done
+                // it.reportIfNeeded(accountToMigrate.id, message = "re-login migration attempt failed")
                 val issue = ReLogin.DismissableIssue(
                     dismiss = { issueDismissals.trySend(Unit) },
                     cause = it.toIssueCause()
@@ -483,7 +487,7 @@ internal class AuthenticatorFacadeImpl(
                 return block()
             }.cancellable().onFailure {
                 it.printStackTrace()
-                it.reportIfNeeded(userId, "re-login migration attempt failed")
+                it.reportIfNeeded(userId, "account connection attempt failed")
                 if (it is IllegalStateException || it is IllegalArgumentException) { // Local errors, no recourse.
                     val issue = Issue.NonRetriable(it.message ?: it::class.simpleName ?: "$it")
                     emit(Account.Status.NotConnected.LoginFailed(issue))
