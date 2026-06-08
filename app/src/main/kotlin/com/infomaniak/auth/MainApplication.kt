@@ -79,7 +79,7 @@ open class MainApplication : Application(), Configuration.Provider {
         if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
         applicationScope.launch {
-            configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = SentryPreferences().isSentryAuthorized)
+            configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = { SentryPreferences().isSentryAuthorized })
             DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
         }
     }
