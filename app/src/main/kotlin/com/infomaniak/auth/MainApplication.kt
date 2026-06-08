@@ -79,7 +79,8 @@ open class MainApplication : Application(), Configuration.Provider {
         if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
         applicationScope.launch {
-            configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = SentryPreferences().isSentryAuthorized)
+            val sentryPreferences = SentryPreferences()
+            configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = { sentryPreferences.isSentryAuthorized })
             DeviceInfoUpdateManager.scheduleWorkerOnDeviceInfoUpdate<DeviceInfoUpdateWorker>()
         }
     }
