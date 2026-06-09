@@ -77,6 +77,7 @@ open class MainApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        Log.v("Jamy", "onCreate: test ci")
         if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
         applicationScope.launch {
