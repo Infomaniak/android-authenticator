@@ -20,6 +20,7 @@ package com.infomaniak.auth
 import android.app.Application
 import android.os.Build.VERSION.SDK_INT
 import android.os.StrictMode
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -94,6 +95,7 @@ open class MainApplication : Application(), Configuration.Provider {
     }
 
     private fun setupStrictMode() {
+        Log.v("Jamy", "setupStrictMode: yolo")
         StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
                 .detectAll()
