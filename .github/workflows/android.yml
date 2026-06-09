@@ -35,6 +35,24 @@ jobs:
             echo "Relevant changes detected."
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
+  lint:
+    needs: check-changes
+    if: needs.check-changes.outputs.should_run == 'true'
+    runs-on: [ self-hosted, Android ]
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v5.0.0
+        with:
+          token: ${{ github.token }}
+          submodules: recursive
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run lint
+        run: ./gradlew lint
+
   instrumentation-tests:
     needs: check-changes
       # This job ONLY runs if the previous job found relevant files
@@ -58,10 +76,6 @@ jobs:
       # Making sure the app compiles
       - name: Build app
         run: ./gradlew assembleDebug
-
-      # Runs the lint while waiting for the `build` task to run them automatically
-      - name: Run lint
-        run: ./gradlew lint
 
       - name: Run unit tests and analyze with sonar
         env:
