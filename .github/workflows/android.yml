@@ -38,20 +38,7 @@ jobs:
   lint:
     needs: check-changes
     if: needs.check-changes.outputs.should_run == 'true'
-    runs-on: [ self-hosted, Android ]
-
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v5.0.0
-        with:
-          token: ${{ github.token }}
-          submodules: recursive
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Run lint
-        run: ./gradlew lint
+    uses: infomaniak/.github/.github/workflows/android-lint.yml@v2
 
   instrumentation-tests:
     needs: check-changes
