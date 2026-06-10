@@ -37,7 +37,6 @@
     <string name="accountSettingsButton">Tilin asetukset</string>
     <string name="accountTitle">Tili</string>
     <string name="accountsTitle">Tilit</string>
-    <string name="actionRequiredDescription">Toimenpide vaaditaan yhden tilisi suojaamiseksi.</string>
     <string name="activityHistoryButton">Toimintahistoria</string>
     <string name="addAccountContentDescription">Lisää tili</string>
     <string name="alertDialogChangePasswordButton">Vaihda salasana</string>

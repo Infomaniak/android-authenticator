@@ -37,7 +37,6 @@
     <string name="accountSettingsButton">Accountinstellingen</string>
     <string name="accountTitle">Account</string>
     <string name="accountsTitle">Accounts</string>
-    <string name="actionRequiredDescription">Actie vereist om een van uw accounts te beveiligen.</string>
     <string name="activityHistoryButton">Activiteitengeschiedenis</string>
     <string name="addAccountContentDescription">Een account toevoegen</string>
     <string name="alertDialogChangePasswordButton">Wachtwoord wijzigen</string>

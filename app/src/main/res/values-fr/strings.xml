@@ -38,7 +38,6 @@
     <string name="accountSettingsButton">Paramètres du compte</string>
     <string name="accountTitle">Compte</string>
     <string name="accountsTitle">Comptes</string>
-    <string name="actionRequiredDescription">Une action est requise pour sécuriser l’un de vos comptes.</string>
     <string name="activityHistoryButton">Historique des activités</string>
     <string name="addAccountContentDescription">Ajouter un compte</string>
     <string name="alertDialogChangePasswordButton">Modifier le mot de passe</string>
