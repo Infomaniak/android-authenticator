@@ -38,11 +38,7 @@ jobs:
   lint:
     needs: check-changes
     if: needs.check-changes.outputs.should_run == 'true'
-    runs-on: [ self-hosted, Android ]
-
-    steps:
-      - name: Run lint
-        uses: infomaniak/.github/.github/workflows/android-lint.yml@v2
+    uses: infomaniak/.github/.github/workflows/android-lint.yml@v2
 
   instrumentation-tests:
     needs: check-changes
