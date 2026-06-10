@@ -20,6 +20,7 @@ package com.infomaniak.auth
 import android.app.Application
 import android.os.Build.VERSION.SDK_INT
 import android.os.StrictMode
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -76,6 +77,7 @@ open class MainApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        Log.v("Jamy", "onCreate: je mets un peu de log ici")
         if (BuildConfig.DEBUG) setupStrictMode() else setupProductionThreadMonitoring()
         notificationUtils.initNotificationChannel()
         applicationScope.launch {
