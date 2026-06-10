@@ -37,7 +37,6 @@
     <string name="accountSettingsButton">Ρυθμίσεις λογαριασμού</string>
     <string name="accountTitle">Λογαριασμός</string>
     <string name="accountsTitle">Λογαριασμοί</string>
-    <string name="actionRequiredDescription">Απαιτείται ενέργεια για την ασφάλεια ενός από τους λογαριασμούς σας.</string>
     <string name="activityHistoryButton">Ιστορικό δραστηριοτήτων</string>
     <string name="addAccountContentDescription">Προσθήκη λογαριασμού</string>
     <string name="alertDialogChangePasswordButton">Αλλαγή κωδικού πρόσβασης</string>

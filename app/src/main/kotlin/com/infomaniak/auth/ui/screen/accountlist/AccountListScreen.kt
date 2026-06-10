@@ -91,13 +91,6 @@ fun AccountListScreen(
     modifier: Modifier = Modifier
 ) {
     val state = uiState()
-    val hasUnsecuredAccounts: Boolean by remember(state.accountPairs) {
-        derivedStateOf {
-            state.accountPairs.any { (first, _) ->
-                (first.status as? Account.Status.LoggedIn)?.isSecured == false
-            }
-        }
-    }
     val hasAccountMigrationIssue: Boolean by remember(state.accountPairs) {
         derivedStateOf { state.accountPairs.any { (first, _) -> first.status is Account.Status.NotConnected.ReLogin } }
     }
@@ -128,7 +121,6 @@ fun AccountListScreen(
                     .padding(bottom = Margin.Medium),
                 verticalArrangement = Arrangement.spacedBy(Margin.Small)
             ) {
-                if (hasUnsecuredAccounts) ActionRequired()
                 if (hasAccountMigrationIssue) MigrationWarning(
                     accountWithMigrationIssueCount = state.accountPairs.count { (account, _) ->
                         account.status is Account.Status.NotConnected.ReLogin
@@ -145,29 +137,6 @@ fun AccountListScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ActionRequired() {
-    StatusCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Margin.Medium),
-        shape = RoundedCornerShape(DefaultCornerRadius),
-        variant = StatusCardVariant.Warning,
-    ) {
-        Row(modifier = Modifier.padding(Margin.Small), verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(R.drawable.shield_exclamation_mark),
-                contentDescription = null,
-                tint = AuthenticatorTheme.customColors.iconTintWarning
-            )
-            Text(
-                modifier = Modifier.padding(start = Margin.Small),
-                text = stringResource(R.string.actionRequiredDescription)
-            )
         }
     }
 }

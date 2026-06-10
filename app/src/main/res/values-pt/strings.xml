@@ -37,7 +37,6 @@
     <string name="accountSettingsButton">Configurações da conta</string>
     <string name="accountTitle">Conta</string>
     <string name="accountsTitle">Contas</string>
-    <string name="actionRequiredDescription">Ação necessária para proteger uma de suas contas.</string>
     <string name="activityHistoryButton">Histórico de atividades</string>
     <string name="addAccountContentDescription">Adicionar uma conta</string>
     <string name="alertDialogChangePasswordButton">Alterar palavra-passe</string>

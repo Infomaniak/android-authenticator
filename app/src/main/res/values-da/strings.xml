@@ -37,7 +37,6 @@
     <string name="accountSettingsButton">Kontoindstillinger</string>
     <string name="accountTitle">Konto</string>
     <string name="accountsTitle">Konti</string>
-    <string name="actionRequiredDescription">En handling er påkrævet for at sikre en af dine konti.</string>
     <string name="activityHistoryButton">Aktivitetshistorik</string>
     <string name="addAccountContentDescription">Tilføj en konto</string>
     <string name="alertDialogChangePasswordButton">Skift adgangskode</string>
