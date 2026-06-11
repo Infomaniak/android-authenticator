@@ -19,6 +19,7 @@ package com.infomaniak.auth.ui.screen.onboarding.start
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
@@ -34,12 +35,14 @@ import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.LoginResult
 import com.infomaniak.core.crossapplogin.back.ExternalAccount
 import com.infomaniak.core.login.InfomaniakLogin
+import com.infomaniak.core.ui.compose.basics.collectAsStateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -111,5 +114,7 @@ class OnboardingStartViewModel @Inject constructor(
         _isButtonLoading.value = false
     }
 
-    val cancelOnboarding: (() -> Unit)? get() = authenticatorFacade.appStatusOrNull<AppStatus.AddingAnAccount>()?.cancel
+    val cancelOnboarding: (() -> Unit)? by authenticatorFacade.appStatus.map {
+        (it as? AppStatus.AddingAnAccount)?.cancel
+    }.collectAsStateIn(scope = viewModelScope, initialValue = null)
 }
