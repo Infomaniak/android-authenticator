@@ -27,7 +27,7 @@ android {
         applicationId = "com.infomaniak.auth"
         minSdk = androidMinSdk
         targetSdk = appTargetSdk
-        versionCode = 2_00_000_15
+        versionCode = 2_00_000_16
         versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
