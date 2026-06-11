@@ -77,7 +77,6 @@ fun OnboardingStartScreen(
     val skippedIds by crossAppLoginFacade.skippedAccountIds.collectAsStateWithLifecycle()
     val isButtonLoading by onboardingStartViewModel.isButtonLoading.collectAsStateWithLifecycle()
 
-    // TODO[ik-auth]: Remove SignUp
     val isSignUpButtonLoading by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
@@ -97,6 +96,10 @@ fun OnboardingStartScreen(
         }
 
         if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
+    }
+
+    BackHandler(onboardingStartViewModel.cancelOnboarding != null) {
+        onboardingStartViewModel.cancelOnboarding?.invoke()
     }
 
     MatomoTrackScreen(MatomoScreen.OnboardingStartScreen)
@@ -135,10 +138,6 @@ private fun OnboardingStartScreen(
     onCancel: (() -> Unit),
 ) {
     val pagerState = rememberPagerState(pageCount = { Page.entries.size })
-
-    BackHandler {
-        onCancel()
-    }
 
     LockScreenOrientation(isLocked = LocalWindowAdaptiveInfo.current.isWindowSmall())
 
