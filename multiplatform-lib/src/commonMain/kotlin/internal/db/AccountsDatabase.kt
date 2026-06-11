@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.db
 
+import androidx.room.AutoMigration
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -29,7 +30,13 @@ import kotlinx.coroutines.IO
 
 internal expect fun getAccountsRoomDatabase(databaseNameOrPath: String?): AccountsDatabase
 
-@Database(entities = [AccountEntity::class], version = 1)
+@Database(
+    entities = [AccountEntity::class],
+    version = 2,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+    ]
+)
 @TypeConverters(AccountStatusConverter::class)
 @ConstructedBy(AccountsDatabaseConstructor::class)
 internal abstract class AccountsDatabase : RoomDatabase() {
