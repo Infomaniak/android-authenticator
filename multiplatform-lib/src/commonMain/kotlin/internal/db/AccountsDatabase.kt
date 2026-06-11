@@ -43,7 +43,7 @@ internal abstract class AccountsDatabase : RoomDatabase() {
     abstract fun getDao(): AccountsDao
 }
 
-@Suppress("KotlinNoActualForExpect")
+@Suppress("KotlinNoActualForExpect", "RedundantSuppression")
 internal expect object AccountsDatabaseConstructor : RoomDatabaseConstructor<AccountsDatabase> {
     override fun initialize(): AccountsDatabase
 }
