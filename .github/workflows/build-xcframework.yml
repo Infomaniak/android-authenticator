@@ -1,4 +1,4 @@
-name: Android CI
+name: Build XCFramework CI
 
 on:
   pull_request:
@@ -29,7 +29,7 @@ jobs:
           # HEAD^1 = Base Branch (e.g., main)
           # HEAD^2 = Your PR Branch
           # Keep changes in multiplatform-lib or Core submodule updates
-          CHANGES=$(git diff --name-only HEAD^1 HEAD^2 | grep -E '^(multiplatform-lib/|Core($|/))' || true)
+          CHANGES=$(git diff --name-only HEAD^1 HEAD^2 | grep -E '^(multiplatform-lib/|Core($|/)|\.github/workflows/build-xcframework\.yml$)' || true)
           
           if [ -z "$CHANGES" ]; then
             echo "No relevant changes found. Skipping tests."
