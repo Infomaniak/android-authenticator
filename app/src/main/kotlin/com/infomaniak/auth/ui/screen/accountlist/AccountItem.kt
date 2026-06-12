@@ -121,7 +121,7 @@ private fun StatusIcon(status: Account.Status) {
                 tint = AuthenticatorTheme.customColors.iconTintWarning,
             )
         }
-        is Account.Status.LoggedIn if !status.isSecured -> {
+        is Account.Status.LoggedIn if !status.yolo -> {
             Icon(
                 modifier = Modifier.padding(end = Margin.Mini),
                 painter = painterResource(id = R.drawable.shield_exclamation_mark),

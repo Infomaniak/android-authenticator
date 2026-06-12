@@ -81,7 +81,7 @@ class AccountDetailsViewModel @Inject constructor(
     private fun genDisconnectConfiguration(status: Account.Status): DisconnectConfiguration {
         return when (status) {
             is Account.Status.LoggedIn -> {
-                if (status.isSecured) {
+                if (status.yolo) {
                     DisconnectConfiguration.DisconnectSecuredAccount
                 } else {
                     DisconnectConfiguration.DisconnectPartiallySecuredAccount

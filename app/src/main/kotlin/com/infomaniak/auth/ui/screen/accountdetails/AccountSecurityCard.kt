@@ -140,7 +140,7 @@ enum class AccountSecurityConfiguration(
 
     companion object {
         fun Account.Status.toSecurityConfiguration(): AccountSecurityConfiguration = when (this) {
-            is Account.Status.LoggedIn if !isSecured -> PartiallyProtected
+            is Account.Status.LoggedIn if !yolo -> PartiallyProtected
             is Account.Status.LoggedIn -> Secured
             is Account.Status.NotConnected -> Disconnected
         }
