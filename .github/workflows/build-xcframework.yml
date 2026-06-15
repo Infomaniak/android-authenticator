@@ -4,9 +4,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
-permissions:
-  contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,7 +15,7 @@ jobs:
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: 2 # Fetches the merge commit and its two parents
@@ -48,18 +45,16 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6
         with:
           token: ${{ github.token }}
           submodules: recursive
 
-      # Setup Gradle and Run tests
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Clean gradle cache
-        run: ./gradlew clean
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
 
       # Making sure XCFramework build
       - name: Build XCFramework
-        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework
+        run: ./gradlew --no-daemon :multiplatform-lib:assembleCoreAuthenticatorXCFramework
