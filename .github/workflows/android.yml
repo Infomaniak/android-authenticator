@@ -15,14 +15,18 @@ jobs:
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v6.0.0
+      - uses: actions/checkout@v6.0.3
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Fetch base SHA
+        run: git fetch --depth=1 origin ${{ github.event.pull_request.base.sha }}
 
       - id: check
         shell: bash
         run: |
-          DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          DIFF=$(git diff --name-only FETCH_HEAD ${{ github.event.pull_request.head.sha }})
 
           # App changes: exclude .md files and .github/ directory
           APP_CHANGES=$(echo "$DIFF" | grep -vE '(\.md$|^\.github/)' || true)
@@ -53,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.3
         with:
           token: ${{ github.token }}
           submodules: recursive
