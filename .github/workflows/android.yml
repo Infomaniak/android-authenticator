@@ -25,9 +25,16 @@ jobs:
         run: |
           # HEAD^1 = Base Branch (e.g., main)
           # HEAD^2 = Your PR Branch
-          # Filter out .md files and .github directory
-          CHANGES=$(git diff --name-only HEAD^1 HEAD^2 | grep -vE '^(\.github/|.*\.md$)' || true)
-          
+          CHANGED=$(git diff --name-only HEAD^1 HEAD^2)
+
+          # App changes: exclude .md files and .github/ directory
+          APP_CHANGES=$(echo "$CHANGED" | grep -vE '(\.md$|^\.github/)' || true)
+
+          # Workflow change: run CI if android.yml itself changed
+          WORKFLOW_CHANGE=$(echo "$CHANGED" | grep -E '^\.github/workflows/android\.yml$' || true)
+
+          CHANGES="${APP_CHANGES}${WORKFLOW_CHANGE}"
+
           if [ -z "$CHANGES" ]; then
             echo "No relevant changes found. Skipping tests."
             echo "should_run=false" >> $GITHUB_OUTPUT
@@ -36,6 +43,7 @@ jobs:
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
   lint:
+    name: Run Android Lint
     needs: check-changes
     if: needs.check-changes.outputs.should_run == 'true'
     uses: infomaniak/.github/.github/workflows/android-lint.yml@v2
