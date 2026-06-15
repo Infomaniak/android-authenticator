@@ -63,4 +63,4 @@ jobs:
 
       # Making sure XCFramework build
       - name: Build XCFramework
-        run: ./gradlew --no-daemon :multiplatform-lib:assembleCoreAuthenticatorXCFramework
+        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework

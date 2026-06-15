@@ -75,7 +75,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
-
-      - name: Stop Gradle daemons
-        if: always()
-        run: ./gradlew --stop || true
