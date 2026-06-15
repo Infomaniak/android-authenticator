@@ -1,8 +1,11 @@
-name: Android CI
+name: Build XCFramework CI
 
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,13 +31,8 @@ jobs:
         run: |
           DIFF=$(git diff --name-only FETCH_HEAD ${{ github.event.pull_request.head.sha }})
 
-          # App changes: exclude .md files and .github/ directory
-          APP_CHANGES=$(echo "$DIFF" | grep -vE '(\.md$|^\.github/)' || true)
-
-          # Always include android.yml changes
-          WORKFLOW_CHANGES=$(echo "$DIFF" | grep -E '^\.github/workflows/android\.yml$' || true)
-
-          CHANGES="${APP_CHANGES}${WORKFLOW_CHANGES}"
+          # Keep changes in multiplatform-lib or Core submodule updates or this workflow file
+          CHANGES=$(echo "$DIFF" | grep -E '^(multiplatform-lib/|Core($|/)|\.github/workflows/build-xcframework\.yml$)' || true)
           
           if [ -z "$CHANGES" ]; then
             echo "No relevant changes found. Skipping tests."
@@ -43,13 +41,9 @@ jobs:
             echo "Relevant changes detected."
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
-  lint:
-    name: Run Android Lint
-    needs: check-changes
-    if: needs.check-changes.outputs.should_run == 'true'
-    uses: infomaniak/.github/.github/workflows/android-lint.yml@v2
 
-  instrumentation-tests:
+  build-apple-bundle:
+    name: Verify generation of XCframework
     needs: check-changes
       # This job ONLY runs if the previous job found relevant files
     if: needs.check-changes.outputs.should_run == 'true'
@@ -67,11 +61,6 @@ jobs:
         with:
           cache-provider: basic
 
-      # Making sure the app compiles
-      - name: Build app
-        run: ./gradlew assembleDebug
-
-      - name: Run unit tests and analyze with sonar
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
+      # Making sure XCFramework build
+      - name: Build XCFramework
+        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework
