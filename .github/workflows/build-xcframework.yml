@@ -20,16 +20,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
-          fetch-depth: 2 # Fetches the merge commit and its two parents
+          fetch-depth: 0
 
       - id: check
         shell: bash
         run: |
-          # HEAD^1 = Base Branch (e.g., main)
-          # HEAD^2 = Your PR Branch
-          # Keep changes in multiplatform-lib or Core submodule updates
-          CHANGES=$(git diff --name-only HEAD^1 HEAD^2 | grep -E '^(multiplatform-lib/|Core($|/)|\.github/workflows/build-xcframework\.yml$)' || true)
+          DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+
+          # Keep changes in multiplatform-lib or Core submodule updates or this workflow file
+          CHANGES=$(echo "$DIFF" | grep -E '^(multiplatform-lib/|Core($|/)|\.github/workflows/build-xcframework\.yml$)' || true)
           
           if [ -z "$CHANGES" ]; then
             echo "No relevant changes found. Skipping tests."
