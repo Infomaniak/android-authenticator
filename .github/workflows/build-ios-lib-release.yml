@@ -112,7 +112,7 @@ jobs:
         run: |
           gh release create "${{ github.event.inputs.version }}" \
             release/CoreAuthenticator.xcframework.zip \
-            --title "${{ github.event.inputs.version }}" \
+            --title "Core Authenticator ${{ github.event.inputs.version }}" \
             --generate-notes \
             --draft
         env:
