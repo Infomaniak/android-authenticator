@@ -1,36 +1,43 @@
-name: Create iOS Release on PR Merge
+name: Release iOS Library
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (x.x.x)'
+        required: true
+        type: string
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  create-release:
-    name: Build XCFramework and publish GitHub Release
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/ios-')
+  release-ios:
+    name: Build XCFramework and open release PR
     runs-on: [ self-hosted, Android ]
 
     steps:
-      - name: Extract version from branch name
-        id: version
+      - name: Validate version format
         run: |
-          BRANCH="${{ github.event.pull_request.head.ref }}"
-          echo "version=${BRANCH#release/ios-}" >> $GITHUB_OUTPUT
+          if [[ ! "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: version must be in x.x.x format"
+            exit 1
+          fi
 
       - name: Checkout the code
         uses: actions/checkout@v6.0.3
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           submodules: recursive
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6.2.0
         with:
           cache-provider: basic
+
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2.4.0
 
       - name: Clean build environment
         run: |
@@ -45,19 +52,60 @@ jobs:
           mkdir -p release
           zip -r release/CoreAuthenticator.xcframework.zip multiplatform-lib/build/XCFrameworks/release/CoreAuthenticator.xcframework
 
-      - name: Create GitHub Release and upload asset
+      - name: Update Package.swift with checksum
         run: |
-          gh release create "${{ steps.version.outputs.version }}" \
-            release/CoreAuthenticator.xcframework.zip \
-            --title "${{ steps.version.outputs.version }}" \
-            --generate-notes
+          VERSION="${{ github.event.inputs.version }}"
+          CHECKSUM=$(swift package compute-checksum release/CoreAuthenticator.xcframework.zip)
+          URL="https://github.com/Infomaniak/android-authenticator/releases/download/$VERSION/CoreAuthenticator.xcframework.zip"
+          perl -0777 -pi -e "s|url: \".*CoreAuthenticator.xcframework.zip\",(\s*)checksum: \".*\"|url: \"$URL\",\1checksum: \"$CHECKSUM\"|g" Package.swift
+
+      - name: Import bot's GPG key for signing commits
+        id: import-gpg
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
+        with:
+          gpg_private_key: ${{ secrets.BOT_MOBILE_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.BOT_MOBILE_GPG_PASSPHRASE }}
+          git_config_global: true
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Close any existing release PR, delete its branch and draft release
+        run: |
+          gh pr list --base main --state open --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("release/ios-")) | [.number, .headRefName] | @tsv' \
+            | while IFS=$'\t' read -r PR_NUMBER BRANCH; do
+                gh pr close "$PR_NUMBER" --comment "Superseded by a new release workflow run."
+                git push origin --delete "$BRANCH" || true
+                VERSION="${BRANCH#release/ios-}"
+                gh release delete "$VERSION" --yes || true
+              done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Notify KChat
+      - name: Create draft GitHub Release and upload asset
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          RELEASE_URL="https://github.com/Infomaniak/android-authenticator/releases/tag/$VERSION"
-          curl -s -X POST "${{ secrets.KCHAT_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"text\": \":rocket: *iOS Authenticator lib $VERSION* is now available!\n:link: $RELEASE_URL\"}"
+          gh release create "${{ github.event.inputs.version }}" \
+            release/CoreAuthenticator.xcframework.zip \
+            --title "${{ github.event.inputs.version }}" \
+            --generate-notes \
+            --draft
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit Package.swift and open PR
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          BRANCH="release/ios-$VERSION"
+          git config user.name "dev-mobile-bot"
+          git config user.email "mobile+github-bot@infomaniak-dev.ch"
+          git checkout -b "$BRANCH"
+          git add Package.swift
+          git commit -m "chore: Update Package.swift for iOS release $VERSION"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "chore: release iOS lib $VERSION" \
+            --body "Update \`Package.swift\` with the new XCFramework URL and checksum for version \`$VERSION\`.\n\nMerging this PR will automatically create the GitHub Release." \
+            --head "$BRANCH" \
+            --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
