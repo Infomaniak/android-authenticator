@@ -28,6 +28,7 @@ import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.NotificationUtils
+import com.infomaniak.core.auth.AuthConfiguration
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfoUpdateManager
 import com.infomaniak.core.network.ApiEnvironment
@@ -70,6 +71,12 @@ open class MainApplication : Application(), Configuration.Provider {
             appVersionName = BuildConfig.VERSION_NAME,
             appVersionCode = BuildConfig.VERSION_CODE,
             apiEnvironment = ApiEnvironment.Prod,
+        )
+        AuthConfiguration.init(
+            appId = BuildConfig.APPLICATION_ID,
+            appVersionCode = BuildConfig.VERSION_CODE,
+            appVersionName = BuildConfig.VERSION_NAME,
+            clientId = BuildConfig.CLIENT_ID,
         )
         userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
     }
