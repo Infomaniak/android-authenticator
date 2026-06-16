@@ -75,14 +75,19 @@ jobs:
 
       - name: Close any existing release PR, delete its branch and draft release
         run: |
+          # Close open PRs and delete their draft releases
           gh pr list --base main --state open --json number,headRefName \
             --jq '.[] | select(.headRefName | startswith("release/ios-")) | [.number, .headRefName] | @tsv' \
             | while IFS=$'\t' read -r PR_NUMBER BRANCH; do
                 gh pr close "$PR_NUMBER" --comment "Superseded by a new release workflow run."
-                git push origin --delete "$BRANCH" || true
                 VERSION="${BRANCH#release/ios-}"
                 gh release delete "$VERSION" --yes || true
               done
+          # Delete all remote release/ios-* branches regardless of PR status
+          git ls-remote --heads origin 'refs/heads/release/ios-*' \
+            | awk '{ print $2 }' \
+            | sed 's|refs/heads/||' \
+            | xargs -r -I{} git push origin --delete {} || true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
