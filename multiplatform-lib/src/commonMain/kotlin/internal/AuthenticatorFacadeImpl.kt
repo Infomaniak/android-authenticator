@@ -261,7 +261,8 @@ internal class AuthenticatorFacadeImpl(
         withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
-                val temporaryToken = authenticatorBridge.getTokenFromDatabase(userId) ?: return
+                val temporaryToken = authenticatorBridge.getTokenFromDatabase(userId)
+                    ?: error("Temporary token missing in DB for userId=$userId")
                 // Just in case orphans passkeys are lying around, we want to make sure to start from a clean state.
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
                 val _ = authenticatorManager.registerPasskey(temporaryToken.accessToken, userId)
