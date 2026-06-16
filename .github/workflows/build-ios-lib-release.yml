@@ -71,13 +71,7 @@ jobs:
 
       - name: Setup gh CLI
         run: |
-          if ! which gh > /dev/null 2>&1; then
-            if [[ "$RUNNER_OS" == "macOS" ]]; then
-              brew install gh
-            else
-              sudo apt-get update -qq && sudo apt-get install -y gh
-            fi
-          fi
+          command -v gh >/dev/null 2>&1 || brew install gh
 
       - name: Close any existing release PR, delete its branch and draft release
         run: |
