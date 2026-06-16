@@ -73,7 +73,7 @@ jobs:
         run: |
           command -v gh >/dev/null 2>&1 || brew install gh
 
-      - name: Close any existing release PR, delete its branch and draft release
+      - name: Close existing iOS release PRs, delete draft releases, and prune release branches
         run: |
           # Close open PRs and delete their draft releases
           gh pr list --base main --state open --json number,headRefName \
