@@ -82,16 +82,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create draft GitHub Release and upload asset
-        run: |
-          gh release create "${{ github.event.inputs.version }}" \
-            release/CoreAuthenticator.xcframework.zip \
-            --title "${{ github.event.inputs.version }}" \
-            --generate-notes \
-            --draft
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Commit Package.swift and open PR
         run: |
           VERSION="${{ github.event.inputs.version }}"
@@ -107,5 +97,15 @@ jobs:
             --body "Update \`Package.swift\` with the new XCFramework URL and checksum for version \`$VERSION\`.\n\nMerging this PR will automatically create the GitHub Release." \
             --head "$BRANCH" \
             --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create draft GitHub Release and upload asset
+        run: |
+          gh release create "${{ github.event.inputs.version }}" \
+            release/CoreAuthenticator.xcframework.zip \
+            --title "${{ github.event.inputs.version }}" \
+            --generate-notes \
+            --draft
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
