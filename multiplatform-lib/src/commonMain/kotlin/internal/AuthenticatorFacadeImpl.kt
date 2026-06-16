@@ -258,13 +258,13 @@ internal class AuthenticatorFacadeImpl(
             else -> throw IllegalArgumentException("registrationAttempts doesn't support $accountStatus")
         }
         val userId = notRegisteredAccount.id
-        val token = authenticatorBridge.getTokenFromDatabase(userId) ?: return
         withRetries(userId = userId) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             if (!passKeyAlreadyRegistered) {
+                val temporaryToken = authenticatorBridge.getTokenFromDatabase(userId) ?: return
                 // Just in case orphans passkeys are lying around, we want to make sure to start from a clean state.
                 authenticatorManager.deleteKeysFor(notRegisteredAccount.id)
-                val _ = authenticatorManager.registerPasskey(token.accessToken, userId)
+                val _ = authenticatorManager.registerPasskey(temporaryToken.accessToken, userId)
                 dao.upsert(notRegisteredAccount.copy(status = Status.FirstPasskeyAuthenticationPending))
                 // The DB update above is expected to cause the cancellation & restart of this.
             }
