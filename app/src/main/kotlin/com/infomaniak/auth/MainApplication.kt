@@ -28,6 +28,7 @@ import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.NotificationUtils
+import com.infomaniak.core.auth.AuthConfiguration
 import com.infomaniak.core.common.AssociatedUserDataCleanable
 import com.infomaniak.core.crossapplogin.back.internal.deviceinfo.DeviceInfoUpdateManager
 import com.infomaniak.core.network.ApiEnvironment
