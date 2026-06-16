@@ -101,8 +101,8 @@ jobs:
           git commit -m "chore: Update Package.swift for iOS release $VERSION"
           git push origin "$BRANCH"
           gh pr create \
-            --title "chore: release iOS lib $VERSION" \
-            --body "Update \`Package.swift\` with the new XCFramework URL and checksum for version \`$VERSION\`.\n\nMerging this PR will automatically create the GitHub Release." \
+            --title "chore: Release iOS lib $VERSION" \
+            --body "Update \`Package.swift\` with the new XCFramework URL and checksum for version \`$VERSION\`. Merging this PR will automatically create the GitHub Release." \
             --head "$BRANCH" \
             --base main
         env:
@@ -112,7 +112,7 @@ jobs:
         run: |
           gh release create "${{ github.event.inputs.version }}" \
             release/CoreAuthenticator.xcframework.zip \
-            --title "${{ github.event.inputs.version }}" \
+            --title "Core Authenticator ${{ github.event.inputs.version }}" \
             --generate-notes \
             --draft
         env:
