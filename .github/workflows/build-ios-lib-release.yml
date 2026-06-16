@@ -1,0 +1,63 @@
+name: Create iOS Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Build XCFramework and publish GitHub Release
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/ios-')
+    runs-on: [ self-hosted, Android ]
+
+    steps:
+      - name: Extract version from branch name
+        id: version
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          echo "version=${BRANCH#release/ios-}" >> $GITHUB_OUTPUT
+
+      - name: Checkout the code
+        uses: actions/checkout@v6.0.3
+        with:
+          ref: main
+          submodules: recursive
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6.2.0
+        with:
+          cache-provider: basic
+
+      - name: Clean build environment
+        run: |
+          ./gradlew clean
+          rm -rf build .gradle release
+
+      - name: Build XCFramework
+        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework
+
+      - name: Archive XCFramework
+        run: |
+          mkdir -p release
+          zip -r release/CoreAuthenticator.xcframework.zip multiplatform-lib/build/XCFrameworks/release/CoreAuthenticator.xcframework
+
+      - name: Create GitHub Release and upload asset
+        run: |
+          gh release create "${{ steps.version.outputs.version }}" \
+            release/CoreAuthenticator.xcframework.zip \
+            --title "${{ steps.version.outputs.version }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify KChat
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          RELEASE_URL="https://github.com/Infomaniak/android-authenticator/releases/tag/$VERSION"
+          curl -s -X POST "${{ secrets.KCHAT_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"text\": \":rocket: *iOS Authenticator lib $VERSION* is now available!\n:link: $RELEASE_URL\"}"
