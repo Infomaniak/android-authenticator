@@ -17,6 +17,13 @@ jobs:
     runs-on: [ self-hosted, Android ]
 
     steps:
+      - name: Validate version format
+        run: |
+          if [[ ! "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: version must be in x.x.x format"
+            exit 1
+          fi
+
       - name: Checkout the code
         uses: actions/checkout@v6.0.3
         with:
@@ -27,6 +34,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v6.2.0
         with:
           cache-provider: basic
+
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2.4.0
 
       - name: Clean build environment
         run: |
