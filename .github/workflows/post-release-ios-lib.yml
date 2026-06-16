@@ -1,0 +1,35 @@
+name: Create iOS Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Publish draft GitHub Release
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/ios-')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract version from branch name
+        id: version
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          echo "version=${BRANCH#release/ios-}" >> $GITHUB_OUTPUT
+
+      - name: Publish draft release
+        run: gh release edit "${{ steps.version.outputs.version }}" --draft=false --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify KChat
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          RELEASE_URL="https://github.com/Infomaniak/android-authenticator/releases/tag/$VERSION"
+          curl -s -X POST "${{ secrets.KCHAT_KMP_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"text\": \":rocket: *iOS Authenticator lib $VERSION* is now available!\n:link: $RELEASE_URL\"}"

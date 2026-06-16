@@ -1,0 +1,111 @@
+name: Release iOS Library
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (x.x.x)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-ios:
+    name: Build XCFramework and open release PR
+    runs-on: [ self-hosted, Android ]
+
+    steps:
+      - name: Validate version format
+        run: |
+          if [[ ! "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: version must be in x.x.x format"
+            exit 1
+          fi
+
+      - name: Checkout the code
+        uses: actions/checkout@v6.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6.2.0
+        with:
+          cache-provider: basic
+
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2.4.0
+
+      - name: Clean build environment
+        run: |
+          ./gradlew clean
+          rm -rf build .gradle release
+
+      - name: Build XCFramework
+        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework
+
+      - name: Archive XCFramework
+        run: |
+          mkdir -p release
+          zip -r release/CoreAuthenticator.xcframework.zip multiplatform-lib/build/XCFrameworks/release/CoreAuthenticator.xcframework
+
+      - name: Update Package.swift with checksum
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          CHECKSUM=$(swift package compute-checksum release/CoreAuthenticator.xcframework.zip)
+          URL="https://github.com/Infomaniak/android-authenticator/releases/download/$VERSION/CoreAuthenticator.xcframework.zip"
+          perl -0777 -pi -e "s|url: \".*CoreAuthenticator.xcframework.zip\",(\s*)checksum: \".*\"|url: \"$URL\",\1checksum: \"$CHECKSUM\"|g" Package.swift
+
+      - name: Import bot's GPG key for signing commits
+        id: import-gpg
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
+        with:
+          gpg_private_key: ${{ secrets.BOT_MOBILE_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.BOT_MOBILE_GPG_PASSPHRASE }}
+          git_config_global: true
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Close any existing release PR, delete its branch and draft release
+        run: |
+          gh pr list --base main --state open --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("release/ios-")) | [.number, .headRefName] | @tsv' \
+            | while IFS=$'\t' read -r PR_NUMBER BRANCH; do
+                gh pr close "$PR_NUMBER" --comment "Superseded by a new release workflow run."
+                git push origin --delete "$BRANCH" || true
+                VERSION="${BRANCH#release/ios-}"
+                gh release delete "$VERSION" --yes || true
+              done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit Package.swift and open PR
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          BRANCH="release/ios-$VERSION"
+          git config user.name "dev-mobile-bot"
+          git config user.email "mobile+github-bot@infomaniak-dev.ch"
+          git checkout -b "$BRANCH"
+          git add Package.swift
+          git commit -m "chore: Update Package.swift for iOS release $VERSION"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "chore: release iOS lib $VERSION" \
+            --body "Update \`Package.swift\` with the new XCFramework URL and checksum for version \`$VERSION\`.\n\nMerging this PR will automatically create the GitHub Release." \
+            --head "$BRANCH" \
+            --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create draft GitHub Release and upload asset
+        run: |
+          gh release create "${{ github.event.inputs.version }}" \
+            release/CoreAuthenticator.xcframework.zip \
+            --title "${{ github.event.inputs.version }}" \
+            --generate-notes \
+            --draft
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
