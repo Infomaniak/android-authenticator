@@ -69,6 +69,10 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
+      - name: Setup gh CLI
+        run: |
+          command -v gh >/dev/null 2>&1 || brew install gh
+
       - name: Close any existing release PR, delete its branch and draft release
         run: |
           gh pr list --base main --state open --json number,headRefName \
