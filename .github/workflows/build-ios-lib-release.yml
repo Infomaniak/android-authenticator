@@ -16,11 +16,13 @@ jobs:
   release-ios:
     name: Build XCFramework and open release PR
     runs-on: [ self-hosted, Android ]
+    env:
+      VERSION: ${{ github.event.inputs.version }}
 
     steps:
       - name: Validate version format
         run: |
-          if [[ ! "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Error: version must be in x.x.x format"
             exit 1
           fi
@@ -54,7 +56,6 @@ jobs:
 
       - name: Update Package.swift with checksum
         run: |
-          VERSION="${{ github.event.inputs.version }}"
           CHECKSUM=$(swift package compute-checksum release/CoreAuthenticator.xcframework.zip)
           URL="https://github.com/Infomaniak/android-authenticator/releases/download/$VERSION/CoreAuthenticator.xcframework.zip"
           perl -0777 -pi -e "s|url: \".*CoreAuthenticator.xcframework.zip\",(\s*)checksum: \".*\"|url: \"$URL\",\1checksum: \"$CHECKSUM\"|g" Package.swift
@@ -92,7 +93,6 @@ jobs:
 
       - name: Commit Package.swift and open PR
         run: |
-          VERSION="${{ github.event.inputs.version }}"
           BRANCH="release/ios-$VERSION"
           git config user.name "dev-mobile-bot"
           git config user.email "mobile+github-bot@infomaniak-dev.ch"
@@ -110,9 +110,9 @@ jobs:
 
       - name: Create draft GitHub Release and upload asset
         run: |
-          gh release create "${{ github.event.inputs.version }}" \
+          gh release create "$VERSION" \
             release/CoreAuthenticator.xcframework.zip \
-            --title "Core Authenticator ${{ github.event.inputs.version }}" \
+            --title "Core Authenticator $VERSION" \
             --generate-notes \
             --draft
         env:

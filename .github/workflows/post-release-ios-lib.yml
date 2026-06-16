@@ -17,8 +17,9 @@ jobs:
     steps:
       - name: Extract version from branch name
         id: version
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
-          BRANCH="${{ github.event.pull_request.head.ref }}"
           echo "version=${BRANCH#release/ios-}" >> $GITHUB_OUTPUT
 
       - name: Publish draft release
