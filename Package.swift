@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Multiplatform-lib",
+    name: "Authenticator-Core",
     platforms: [
         .iOS(.v14),
     ],
     products: [
-        .library(name: "multiplatform-lib", targets: ["CoreAuthenticator"])
+        .library(name: "CoreAuthenticator", targets: ["CoreAuthenticator"])
     ],
     targets: [
         .binaryTarget(
