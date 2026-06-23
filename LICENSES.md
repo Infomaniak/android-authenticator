@@ -1,13 +1,12 @@
-# Third-Party Licenses
+# Open Source Licenses
 
-Infomaniak Authenticator for Android includes the following third-party libraries in the distributed application (runtime dependencies; test-only dependencies are excluded):
+Infomaniak Authenticator for Android includes the following notable open source libraries (runtime dependencies; test-only dependencies are excluded). This list may not be exhaustive.
 
 | Library | License |
 |---------|---------|
 | [AndroidX Activity Compose](https://developer.android.com/jetpack/androidx/releases/activity) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [AndroidX AppCompat](https://developer.android.com/jetpack/androidx/releases/appcompat) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [AndroidX Biometric](https://developer.android.com/jetpack/androidx/releases/biometric) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
-| [AndroidX Compose BOM](https://developer.android.com/jetpack/compose/bom) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [AndroidX Core KTX](https://developer.android.com/jetpack/androidx/releases/core) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [AndroidX Core Splashscreen](https://developer.android.com/jetpack/androidx/releases/core) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [AndroidX Lifecycle](https://developer.android.com/jetpack/androidx/releases/lifecycle) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
@@ -16,11 +15,12 @@ Infomaniak Authenticator for Android includes the following third-party librarie
 | [AndroidX Work Runtime](https://developer.android.com/jetpack/androidx/releases/work) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Coil](https://github.com/coil-kt/coil) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Dagger Hilt](https://dagger.dev/hilt/) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
-| [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
+| [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) _(standard flavor only)_ | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Google Material Components for Android](https://github.com/material-components/material-components-android) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Google Play App Update](https://developer.android.com/guide/playcore/in-app-updates) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Google Play Review](https://developer.android.com/guide/playcore/in-app-review) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
-| [Kotlin](https://kotlinlang.org/) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
+| [Jetpack Compose](https://developer.android.com/jetpack/compose) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
+| [Kotlin Standard Library](https://kotlinlang.org/) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Kotlinx Coroutines](https://github.com/Kotlin/kotlinx.coroutines) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 | [Matomo SDK for Android](https://github.com/matomo-org/matomo-sdk-android) | [BSD 3-Clause License](https://opensource.org/licenses/BSD-3-Clause) |
