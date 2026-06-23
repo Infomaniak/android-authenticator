@@ -8,7 +8,7 @@ Infomaniak Authenticator — TOTP-based two-factor auth app. Kotlin + Jetpack Co
 ## One-Time Environment Setup
 ```bash
 git submodule update --init --recursive   # Core submodule
-cp env.example.properties env.properties  # fill sentryAuthToken (dummy value OK locally)
+cp env.example.properties env.properties  # only required for Sentry release tasks; debug builds work without it
 ```
 
 ## Build & Test (CI: `.github/workflows/android.yml`)
