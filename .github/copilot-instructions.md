@@ -14,32 +14,26 @@ cp env.example.properties env.properties  # fill sentryAuthToken (dummy value OK
 ## Build & Test (CI: `.github/workflows/android.yml`)
 CI runs on non-draft PRs only if non-`.md`/`.github` files changed:
 ```bash
-./gradlew assembleDebug                                         # compile check
+./gradlew assembleDebug
 ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
-```
-CI also runs Android Lint via `infomaniak/.github` reusable workflow. Locally:
-```bash
-./gradlew lint
+./gradlew lint   # via infomaniak/.github reusable workflow
 ```
 
 ## Project Layout
 ```
-app/                        # Android application
-├── src/main/java/com/infomaniak/authenticator/
-│   ├── data/               # Room DB, repositories, models
-│   ├── di/                 # Hilt modules
-│   ├── ui/                 # Compose screens (TOTP codes, accounts, settings)
-│   └── worker/             # WorkManager workers
-multiplatform-lib/          # KMP module — TOTP logic shared with iOS
-Core/                       # Git submodule — Infomaniak shared library
-Package.swift               # iOS Swift Package entry point
-buildRelease / buildXCFramework  # Shell scripts to produce iOS XCFramework
-gradle/libs.versions.toml
+app/src/main/java/com/infomaniak/authenticator/
+├── data/               # Room DB, repositories, models
+├── di/                 # Hilt modules
+├── ui/                 # Compose screens (TOTP codes, accounts, settings)
+└── worker/             # WorkManager workers
+multiplatform-lib/      # KMP module — TOTP logic shared with iOS
+Core/                   # Git submodule — Infomaniak shared library
 ```
 
-## Key Rules
-- Firebase is `standardImplementation` only — fdroid builds must compile without it.
-- Room is a **runtime** dependency here (unlike euria where it is kapt-only).
-- After modifying KMP (`multiplatform-lib/`) public API, verify the iOS build still compiles.
-- All user-visible strings in `res/values/strings.xml`.
+## PR Review Instructions
+
+- Ensure strings are localized via `strings.xml` resources.
+- Ensure UI is written in Jetpack Compose using Material3 components.
+- `standard` flavor only: Firebase, Google services — fdroid builds must compile without them.
+- After modifying the public API of `multiplatform-lib/`, verify the iOS XCFramework build still compiles (`./buildXCFramework`).
 - When adding/removing a runtime dependency, update `LICENSES.md` at the repo root.
