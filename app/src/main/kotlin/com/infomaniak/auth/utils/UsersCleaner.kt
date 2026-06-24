@@ -33,7 +33,7 @@ class UsersCleaner @Inject constructor(
 
         users.forEach { user ->
             if (user.id.toLong() !in accountsIds) {
-                SentryLog.e("UsersCleaner", "Removing orphan user ${user.id} (${user.email})")
+                SentryLog.e("UsersCleaner", "Removing orphan user ${user.id}")
                 accountUtils.removeUser(user.id)
             }
         }
