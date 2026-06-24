@@ -69,6 +69,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -119,8 +120,13 @@ internal class AuthenticatorFacadeImpl(
 
         userIdsToStatusFlows.buildFlowWithElements(userIds) { userIdsToStatusFlow ->
             val flowsOfStatus = entities.map { userIdsToStatusFlow.getValue(it.id) }
-            combine(flowsOfStatus) { statuses ->
-                entities.mapIndexed { index, entity -> entity.toAccount(statuses[index]) }
+
+            if (entities.isEmpty()) {
+                flowOf(emptyList())
+            } else {
+                combine(flowsOfStatus) { statuses ->
+                    entities.mapIndexed { index, entity -> entity.toAccount(statuses[index]) }
+                }
             }
         }
     }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)

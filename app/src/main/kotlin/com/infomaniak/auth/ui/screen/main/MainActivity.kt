@@ -36,6 +36,7 @@ import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
+import com.infomaniak.auth.utils.AccountsCleaner
 import com.infomaniak.core.applock.AppLockManager
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.inappreview.reviewmanagers.InAppReviewManager
@@ -56,6 +57,9 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
+    lateinit var accountsCleaner: AccountsCleaner
+
+    @Inject
     lateinit var appSettingsRepository: AppSettingsRepository
 
     @Inject
@@ -74,6 +78,10 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
 
         enableEdgeToEdge()
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+
+        lifecycleScope.launch {
+            accountsCleaner.cleanOrphanAccounts()
+        }
 
         lifecycleScope.launch {
             inAppUpdateManager.isUpdateRequired
