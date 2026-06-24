@@ -69,6 +69,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -114,6 +115,7 @@ internal class AuthenticatorFacadeImpl(
 
     /** [Account.status] values come from the [accountStatusForUser] function. */
     override val accounts: Flow<List<Account>> = accountEntities.flatMapLatest { entities ->
+        if (entities.isEmpty()) return@flatMapLatest flowOf(emptyList())
 
         val userIds = entities.mapTo(mutableSetOf()) { it.id }
 

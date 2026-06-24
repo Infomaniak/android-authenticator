@@ -23,6 +23,7 @@ import com.infomaniak.auth.data.preferences.PermissionPreferences
 import com.infomaniak.auth.lib.Account
 import com.infomaniak.auth.lib.AuthenticatorFacade
 import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.auth.utils.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,6 +40,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     appSettingsRepository: AppSettingsRepository,
     authenticatorFacade: AuthenticatorFacade,
+    private val accountUtils: AccountUtils,
 ) : ViewModel() {
     val appStatus = authenticatorFacade.appStatus
 
@@ -63,6 +65,12 @@ class MainViewModel @Inject constructor(
     fun onNotificationPermissionTriggered() {
         viewModelScope.launch {
             PermissionPreferences().hasTriggeredNotificationPermission = true
+        }
+    }
+
+    fun removeUser(accountId: Int) {
+        viewModelScope.launch {
+            accountUtils.removeUser(accountId)
         }
     }
 }

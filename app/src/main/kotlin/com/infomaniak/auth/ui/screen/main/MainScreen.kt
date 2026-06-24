@@ -123,7 +123,8 @@ fun MainScreen(
     showDisconnectedAccountDialogFor?.let {
         PriorityEventStackDialog(
             event = PriorityEventAlert.AccountDisconnected,
-            account = it
+            account = it,
+            removeUser = { viewModel.removeUser(it.id.toInt()) }
         )
     }
 
@@ -193,6 +194,7 @@ fun MainScreen(
 private fun PriorityEventStackDialog(
     event: PriorityEventAlert,
     account: Account,
+    removeUser: (() -> Unit)? = null,
 ) {
     var showPriorityEventDialog by remember { mutableStateOf(true) }
     LaunchedEffect(account) {
@@ -206,10 +208,7 @@ private fun PriorityEventStackDialog(
             account = account,
             event = event,
             onDismissButton = {
-                when (event) {
-                    PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
-                    PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
-                }
+                event.proceed(account, removeUser)
                 showPriorityEventDialog = false
             },
             onReportUnauthorizedChange = {
@@ -224,24 +223,31 @@ private fun PriorityEventStackDialog(
 
         VerifyAccountSecurityDialog(
             onChangePassword = {
-                when (event) {
-                    PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
-                    PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
-                }
+                event.proceed(account, removeUser)
                 context.openUrlInCustomTab(RECOVER_PASSWORD_URL)
                 showVerifyAccountDialog = false
                 showPriorityEventDialog = true
             },
             onContactSupport = {
-                when (event) {
-                    PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
-                    PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
-                }
+                event.proceed(account, removeUser)
                 context.openUrlInCustomTab(HELP_SUPPORT_URL)
                 showVerifyAccountDialog = false
                 showPriorityEventDialog = true
             },
         )
+    }
+}
+
+private fun PriorityEventAlert.proceed(
+    account: Account,
+    removeUser: (() -> Unit)?
+) {
+    when (this) {
+        PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
+        PriorityEventAlert.AccountDisconnected -> {
+            removeUser?.invoke()
+            (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
+        }
     }
 }
 
