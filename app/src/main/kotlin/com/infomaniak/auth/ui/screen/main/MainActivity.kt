@@ -36,7 +36,7 @@ import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
-import com.infomaniak.auth.utils.AccountsCleaner
+import com.infomaniak.auth.utils.UsersCleaner
 import com.infomaniak.core.applock.AppLockManager
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.inappreview.reviewmanagers.InAppReviewManager
@@ -57,7 +57,7 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
     private val viewModel: MainViewModel by viewModels()
 
     @Inject
-    lateinit var accountsCleaner: AccountsCleaner
+    lateinit var usersCleaner: UsersCleaner
 
     @Inject
     lateinit var appSettingsRepository: AppSettingsRepository
@@ -80,7 +80,7 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
         if (SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
 
         lifecycleScope.launch {
-            accountsCleaner.cleanOrphanAccounts()
+            usersCleaner.cleanOrphanUsers()
         }
 
         lifecycleScope.launch {

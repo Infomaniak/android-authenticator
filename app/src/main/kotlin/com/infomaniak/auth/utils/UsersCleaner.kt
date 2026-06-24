@@ -18,22 +18,20 @@
 package com.infomaniak.auth.utils
 
 import com.infomaniak.auth.lib.AuthenticatorFacade
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class AccountsCleaner @Inject constructor(
+class UsersCleaner @Inject constructor(
     private val accountUtils: AccountUtils,
     private val authenticatorFacade: AuthenticatorFacade,
 ) {
 
-    suspend fun cleanOrphanAccounts() {
+    suspend fun cleanOrphanUsers() {
         val users = accountUtils.users.first()
-        val accounts = authenticatorFacade.accounts.first()
+        val accountsIds = authenticatorFacade.accounts.first().map { it.id }
 
-        users.filter { user ->
-            accounts.none { account -> account.id != user.id.toLong() }
-        }.forEach {
-            accountUtils.removeUser(it.id)
+        users.forEach { user ->
+            if (user.id.toLong() !in accountsIds) accountUtils.removeUser(user.id)
         }
     }
 }

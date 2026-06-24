@@ -115,18 +115,14 @@ internal class AuthenticatorFacadeImpl(
 
     /** [Account.status] values come from the [accountStatusForUser] function. */
     override val accounts: Flow<List<Account>> = accountEntities.flatMapLatest { entities ->
+        if (entities.isEmpty()) return@flatMapLatest flowOf(emptyList())
 
         val userIds = entities.mapTo(mutableSetOf()) { it.id }
 
         userIdsToStatusFlows.buildFlowWithElements(userIds) { userIdsToStatusFlow ->
             val flowsOfStatus = entities.map { userIdsToStatusFlow.getValue(it.id) }
-
-            if (entities.isEmpty()) {
-                flowOf(emptyList())
-            } else {
-                combine(flowsOfStatus) { statuses ->
-                    entities.mapIndexed { index, entity -> entity.toAccount(statuses[index]) }
-                }
+            combine(flowsOfStatus) { statuses ->
+                entities.mapIndexed { index, entity -> entity.toAccount(statuses[index]) }
             }
         }
     }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
