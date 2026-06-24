@@ -18,6 +18,7 @@
 package com.infomaniak.auth.utils
 
 import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -31,7 +32,10 @@ class UsersCleaner @Inject constructor(
         val accountsIds = authenticatorFacade.accounts.first().map { it.id }
 
         users.forEach { user ->
-            if (user.id.toLong() !in accountsIds) accountUtils.removeUser(user.id)
+            if (user.id.toLong() !in accountsIds) {
+                SentryLog.e("UsersCleaner", "Removing orphan user ${user.id} (${user.email})")
+                accountUtils.removeUser(user.id)
+            }
         }
     }
 }
