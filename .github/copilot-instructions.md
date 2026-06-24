@@ -12,7 +12,7 @@ cp env.example.properties env.properties  # only required for Sentry release tas
 ```
 
 ## Build & Test (CI: `.github/workflows/android.yml`)
-CI runs on non-draft PRs only if non-`.md`/`.github` files changed:
+CI runs on non-draft PRs only if relevant files changed (excluding `.md` and most `.github/` changes, except `.github/workflows/android.yml`):
 ```bash
 ./gradlew assembleDebug
 ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
@@ -21,11 +21,11 @@ CI runs on non-draft PRs only if non-`.md`/`.github` files changed:
 
 ## Project Layout
 ```
-app/src/main/java/com/infomaniak/authenticator/
+app/src/main/kotlin/com/infomaniak/auth/
 ├── data/               # Room DB, repositories, models
 ├── di/                 # Hilt modules
-├── ui/                 # Compose screens (TOTP codes, accounts, settings)
-└── worker/             # WorkManager workers
+├── service/            # Android services + WorkManager workers
+└── ui/                 # Compose screens (TOTP codes, accounts, settings)
 multiplatform-lib/      # KMP module — TOTP logic shared with iOS
 Core/                   # Git submodule — Infomaniak shared library
 ```
