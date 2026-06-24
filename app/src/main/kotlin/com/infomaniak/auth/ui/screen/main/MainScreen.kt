@@ -208,12 +208,12 @@ private fun PriorityEventStackDialog(
             account = account,
             event = event,
             onDismissButton = {
+                removeUser?.invoke()
                 when (event) {
                     PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
                     PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
                 }
                 showPriorityEventDialog = false
-                removeUser?.invoke()
             },
             onReportUnauthorizedChange = {
                 showPriorityEventDialog = false
@@ -227,6 +227,7 @@ private fun PriorityEventStackDialog(
 
         VerifyAccountSecurityDialog(
             onChangePassword = {
+                removeUser?.invoke()
                 when (event) {
                     PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
                     PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
@@ -236,6 +237,7 @@ private fun PriorityEventStackDialog(
                 showPriorityEventDialog = true
             },
             onContactSupport = {
+                removeUser?.invoke()
                 when (event) {
                     PriorityEventAlert.PasswordChanged -> (account.status as? Account.Status.LoggedIn)?.passwordChangedAck?.invoke()
                     PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
