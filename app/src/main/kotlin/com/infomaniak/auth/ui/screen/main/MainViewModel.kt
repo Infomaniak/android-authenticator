@@ -68,7 +68,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun deleteAccount(accountId: Int) {
+    fun removeUser(accountId: Int) {
         viewModelScope.launch {
             accountUtils.removeUser(accountId)
         }

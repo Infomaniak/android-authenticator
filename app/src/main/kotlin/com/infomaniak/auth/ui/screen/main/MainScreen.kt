@@ -124,7 +124,7 @@ fun MainScreen(
         PriorityEventStackDialog(
             event = PriorityEventAlert.AccountDisconnected,
             account = it,
-            deleteAccount = { viewModel.deleteAccount(it.id.toInt()) }
+            removeUser = { viewModel.removeUser(it.id.toInt()) }
         )
     }
 
@@ -194,7 +194,7 @@ fun MainScreen(
 private fun PriorityEventStackDialog(
     event: PriorityEventAlert,
     account: Account,
-    deleteAccount: (() -> Unit)? = null,
+    removeUser: (() -> Unit)? = null,
 ) {
     var showPriorityEventDialog by remember { mutableStateOf(true) }
     LaunchedEffect(account) {
@@ -213,7 +213,7 @@ private fun PriorityEventStackDialog(
                     PriorityEventAlert.AccountDisconnected -> (account.status as? Account.Status.NotConnected.Disconnected)?.removeAccount?.invoke()
                 }
                 showPriorityEventDialog = false
-                deleteAccount?.invoke()
+                removeUser?.invoke()
             },
             onReportUnauthorizedChange = {
                 showPriorityEventDialog = false
