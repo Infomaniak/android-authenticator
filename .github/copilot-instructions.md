@@ -16,6 +16,7 @@ CI runs on non-draft PRs only if relevant files changed (excluding `.md` and mos
 ```bash
 ./gradlew assembleDebug
 ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
+# Note: `sonar` requires `SONAR_TOKEN` (provided as a CI secret). Omit `sonar` locally if the token isn't available.
 ./gradlew lint   # via infomaniak/.github reusable workflow
 ```
 
