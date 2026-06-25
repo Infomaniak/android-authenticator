@@ -29,4 +29,6 @@ internal data class AuthResult(
     val userId: Long,
     @SerialName("access_token")
     val accessToken: String,
-)
+) {
+    override fun toString() = "AuthResult(tokenType='$tokenType', scope='$scope', userId=$userId, accessToken=██)"
+}
