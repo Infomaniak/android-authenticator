@@ -31,4 +31,13 @@ data class SharedApiToken(
     @SerialName("scope") val scope: String? = null,
     @Transient var expiresAt: Long? = null,
     @Transient var isTemporary: Boolean = false
-)
+) {
+    override fun toString() = "SharedApiToken(accessToken=██, " +
+            "refreshToken=██, " +
+            "tokenType='$tokenType', " +
+            "expiresIn=$expiresIn, " +
+            "userId=$userId, " +
+            "scope=$scope, " +
+            "expiresAt=$expiresAt, " +
+            "isTemporary=$isTemporary)"
+}
