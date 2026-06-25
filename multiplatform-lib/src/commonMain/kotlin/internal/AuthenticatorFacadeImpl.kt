@@ -43,6 +43,8 @@ import com.infomaniak.auth.lib.internal.utils.race
 import com.infomaniak.auth.lib.internal.utils.raceOf
 import com.infomaniak.auth.lib.internal.utils.waitForComplete
 import com.infomaniak.auth.lib.internal.utils.withTimeoutOrNull
+import com.infomaniak.auth.lib.logging.BlockLogger
+import com.infomaniak.auth.lib.logging.breadcrumbsLogger
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.infomaniak.auth.lib.network.exceptions.NetworkException
@@ -88,6 +90,8 @@ internal class AuthenticatorFacadeImpl(
     private val crashReport: CrashReportInterface,
     coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
+
+    private val blockLogger = BlockLogger.breadcrumbsLogger(crashReport, "lib.kmp")
 
     private val dao = accountsDatabase.getDao()
 
@@ -224,21 +228,24 @@ internal class AuthenticatorFacadeImpl(
     private fun accountStatusForUser(userId: Long): Flow<Account.Status?> =
         dao.getAccountAsFlow(userId).transformLatest { entity ->
             emit(null)
-            when (entity?.status) {
-                Status.ToBeMigrated -> migrationAttempts(entity)
-                Status.PasskeyRegistrationPending, Status.FirstPasskeyAuthenticationPending -> {
-                    registrationAttempts(entity)
+            val status = entity?.status
+            blockLogger.withLog("accountStatusForUser($status)") {
+                when (status) {
+                    Status.ToBeMigrated -> migrationAttempts(entity)
+                    Status.PasskeyRegistrationPending, Status.FirstPasskeyAuthenticationPending -> {
+                        registrationAttempts(entity)
+                    }
+                    Status.RestoringFromBackup, Status.DeletingOldKeyAfterRestoration -> {
+                        restoreFromBackupAttempts(account = entity)
+                    }
+                    Status.LoggedIn, Status.PasswordChanged -> {
+                        handledLoggedInState(entity)
+                    }
+                    Status.Disconnected -> {
+                        handleDisconnectedState(entity)
+                    }
+                    null -> Unit // Should not happen in practice.
                 }
-                Status.RestoringFromBackup, Status.DeletingOldKeyAfterRestoration -> {
-                    restoreFromBackupAttempts(account = entity)
-                }
-                Status.LoggedIn, Status.PasswordChanged -> {
-                    handledLoggedInState(entity)
-                }
-                Status.Disconnected -> {
-                    handleDisconnectedState(entity)
-                }
-                null -> Unit // Should not happen in practice.
             }
         }
 
@@ -300,10 +307,16 @@ internal class AuthenticatorFacadeImpl(
         require(accountToMigrate.status == Status.ToBeMigrated)
 
         if (shouldTryImmediateLogin()) {
-            tryCrossAppLogin(accountToMigrate) { return }
-            tryToMigrateViaOngoingLogin(accountToMigrate) { return }
+            blockLogger.withLog("migrationAttempts.tryCrossAppLogin") {
+                tryCrossAppLogin(accountToMigrate) { return }
+            }
+            blockLogger.withLog("migrationAttempts.tryToMigrateViaOngoingLogin") {
+                tryToMigrateViaOngoingLogin(accountToMigrate) { return }
+            }
         }
-        tryMigratingWithReLogin(accountToMigrate)
+        blockLogger.withLog("migrationAttempts.tryMigratingWithReLogin") {
+            tryMigratingWithReLogin(accountToMigrate)
+        }
     }
 
     private suspend inline fun FlowCollector<Account.Status.NotConnected>.tryCrossAppLogin(
