@@ -3,7 +3,7 @@
 > **Read `AGENTS.md` first** for architecture and conventions. This file covers build, CI, and validation.
 
 ## Overview
-Infomaniak Authenticator — TOTP-based two-factor auth app. Kotlin + Jetpack Compose, Hilt DI, AndroidX Biometric, AndroidX Room (runtime). Also exports an iOS Swift Package / XCFramework for cross-platform TOTP logic (`multiplatform-lib/`). Two flavors: `standard` and `fdroid`.
+Infomaniak Authenticator — TOTP-based two-factor auth app. Kotlin + Jetpack Compose, Hilt DI, Room (via `multiplatform-lib/`), and app-lock / device credentials via Infomaniak Core (`com.infomaniak.core.applock`). Also exports an iOS Swift Package / XCFramework for cross-platform logic (`multiplatform-lib/`). Two flavors: `standard` and `fdroid`.
 
 ## One-Time Environment Setup
 ```bash
@@ -12,7 +12,7 @@ cp env.example.properties env.properties  # only required for Sentry release tas
 ```
 
 ## Build & Test (CI: `.github/workflows/android.yml`)
-CI runs on non-draft PRs only if relevant files changed (excluding `.md` and most `.github/` changes, except `.github/workflows/android.yml`):
+CI runs on non-draft PRs only if relevant files changed (excluding `.md` and `.github/`, except `.github/workflows/android.yml`):
 ```bash
 ./gradlew assembleDebug
 ./gradlew testStandardDebugUnitTest testFdroidDebugUnitTest sonar --info --stacktrace
