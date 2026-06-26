@@ -84,19 +84,21 @@ fun OnboardingStartScreen(
     val loginFlowController = LoginUtils.rememberLoginFlowController(
         infomaniakLogin = onboardingStartViewModel.infomaniakLogin,
         userExistenceChecker = onboardingStartViewModel.accountUtils,
-    ) { userLoginResult ->
-        when (userLoginResult) {
-            is UserLoginResult.Success -> scope.launch {
-                onboardingStartViewModel.loginUsersIntoTheApp(listOf(userLoginResult.user))
+        withSecurity = true,
+        onLoginResult = { userLoginResult ->
+            when (userLoginResult) {
+                is UserLoginResult.Success -> scope.launch {
+                    onboardingStartViewModel.loginUsersIntoTheApp(listOf(userLoginResult.user))
+                }
+                is UserLoginResult.Failure -> scope.launch {
+                    snackbarHostState.showSnackbar(userLoginResult.errorMessage)
+                }
+                null -> Unit
             }
-            is UserLoginResult.Failure -> scope.launch {
-                snackbarHostState.showSnackbar(userLoginResult.errorMessage)
-            }
-            null -> Unit
-        }
 
-        if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
-    }
+            if (userLoginResult !is UserLoginResult.Success) onboardingStartViewModel.stopLoadingLoginButtons()
+        }
+    )
 
     BackHandler(onboardingStartViewModel.cancelOnboarding != null) {
         onboardingStartViewModel.cancelOnboarding?.invoke()
