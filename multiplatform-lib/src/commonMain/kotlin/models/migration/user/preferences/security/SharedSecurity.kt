@@ -24,5 +24,5 @@ import kotlinx.serialization.Serializable
 data class SharedSecurity(
     var score: Int,
     @SerialName("date_last_changed_password")
-    var dateLastChangedPassword: Long,
+    var dateLastChangedPassword: Long?,
 )
