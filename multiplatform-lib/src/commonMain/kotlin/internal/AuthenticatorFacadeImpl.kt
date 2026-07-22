@@ -35,6 +35,9 @@ import com.infomaniak.auth.lib.internal.extensions.toAccount
 import com.infomaniak.auth.lib.internal.extensions.toAccountEntity
 import com.infomaniak.auth.lib.internal.managers.AuthenticatorManager
 import com.infomaniak.auth.lib.internal.managers.MigrationManager
+import com.infomaniak.auth.lib.internal.otp.deleteLegacyAccount
+import com.infomaniak.auth.lib.internal.otp.deleteLegacyDB
+import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.requests.AuthenticatorRequests
 import com.infomaniak.auth.lib.internal.utils.buildFlowWithElements
 import com.infomaniak.auth.lib.internal.utils.dynamicLazyMapOfSharedFlow
@@ -284,6 +287,8 @@ internal class AuthenticatorFacadeImpl(
             ).firstOrElse { error("Key not found: ${it.details}") }
             authenticatorBridge.persistTokenForAccount(userId, token)
             val profile = authenticatorManager.getUserProfile(token.accessToken)
+            authenticatorBridge.persistUserProfile(profile)
+            cleanupLegacyAccountIfNeeded(userId)
             dao.upsert(
                 notRegisteredAccount.copy(
                     securityScore = profile.preferences.security?.score,
@@ -292,6 +297,13 @@ internal class AuthenticatorFacadeImpl(
                 )
             )
         }
+    }
+
+    private suspend fun cleanupLegacyAccountIfNeeded(userId: Long) {
+        val initialLegacyAccounts = getLegacyAccounts()
+        if (initialLegacyAccounts.none { it.userId.toLong() == userId }) return
+        deleteLegacyAccount(userId.toString())
+        if (initialLegacyAccounts.size == 1) deleteLegacyDB()
     }
 
     /**
@@ -356,20 +368,14 @@ internal class AuthenticatorFacadeImpl(
         authentication: MigrationAuthentication,
     ): Boolean {
         val userId = notConnectedAccount.id
-        val userProfile = migrationManager.tryMigrating(
+        val succeeded = migrationManager.tryMigrating(
             userId = userId,
             authentication = authentication,
-            persistUser = authenticatorBridge::persistUserProfile,
         )
 
-        if (userProfile == null) return false
+        if (!succeeded) return false
 
-        val updatedAccount = notConnectedAccount.copy(
-            status = Status.LoggedIn,
-            securityScore = userProfile.preferences.security?.score,
-            lastPasswordUpdate = userProfile.preferences.security?.dateLastChangedPassword
-        )
-        dao.upsert(updatedAccount)
+        dao.upsert(notConnectedAccount.copy(status = Status.FirstPasskeyAuthenticationPending))
 
         return true
     }
