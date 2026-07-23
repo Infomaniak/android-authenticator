@@ -302,7 +302,7 @@ internal class AuthenticatorFacadeImpl(
     private suspend fun cleanupLegacyAccountIfNeeded(userId: Long) {
         if (getLegacyAccounts().none { it.userId.toLong() == userId }) return
         deleteLegacyAccount(userId.toString())
-        if (getLegacyAccounts().size == 1) deleteLegacyDB()
+        if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
     }
 
     /**
