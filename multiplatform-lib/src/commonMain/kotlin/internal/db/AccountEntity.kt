@@ -53,7 +53,7 @@ internal data class AccountEntity(
 
         /**
          * Transition status, right after [PasskeyRegistrationPending] or [ToBeMigrated],
-         * before the 1st a passkey-bound token is obtained.
+         * before the 1st passkey-bound token is obtained.
          */
         FirstPasskeyAuthenticationPending,
 
