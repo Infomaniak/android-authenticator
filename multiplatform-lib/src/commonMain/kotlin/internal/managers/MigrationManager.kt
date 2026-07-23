@@ -17,6 +17,7 @@
  */
 package com.infomaniak.auth.lib.internal.managers
 
+import com.infomaniak.auth.lib.internal.KeyPairManager
 import com.infomaniak.auth.lib.internal.MigrationAuthentication
 import com.infomaniak.auth.lib.internal.RestoreFromBackupDetector
 import com.infomaniak.auth.lib.internal.db.AccountEntity
@@ -90,6 +91,8 @@ internal class MigrationManager(
         userId: Long,
         authentication: MigrationAuthentication,
     ): Boolean {
+        if (alreadyHasValidPasskey(userId)) return true
+
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
         val secret = checkNotNull(getSecretFor(userId)) { "Couldn't find the secret for user $userId" }
@@ -148,6 +151,20 @@ internal class MigrationManager(
             }.cancellable().onFailure { crashReport.capture(userId = userId, "completeMigration failed", it) }
         }
         return true
+    }
+
+    private suspend fun alreadyHasValidPasskey(userId: Long): Boolean {
+        val keyId = authenticatorManager.keyPairManager.findKeyIdFor(KeyPairManager.MatchOn.UserId(userId))
+            ?: return false // No passkey for this user.
+        return runCatching {
+            val result = authenticatorManager.getToken(clientId = clientId, userId = userId, keyIdOrDefault = keyId)
+            result.firstOrNull() != null // If we can get a token successfully, the passkey is valid.
+        }.cancellable().getOrElse {
+            when (it) {
+                is ApiException.ApiErrorException if it.errorCode == "not_authorized" -> false // Invalid passkey
+                else -> throw it // Other error, propagate it.
+            }
+        }
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {
