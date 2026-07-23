@@ -300,10 +300,9 @@ internal class AuthenticatorFacadeImpl(
     }
 
     private suspend fun cleanupLegacyAccountIfNeeded(userId: Long) {
-        val initialLegacyAccounts = getLegacyAccounts()
-        if (initialLegacyAccounts.none { it.userId.toLong() == userId }) return
+        if (getLegacyAccounts().none { it.userId.toLong() == userId }) return
         deleteLegacyAccount(userId.toString())
-        if (initialLegacyAccounts.size == 1) deleteLegacyDB()
+        if (getLegacyAccounts().size == 1) deleteLegacyDB()
     }
 
     /**
