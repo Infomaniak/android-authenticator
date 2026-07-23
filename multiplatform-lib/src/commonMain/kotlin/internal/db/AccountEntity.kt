@@ -51,7 +51,10 @@ internal data class AccountEntity(
         /** Account added via [AuthenticatorFacade.addAccounts], with passkey registration not complete yet. */
         PasskeyRegistrationPending,
 
-        /** Transition status, right after [PasskeyRegistrationPending], before the 1st a passkey-bound token is obtained. */
+        /**
+         * Transition status, right after [PasskeyRegistrationPending] or [ToBeMigrated],
+         * before the 1st a passkey-bound token is obtained.
+         */
         FirstPasskeyAuthenticationPending,
 
         /** Account successfully connected, with registered passkey. */

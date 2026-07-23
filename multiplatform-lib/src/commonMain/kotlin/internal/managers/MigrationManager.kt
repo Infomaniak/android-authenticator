@@ -80,7 +80,7 @@ internal class MigrationManager(
     }
 
     /**
-     * @return null if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
+     * @return false if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
      *
      * @throws IOException in case of networking or I/O issues
      * @throws ApiException in case the backend returns a non-successful response (except for "access_denied")
@@ -135,6 +135,9 @@ internal class MigrationManager(
             token = temporaryToken.accessToken,
             userId = userId
         )
+        //TODO: Figure out which state we were in with the bug, and see if we can reliably fix it up, without
+        // affecting other unrelated cases.
+
         coroutineScope.launch { // TODO: Remove this whole block once the backend is updated to do it automatically.
             runCatching {
                 webAuthnRequests.completeMigration(
