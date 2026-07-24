@@ -17,33 +17,35 @@
  */
 package com.infomaniak.auth.lib.internal.managers
 
+import com.infomaniak.auth.lib.internal.KeyPairManager
 import com.infomaniak.auth.lib.internal.MigrationAuthentication
 import com.infomaniak.auth.lib.internal.RestoreFromBackupDetector
 import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.db.AccountsDatabase
 import com.infomaniak.auth.lib.internal.extensions.cancellable
-import com.infomaniak.auth.lib.internal.extensions.firstOrElse
 import com.infomaniak.auth.lib.internal.extensions.toEntity
 import com.infomaniak.auth.lib.internal.models.AuthResult
 import com.infomaniak.auth.lib.internal.models.OtpPayload
 import com.infomaniak.auth.lib.internal.otp.TotpGenerator
-import com.infomaniak.auth.lib.internal.otp.deleteLegacyAccount
-import com.infomaniak.auth.lib.internal.otp.deleteLegacyDB
 import com.infomaniak.auth.lib.internal.otp.getLegacyAccounts
 import com.infomaniak.auth.lib.internal.otp.getSecretFor
 import com.infomaniak.auth.lib.internal.otp.needMigration
 import com.infomaniak.auth.lib.internal.requests.WebAuthnRequests
 import com.infomaniak.auth.lib.models.migration.SharedApiToken
-import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 import com.infomaniak.auth.lib.network.exceptions.ApiException
+import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.osmerion.kotlin.io.encoding.Base32
 import io.ktor.utils.io.core.toByteArray
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.io.IOException
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 internal class MigrationManager(
+    private val coroutineScope: CoroutineScope,
+    private val crashReport: CrashReportInterface,
     private val accountsDatabase: AccountsDatabase,
     private val authenticatorManager: AuthenticatorManager,
     private val webAuthnRequests: WebAuthnRequests,
@@ -79,7 +81,7 @@ internal class MigrationManager(
     }
 
     /**
-     * @return null if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
+     * @return false if the backend returned the `access_denied`, which means a correct password is needed (in [authentication]).
      *
      * @throws IOException in case of networking or I/O issues
      * @throws ApiException in case the backend returns a non-successful response (except for "access_denied")
@@ -87,9 +89,10 @@ internal class MigrationManager(
      */
     suspend fun tryMigrating(
         userId: Long,
-        persistUser: suspend (userProfile: SharedUserProfile) -> Unit,
         authentication: MigrationAuthentication,
-    ): SharedUserProfile? {
+    ): Boolean {
+        if (alreadyHasValidPasskey(userId)) return true
+
         @OptIn(ExperimentalUuidApi::class)
         val deviceId = Uuid.random().toHexDashString()
         val secret = checkNotNull(getSecretFor(userId)) { "Couldn't find the secret for user $userId" }
@@ -123,7 +126,7 @@ internal class MigrationManager(
                 }.cancellable().getOrElse {
                     if (it !is ApiException.ApiErrorException) throw it
                     when (it.errorCode) {
-                        "access_denied", "not_authorized" -> return null
+                        "access_denied", "not_authorized" -> return false
                         else -> throw it
                     }
                 }
@@ -135,26 +138,33 @@ internal class MigrationManager(
             token = temporaryToken.accessToken,
             userId = userId
         )
-        val apiTokenFromPasskey = authenticatorManager.getToken(
-            clientId = clientId,
-            userId = userId,
-        ).firstOrElse { error("Didn't find the key locally: $it") }
+        //TODO: Figure out which state we were in with the bug, and see if we can reliably fix it up, without
+        // affecting other unrelated cases.
 
-        val userProfile = authenticatorManager.getUserProfile(apiTokenFromPasskey.accessToken).also {
-            it.apiToken = apiTokenFromPasskey
+        coroutineScope.launch { // TODO: Remove this whole block once the backend is updated to do it automatically.
+            runCatching {
+                webAuthnRequests.completeMigration(
+                    token = temporaryToken.accessToken,
+                    sessionId = migrationOptions.session,
+                    deviceId = deviceId
+                )
+            }.cancellable().onFailure { crashReport.capture(userId = userId, "completeMigration failed", it) }
         }
-        persistUser(userProfile)
+        return true
+    }
 
-        webAuthnRequests.completeMigration(
-            token = apiTokenFromPasskey.accessToken,
-            sessionId = migrationOptions.session,
-            deviceId = deviceId
-        )
-        deleteLegacyAccount(userId.toString())
-
-        if (getLegacyAccounts().isEmpty()) deleteLegacyDB()
-
-        return userProfile
+    private suspend fun alreadyHasValidPasskey(userId: Long): Boolean {
+        val keyId = authenticatorManager.keyPairManager.findKeyIdFor(KeyPairManager.MatchOn.UserId(userId))
+            ?: return false // No passkey for this user.
+        return runCatching {
+            val result = authenticatorManager.getToken(clientId = clientId, userId = userId, keyIdOrDefault = keyId)
+            result.firstOrNull() != null // If we can get a token successfully, the passkey is valid.
+        }.cancellable().getOrElse {
+            when (it) {
+                is ApiException.ApiErrorException if it.errorCode == "not_authorized" -> false // Invalid passkey
+                else -> throw it // Other error, propagate it.
+            }
+        }
     }
 
     private fun getOtp(secret: String, timestampSeconds: Long): String {

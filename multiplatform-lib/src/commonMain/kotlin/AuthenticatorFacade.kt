@@ -92,6 +92,8 @@ abstract class AuthenticatorFacade internal constructor() {
                 accountsRepository = accountsRepository
             )
             val migrationManager = MigrationManager(
+                coroutineScope = scope,
+                crashReport = crashReport,
                 accountsDatabase = accountsDatabase,
                 authenticatorManager = authenticatorManager,
                 webAuthnRequests = webAuthnRequests,
