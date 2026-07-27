@@ -35,11 +35,10 @@ import com.infomaniak.auth.lib.models.migration.SharedApiToken
 import com.infomaniak.auth.lib.network.exceptions.ApiException
 import com.infomaniak.auth.lib.network.interfaces.CrashReportInterface
 import com.osmerion.kotlin.io.encoding.Base32
-import io.ktor.utils.io.core.toByteArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.io.IOException
-import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
+import okio.ByteString.Companion.encodeUtf8
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -104,9 +103,10 @@ internal class MigrationManager(
             is MigrationAuthentication.CrossAppLogin -> authentication.derivedToken
             else -> {
                 val otp = getOtp(secret = secret, timestampSeconds = migrationOptions.timestamp)
-                val assertion = HmacSHA256(secret.toByteArray())
-                    .doFinal("${migrationOptions.session}:${migrationOptions.timestamp}".toByteArray())
-                    .toHexString()
+                val assertion = "${migrationOptions.session}:${migrationOptions.timestamp}"
+                    .encodeUtf8()
+                    .hmacSha256(secret.encodeUtf8())
+                    .hex()
                 val password = when (authentication) {
                     is MigrationAuthentication.NoOngoingLogin -> authentication.password
                     is MigrationAuthentication.OngoingLogin -> null
