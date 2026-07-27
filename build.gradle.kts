@@ -4,7 +4,7 @@ buildscript {
         set("androidCompileSdk", 36)
         set("appTargetSdk", 36)
         set("androidMinSdk", 27)
-        set("javaVersion", JavaVersion.VERSION_21)
+        set("javaVersion", JavaVersion.VERSION_17)
     }
 }
 
