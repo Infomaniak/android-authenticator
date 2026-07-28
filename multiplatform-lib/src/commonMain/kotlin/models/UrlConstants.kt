@@ -25,10 +25,10 @@ object UrlConstants {
     fun autologUrl(host: String, url: String) = "https://manager.$host/v3/$AUTOLOG_URL/?url=$url"
 
     private const val AUTOLOG_URL = "mobile_login"
-    const val ACTIVITY_MANAGER_URL = "ng/profile/user/connection-history/activity"
-    const val SETTINGS_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security&global-settings-prevent-closing=true&global-settings-prevent-popups=true"
-    const val SETTINGS_2FA_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security-2fa&global-settings-prevent-closing=true&global-settings-prevent-popups=true"
-    const val SETTINGS_ACCOUNT_SECURITY_URL = "ng/profile/user/security-and-recovery-parameters/dashboard"
+    const val ACTIVITY_MANAGER_URL = "ng/profile/user/connection-history/activity?no-header=true"
+    const val SETTINGS_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security&global-settings-prevent-closing=true&global-settings-prevent-popups=true&no-header=true"
+    const val SETTINGS_2FA_MANAGER_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?global-settings=user-account-security-2fa&global-settings-prevent-closing=true&global-settings-prevent-popups=true&no-header=true"
+    const val SETTINGS_ACCOUNT_SECURITY_URL = "ng/profile/user/security-and-recovery-parameters/dashboard?no-header=true"
 
     const val RECOVER_PASSWORD_URL = "https://login.infomaniak.com/recover"
     const val HELP_SUPPORT_URL = "https://www.infomaniak.com/gtl/help"

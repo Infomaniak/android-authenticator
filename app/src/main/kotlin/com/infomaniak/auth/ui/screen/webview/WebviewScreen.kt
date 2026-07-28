@@ -18,6 +18,7 @@
 package com.infomaniak.auth.ui.screen.webview
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -58,12 +59,13 @@ fun WebviewScreen(
                 onBackPressed = onBackPressed
             )
         }
-    ) { _ -> // Avoid redundant padding (our Webview is already using safeDrawingPadding)
+    ) { contentPadding ->
         WebView(
             url = url,
             headers = headers ?: persistentMapOf(),
             onUrlToQuitReached = onBackPressed,
             urlToQuit = null,
+            modifier = Modifier.padding(contentPadding),
             domStorageEnabled = true,
         )
     }
