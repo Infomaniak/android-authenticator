@@ -64,7 +64,7 @@ fun WebviewScreen(
             headers = headers ?: persistentMapOf(),
             onUrlToQuitReached = onBackPressed,
             urlToQuit = null,
-            domStorageEnabled = false,
+            domStorageEnabled = true,
         )
     }
 }
