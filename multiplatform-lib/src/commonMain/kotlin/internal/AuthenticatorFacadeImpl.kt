@@ -182,6 +182,7 @@ internal class AuthenticatorFacadeImpl(
                     emit(AppStatus.LoggingIn)
                     /** Continue towards [AppStatus.SetupComplete] once all accounts are waiting for an action (no loading). */
                     val accountToReloginOrSkip: Account? = accounts.transform { list ->
+                        if (list.isEmpty()) return@transform // The accounts list doesn't reflect the DB yet.
                         if (list.size == 1 && list.single().status is ReLogin) {
                             return@transform emit(list.single())
                         }
