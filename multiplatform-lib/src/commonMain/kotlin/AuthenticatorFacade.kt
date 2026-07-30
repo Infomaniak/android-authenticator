@@ -106,7 +106,7 @@ abstract class AuthenticatorFacade internal constructor() {
                     getTokenForUser = authenticatorBridge::getTokenFromDatabase,
                     refreshToken = { userId ->
                         authenticatorManager.getToken(clientId, userId).firstOrElse { error(it) }.also { newToken ->
-                            authenticatorBridge.persistTokenForAccount(userId, newToken)
+                            authenticatorBridge.attemptPersistingTokenForAccount(userId, newToken)
                         }
                     },
                     disconnectAccount = { userId ->

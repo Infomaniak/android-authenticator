@@ -160,7 +160,7 @@ internal class AuthenticatorFacadeImpl(
         val token = authenticatorManager.getToken(clientId, userId).firstOrElse {
             error("Could not get the key for user $userId from the storage: $it")
         }
-        authenticatorBridge.persistTokenForAccount(userId, token)
+        authenticatorBridge.attemptPersistingTokenForAccount(userId, token)
     }
 
     override fun refreshUserProfiles() {
@@ -282,13 +282,15 @@ internal class AuthenticatorFacadeImpl(
                 dao.upsert(notRegisteredAccount.copy(status = Status.FirstPasskeyAuthenticationPending))
                 // The DB update above is expected to cause the cancellation & restart of this.
             }
+
             val token = authenticatorManager.getToken(
                 clientId = clientId,
                 userId = userId,
             ).firstOrElse { error("Key not found: ${it.details}") }
-            authenticatorBridge.persistTokenForAccount(userId, token)
-            val profile = authenticatorManager.getUserProfile(token.accessToken)
+            authenticatorBridge.attemptPersistingTokenForAccount(userId, token)
+            val profile = authenticatorManager.getUserProfile(token.accessToken).also { it.apiToken = token }
             authenticatorBridge.persistUserProfile(profile)
+            
             cleanupLegacyAccountIfNeeded(userId)
             dao.upsert(
                 notRegisteredAccount.copy(
@@ -446,7 +448,7 @@ internal class AuthenticatorFacadeImpl(
         withRetries(userId = account.id) {
             emit(Account.Status.NotConnected.AttemptingToConnect)
             migrationManager.restore(account = account) { userId, token ->
-                authenticatorBridge.persistTokenForAccount(userId, token)
+                authenticatorBridge.attemptPersistingTokenForAccount(userId, token)
             }
         }
     }
