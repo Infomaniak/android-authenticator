@@ -70,6 +70,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
@@ -79,7 +80,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlinx.io.IOException
@@ -135,7 +135,7 @@ internal class AuthenticatorFacadeImpl(
                 entities.mapIndexed { index, entity -> entity.toAccount(statuses[index]) }
             }
         }
-    }.flowOn(Dispatchers.Default).distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+    }.flowOn(Dispatchers.Default).conflate().distinctUntilChanged().shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
 
     override val appStatus: SharedFlow<AppStatus> = appStatusFlow()
         .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
@@ -170,37 +170,24 @@ internal class AuthenticatorFacadeImpl(
     private fun appStatusFlow(): Flow<AppStatus> = flow {
         var needsToShowEverythingReady = false
 
-        val appStatusFlow: Flow<AppStatus> = accountEntities.transformLatest { entities ->
-            val atLeastOneConnectedAccount = entities.any { it.status == Status.LoggedIn }
+        val appStatusFlow: Flow<AppStatus> = accounts.transformLatest { accounts ->
+            val atLeastOneConnectedAccount = accounts.any { it.status is Account.Status.LoggedIn }
             val noConnectedAccount = !atLeastOneConnectedAccount
 
             if (noConnectedAccount) {
                 needsToShowEverythingReady = true
-                if (entities.isEmpty()) {
+                if (accounts.isEmpty()) {
                     emit(AppStatus.LoginRequired.NotMigrating)
                     /** Waiting for [addAccounts] to be called, which will cancel this, as `accountEntities` emits. */
                     awaitCancellation()
                 } else {
-                    val needsMigration = entities.any { it.status == Status.ToBeMigrated }
+                    val needsMigration = accounts.any { it.status == Account.Status.NotConnected.AttemptingToConnect.ToBeMigrated }
                     if (needsMigration) {
                         emit(AppStatus.LoginRequired.MigratingFromLegacyKAuth(proceed = proceedMigration::complete))
                         proceedMigration.join()
                     }
                     emit(AppStatus.LoggingIn)
-                    /** Continue towards [AppStatus.SetupComplete] once all accounts are waiting for an action (no loading). */
-                    val accountToReloginOrSkip: Account? = accounts.transform { list ->
-                        if (list.isEmpty()) return@transform // The accounts list doesn't reflect the DB yet.
-                        if (list.size == 1 && list.single().status is ReLogin) {
-                            return@transform emit(list.single())
-                        }
-                        val stillTryingToConnect = list.any { account ->
-                            account.status is Account.Status.NotConnected.AttemptingToConnect
-                        }
-                        if (!stillTryingToConnect) emit(null) // Emit to skip
-                    }.first()
-                    accountToReloginOrSkip?.let { accountToRelogin ->
-                        handleSingleAccountToReLoginOrSkip(accountToRelogin)
-                    }
+                    handleLoggingInStatus(accounts)
                 }
             } else if (needsToShowEverythingReady) {
                 waitForComplete { proceedAsync ->
@@ -222,23 +209,29 @@ internal class AuthenticatorFacadeImpl(
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
 
-    private suspend fun FlowCollector<AppStatus.LoginRequired>.handleSingleAccountToReLoginOrSkip(account: Account) {
-        val skipAsync: CompletableJob = Job()
-        emit(AppStatus.LoginRequired.MustReLogin(account.id, skipAsync::complete))
-        raceOf(
-            { skipAsync.join() },
-            {
-                val _ = accounts.first { list ->
-                    val account = list.singleOrNull() ?: return@first false
-                    account.status is Account.Status.LoggedIn
-                }
+    private suspend fun FlowCollector<AppStatus>.handleLoggingInStatus(accounts: List<Account>) {
+        val stillTryingToConnect = accounts.any { account ->
+            account.status is Account.Status.NotConnected.AttemptingToConnect
+        }
+        if (stillTryingToConnect) {
+            awaitCancellation() // If at least one account is still loading, wait for the next update (i.e. cancellation)
+        }
+
+        val accountToRelogin: Account = when (accounts.size) {
+            1 if accounts.single().status is ReLogin -> accounts.single()
+            else -> {
+                /** Continue towards [AppStatus.SetupComplete] to let the user handle failures, or re-login accounts separately */
+                return
             }
-        )
+        }
+        /** Continue towards [AppStatus.SetupComplete] if the user asks to skip. */
+        waitForComplete { skipAsync ->
+            emit(AppStatus.LoginRequired.MustReLogin(accountToRelogin.id, skipAsync::complete))
+        }
     }
 
-    private fun accountStatusForUser(userId: Long): Flow<Account.Status?> =
+    private fun accountStatusForUser(userId: Long): Flow<Account.Status> =
         dao.getAccountAsFlow(userId).transformLatest { entity ->
-            emit(null)
             val status = entity?.status
             blockLogger.withLog("accountStatusForUser($status)") {
                 when (status) {
@@ -324,6 +317,7 @@ internal class AuthenticatorFacadeImpl(
      */
     private suspend fun FlowCollector<Account.Status.NotConnected>.migrationAttempts(accountToMigrate: AccountEntity) {
         require(accountToMigrate.status == Status.ToBeMigrated)
+        emit(Account.Status.NotConnected.AttemptingToConnect.ToBeMigrated)
 
         if (shouldTryImmediateLogin()) {
             blockLogger.withLog("migrationAttempts.tryCrossAppLogin") {
@@ -389,7 +383,7 @@ internal class AuthenticatorFacadeImpl(
 
     private suspend fun FlowCollector<ReLogin>.tryMigratingWithReLogin(accountToMigrate: AccountEntity) {
         var status = ReLogin(
-            legacyAccount = accountToMigrate.toAccount(null),
+            legacyAccount = accountToMigrate.toAccount(Account.Status.NotConnected.AttemptingToConnect),
             hadIncorrectPassword = false,
             lastIssue = null,
             sendCredentials = null

@@ -40,7 +40,10 @@ data class Account(
 
         sealed interface NotConnected : Status {
 
-            data object AttemptingToConnect : NotConnected
+            sealed interface AttemptingToConnect : NotConnected {
+                data object ToBeMigrated : AttemptingToConnect
+                companion object : AttemptingToConnect
+            }
 
             /**
              * The actual email of the account might have changed since then, and we can't know about it.
