@@ -66,7 +66,7 @@ class DisconnectDialogViewModel @Inject constructor(
     }
 
     fun removeAccount(onAccountRemoved: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             accountIdFlow.first().let { accountId ->
                 authenticatorFacade.removeAccount(token = userAccessToken.value, id = accountId)
                 accountUtils.removeUser(accountId.toInt())
