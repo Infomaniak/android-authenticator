@@ -181,7 +181,7 @@ object ApplicationModule {
                 return accountUtils.getUserById(userId.toInt())?.apiToken?.toSharedApiToken()
             }
 
-            override suspend fun persistTokenForAccount(userId: Long, token: SharedApiToken) {
+            override suspend fun attemptPersistingTokenForAccount(userId: Long, token: SharedApiToken) {
                 MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
                 val dao = UserDatabase.getDatabase().userDao()
                 val user = accountUtils.getUserById(userId.toInt()) ?: return
