@@ -74,6 +74,7 @@ abstract class AuthenticatorFacade internal constructor() {
             databaseNameOrPath: String? = null,
             crashReport: CrashReportInterface,
             authenticatorBridge: AuthenticatorBridge,
+            logStatusChanges: Boolean = false,
             scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
         ): AuthenticatorFacade {
             val routes = ApiRoutes(apiHost)
@@ -127,6 +128,7 @@ abstract class AuthenticatorFacade internal constructor() {
                 migrationManager = migrationManager,
                 authenticatorBridge = authenticatorBridge,
                 crashReport = crashReport,
+                shouldLogStatusChanges = logStatusChanges,
                 coroutineScope = scope,
             )
         }
