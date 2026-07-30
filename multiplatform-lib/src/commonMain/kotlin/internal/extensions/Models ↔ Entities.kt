@@ -22,14 +22,14 @@ import com.infomaniak.auth.lib.internal.db.AccountEntity
 import com.infomaniak.auth.lib.internal.models.LegacyUser
 import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
 
-internal fun AccountEntity.toAccount(status: Account.Status?): Account {
+internal fun AccountEntity.toAccount(status: Account.Status): Account {
     return Account(
         id = id,
         fullName = fullName,
         initials = initials,
         email = email,
         avatarUrl = avatarUrl,
-        status =  status ?: Account.Status.NotConnected.AttemptingToConnect
+        status = status
     )
 }
 
