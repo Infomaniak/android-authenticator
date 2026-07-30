@@ -115,7 +115,7 @@ private class KeyPairManagerAndroidImpl : KeyPairManager() {
             predicate(it.name)
         } ?: return Xor.Second(Failure.KeyManagement.KeyNotFound("No keys"))
 
-        keys.forEach { it.delete() }
+        Dispatchers.IO { keys.forEach { it.delete() } }
 
         return Xor.First(Unit)
     }
