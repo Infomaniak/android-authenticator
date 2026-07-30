@@ -68,9 +68,6 @@ kotlin {
                 implementation(core.ktor.client.json)
                 implementation(core.ktor.client.encoding)
                 implementation(core.okio)
-                implementation(project.dependencies.platform(libs.kotlincrypto.bom))
-                implementation(libs.kotlincrypto.hmac.sha1)
-                implementation(libs.kotlincrypto.hmac.sha2)
                 implementation(libs.osmerion.kotlin.base32)
             }
         }

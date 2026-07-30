@@ -18,18 +18,18 @@
 package com.infomaniak.auth.lib.internal.otp
 
 import com.infomaniak.auth.lib.internal.models.LegacyUser
-import org.kotlincrypto.core.mac.Mac
-import org.kotlincrypto.macs.hmac.sha1.HmacSHA1
-import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
-import org.kotlincrypto.macs.hmac.sha2.HmacSHA512
+import okio.ByteString
+import okio.ByteString.Companion.toByteString
 import kotlin.math.pow
 
 internal class TotpGenerator(
-    private val secret: ByteArray,
+    secret: ByteArray,
     private val digits: Int = 6,
     private val timeStep: Long = 30L, // seconds
     private val algorithm: Algorithm = Algorithm.SHA1
 ) {
+    private val secret = secret.toByteString()
+
     enum class Algorithm {
         SHA1, SHA256, SHA512
     }
@@ -41,7 +41,7 @@ internal class TotpGenerator(
 
     fun generateOtp(counter: Long): String {
         val counterBytes = counter.toByteArrayBigEndian()
-        val hash = hmac(counterBytes)
+        val hash = hmac(counterBytes.toByteString())
         val offset = hash.last().toInt() and 0x0F
         val binary = ((hash[offset].toInt() and 0x7F) shl 24) or
                 ((hash[offset + 1].toInt() and 0xFF) shl 16) or
@@ -51,13 +51,12 @@ internal class TotpGenerator(
         return otp.toString().padStart(digits, '0')
     }
 
-    private fun hmac(data: ByteArray): ByteArray {
-        val mac: Mac = when (algorithm) {
-            Algorithm.SHA1 -> HmacSHA1(secret)
-            Algorithm.SHA256 -> HmacSHA256(secret)
-            Algorithm.SHA512 -> HmacSHA512(secret)
-        }
-        return mac.doFinal(data)
+    private fun hmac(data: ByteString): ByteArray {
+        return when (algorithm) {
+            Algorithm.SHA1 -> data.hmacSha1(secret)
+            Algorithm.SHA256 -> data.hmacSha256(secret)
+            Algorithm.SHA512 -> data.hmacSha512(secret)
+        }.toByteArray()
     }
 
     private fun Long.toByteArrayBigEndian(): ByteArray {

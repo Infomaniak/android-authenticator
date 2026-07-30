@@ -24,7 +24,8 @@ logic and the migration models exchanged between platforms.
 - **kotlinx.serialization** (`json`, `cbor`) - JSON is configured in `internal/network/ApiClientProvider.kt` with
   `coerceInputValues = true`, `ignoreUnknownKeys = true`, and `decodeEnumsCaseInsensitive`.
 - **AndroidX Room** (multiplatform Room with `androidx.sqlite.bundled`) - schemas are exported to `multiplatform-lib/schemas`.
-- **KotlinCrypto** (`hmac-sha1`, `hmac-sha2`) and `osmerion-kotlin-base32` for OTP computation.
+- **okio** for hashing.
+- **kotlin-base32** (`osmerion-kotlin-base32`) for OTP computation.
 - **Coroutines** (`kotlinx.coroutines.core`, `kotlinx.coroutines.test`).
 - **Parcelize** plugin enabled for Android-only `@Parcelize` models.
 
