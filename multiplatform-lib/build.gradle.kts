@@ -44,7 +44,6 @@ kotlin {
             baseName = xcframeworkName
             binaryOption("bundleId", "com.infomaniak.multiplatform-authenticator.${xcframeworkName}")
             xcf.add(this)
-            isStatic = true
             linkerOpts.add("-lsqlite3")
         }
     }
