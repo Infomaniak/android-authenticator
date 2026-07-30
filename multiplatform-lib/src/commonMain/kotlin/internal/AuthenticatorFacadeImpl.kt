@@ -62,6 +62,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -80,6 +81,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.launch
 import kotlinx.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
@@ -91,6 +93,7 @@ internal class AuthenticatorFacadeImpl(
     private val migrationManager: MigrationManager,
     private val authenticatorBridge: AuthenticatorBridge,
     private val crashReport: CrashReportInterface,
+    shouldLogStatusChanges: Boolean,
     coroutineScope: CoroutineScope,
 ) : AuthenticatorFacade() {
 
@@ -136,6 +139,10 @@ internal class AuthenticatorFacadeImpl(
 
     override val appStatus: SharedFlow<AppStatus> = appStatusFlow()
         .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 1)
+
+    init {
+        if (shouldLogStatusChanges) coroutineScope.launch { logStatusChanges() }
+    }
 
     override suspend fun addAccounts(connectedAccounts: List<SharedUserProfile>) {
         connectedAccounts.forEach { authenticatorBridge.persistUserProfile(it) }
@@ -544,5 +551,16 @@ internal class AuthenticatorFacadeImpl(
             is ApiException if (statusCode == 503) -> Unit
             else -> crashReport.capture(userId, message, this)
         }
+    }
+
+    private suspend fun logStatusChanges(): Nothing = coroutineScope {
+        launch {
+            accounts.collect { accounts ->
+                accounts.forEach { account ->
+                    println("Account ${account.id} (${account.initials}) has status: ${account.status}")
+                }
+            }
+        }
+        appStatus.collect { println("appStatus: $it") }
     }
 }
