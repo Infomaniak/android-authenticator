@@ -134,7 +134,7 @@ enum class AccountSecurityConfiguration(
     ),
     Disconnected(
         titleResId = R.string.disconnectSuccess,
-        iconResId = R.drawable.circle_block,
+        iconResId = R.drawable.alert,
         iconTint = { AuthenticatorTheme.customColors.iconTintDisconnected }
     );
 

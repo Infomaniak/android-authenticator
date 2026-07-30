@@ -118,7 +118,7 @@ private fun StatusIcon(status: Account.Status) {
                 modifier = Modifier.padding(end = Margin.Mini),
                 painter = painterResource(id = R.drawable.alert),
                 contentDescription = stringResource(R.string.warningIconContentDescription),
-                tint = AuthenticatorTheme.customColors.iconTintWarning,
+                tint = AuthenticatorTheme.customColors.iconTintDisconnected,
             )
         }
         is Account.Status.LoggedIn if !status.isSecured -> {
