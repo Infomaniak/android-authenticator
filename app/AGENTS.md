@@ -1,25 +1,26 @@
 # AGENTS.md - Infomaniak Authenticator App
 
-> For the shared Kotlin Multiplatform library, see `multiplatform-lib/AGENTS.md`. For the Core library, see `Core/AGENTS.md`. For
-> the composite build overview, see the root `AGENTS.md`.
+> For the shared Kotlin Multiplatform library, see `multiplatform-authenticator/AGENTS.md`. For the Core library, see
+> `Core/AGENTS.md`. For the composite build overview, see the root `AGENTS.md`.
 
 ## Project Summary
 
 Infomaniak Authenticator is an Android app built by Infomaniak Network SA that generates TOTP/HOTP codes and manages 2FA for
-Infomaniak accounts. The UI is fully Jetpack Compose, persistence uses Room (via the `:multiplatform-lib` module), and
-authentication / cross-app login is provided by the Infomaniak Core libraries.
+Infomaniak accounts. The UI is fully Jetpack Compose, persistence uses Room (via the `multiplatform-authenticator` submodule,
+Gradle module `:AuthenticatorCore`), and authentication / cross-app login is provided by the Infomaniak Core libraries.
 
 ## High-Level Tech Stack
 
 - **Language**: Kotlin - JVM target set via `javaVersion` in the root `build.gradle.kts` (`JavaVersion.VERSION_17`)
 - **Platform**: Android - SDK versions (`androidCompileSdk`, `appTargetSdk`, `androidMinSdk`) set in the root `build.gradle.kts`
-- **Build System**: Gradle with Kotlin DSL, version catalogs (`libs`, `core`)
-- **Architecture**: MVVM with Repository pattern; shared business logic lives in `:multiplatform-lib`
+- **Build System**: Gradle with Kotlin DSL, version catalogs (`libs`, `core`, `kmpAuthenticator`)
+- **Architecture**: MVVM with Repository pattern; shared business logic lives in the `multiplatform-authenticator` submodule
+  (`:AuthenticatorCore`)
 - **Dependency Injection**: Dagger Hilt (`@HiltAndroidApp`, `@HiltViewModel`, `@Inject constructor`)
-- **Database**: Room (app settings, account, and 2FA persistence are provided via `:multiplatform-lib`)
+- **Database**: Room (app settings, account, and 2FA persistence are provided via `multiplatform-authenticator`)
 - **UI Framework**: Jetpack Compose only (Material3, Navigation 3) - no XML layouts / ViewBinding
 - **Navigation**: AndroidX Navigation 3 (`androidx.navigation3.*`) with Compose
-- **Network**: Ktor (in `:multiplatform-lib`) + OkHttp; Infomaniak Core `network` / `auth` modules
+- **Network**: Ktor (in `multiplatform-authenticator`) + OkHttp; Infomaniak Core `network` / `auth` modules
 - **Background work**: WorkManager + Hilt Work
 - **Crash Reporting**: Sentry (auto-installed via the Sentry Gradle plugin)
 - **Analytics**: Matomo
@@ -72,8 +73,8 @@ app/src/standard/               # `standard` flavor (Google Play Services, Fireb
 
 - `app/src/test/` (does not exist yet - add JUnit unit tests here when needed)
 - `app/src/androidTest/` (does not exist yet - add instrumentation tests here when needed)
-- Shared/business-logic tests live in `multiplatform-lib/src/commonTest` and `multiplatform-lib/src/androidHostTest` (see
-  `multiplatform-lib/AGENTS.md`).
+- Shared/business-logic tests live in `multiplatform-authenticator/AuthenticatorCore/src/commonTest` and
+  `multiplatform-authenticator/AuthenticatorCore/src/androidHostTest` (see `multiplatform-authenticator/AGENTS.md`).
 
 ## Local Norms
 
@@ -81,8 +82,9 @@ app/src/standard/               # `standard` flavor (Google Play Services, Fireb
 
 - **MVVM**: One Compose screen + one `ViewModel` per feature. ViewModels are Hilt-injected (
   `@HiltViewModel class FooViewModel @Inject constructor(...)`).
-- **Repository pattern**: Data access goes through repositories exposed by `:multiplatform-lib` (e.g. `AuthenticatorFacade`,
-  account/2FA repositories). The app layer should not talk to Room/Ktor directly when a multiplatform repository exists.
+- **Repository pattern**: Data access goes through repositories exposed by `multiplatform-authenticator` (e.g.
+  `AuthenticatorFacade`, account/2FA repositories). The app layer should not talk to Room/Ktor directly when a multiplatform
+  repository exists.
 - **DI**: Provide bindings in `di/ApplicationModule.kt` / `di/DatabaseModule.kt` (or new feature-scoped Hilt modules). Use
   `@Inject constructor` on classes you own.
 - **Preferences**: Use the Splitties `Preferences` + `SuspendPrefsAccessor` pattern already in `data/preferences/` (e.g.
@@ -112,8 +114,8 @@ app/src/standard/               # `standard` flavor (Google Play Services, Fireb
 ./gradlew clean
 ```
 
-> Reminder: all Gradle commands require the `Core/` submodule to be initialised - run `git submodule update --init --recursive`
-> first.
+> Reminder: all Gradle commands require the `Core/` and `multiplatform-authenticator/` submodules to be initialised - run
+> `git submodule update --init --recursive` first.
 
 ### Code Style
 
@@ -204,7 +206,8 @@ fun MyButton(
 
 - Unit tests (when added): `app/src/test/java/` or `app/src/test/kotlin/`, JUnit 4 + MockK.
 - UI tests (when added): `app/src/androidTest/`, Compose UI Testing (`androidx.compose.ui.test.*`).
-- Business-logic tests should live in `multiplatform-lib/src/commonTest` whenever the code under test is multiplatform.
+- Business-logic tests should live in `multiplatform-authenticator/AuthenticatorCore/src/commonTest` whenever the code under
+  test is multiplatform.
 
 ### Product Flavors
 
@@ -250,5 +253,5 @@ Add project-specific corrections here as they occur.
 
 - **Stale Map**: Update when you encounter new files/folders not listed.
 - **New Norms**: Add user corrections to "Learned Preferences" immediately.
-- **Reference Core / multiplatform-lib**: When editing imports from `com.infomaniak.core.*` or from the shared module, check
-  `Core/AGENTS.md` and `multiplatform-lib/AGENTS.md` respectively for their specific norms.
+- **Reference Core / multiplatform-authenticator**: When editing imports from `com.infomaniak.core.*` or from the shared
+  module, check `Core/AGENTS.md` and `multiplatform-authenticator/AGENTS.md` respectively for their specific norms.
