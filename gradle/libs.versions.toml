@@ -14,6 +14,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 osmerion-kotlin-base32 = { module = "com.osmerion.kotlin:kotlin-base32", version.ref = "osmerionkotlinBase32" }
+infomaniak-multiplatform-authenticator-submodule = { module = "com.infomaniak.multiplaform-authenticator:multiplatform-authenticator" }
 
 [plugins]
 androidx-room = { id = "androidx.room", version.ref = "room" }
