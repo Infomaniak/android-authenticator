@@ -209,7 +209,7 @@ internal class AuthenticatorFacadeImpl(
         emitAll(appStatusFlow)
     }.distinctUntilChanged()
 
-    private suspend fun FlowCollector<AppStatus>.handleLoggingInStatus(accounts: List<Account>) {
+    private suspend fun FlowCollector<AppStatus.LoginRequired.MustReLogin>.handleLoggingInStatus(accounts: List<Account>) {
         val stillTryingToConnect = accounts.any { account ->
             account.status is Account.Status.NotConnected.AttemptingToConnect
         }
