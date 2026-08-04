@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.infomaniak.auth.ui.screen.main
 
 import android.os.Build.VERSION.SDK_INT
@@ -44,11 +46,15 @@ import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.front.TwoFactorAuthApprovalAutoManagedBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -128,16 +134,21 @@ class MainActivity : FragmentActivity(), InAppServiceManager {
             }
         }
         lifecycleScope.launch {
-            keepCrossAppLoginActivatedWhileNeeded(viewModel.appStatus)
+            keepCrossAppLoginActivatedWhileNeeded(viewModel.appStatus, viewModel.accounts)
         }
     }
 
-    private suspend fun keepCrossAppLoginActivatedWhileNeeded(appStatus: SharedFlow<AppStatus>) {
-        val shouldBeActivatedFlow = appStatus.map { status ->
+    private suspend fun keepCrossAppLoginActivatedWhileNeeded(
+        appStatus: SharedFlow<AppStatus>,
+        accounts: Flow<List<Account>>
+    ) {
+        val stillTryingToConnectSomeAccount: Flow<Boolean> = accounts.map { accountList ->
+            accountList.any { it.status is Account.Status.NotConnected.AttemptingToConnect }
+        }
+        val shouldBeActivatedFlow = appStatus.transformLatest { status ->
             when (status) {
-                is AppStatus.LoginRequired, is AppStatus.LoggingIn -> true
-                is AppStatus.AddingAnAccount -> true
-                is AppStatus.EverythingReady, is AppStatus.SetupComplete -> false
+                is AppStatus.LoginRequired, is AppStatus.LoggingIn, is AppStatus.AddingAnAccount -> emit(true)
+                is AppStatus.EverythingReady, is AppStatus.SetupComplete -> emitAll(stillTryingToConnectSomeAccount)
             }
         }.distinctUntilChanged()
         shouldBeActivatedFlow.collectLatest { shouldBeActivated ->
