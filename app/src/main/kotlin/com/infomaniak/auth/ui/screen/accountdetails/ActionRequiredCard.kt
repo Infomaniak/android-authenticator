@@ -36,9 +36,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.Issue
-import com.infomaniak.auth.lib.models.UrlConstants.HELP_SUPPORT_URL
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.Issue
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.HELP_SUPPORT_URL
 import com.infomaniak.auth.ui.components.ButtonStyle
 import com.infomaniak.auth.ui.components.LargeButton
 import com.infomaniak.auth.ui.components.StatusCard

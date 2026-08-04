@@ -44,10 +44,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.lib.models.UrlConstants.HELP_SUPPORT_URL
-import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.AppStatus
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.HELP_SUPPORT_URL
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.RECOVER_PASSWORD_URL
 import com.infomaniak.auth.ui.dialog.priorityevent.PriorityEventAlert
 import com.infomaniak.auth.ui.dialog.priorityevent.PriorityEventAlertDialog
 import com.infomaniak.auth.ui.dialog.priorityevent.VerifyAccountSecurityDialog

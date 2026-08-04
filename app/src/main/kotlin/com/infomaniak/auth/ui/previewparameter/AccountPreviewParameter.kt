@@ -18,9 +18,9 @@
 package com.infomaniak.auth.ui.previewparameter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.Account.Status.NotConnected.ReLogin
-import com.infomaniak.auth.lib.Issue
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.Account.Status.NotConnected.ReLogin
+import com.infomaniak.multiplatform_authenticator.core.Issue
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.ui.compose.preview.previewparameter.dummyUserOf
 import kotlinx.collections.immutable.persistentListOf

@@ -34,7 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoScreen
 import com.infomaniak.auth.utils.MatomoTrackScreen
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages.AppIllus

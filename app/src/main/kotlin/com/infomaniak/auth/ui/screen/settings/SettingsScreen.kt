@@ -38,9 +38,9 @@ import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.MatomoAuthenticator.trackSettingsEvent
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.matomo.MatomoCategory
-import com.infomaniak.auth.lib.matomo.MatomoName
-import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoCategory
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoName
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoScreen
 import com.infomaniak.auth.ui.components.OptionItemType
 import com.infomaniak.auth.ui.components.OptionsSection
 import com.infomaniak.auth.ui.screen.settings.theme.AppSettingsViewModel

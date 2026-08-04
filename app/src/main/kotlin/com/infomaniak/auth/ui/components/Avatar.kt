@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import coil3.SingletonImageLoader
-import com.infomaniak.auth.lib.Account
+import com.infomaniak.multiplatform_authenticator.core.Account
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.avatar.LocalAvatarColors
 import com.infomaniak.core.avatar.components.Avatar

@@ -18,7 +18,7 @@
 package com.infomaniak.auth.ui.screen.webview
 
 import androidx.lifecycle.ViewModel
-import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

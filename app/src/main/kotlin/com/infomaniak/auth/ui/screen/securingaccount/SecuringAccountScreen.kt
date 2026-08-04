@@ -34,8 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoScreen
 import com.infomaniak.auth.ui.components.IllustrationWithHalo
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.images.AppImages

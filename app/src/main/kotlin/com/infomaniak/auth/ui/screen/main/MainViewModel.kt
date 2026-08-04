@@ -20,9 +20,9 @@ package com.infomaniak.auth.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.data.preferences.PermissionPreferences
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.repository.AppSettingsRepository
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.repository.AppSettingsRepository
 import com.infomaniak.auth.utils.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

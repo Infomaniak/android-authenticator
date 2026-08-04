@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.Account
+import com.infomaniak.multiplatform_authenticator.core.Account
 import com.infomaniak.auth.ui.components.Avatar
 import com.infomaniak.auth.ui.previewparameter.AccountPreviewParameter
 import com.infomaniak.auth.ui.theme.AppDimens.DefaultCornerRadius

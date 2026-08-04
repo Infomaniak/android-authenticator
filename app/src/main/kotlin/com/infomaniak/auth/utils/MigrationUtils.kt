@@ -17,11 +17,11 @@
  */
 package com.infomaniak.auth.utils
 
-import com.infomaniak.auth.lib.models.migration.SharedApiToken
-import com.infomaniak.auth.lib.models.migration.user.SharedUserProfile
-import com.infomaniak.auth.lib.models.migration.user.preferences.Preferences
-import com.infomaniak.auth.lib.models.migration.user.preferences.SharedOrganizationPreference
-import com.infomaniak.auth.lib.models.migration.user.preferences.security.SharedSecurity
+import com.infomaniak.multiplatform_authenticator.core.models.migration.SharedApiToken
+import com.infomaniak.multiplatform_authenticator.core.models.migration.user.SharedUserProfile
+import com.infomaniak.multiplatform_authenticator.core.models.migration.user.preferences.Preferences
+import com.infomaniak.multiplatform_authenticator.core.models.migration.user.preferences.SharedOrganizationPreference
+import com.infomaniak.multiplatform_authenticator.core.models.migration.user.preferences.security.SharedSecurity
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.auth.models.user.preferences.OrganizationPreference
 import com.infomaniak.core.auth.models.user.preferences.security.Security

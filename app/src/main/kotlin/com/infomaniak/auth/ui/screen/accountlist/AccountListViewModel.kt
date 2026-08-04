@@ -20,8 +20,8 @@ package com.infomaniak.auth.ui.screen.accountlist
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.core.auth.models.user.User
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
