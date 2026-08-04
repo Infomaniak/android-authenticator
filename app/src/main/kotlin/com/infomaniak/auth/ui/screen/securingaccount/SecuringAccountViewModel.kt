@@ -18,7 +18,7 @@
 package com.infomaniak.auth.ui.screen.securingaccount
 
 import androidx.lifecycle.ViewModel
-import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject

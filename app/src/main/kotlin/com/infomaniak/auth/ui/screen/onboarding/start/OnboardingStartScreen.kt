@@ -35,11 +35,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
-import com.infomaniak.auth.lib.matomo.MatomoName
-import com.infomaniak.auth.lib.matomo.MatomoScreen
-import com.infomaniak.auth.lib.models.UrlConstants.createAccountCancelUrl
-import com.infomaniak.auth.lib.models.UrlConstants.createAccountSuccessUrl
-import com.infomaniak.auth.lib.models.UrlConstants.createAccountUrl
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoName
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoScreen
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.createAccountCancelUrl
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.createAccountSuccessUrl
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.createAccountUrl
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.theme.AppDimens
 import com.infomaniak.auth.ui.theme.AppShapes

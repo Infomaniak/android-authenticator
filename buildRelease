@@ -53,12 +53,12 @@ function release_ios {
 
     # Build
     echo "Build all Modules for XCFrameworks"
-    ./gradlew :MultiplatformLib:assembleCoreAuthenticatorXCFramework
+    ./gradlew :multiplatform-authenticator:AuthenticatorCore:assembleCoreAuthenticatorXCFramework
 
     # Archive
     echo "Archive XCFramework to ${BOLD}release${BOLD_OFF} folder"
     mkdir -p release
-    zip -r release/CoreAuthenticator.xcframework.zip multiplatform-lib/build/XCFrameworks/release/CoreAuthenticator.xcframework
+    zip -r release/CoreAuthenticator.xcframework.zip multiplatform-authenticator/AuthenticatorCore/build/XCFrameworks/release/CoreAuthenticator.xcframework
 
     # Calculate checksums
     echo "Calculate modules checksums from release folder"
@@ -66,7 +66,7 @@ function release_ios {
 
     # Update Package.swift
     echo "${BOLD}Update Package.swift${BOLD_OFF}"
-    MULTIPLATFORM_LIB_URL="https://github.com/Infomaniak/android-authenticator/multiplatform-lib/releases/download/$IOS_TAG/CoreAuthenticator.xcframework.zip"
+    MULTIPLATFORM_LIB_URL="https://github.com/Infomaniak/android-authenticator/releases/download/$IOS_TAG/CoreAuthenticator.xcframework.zip"
     # With the `sed` command the regex doesn't work, whereas with the `perl` command it does.
     perl -0777 -pi -e "s|url: \".*CoreAuthenticator.xcframework.zip\",(\s*)checksum: \".*\"|url: \"$MULTIPLATFORM_LIB_URL\",\1checksum: \"$MULTIPLATFORM_LIB_CHECKSUM\"|g" Package.swift
 

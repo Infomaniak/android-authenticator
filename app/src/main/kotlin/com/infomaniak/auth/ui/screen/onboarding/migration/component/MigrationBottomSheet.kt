@@ -36,7 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.infomaniak.auth.lib.Account
+import com.infomaniak.multiplatform_authenticator.core.Account
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.core.ui.compose.basics.Dimens

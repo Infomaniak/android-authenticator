@@ -17,7 +17,7 @@
  */
 package com.infomaniak.auth.utils
 
-import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
 import com.infomaniak.core.sentry.SentryLog
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

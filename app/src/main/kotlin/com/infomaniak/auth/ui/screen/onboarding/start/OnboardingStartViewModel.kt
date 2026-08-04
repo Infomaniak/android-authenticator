@@ -23,9 +23,9 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.MatomoAuthenticator.trackAccountEvent
-import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.multiplatform_authenticator.core.AppStatus
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoName
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.toSharedUser
 import com.infomaniak.core.auth.models.UserLoginResult

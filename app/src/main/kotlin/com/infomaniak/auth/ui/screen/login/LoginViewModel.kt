@@ -19,9 +19,9 @@ package com.infomaniak.auth.ui.screen.login
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.lib.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.AppStatus
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

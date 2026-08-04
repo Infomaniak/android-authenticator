@@ -17,8 +17,8 @@
  */
 package com.infomaniak.auth
 
-import com.infomaniak.auth.lib.matomo.MatomoCategory
-import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoCategory
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoName
 import com.infomaniak.core.matomo.Matomo
 import com.infomaniak.core.matomo.Matomo.TrackerAction
 import org.matomo.sdk.Tracker

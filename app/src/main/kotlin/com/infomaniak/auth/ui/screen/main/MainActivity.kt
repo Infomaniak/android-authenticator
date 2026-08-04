@@ -32,10 +32,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.lib.repository.AppSettingsRepository
-import com.infomaniak.auth.lib.room.appsettings.Theme
 import com.infomaniak.auth.ui.applock.AppLockActivity
 import com.infomaniak.auth.ui.navigation.NavDestination
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
@@ -46,6 +42,10 @@ import com.infomaniak.core.inappreview.reviewmanagers.InAppReviewManager
 import com.infomaniak.core.inappupdate.updatemanagers.InAppUpdateManager
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.core.twofactorauth.front.TwoFactorAuthApprovalAutoManagedBottomSheet
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.AppStatus
+import com.infomaniak.multiplatform_authenticator.core.repository.AppSettingsRepository
+import com.infomaniak.multiplatform_authenticator.core.room.appsettings.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

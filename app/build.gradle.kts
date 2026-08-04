@@ -136,7 +136,7 @@ sentry {
 }
 
 dependencies {
-    implementation(project(":multiplatform-lib"))
+    implementation(libs.infomaniak.multiplatform.authenticator.submodule)
 
     implementation(core.infomaniak.core.applock)
     implementation(core.infomaniak.core.auth)

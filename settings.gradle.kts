@@ -24,6 +24,9 @@ dependencyResolutionManagement {
         create("core") {
             from(files("Core/gradle/core.versions.toml"))
         }
+        create("kmpAuthenticator") {
+            from(files("multiplatform-authenticator/gradle/kmpAuthenticator.versions.toml"))
+        }
     }
 }
 
@@ -33,4 +36,8 @@ plugins {
 
 rootProject.name = "Authenticator"
 include(":app")
-include("multiplatform-lib")
+includeBuild("multiplatform-authenticator") {
+    dependencySubstitution {
+        substitute(module("com.infomaniak.multiplaform-authenticator:multiplatform-authenticator")).using(project(":AuthenticatorCore"))
+    }
+}

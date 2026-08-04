@@ -31,8 +31,8 @@ jobs:
         run: |
           DIFF=$(git diff --name-only FETCH_HEAD ${{ github.event.pull_request.head.sha }})
 
-          # Keep changes in multiplatform-lib or Core submodule updates or this workflow file
-          CHANGES=$(echo "$DIFF" | grep -E '^(multiplatform-lib/|Core($|/)|\.github/workflows/build-xcframework\.yml$)' || true)
+          # Keep changes in multiplatform-authenticator or Core submodule updates or this workflow file
+          CHANGES=$(echo "$DIFF" | grep -E '^(multiplatform-authenticator($|/)|Core($|/)|\.github/workflows/build-xcframework\.yml$)' || true)
           
           if [ -z "$CHANGES" ]; then
             echo "No relevant changes found. Skipping tests."
@@ -63,4 +63,4 @@ jobs:
 
       # Making sure XCFramework build
       - name: Build XCFramework
-        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework
+        run: ./gradlew :multiplatform-authenticator:AuthenticatorCore:assembleCoreAuthenticatorXCFramework

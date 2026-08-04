@@ -47,12 +47,12 @@ jobs:
           rm -rf build .gradle release
 
       - name: Build XCFramework
-        run: ./gradlew :multiplatform-lib:assembleCoreAuthenticatorXCFramework
+        run: ./gradlew :multiplatform-authenticator:AuthenticatorCore:assembleCoreAuthenticatorXCFramework
 
       - name: Archive XCFramework
         run: |
           mkdir -p release
-          zip -r release/CoreAuthenticator.xcframework.zip multiplatform-lib/build/XCFrameworks/release/CoreAuthenticator.xcframework
+          zip -r release/CoreAuthenticator.xcframework.zip multiplatform-authenticator/AuthenticatorCore/build/XCFrameworks/release/CoreAuthenticator.xcframework
 
       - name: Update Package.swift with checksum
         run: |

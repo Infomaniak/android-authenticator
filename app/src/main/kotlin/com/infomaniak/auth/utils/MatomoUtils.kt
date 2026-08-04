@@ -20,7 +20,7 @@ package com.infomaniak.auth.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.infomaniak.auth.MatomoAuthenticator.trackScreen
-import com.infomaniak.auth.lib.matomo.MatomoScreen
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoScreen
 
 @Composable
 fun MatomoTrackScreen(screen: MatomoScreen) {

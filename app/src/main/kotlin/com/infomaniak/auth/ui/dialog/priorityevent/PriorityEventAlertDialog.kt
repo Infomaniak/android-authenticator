@@ -31,7 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.Account
+import com.infomaniak.multiplatform_authenticator.core.Account
 import com.infomaniak.auth.ui.previewparameter.fakeAccounts
 import com.infomaniak.auth.ui.theme.AuthenticatorTheme
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow

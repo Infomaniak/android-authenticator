@@ -19,10 +19,10 @@ package com.infomaniak.auth.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import com.infomaniak.auth.MatomoAuthenticator
-import com.infomaniak.auth.lib.AppStatus
-import com.infomaniak.auth.lib.AuthenticatorFacade
-import com.infomaniak.auth.lib.matomo.MatomoCategory
-import com.infomaniak.auth.lib.matomo.MatomoName
+import com.infomaniak.multiplatform_authenticator.core.AppStatus
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoCategory
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

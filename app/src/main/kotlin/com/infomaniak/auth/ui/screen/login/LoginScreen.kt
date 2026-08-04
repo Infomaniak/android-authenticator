@@ -64,11 +64,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.infomaniak.auth.MatomoAuthenticator
 import com.infomaniak.auth.R
-import com.infomaniak.auth.lib.Account
-import com.infomaniak.auth.lib.CredentialsForMigration
-import com.infomaniak.auth.lib.matomo.MatomoCategory
-import com.infomaniak.auth.lib.matomo.MatomoName
-import com.infomaniak.auth.lib.models.UrlConstants.RECOVER_PASSWORD_URL
+import com.infomaniak.multiplatform_authenticator.core.Account
+import com.infomaniak.multiplatform_authenticator.core.CredentialsForMigration
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoCategory
+import com.infomaniak.multiplatform_authenticator.core.matomo.MatomoName
+import com.infomaniak.multiplatform_authenticator.core.models.UrlConstants.RECOVER_PASSWORD_URL
 import com.infomaniak.auth.ui.components.AccountRow
 import com.infomaniak.auth.ui.components.InfomaniakAuthenticatorTopAppBar
 import com.infomaniak.auth.ui.components.LargeButton

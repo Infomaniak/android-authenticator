@@ -24,7 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.infomaniak.auth.data.preferences.SentryPreferences
-import com.infomaniak.auth.lib.room.appsettings.AppSettingsDatabase
+import com.infomaniak.multiplatform_authenticator.core.room.appsettings.AppSettingsDatabase
 import com.infomaniak.auth.service.DeviceInfoUpdateWorker
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.NotificationUtils
