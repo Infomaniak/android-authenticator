@@ -12,8 +12,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "CoreAuthenticator",
-            url: "https://github.com/Infomaniak/android-authenticator/releases/download/0.0.5/CoreAuthenticator.xcframework.zip",
-            checksum: "c9dc4dd63cec4bc9de69a1e92f2212ce99d10d4dc8d902ab6a4fd8432d74a8f8"
+            url: "https://github.com/Infomaniak/android-authenticator/releases/download/0.0.6/CoreAuthenticator.xcframework.zip",
+            checksum: "31811095324c199650afebe2faebfa7226e57fc6db1f15847ed38623978d304e"
         ),
     ]
 )
