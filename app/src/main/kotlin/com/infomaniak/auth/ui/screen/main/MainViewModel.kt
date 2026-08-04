@@ -43,6 +43,7 @@ class MainViewModel @Inject constructor(
     private val accountUtils: AccountUtils,
 ) : ViewModel() {
     val appStatus = authenticatorFacade.appStatus
+    val accounts = authenticatorFacade.accounts
 
     val accountsWithPasswordUpdate: Flow<List<Account>> = authenticatorFacade.accounts.map { accounts ->
         accounts.filter {
