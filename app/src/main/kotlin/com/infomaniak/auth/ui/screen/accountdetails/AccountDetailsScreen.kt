@@ -18,6 +18,8 @@
 package com.infomaniak.auth.ui.screen.accountdetails
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -66,6 +68,7 @@ import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.ui.compose.bottomstickybuttonscaffolds.SinglePaneScaffold
 import com.infomaniak.core.ui.compose.margin.Margin
 import com.infomaniak.core.ui.compose.preview.PreviewSmallWindow
+import io.sentry.Sentry
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentList
@@ -183,6 +186,12 @@ private fun Header(account: Account, user: User?) {
             account = account,
             user = user,
             modifier = Modifier
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onLongClick = { sendBreadcrumbForUser(user?.id?.toLong()) },
+                    onClick = {},
+                )
                 .padding(horizontal = Margin.Medium)
                 .size(40.dp)
                 .clip(CircleShape)
@@ -192,6 +201,12 @@ private fun Header(account: Account, user: User?) {
             Text(text = account.fullName, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Medium))
             Text(text = account.email)
         }
+    }
+}
+
+private fun sendBreadcrumbForUser(userId: Long?) {
+    Sentry.captureMessage("Breadcrumbs flush") { scope ->
+        if (userId != null) scope.user = io.sentry.protocol.User().also { it.id = userId.toString() }
     }
 }
 
