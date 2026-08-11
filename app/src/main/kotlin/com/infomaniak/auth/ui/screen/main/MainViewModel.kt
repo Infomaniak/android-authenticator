@@ -20,10 +20,10 @@ package com.infomaniak.auth.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infomaniak.auth.data.preferences.PermissionPreferences
+import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.multiplatform_authenticator.core.Account
 import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
 import com.infomaniak.multiplatform_authenticator.core.repository.AppSettingsRepository
-import com.infomaniak.auth.utils.AccountUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -62,6 +62,14 @@ class MainViewModel @Inject constructor(
     val hasTriggeredNotificationPermission: StateFlow<Boolean> = flow {
         emitAll(PermissionPreferences().hasTriggeredNotificationPermissionFlow)
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    init {
+        viewModelScope.launch {
+            accounts.collect {
+                if (it.isEmpty()) appSettingsRepository.clear()
+            }
+        }
+    }
 
     fun onNotificationPermissionTriggered() {
         viewModelScope.launch {
