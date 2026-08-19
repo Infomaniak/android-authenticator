@@ -27,4 +27,4 @@ import javax.inject.Singleton
 @Singleton
 class AccountUtils @Inject constructor(
     @ApplicationContext context: Context,
-) : UserAccountUtils(context, MainApplication.userDataCleanableList)
+) : UserAccountUtils(context, { MainApplication.userDataCleanableList })
