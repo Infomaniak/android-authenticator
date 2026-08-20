@@ -20,18 +20,11 @@ package com.infomaniak.auth.utils
 import android.content.Context
 import com.infomaniak.auth.MainApplication
 import com.infomaniak.core.auth.UserAccountUtils
-import com.infomaniak.core.auth.models.user.User
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AccountUtils @Inject constructor(
     @ApplicationContext context: Context,
-) : UserAccountUtils(context, MainApplication.userDataCleanableList) {
-    suspend fun isUserConnected(): Boolean = users.first().isNotEmpty()
-
-    suspend fun getUserById(id: Int): User? = userDao.findById(id)
-    suspend fun getUsersById(userIds: IntArray): List<User> = userDao.loadAllByIds(userIds)
-}
+) : UserAccountUtils(context, MainApplication.userDataCleanableList)
