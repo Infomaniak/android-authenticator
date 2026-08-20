@@ -29,6 +29,7 @@ import kotlinx.coroutines.asExecutor
 private val classNamePrefixesToIgnore = listOf(
     "okhttp3.",
     "org.matomo.sdk.",
+    // IMPORTANT: Make sure to keep this in sync with proguard-rules.pro
 )
 
 fun setupStrictMode() {
