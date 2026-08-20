@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Packages we want to keep to filter them out for StrictMode (see `classNamePrefixesToIgnore` in `StrictModeConfig.kt`):
+-keeppackagenames okhttp3
+-keeppackagenames org.matomo.sdk
