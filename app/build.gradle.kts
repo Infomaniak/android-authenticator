@@ -5,7 +5,6 @@ plugins {
     alias(core.plugins.android.application)
     alias(core.plugins.compose.compiler)
     alias(core.plugins.dagger.hilt)
-    alias(libs.plugins.kotlin.android)
     alias(core.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(core.plugins.sentry.plugin)
@@ -31,8 +30,6 @@ android {
         versionName = "2.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        setProperty("archivesBaseName", "infomaniak-authenticator-$versionName ($versionCode)")
 
         buildConfigField("String", "GITHUB_REPO_URL", "\"https://github.com/Infomaniak/android-authenticator\"")
         buildConfigField("String", "CLIENT_ID", "\"A7B265CD-C9DB-4E6B-8236-2DFF60F146FC\"")
@@ -90,6 +87,10 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
+}
+
+base {
+    archivesName = "infomaniak-authenticator-${android.defaultConfig.versionName} (${android.defaultConfig.versionCode})"
 }
 
 val isRelease = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
