@@ -200,9 +200,6 @@ dependencies {
     implementation(core.hilt.work)
     ksp(core.hilt.compiler)
     ksp(core.hilt.androidx.compiler)
-    // Workaround for Hilt + Kotlin 2.3.0 metadata compatibility
-    // https://github.com/google/dagger/issues/5001
-    annotationProcessor("org.jetbrains.kotlin:kotlin-metadata-jvm:2.3.0")
 
     // Compose
     implementation(platform(core.compose.bom))
