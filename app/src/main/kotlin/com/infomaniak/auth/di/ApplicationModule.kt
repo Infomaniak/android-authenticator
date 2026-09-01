@@ -18,21 +18,18 @@
 package com.infomaniak.auth.di
 
 import android.content.Context
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import androidx.room.withTransaction
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MainApplication
-import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
-import com.infomaniak.multiplatform_authenticator.core.models.migration.SharedApiToken
-import com.infomaniak.multiplatform_authenticator.core.models.migration.user.SharedUserProfile
-import com.infomaniak.multiplatform_authenticator.core.network.interfaces.AuthenticatorBridge
-import com.infomaniak.multiplatform_authenticator.core.network.interfaces.BreadcrumbType
-import com.infomaniak.multiplatform_authenticator.core.network.interfaces.CrashReportInterface
-import com.infomaniak.multiplatform_authenticator.core.network.interfaces.CrashReportLevel
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.toLoginApiToken
 import com.infomaniak.auth.utils.toSharedApiToken
 import com.infomaniak.auth.utils.toUser
+import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.common.getAndroidId
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.login.InfomaniakLogin
@@ -40,6 +37,13 @@ import com.infomaniak.core.network.ApiEnvironment
 import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
+import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.models.migration.SharedApiToken
+import com.infomaniak.multiplatform_authenticator.core.models.migration.user.SharedUserProfile
+import com.infomaniak.multiplatform_authenticator.core.network.interfaces.AuthenticatorBridge
+import com.infomaniak.multiplatform_authenticator.core.network.interfaces.BreadcrumbType
+import com.infomaniak.multiplatform_authenticator.core.network.interfaces.CrashReportInterface
+import com.infomaniak.multiplatform_authenticator.core.network.interfaces.CrashReportLevel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -183,9 +187,15 @@ object ApplicationModule {
 
             override suspend fun attemptPersistingTokenForAccount(userId: Long, token: SharedApiToken) {
                 MainApplication.userDataCleanableList.forEach { it.resetForUser(userId) }
-                val dao = UserDatabase.getDatabase().userDao()
-                val user = accountUtils.getUserById(userId.toInt()) ?: return
-                dao.update(user.copy(apiToken = token.toLoginApiToken()))
+                val db = UserDatabase.getDatabase()
+                val user = accountUtils.getUserById(userId.toInt()) ?: error("User not found for ID: $userId")
+                db.useWriterConnection {
+                    it.immediateTransaction {
+                        val dao = db.userDao()
+                        dao.update(user.copy(apiToken = token.toLoginApiToken()))
+                        dao.upsertTokenDeviceBinding(TokenDeviceBinding(userId.toInt(), getAndroidId()))
+                    }
+                }
             }
 
             override suspend fun persistUserProfile(userProfile: SharedUserProfile) {
