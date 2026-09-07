@@ -202,7 +202,13 @@ object ApplicationModule {
                 val db = UserDatabase.getDatabase()
                 if (userProfile.apiToken.accessToken.isNotEmpty()) {
                     MainApplication.userDataCleanableList.forEach { it.resetForUser(userProfile.id.toLong()) }
-                    db.userDao().upsert(userProfile.toUser())
+                    db.useWriterConnection {
+                        it.immediateTransaction {
+                            val dao = db.userDao()
+                            dao.upsert(userProfile.toUser())
+                            dao.upsertTokenDeviceBinding(TokenDeviceBinding(userProfile.id, getAndroidId()))
+                        }
+                    }
                 } else {
                     db.withTransaction {
                         userProfile.apiToken = db.userDao().findById(userProfile.id)?.apiToken?.toSharedApiToken()
