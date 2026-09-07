@@ -68,10 +68,9 @@ open class MainApplication : Application(), Configuration.Provider {
             apiEnvironment = ApiEnvironment.Prod,
         )
         AuthConfiguration.init(
-            appId = BuildConfig.APPLICATION_ID,
-            appVersionCode = BuildConfig.VERSION_CODE,
-            appVersionName = BuildConfig.VERSION_NAME,
             clientId = BuildConfig.CLIENT_ID,
+            accessType = null,
+            tokenInterceptorListener = null,
         )
         userDataCleanableList = listOf<AssociatedUserDataCleanable>(DeviceInfoUpdateManager)
     }
