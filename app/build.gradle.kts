@@ -11,10 +11,10 @@ plugins {
     alias(core.plugins.google.services)
 }
 
-val androidCompileSdk: Int by rootProject.extra
-val appTargetSdk: Int by rootProject.extra
-val androidMinSdk: Int by rootProject.extra
-val javaVersion: JavaVersion by rootProject.extra
+val androidCompileSdk: Int = rootProject.extra["androidCompileSdk"] as Int
+val appTargetSdk: Int = rootProject.extra["appTargetSdk"] as Int
+val androidMinSdk: Int = rootProject.extra["androidMinSdk"] as Int
+val javaVersion: JavaVersion = rootProject.extra["javaVersion"] as JavaVersion
 
 android {
     namespace = "com.infomaniak.auth"
@@ -56,13 +56,6 @@ android {
         targetCompatibility = javaVersion
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
-        }
-    }
-
     flavorDimensions += "distribution"
 
     productFlavors {
@@ -89,11 +82,20 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
+    }
+}
+
 base {
     archivesName = "infomaniak-authenticator-${android.defaultConfig.versionName} (${android.defaultConfig.versionCode})"
 }
 
 val isRelease = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
+
+val useAuthenticatorCoreCompositeBuild = gradle.extra["useAuthenticatorCoreCompositeBuild"] as Boolean
 
 val envProperties = rootProject.file("env.properties")
     .takeIf { it.exists() }
@@ -137,7 +139,11 @@ sentry {
 }
 
 dependencies {
-    implementation(libs.infomaniak.multiplatform.authenticator.submodule)
+    if (useAuthenticatorCoreCompositeBuild) {
+        implementation(libs.infomaniak.multiplatform.authenticator.core.submodule)
+    } else {
+        implementation(libs.infomaniak.multiplatform.authenticator.core)
+    }
 
     implementation(core.infomaniak.core.applock)
     implementation(core.infomaniak.core.auth)

@@ -1,5 +1,6 @@
 [versions]
 accompanistPermissions = "0.37.3"
+authenticatorCore = "0.0.12"
 kotlin = "2.3.21"
 osmerionkotlinBase32 = "1.0.0"
 ksp = "2.3.9"
@@ -14,7 +15,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 osmerion-kotlin-base32 = { module = "com.osmerion.kotlin:kotlin-base32", version.ref = "osmerionkotlinBase32" }
-infomaniak-multiplatform-authenticator-submodule = { module = "com.infomaniak.multiplaform-authenticator:multiplatform-authenticator" }
+infomaniak-multiplatform-authenticator-core-submodule = { module = "com.infomaniak.multiplaform-authenticator:multiplatform-authenticator" }
+infomaniak-multiplatform-authenticator-core = { group = "com.infomaniak.multiplatform_authenticator", name = "AuthenticatorCore", version.ref = "authenticatorCore" }
 
 [plugins]
 androidx-room = { id = "androidx.room", version.ref = "room" }
