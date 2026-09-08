@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     extra.apply {
-        set("androidCompileSdk", 36)
+        set("androidCompileSdk", 37)
         set("appTargetSdk", 36)
         set("androidMinSdk", 27)
         set("javaVersion", JavaVersion.VERSION_17)
@@ -25,7 +25,6 @@ plugins {
     alias(core.plugins.kotlin.serialization) apply false
     alias(core.plugins.sentry.plugin) apply false
 
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.skie) apply false
