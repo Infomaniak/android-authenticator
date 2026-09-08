@@ -28,7 +28,6 @@ interface InAppServiceManager {
     fun initAppReviewManager() = inAppReviewManager.init(
         countdownBehavior = BaseInAppReviewManager.Behavior.Manual,
         appReviewThreshold = APP_REVIEW_THRESHOLD,
-        maxAppReviewThreshold = MAX_APP_REVIEW_THRESHOLD,
     )
 
     fun initAppUpdateManager(isUpdateRequired: Boolean) = inAppUpdateManager.init(
@@ -37,6 +36,5 @@ interface InAppServiceManager {
 
     companion object {
         private const val APP_REVIEW_THRESHOLD = 2
-        private const val MAX_APP_REVIEW_THRESHOLD = 10
     }
 }
