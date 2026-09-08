@@ -188,6 +188,7 @@ dependencies {
     // Notification
     "standardImplementation"(core.infomaniak.core.notifications.registration)
     "standardImplementation"(core.firebase.messaging.ktx)
+    "standardImplementation"(libs.play.services.block.store)
 
     // Room
     implementation(core.room.ktx)
