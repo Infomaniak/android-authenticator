@@ -36,9 +36,6 @@ dependencyResolutionManagement {
         create("core") {
             from(files("Core/gradle/core.versions.toml"))
         }
-        create("kmpAuthenticator") {
-            from(files("multiplatform-authenticator/gradle/kmpAuthenticator.versions.toml"))
-        }
     }
 }
 
