@@ -18,25 +18,46 @@
 package com.infomaniak.auth.backup
 
 import android.app.backup.FullBackupDataOutput
-import android.os.ParcelFileDescriptor
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
+import com.infomaniak.core.auth.models.user.User
+import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.backup.FullBackupAgent
-import java.io.File
+import kotlinx.coroutines.runBlocking
 
 class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBackedUpFiles) {
 
     override fun onFullBackup(data: FullBackupDataOutput) {
-        super.onFullBackup(data)
+        val blockStoreBackupSucceeded = runBlocking { BlockStoreBackup.backupPasskeys() }
+        if (!blockStoreBackupSucceeded) return super.onFullBackup(data)
+
+        val db = UserDatabase()
+        // We don't want to keep tokens in the db for backup, so we remove them temporarily.
+        val usersWithTokens = runBlocking { db.getUsersAndRemoveTokens() }
+        try {
+            super.onFullBackup(data)
+        } finally {
+            runBlocking { db.putTokensBack(usersWithTokens) }
+        }
     }
 
-    override fun onRestoreFile(
-        data: ParcelFileDescriptor,
-        size: Long,
-        destination: File,
-        type: Int,
-        mode: Long,
-        mtime: Long
-    ) {
-        //TODO: Try to retrieve data from BlockStore first.
-        super.onRestoreFile(data, size, destination, type, mode, mtime)
+    private suspend fun UserDatabase.getUsersAndRemoveTokens(): List<User> = useWriterConnection { transactor ->
+        transactor.immediateTransaction {
+            userDao().allUsers().also { users ->
+                users.forEach { user ->
+                    userDao().update(user = user.copy(apiToken = user.apiToken.copy(accessToken = "", refreshToken = null)))
+                }
+            }
+        }
+    }
+
+    private suspend fun UserDatabase.putTokensBack(usersWithTokens: List<User>) {
+        useWriterConnection { transactor ->
+            transactor.immediateTransaction {
+                usersWithTokens.forEach { user ->
+                    userDao().updateUserToken(user.id, user.apiToken.accessToken)
+                }
+            }
+        }
     }
 }

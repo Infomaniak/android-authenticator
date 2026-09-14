@@ -45,12 +45,12 @@ object BlockStoreBackup {
         val backupContent = dumpPasskeys()
         val alreadyBackedUpContent = readPasskeysBackup()
         val bytes = ProtoBuf.encodeToByteArray(backupContent)
-        if (bytes contentEquals ProtoBuf.encodeToByteArray(alreadyBackedUpContent)) return true
+        if (alreadyBackedUpContent != null && bytes contentEquals ProtoBuf.encodeToByteArray(alreadyBackedUpContent)) return true
         return writePasskeysBackup(bytes)
     }
 
     suspend fun restorePasskeys() {
-        val passKeysBackup = readPasskeysBackup()
+        val passKeysBackup = readPasskeysBackup() ?: return
         applyPasskeysBackup(passKeysBackup)
     }
 
@@ -92,11 +92,12 @@ object BlockStoreBackup {
         )
     }
 
-    private suspend fun readPasskeysBackup(): PasskeysBackup {
+    private suspend fun readPasskeysBackup(): PasskeysBackup? {
         val retrieveRequest = RetrieveBytesRequest.Builder()
             .setKeys(listOf(PASSKEYS_KEY))
             .build()
-        val bytes = blockstoreClient.retrieveBytes(retrieveRequest).await().blockstoreDataMap[PASSKEYS_KEY]!!.bytes
+        val bytes = blockstoreClient.retrieveBytes(retrieveRequest).await().blockstoreDataMap[PASSKEYS_KEY]?.bytes
+            ?: return null
         return ProtoBuf.decodeFromByteArray(bytes)
     }
 

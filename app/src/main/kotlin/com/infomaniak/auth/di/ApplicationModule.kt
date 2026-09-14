@@ -23,6 +23,7 @@ import androidx.room.useWriterConnection
 import androidx.room.withTransaction
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.MainApplication
+import com.infomaniak.auth.backup.BlockStoreBackup
 import com.infomaniak.auth.utils.AccountUtils
 import com.infomaniak.auth.utils.toLoginApiToken
 import com.infomaniak.auth.utils.toSharedApiToken
@@ -222,6 +223,10 @@ object ApplicationModule {
                         db.userDao().update(userProfile.toUser())
                     }
                 }
+            }
+
+            override suspend fun restorePasskeys() {
+                BlockStoreBackup.restorePasskeys() // No-op on the F-Droid variant.
             }
         }
 }
