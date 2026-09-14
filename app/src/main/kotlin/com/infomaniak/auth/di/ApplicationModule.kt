@@ -30,6 +30,7 @@ import com.infomaniak.auth.utils.toUser
 import com.infomaniak.core.auth.models.TokenDeviceBinding
 import com.infomaniak.core.auth.room.UserDatabase
 import com.infomaniak.core.common.getAndroidId
+import com.infomaniak.core.common.toDynamicLazyMap
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade
 import com.infomaniak.core.crossapplogin.back.CrossAppLoginFacade.AccountsCheckingStatus
 import com.infomaniak.core.login.InfomaniakLogin
@@ -38,6 +39,7 @@ import com.infomaniak.core.network.LOGIN_ENDPOINT_URL
 import com.infomaniak.core.network.networking.HttpUtils
 import com.infomaniak.core.twofactorauth.back.TwoFactorAuthManager
 import com.infomaniak.multiplatform_authenticator.core.AuthenticatorFacade
+import com.infomaniak.multiplatform_authenticator.core.httpClients
 import com.infomaniak.multiplatform_authenticator.core.models.migration.SharedApiToken
 import com.infomaniak.multiplatform_authenticator.core.models.migration.user.SharedUserProfile
 import com.infomaniak.multiplatform_authenticator.core.network.interfaces.AuthenticatorBridge
@@ -107,8 +109,12 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideTwoFactorAuthManager(accountUtils: AccountUtils) =
-        TwoFactorAuthManager { userId -> accountUtils.getHttpClient(userId) }
+    fun provideTwoFactorAuthManager(
+        authenticatorFacade: AuthenticatorFacade,
+    ): TwoFactorAuthManager = TwoFactorAuthManager(
+        coroutineScope = appScope,
+        connectedHttpClients = context(appScope) { authenticatorFacade.httpClients().toDynamicLazyMap() }
+    )
 
     private fun createCrashReportInterface() = object : CrashReportInterface {
         override fun addBreadcrumb(
