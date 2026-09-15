@@ -135,7 +135,7 @@ object BlockStoreBackup {
 
     private suspend fun isE2eeAvailable(): Boolean = blockstoreClient.isEndToEndEncryptionAvailable.await()
 
-    private class KeyPairReference(
+    private data class KeyPairReference(
         val userId: Long,
         val keyId: String,
     )
