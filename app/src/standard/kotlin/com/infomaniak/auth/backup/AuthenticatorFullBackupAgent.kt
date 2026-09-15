@@ -33,6 +33,9 @@ class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBacked
 
         val db = UserDatabase()
         // We don't want to keep tokens in the db for backup, so we remove them temporarily.
+        // Note that the app can perfectly recover from this state if the backup process is aborted, here's why:
+        // Authenticated API calls with an empty token will result in a 401 http status code,
+        // which will lead to the token being refreshed using the passkey.
         val usersWithTokens = runBlocking { db.getUsersAndRemoveTokens() }
         try {
             super.onFullBackup(data)
