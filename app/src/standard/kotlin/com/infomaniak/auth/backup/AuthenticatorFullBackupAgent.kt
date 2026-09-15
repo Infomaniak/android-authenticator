@@ -58,6 +58,7 @@ class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBacked
         useWriterConnection { transactor ->
             transactor.immediateTransaction {
                 usersWithTokens.forEach { user ->
+                    // We don't need the refreshToken even if it's there because we're using passkeys instead.
                     userDao().updateUserToken(user.id, user.apiToken.accessToken)
                 }
             }
