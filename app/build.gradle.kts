@@ -6,7 +6,7 @@ plugins {
     alias(core.plugins.compose.compiler)
     alias(core.plugins.dagger.hilt)
     alias(core.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
+    alias(core.plugins.ksp)
     alias(core.plugins.sentry.plugin)
     alias(core.plugins.google.services)
 }

@@ -2,7 +2,6 @@
 accompanistPermissions = "0.37.3"
 authenticatorCore = "1.0.0"
 kotlin = "2.3.21"
-ksp = "2.3.9"
 sonarqube = "7.3.1.8318"
 
 [libraries]
@@ -13,5 +12,4 @@ play-services-block-store = { module = "com.google.android.gms:play-services-aut
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
