@@ -29,7 +29,7 @@ class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBacked
 
     override fun onFullBackup(data: FullBackupDataOutput) {
         val blockStoreBackupSucceeded = runBlocking { BlockStoreBackup.backupPasskeys() }
-        if (!blockStoreBackupSucceeded) return super.onFullBackup(data)
+        if (!blockStoreBackupSucceeded) return // Don't backup anything if we can't save the passkeys.
 
         val db = UserDatabase()
         // We don't want to keep tokens in the db for backup, so we remove them temporarily.
