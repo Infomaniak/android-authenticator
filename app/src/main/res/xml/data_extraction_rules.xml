@@ -16,17 +16,22 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <data-extraction-rules>
+    <cloud-backup>
+        <include
+            domain="file"
+            path="datastore" />
+        <include
+            domain="database"
+            path="." />
+    </cloud-backup>
 
     <device-transfer>
         <include
             domain="file"
-            path="." />
+            path="datastore" />
         <include
             domain="database"
             path="." />
-        <exclude
-            domain="file"
-            path="Quoi ?" />
     </device-transfer>
 
 </data-extraction-rules>

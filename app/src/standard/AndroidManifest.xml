@@ -20,8 +20,6 @@
 
     <application
         android:name=".StandardMainApplication"
-        android:backupAgent=".backup.AuthenticatorFullBackupAgent"
-        android:fullBackupOnly="true"
         tools:ignore="MissingApplicationIcon"
         tools:replace="android:name">
 

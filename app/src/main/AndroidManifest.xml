@@ -8,8 +8,10 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
+        android:backupAgent=".backup.AuthenticatorFullBackupAgent"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
         android:supportsRtl="true"

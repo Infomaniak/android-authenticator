@@ -18,11 +18,8 @@
 <full-backup-content>
     <include
         domain="file"
-        path="." />
+        path="datastore" />
     <include
         domain="database"
         path="." />
-    <exclude
-        domain="file"
-        path="Quoi ?" />
 </full-backup-content>
