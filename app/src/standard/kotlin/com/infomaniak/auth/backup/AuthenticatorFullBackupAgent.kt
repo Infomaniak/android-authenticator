@@ -18,10 +18,20 @@
 package com.infomaniak.auth.backup
 
 import android.app.backup.FullBackupDataOutput
+import com.infomaniak.auth.BuildConfig
+import com.infomaniak.auth.data.preferences.SentryPreferences
 import com.infomaniak.core.auth.backup.withBlockStoreCredentialsBackup
 import com.infomaniak.core.common.backup.FullBackupAgent
+import com.infomaniak.core.sentry.SentryConfig.configureSentry
+import kotlinx.coroutines.runBlocking
 
 class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBackedUpFiles) {
+
+    override fun onCreate() {
+        super.onCreate()
+        val sentryPreferences = runBlocking { SentryPreferences() } // Non-user-facing process, runBlocking is fine.
+        configureSentry(isDebug = BuildConfig.DEBUG, isSentryTrackingEnabled = { sentryPreferences.isSentryAuthorized })
+    }
 
     override fun onFullBackup(data: FullBackupDataOutput) = withBlockStoreCredentialsBackup(
         backupCredentials = { BlockStoreBackup.backupPasskeys() }
