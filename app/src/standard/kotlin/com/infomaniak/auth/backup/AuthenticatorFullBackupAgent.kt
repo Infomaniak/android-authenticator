@@ -18,50 +18,14 @@
 package com.infomaniak.auth.backup
 
 import android.app.backup.FullBackupDataOutput
-import androidx.room.immediateTransaction
-import androidx.room.useWriterConnection
-import com.infomaniak.core.auth.models.user.User
-import com.infomaniak.core.auth.room.UserDatabase
+import com.infomaniak.core.auth.backup.withBlockStoreCredentialsBackup
 import com.infomaniak.core.common.backup.FullBackupAgent
-import kotlinx.coroutines.runBlocking
 
 class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBackedUpFiles) {
 
-    override fun onFullBackup(data: FullBackupDataOutput) {
-        val blockStoreBackupSucceeded = runBlocking { BlockStoreBackup.backupPasskeys() }
-        if (!blockStoreBackupSucceeded) return // Don't backup anything if we can't save the passkeys.
-
-        val db = UserDatabase()
-        // We don't want to keep tokens in the db for backup, so we remove them temporarily.
-        // Note that the app can perfectly recover from this state if the backup process is aborted, here's why:
-        // Authenticated API calls with an empty token will result in a 401 http status code,
-        // which will lead to the token being refreshed using the passkey.
-        val usersWithTokens = runBlocking { db.getUsersAndRemoveTokens() }
-        try {
-            super.onFullBackup(data)
-        } finally {
-            runBlocking { db.putTokensBack(usersWithTokens) }
-        }
-    }
-
-    private suspend fun UserDatabase.getUsersAndRemoveTokens(): List<User> = useWriterConnection { transactor ->
-        transactor.immediateTransaction {
-            userDao().allUsers().also { users ->
-                users.forEach { user ->
-                    userDao().update(user = user.copy(apiToken = user.apiToken.copy(accessToken = "", refreshToken = null)))
-                }
-            }
-        }
-    }
-
-    private suspend fun UserDatabase.putTokensBack(usersWithTokens: List<User>) {
-        useWriterConnection { transactor ->
-            transactor.immediateTransaction {
-                usersWithTokens.forEach { user ->
-                    // We don't need the refreshToken even if it's there because we're using passkeys instead.
-                    userDao().updateUserToken(user.id, user.apiToken.accessToken)
-                }
-            }
-        }
+    override fun onFullBackup(data: FullBackupDataOutput) = withBlockStoreCredentialsBackup(
+        backupCredentials = { BlockStoreBackup.backupPasskeys() }
+    ) {
+        super.onFullBackup(data)
     }
 }
