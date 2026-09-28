@@ -18,14 +18,22 @@
 package com.infomaniak.auth.backup
 
 import android.app.backup.FullBackupDataOutput
+import android.content.Context
 import com.infomaniak.auth.BuildConfig
 import com.infomaniak.auth.data.preferences.SentryPreferences
 import com.infomaniak.core.auth.backup.withBlockStoreCredentialsBackup
 import com.infomaniak.core.common.backup.FullBackupAgent
 import com.infomaniak.core.sentry.SentryConfig.configureSentry
 import kotlinx.coroutines.runBlocking
+import splitties.init.appCtx
+import splitties.init.injectAsAppCtx
 
 class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBackedUpFiles) {
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        runCatching { appCtx }.onFailure { base.applicationContext.injectAsAppCtx() }
+    }
 
     override fun onCreate() {
         super.onCreate()
