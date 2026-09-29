@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.37.3"
-authenticatorCore = "1.0.0"
+authenticatorCore = "1.0.1"
 sonarqube = "7.3.1.8318"
 
 [libraries]

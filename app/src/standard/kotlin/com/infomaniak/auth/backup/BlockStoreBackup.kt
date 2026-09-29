@@ -26,7 +26,6 @@ import com.google.android.gms.auth.blockstore.StoreBytesData
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.multiplatform_authenticator.core.PasskeysStorageLocation
-import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.tasks.await
@@ -99,8 +98,7 @@ object BlockStoreBackup {
             .build()
         val bytes = blockstoreClient.retrieveBytes(retrieveRequest).await().blockstoreDataMap[PASSKEYS_KEY]?.bytes
             ?: return null
-        Sentry.addBreadcrumb("readPasskeysBackup(): Trying to decode ${bytes.size} bytes")
-        return ProtoBuf.decodeFromByteArray(bytes)
+        return ProtoBuf.decodeFromByteArray<PasskeysBackup>(bytes)
     }
 
     private suspend fun applyPasskeysBackup(backup: PasskeysBackup) {
