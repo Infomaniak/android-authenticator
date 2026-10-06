@@ -19,25 +19,21 @@
 
 package com.infomaniak.auth.backup
 
-import com.google.android.gms.auth.blockstore.Blockstore
 import com.google.android.gms.auth.blockstore.BlockstoreClient
-import com.google.android.gms.auth.blockstore.RetrieveBytesRequest
-import com.google.android.gms.auth.blockstore.StoreBytesData
+import com.infomaniak.core.auth.backup.BlockStore
 import com.infomaniak.core.common.cancellable
 import com.infomaniak.core.sentry.SentryLog
 import com.infomaniak.multiplatform_authenticator.core.PasskeysStorageLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
-import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import splitties.init.appCtx
 import java.io.File
 
 object BlockStoreBackup {
-    private val blockstoreClient = Blockstore.getClient(appCtx)
+    private val blockStore = BlockStore.instance
     private const val PASSKEYS_KEY = "pk"
     private const val TAG = "BlockStoreBackup"
 
@@ -63,15 +59,15 @@ object BlockStoreBackup {
                 scope.setExtra("Max size", "${BlockstoreClient.MAX_SIZE}B")
                 scope.setExtra("Actual size", "${keySizeInBytes}B + ${contentSizeInBytes}B = ${entireSize}B")
             }
+                // shouldBackupToCloud = blockStore.isE2eeAvailable(),
             return false
         }
-        val storeRequest = StoreBytesData.Builder()
-            .setKey(PASSKEYS_KEY)
-            .setShouldBackupToCloud(true)
-            .setBytes(protobufEncodedBytes)
-            .build()
         return runCatching {
-            blockstoreClient.storeBytes(storeRequest).await()
+            blockStore.storeBytes(
+                key = PASSKEYS_KEY,
+                shouldBackupToCloud = true,
+                bytes = protobufEncodedBytes
+            )
             true
         }.cancellable().getOrElse { throwable ->
             SentryLog.wtf(TAG, "Failed to backup passkeys", throwable)
@@ -93,10 +89,7 @@ object BlockStoreBackup {
     }
 
     private suspend fun readPasskeysBackup(): PasskeysBackup? {
-        val retrieveRequest = RetrieveBytesRequest.Builder()
-            .setKeys(listOf(PASSKEYS_KEY))
-            .build()
-        val bytes = blockstoreClient.retrieveBytes(retrieveRequest).await().blockstoreDataMap[PASSKEYS_KEY]?.bytes
+        val bytes = blockStore.retrieveBytes(listOf(PASSKEYS_KEY))[PASSKEYS_KEY]
             ?: return null
         return ProtoBuf.decodeFromByteArray<PasskeysBackup>(bytes)
     }
@@ -132,8 +125,6 @@ object BlockStoreBackup {
         keyId = reference.keyId,
         isPublic = isPublic,
     )
-
-    private suspend fun isE2eeAvailable(): Boolean = blockstoreClient.isEndToEndEncryptionAvailable.await()
 
     private data class KeyPairReference(
         val userId: Long,

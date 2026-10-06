@@ -34,6 +34,7 @@ class AuthenticatorFullBackupAgent : FullBackupAgent(RestorationPolicy.AllBacked
     }
 
     override fun onFullBackup(data: FullBackupDataOutput) = withBlockStoreCredentialsBackup(
+        data = data,
         backupCredentials = { BlockStoreBackup.backupPasskeys() }
     ) {
         super.onFullBackup(data)
