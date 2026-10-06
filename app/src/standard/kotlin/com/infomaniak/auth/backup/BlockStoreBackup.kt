@@ -59,7 +59,6 @@ object BlockStoreBackup {
                 scope.setExtra("Max size", "${BlockstoreClient.MAX_SIZE}B")
                 scope.setExtra("Actual size", "${keySizeInBytes}B + ${contentSizeInBytes}B = ${entireSize}B")
             }
-                // shouldBackupToCloud = blockStore.isE2eeAvailable(),
             return false
         }
         return runCatching {
